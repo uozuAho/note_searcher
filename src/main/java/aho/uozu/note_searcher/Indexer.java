@@ -27,13 +27,11 @@ class Indexer {
     }
 
     /** Index all text files under a directory. */
-    public void indexDirectory(String directory, boolean update) throws IOException {
-        String docsPath = directory;
+    public void indexDirectory(Path directory, boolean update) throws IOException {
         boolean create = !update;
 
-        final Path docDir = Paths.get(docsPath);
-        if (!Files.isReadable(docDir)) {
-            System.out.println("Document directory '" +docDir.toAbsolutePath()+ "' does not exist or is not readable, please check the path");
+        if (!Files.isReadable(directory)) {
+            System.out.println("Document directory '" +directory.toAbsolutePath()+ "' does not exist or is not readable, please check the path");
             return;
         }
 
@@ -59,7 +57,7 @@ class Indexer {
         // iwc.setRAMBufferSizeMB(256.0);
 
         var writer = new IndexWriter(dir, indexWriterConfig);
-        indexDocs(writer, docDir);
+        indexDocs(writer, directory);
 
         // NOTE: if you want to maximize search performance,
         // you can optionally call forceMerge here.  This can be

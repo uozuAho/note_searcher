@@ -8,20 +8,25 @@ import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.store.FSDirectory;
 
 import java.io.IOException;
-import java.nio.file.Paths;
+import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
 class Searcher {
-    public static List<SearchResult> search(String queryString)
+    private final Path _indexPath;
+
+    public Searcher(Path indexPath) {
+        this._indexPath = indexPath;
+    }
+
+    public List<SearchResult> search(String queryString)
             throws IOException, ParseException
     {
         // todo: config for this
         final int searchResultLimit = 10;
-        var indexPath = "C:/Users/boozFamily/Downloads/lucene-8.4.1/demo/index";
 
-        var indexReader = DirectoryReader.open(FSDirectory.open(Paths.get(indexPath)));
+        var indexReader = DirectoryReader.open(FSDirectory.open(this._indexPath));
         var searcher = new IndexSearcher(indexReader);
         var analyzer = new StandardAnalyzer();
         var queryParser = new QueryParser("contents", analyzer);

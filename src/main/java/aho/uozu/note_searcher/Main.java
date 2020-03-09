@@ -2,11 +2,9 @@ package aho.uozu.note_searcher;
 
 import org.apache.lucene.queryparser.classic.ParseException;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 
 public class Main {
     public static void main(String[] args) {
@@ -32,7 +30,7 @@ public class Main {
         index
     }
 
-    private static Command parseCommand(String args[]) {
+    private static Command parseCommand(String[] args) {
         if (args.length == 0) throw new IllegalStateException("need at least one arg");
         if (args[0].trim().toLowerCase().equals("search")) return Command.search;
         if (args[0].trim().toLowerCase().equals("index")) return Command.index;
@@ -40,18 +38,18 @@ public class Main {
     }
 
     private static void runIndex(String[] args) throws URISyntaxException, IOException {
-        var jarDir = Paths.get(Main.class.getProtectionDomain().getCodeSource().getLocation().toURI()).getParent();
-        var indexPath = Paths.get(jarDir.toString(), "index");
+        var indexPath = Paths.indexPath();
         var indexer = new Indexer(indexPath);
         var dirToIndex = getDirectoryToIndex(args);
         indexer.indexDirectory(dirToIndex, false);
     }
 
-    private static void runSearch(String[] args) throws IOException, ParseException {
+    private static void runSearch(String[] args) throws IOException, ParseException, URISyntaxException {
         var queryString = getQueryText(args);
-        var results = Searcher.search(queryString);
+        var searcher = new Searcher(Paths.indexPath());
+        var results = searcher.search(queryString);
 
-        Searcher.printSearchResults(queryString, results);
+        searcher.printSearchResults(queryString, results);
     }
 
     private static String getQueryText(String args[]) {
@@ -59,8 +57,8 @@ public class Main {
         return args[1];
     }
 
-    private static String getDirectoryToIndex(String[] args) {
+    private static Path getDirectoryToIndex(String[] args) {
         if (args.length <= 1) throw new IllegalStateException("no");
-        return args[1];
+        return java.nio.file.Paths.get(args[1]);
     }
 }

@@ -27,7 +27,6 @@ To build the distributable jar plus runner script
 
 
 ## Todo
-
 - remove default search query (the soup thing)
 - dont use args directly as search query
     - eg. "!" breaks parser
