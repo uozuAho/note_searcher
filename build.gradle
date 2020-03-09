@@ -9,7 +9,7 @@ version '1.0-SNAPSHOT'
 sourceCompatibility = 1.11
 
 application {
-    mainClassName = 'Main'
+    mainClassName = 'aho.uozu.note_searcher.Main'
 }
 
 repositories {

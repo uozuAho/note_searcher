@@ -1,3 +1,5 @@
+package aho.uozu.note_searcher;
+
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.queryparser.classic.QueryParser;
