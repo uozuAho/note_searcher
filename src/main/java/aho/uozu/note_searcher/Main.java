@@ -2,50 +2,64 @@ package aho.uozu.note_searcher;
 
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.index.DirectoryReader;
+import org.apache.lucene.queryparser.classic.ParseException;
 import org.apache.lucene.queryparser.classic.QueryParser;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.search.IndexSearcher;
 
+import java.io.IOException;
 import java.nio.file.Paths;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class Main {
     public static void main(String[] args) {
         try {
-            final int searchResultLimit = 10;
-            var queryString = "where is my soup";
-            if (args.length > 0) {
-                queryString = args[0];
-            }
+            var queryString = getQueryText(args);
+            var results = search(queryString);
 
-            // todo: config for this
-            var indexPath = "C:/Users/boozFamily/Downloads/lucene-8.4.1/demo/index";
-
-            var indexReader = DirectoryReader.open(FSDirectory.open(Paths.get(indexPath)));
-            var searcher = new IndexSearcher(indexReader);
-            var analyzer = new StandardAnalyzer();
-            var queryParser = new QueryParser("contents", analyzer);
-
-            var query = queryParser.parse(queryString);
-            var hits = searcher.search(query, searchResultLimit).scoreDocs;
-
-            System.out.println("Top results for query '" + queryString + "':");
-
-            for (int i = 0; i < hits.length; i++) {
-                var doc = searcher.doc(hits[i].doc);
-                String path = doc.get("path");
-                if (path != null) {
-                    System.out.println((i + 1) + ". " + path);
-                    String title = doc.get("title");
-                    if (title != null) {
-                        System.out.println("   Title: " + doc.get("title"));
-                    }
-                } else {
-                    System.out.println((i + 1) + ". " + "No path for this document");
-                }
-            }
+            printSearchResults(queryString, results);
         }
         catch (Exception e) {
-            System.out.println(e);
+            e.printStackTrace();
+        }
+    }
+
+    private static String getQueryText(String args[]) {
+        if (args.length == 0) return "where is my soup";
+        return args[0];
+    }
+
+    private static List<SearchResult> search(String queryString)
+            throws IOException, ParseException
+    {
+        // todo: config for this
+        final int searchResultLimit = 10;
+        var indexPath = "C:/Users/boozFamily/Downloads/lucene-8.4.1/demo/index";
+
+        var indexReader = DirectoryReader.open(FSDirectory.open(Paths.get(indexPath)));
+        var searcher = new IndexSearcher(indexReader);
+        var analyzer = new StandardAnalyzer();
+        var queryParser = new QueryParser("contents", analyzer);
+
+        var query = queryParser.parse(queryString);
+        var hits = searcher.search(query, searchResultLimit).scoreDocs;
+
+        return Arrays.stream(hits)
+                .map(hit -> SearchResult.build(searcher, hit))
+                .collect(Collectors.toList());
+    }
+
+    private static void printSearchResults(String queryString, List<SearchResult> results) {
+        if (results.size() == 0) {
+            System.out.println("No results for query '" + queryString + "'");
+        }
+        else {
+            System.out.println("Top results for query '" + queryString + "':");
+            for (var result : results) {
+                System.out.println(result.path);
+            }
         }
     }
 }
