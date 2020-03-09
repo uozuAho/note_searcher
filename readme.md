@@ -11,16 +11,21 @@ Intended to useful like https://zettelkasten.de/, but
 - console-based, intended to be used via a vs code extension
 
 
-## Run
+## Usage of this repo
 
-To run a search: 
+To run a search:
 
-> search.sh "your search query"  # quotes are required for multiple words
+> ./search.sh "your search query"  # quotes are required for multiple words
 
 To rebuild the index: `TODO :)`
+
+To build the distributable jar plus runner script
+
+> ./build.dist.sh  # output sent to dist/
 
 
 ## Todo
 
-- dev: run script
-- feature: build index
+- build index
+- vs code plugin
+- watch directories, continuously build index
