@@ -2,7 +2,11 @@ package aho.uozu.note_searcher;
 
 import org.apache.lucene.queryparser.classic.ParseException;
 
+import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 public class Main {
     public static void main(String[] args) {
@@ -11,7 +15,7 @@ public class Main {
 
             switch (command) {
                 case index:
-                    runIndex();
+                    runIndex(args);
                     break;
                 case search:
                     runSearch(args);
@@ -35,8 +39,12 @@ public class Main {
         throw new IllegalStateException("unknown command: " + args[0]);
     }
 
-    private static void runIndex() {
-        System.out.println("index not yet supported!");
+    private static void runIndex(String[] args) throws URISyntaxException, IOException {
+        var jarDir = Paths.get(Main.class.getProtectionDomain().getCodeSource().getLocation().toURI()).getParent();
+        var indexPath = Paths.get(jarDir.toString(), "index");
+        var indexer = new Indexer(indexPath);
+        var dirToIndex = getDirectoryToIndex(args);
+        indexer.indexDirectory(dirToIndex, false);
     }
 
     private static void runSearch(String[] args) throws IOException, ParseException {
@@ -48,6 +56,11 @@ public class Main {
 
     private static String getQueryText(String args[]) {
         if (args.length == 1) return "where is my soup";
+        return args[1];
+    }
+
+    private static String getDirectoryToIndex(String[] args) {
+        if (args.length <= 1) throw new IllegalStateException("no");
         return args[1];
     }
 }
