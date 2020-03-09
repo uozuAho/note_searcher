@@ -15,7 +15,7 @@ Intended to useful like https://zettelkasten.de/, but
 
 To run a search:
 
-> ./search.sh "your search query"  # quotes are required for multiple words
+> ./note_searcher.sh search "your search query"  # quotes are required for multiple words
 
 To rebuild the index: `TODO :)`
 
@@ -31,6 +31,7 @@ To build the distributable jar plus runner script
 - dont use args directly as search query
     - eg. "!" breaks parser
     - how to do phrases, NOT, AND, OR etc...?
+- how to run from any dir
 - tag parser/searcher
 - what other search features does lucene have? titles, authors etc.
 - vs code plugin
