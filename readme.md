@@ -27,11 +27,11 @@ To build the distributable jar plus runner script
 
 
 ## Todo
-- remove default search query (the soup thing)
-- dont use args directly as search query
-    - eg. "!" breaks parser
-    - how to do phrases, NOT, AND, OR etc...?
 - tag parser/searcher
-- what other search features does lucene have? titles, authors etc.
 - vs code plugin
-- watch directories, continuously build index
+- full text search:
+    - dont use args directly as search query
+        - eg. "!" breaks parser
+        - how to do phrases, NOT, AND, OR etc...?
+    - what other search features does lucene have? titles, authors etc.
+    - watch directories, continuously build index

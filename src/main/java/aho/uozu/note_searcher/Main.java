@@ -53,12 +53,12 @@ public class Main {
     }
 
     private static String getQueryText(String args[]) {
-        if (args.length == 1) return "where is my soup";
+        if (args.length <= 1) throw new IllegalStateException("gimme a search phrase");
         return args[1];
     }
 
     private static Path getDirectoryToIndex(String[] args) {
-        if (args.length <= 1) throw new IllegalStateException("no");
+        if (args.length <= 1) throw new IllegalStateException("gimme a directory to index");
         return java.nio.file.Paths.get(args[1]);
     }
 }

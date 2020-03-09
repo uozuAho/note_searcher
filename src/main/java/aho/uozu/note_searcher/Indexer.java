@@ -110,6 +110,7 @@ class Indexer {
     }
 
     static boolean shouldIndexFile(Path file) {
+        // todo: config for this
         var pathString = file.toString().toLowerCase();
         return pathString.endsWith(".md")
                 || pathString.endsWith(".txt")
