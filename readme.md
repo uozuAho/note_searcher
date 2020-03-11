@@ -1,32 +1,33 @@
 # Notes searcher
 
-## End goal
+Full-text and tag-based searching of arbitrary directories and files.
+Lets you make your own zettelkasten! Inspired by https://zettelkasten.de/.
 
-- Search notes using full-text and tag search
-- Get started with zero config
-
-Intended to useful like https://zettelkasten.de/, but
-
-- works on windows
-- console-based, intended to be used via a vs code extension
+This is a console-base tool, intended to be used in text-editor plugins,
+or just on the console if you like!
 
 
-## Usage of this repo
-
-To run a search:
-
-> ./note_searcher.sh search "your search query"  # quotes are required for multiple words
-
-To rebuild the index:
-
-> ./note_searcher.sh index /path/to/index
+## Development
 
 To build the distributable jar plus runner script
 
 > ./build.dist.sh  # output sent to dist/
 
+The following scripts build the distributable before using it.
+
+Before running any searches, you need to rebuild the search index. To do so:
+
+> ./note_searcher.sh index /path/to/index
+
+This builds the index next to the distributable jar.
+
+To run a search:
+
+> ./note_searcher.sh search "your search query"  # quotes are required for multiple words
+
 
 ## Todo
+
 - tag parser/searcher
 - vs code plugin
 - full text search:
