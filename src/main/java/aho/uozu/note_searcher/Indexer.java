@@ -93,7 +93,6 @@ class Indexer {
             Files.walkFileTree(path, new SimpleFileVisitor<>() {
                 @Override
                 public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) {
-                    System.out.println(file);
                     if (!shouldIndexFile(file)) return FileVisitResult.CONTINUE;
                     try {
                         indexDoc(writer, file, attrs.lastModifiedTime().toMillis());
