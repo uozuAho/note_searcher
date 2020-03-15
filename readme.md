@@ -30,9 +30,14 @@ To run a search:
 ## Todo
 
 - tag parser/searcher
-    tokenizer? annotator? analyser????
-    http://shaierera.blogspot.com/2016/01/indexing-tagged-data-with-lucene.html
-    https://lucene.apache.org/core/5_4_0/core/org/apache/lucene/analysis/package-summary.html
+    - I want lowercase filtering, punctuation removal, stop word removal, but
+      need to keep # characters for tagging. StandardTokenizer removes #.
+    - I think the analyser does stemming.
+    - http://intelligiblebabble.com/custom-lucene-tokenizer-for-tech-keywords/
+    - https://www.toptal.com/database/full-text-search-of-dialogues-with-apache-lucene
+    - http://shaierera.blogspot.com/2016/01/indexing-tagged-data-with-lucene.html
+    - https://lucene.apache.org/core/8_4_1/core/index.html has some demos
+    - https://lucene.apache.org/core/5_4_0/core/org/apache/lucene/analysis/package-summary.html
 - vs code plugin???
 - full text search:
     - is lucene query language easy to use? document some
