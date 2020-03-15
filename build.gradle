@@ -1,6 +1,7 @@
 plugins {
     id 'java'
     id 'application'
+    // 'shadow build': includes all dependencies in output JAR
     id "com.github.johnrengelman.shadow" version "5.2.0"
 }
 
@@ -18,11 +19,10 @@ repositories {
 }
 
 dependencies {
-    // https://mvnrepository.com/artifact/org.apache.lucene/lucene-core
     compile group: 'org.apache.lucene', name: 'lucene-core', version: '8.4.1'
-    // https://mvnrepository.com/artifact/org.apache.lucene/lucene-queryparser
     compile group: 'org.apache.lucene', name: 'lucene-queryparser', version: '8.4.1'
-    // https://mvnrepository.com/artifact/org.apache.lucene/lucene-queryparser
     compile group: 'org.apache.lucene', name: 'lucene-analyzers-common', version: '8.4.1'
     testCompile group: 'junit', name: 'junit', version: '4.12'
+    testCompile group: 'org.hamcrest', name: 'hamcrest', version: '2.2'
+    testCompile group: 'org.apache.lucene', name: 'lucene-memory', version: '8.4.1'
 }
