@@ -26,19 +26,31 @@ To run a search:
 
 > ./note_searcher.sh search "your search query"  # quotes are required for multiple words
 
+Search queries are expected to be in lucene classic parser syntax, see:
+https://lucene.apache.org/core/8_0_0/queryparser/org/apache/lucene/queryparser/classic/package-summary.html#package.description
+
+Some examples:
+
+Must contain a word: `+word`
+Search by document field: `field:value`
+
+Available fields are
+- contents (default)
+- tag: 'tagged' text within documents, eg. #great #games #icecream
+- path: file path
+- modified: file modification timestamp
+
+Currently searching by tag requires that you enter the hash prefix in the search,
+eg. `tag:#games`. I'm trying to fix this...
 
 ## Todo
 
-- tag parser/searcher
-    tokenizer? annotator? analyser????
-    http://shaierera.blogspot.com/2016/01/indexing-tagged-data-with-lucene.html
-    https://lucene.apache.org/core/5_4_0/core/org/apache/lucene/analysis/package-summary.html
-- vs code plugin???
-- full text search:
-    - is lucene query language easy to use? document some
-        see https://lucene.apache.org/core/2_9_4/queryparsersyntax.html
-    - dont use args directly as search quer
-        - eg. "!" breaks parser
-        - how to do phrases, NOT, AND, OR etc...?
-    - what other search features does lucene have? titles, authors etc.
-    - watch directories, continuously build index
+- vs code plugin
+- stop requiring hash in tag searches
+- watch directories, continuously build index
+
+## References
+- http://shaierera.blogspot.com/2016/01/indexing-tagged-data-with-lucene.html
+- https://lucene.apache.org/core/8_4_1/core/index.html has some demos
+- http://intelligiblebabble.com/custom-lucene-tokenizer-for-tech-keywords/
+- https://www.toptal.com/database/full-text-search-of-dialogues-with-apache-lucene

@@ -1,5 +1,6 @@
 package aho.uozu.note_searcher;
 
+import aho.uozu.note_searcher.analysis.EnglishWithTagsAnalyzer;
 import org.apache.lucene.queryparser.classic.ParseException;
 
 import java.io.IOException;
@@ -39,20 +40,20 @@ public class Main {
 
     private static void runIndex(String[] args) throws URISyntaxException, IOException {
         var indexPath = Paths.indexPath();
-        var indexer = new Indexer(indexPath);
+        var indexer = new Indexer(indexPath, EnglishWithTagsAnalyzer.create());
         var dirToIndex = getDirectoryToIndex(args);
         indexer.indexDirectory(dirToIndex, false);
     }
 
     private static void runSearch(String[] args) throws IOException, ParseException, URISyntaxException {
         var queryString = getQueryText(args);
-        var searcher = new Searcher(Paths.indexPath());
+        var searcher = new Searcher(Paths.indexPath(), EnglishWithTagsAnalyzer.create());
         var results = searcher.search(queryString);
 
-        searcher.printSearchResults(queryString, results);
+        Searcher.printSearchResults(queryString, results);
     }
 
-    private static String getQueryText(String args[]) {
+    private static String getQueryText(String[] args) {
         if (args.length <= 1) throw new IllegalStateException("gimme a search phrase");
         return args[1];
     }
