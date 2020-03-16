@@ -1,17 +1,14 @@
 package aho.uozu.note_searcher;
 
-import org.apache.lucene.analysis.standard.StandardAnalyzer;
+import aho.uozu.note_searcher.analysis.EnglishWithTagsAnalyzer;
+import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.document.*;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.store.FSDirectory;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
+import java.io.*;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Date;
@@ -21,9 +18,11 @@ import java.util.Date;
  */
 class Indexer {
     private final Path _indexPath;
+    private final Analyzer _analyzer;
 
-    public Indexer(Path indexPath) {
+    public Indexer(Path indexPath, Analyzer analyzer) {
         this._indexPath = indexPath;
+        this._analyzer = analyzer;
     }
 
     /** Index all text files under a directory. */
@@ -40,8 +39,7 @@ class Indexer {
         System.out.println("Indexing to directory '" + this._indexPath + "'...");
 
         var dir = FSDirectory.open(this._indexPath);
-        var analyzer = new StandardAnalyzer();
-        var indexWriterConfig = new IndexWriterConfig(analyzer);
+        var indexWriterConfig = new IndexWriterConfig(_analyzer);
 
         if (create) {
             indexWriterConfig.setOpenMode(IndexWriterConfig.OpenMode.CREATE);
@@ -87,21 +85,20 @@ class Indexer {
     }
 
     static void indexDoc(IndexWriter writer, Path file, long lastModified) throws IOException {
-        try (InputStream stream = Files.newInputStream(file)) {
-            Document doc = new Document();
+        String contents = new String(Files.readAllBytes(file));
+        Document doc = new Document();
 
-            Field pathField = new StringField("path", file.toString(), Field.Store.YES);
-            doc.add(pathField);
-            doc.add(new LongPoint("modified", lastModified));
-            doc.add(new TextField("contents", new BufferedReader(new InputStreamReader(stream, StandardCharsets.UTF_8))));
+        doc.add(new StringField("path", file.toString(), Field.Store.YES));
+        doc.add(new LongPoint("modified", lastModified));
+        doc.add(new TextField("contents", contents, Field.Store.YES));
+        doc.add(new TextField(EnglishWithTagsAnalyzer.TAG_FIELD, contents, Field.Store.NO));
 
-            if (writer.getConfig().getOpenMode() == IndexWriterConfig.OpenMode.CREATE) {
-                System.out.println("adding " + file);
-                writer.addDocument(doc);
-            } else {
-                System.out.println("updating " + file);
-                writer.updateDocument(new Term("path", file.toString()), doc);
-            }
+        if (writer.getConfig().getOpenMode() == IndexWriterConfig.OpenMode.CREATE) {
+            System.out.println("adding " + file);
+            writer.addDocument(doc);
+        } else {
+            System.out.println("updating " + file);
+            writer.updateDocument(new Term("path", file.toString()), doc);
         }
     }
 }

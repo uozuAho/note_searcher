@@ -1,6 +1,6 @@
 package aho.uozu.note_searcher;
 
-import org.apache.lucene.analysis.standard.StandardAnalyzer;
+import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.queryparser.classic.ParseException;
 import org.apache.lucene.queryparser.classic.QueryParser;
@@ -15,9 +15,11 @@ import java.util.stream.Collectors;
 
 class Searcher {
     private final Path _indexPath;
+    private final Analyzer _analyzer;
 
-    public Searcher(Path indexPath) {
+    public Searcher(Path indexPath, Analyzer analyzer) {
         this._indexPath = indexPath;
+        this._analyzer = analyzer;
     }
 
     public List<SearchResult> search(String queryString)
@@ -28,8 +30,7 @@ class Searcher {
 
         var indexReader = DirectoryReader.open(FSDirectory.open(this._indexPath));
         var searcher = new IndexSearcher(indexReader);
-        var analyzer = new StandardAnalyzer();
-        var queryParser = new QueryParser("contents", analyzer);
+        var queryParser = new QueryParser("contents", _analyzer);
 
         var query = queryParser.parse(queryString);
         var hits = searcher.search(query, searchResultLimit).scoreDocs;

@@ -1,7 +1,6 @@
 package aho.uozu.note_searcher;
 
 import aho.uozu.note_searcher.analysis.EnglishWithTagsAnalyzer;
-import aho.uozu.note_searcher.analysis.TagsAnalyzer;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.index.memory.MemoryIndex;
 import org.apache.lucene.queryparser.classic.ParseException;
@@ -45,9 +44,18 @@ public class EnglishWithTagsAnalyzerTests {
 
     @Test
     public void mustContainTag() throws ParseException {
-        float score = search("+tag:wow");
+        // todo: how to index tags without the hash?
+        float score = search("+tag:#wow");
 
         assertThat(score, greaterThan(0f));
+    }
+
+    @Test
+    public void scoresZeroWhenMustContainNonExistentTag() throws ParseException {
+        // todo: how to index tags without the hash?
+        float score = search("+tag:#jabba");
+
+        assertThat(score, equalTo(0f));
     }
 
     private float search(String query) throws ParseException {
