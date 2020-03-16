@@ -19,12 +19,12 @@ public class EnglishWithTagsAnalyzerTests {
 
     @BeforeEach
     public void setup() {
+        String documentText =
+                "Demo Text, Including \"tags\" like #wow. Many dogs. Not a tag: # meat";
         _analyzer = EnglishWithTagsAnalyzer.create();
         _index = new MemoryIndex();
-        // todo: how to add tag field???
-        _index.addField("content",
-                "Demo Text, Including \"tags\" like #wow. Many dogs. Not a tag: # meat",
-                _analyzer);
+        _index.addField("content", documentText, _analyzer);
+        _index.addField(EnglishWithTagsAnalyzer.TAG_FIELD, documentText, _analyzer);
     }
 
     @Test
