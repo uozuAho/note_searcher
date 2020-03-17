@@ -16,7 +16,8 @@ VS code extension
 
 
 # todo
-- vscode: single shortcut to get to search
-- vscode: custom text for search box
-- vscode: rename command
-- bundle jar with extension?
+- vscode
+    - rename command
+    - add index current dir command
+    - bundle jar with extension?
+    - publish extension?

@@ -19,6 +19,12 @@
 				"command": "extension.helloWorld",
 				"title": "Hello World"
 			}
+		],
+		"keybindings": [
+			{
+				"command": "extension.helloWorld",
+				"key": "ctrl+alt+f"
+			}
 		]
 	},
 	"scripts": {
