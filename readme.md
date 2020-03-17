@@ -17,7 +17,6 @@ VS code extension
 
 # todo
 - vscode
-    - rename command
     - add index current dir command
     - bundle jar with extension?
     - publish extension?

@@ -10,19 +10,19 @@
 		"Other"
 	],
 	"activationEvents": [
-		"onCommand:extension.helloWorld"
+		"onCommand:extension.search"
 	],
 	"main": "./out/extension.js",
 	"contributes": {
 		"commands": [
 			{
-				"command": "extension.helloWorld",
-				"title": "Hello World"
+				"command": "extension.search",
+				"title": "Note searcher: search for docs"
 			}
 		],
 		"keybindings": [
 			{
-				"command": "extension.helloWorld",
+				"command": "extension.search",
 				"key": "ctrl+alt+f"
 			}
 		]
