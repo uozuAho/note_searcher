@@ -1,6 +1,7 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
+import * as child_process from 'child_process';
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
@@ -18,6 +19,20 @@ export function activate(context: vscode.ExtensionContext) {
 
 		// Display a message box to the user
 		vscode.window.showInformationMessage('Hello snrub!');
+
+		child_process.exec('pwd', (err, stdout, stderr) => {
+			console.log(stdout);
+		});
+
+		const jar = 'C:\\woz\\note_searcher2\\cli\\dist\\note_searcher.jar';
+		const cmd = `java -jar ${jar} search "asdf"`;
+		child_process.exec(cmd, (err, stdout, stderr) => {
+			console.log(stdout);
+			console.error(stderr);
+			if (err) {
+				console.error(err);
+			}
+		});
 	});
 
 	context.subscriptions.push(disposable);

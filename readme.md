@@ -3,12 +3,17 @@
 Full-text and tag-based searching of arbitrary directories and files.
 Lets you make your own zettelkasten! Inspired by https://zettelkasten.de/.
 
-## projects
 
-### cli
+# projects
+
+## cli
 
 Console app that does indexing and searching
 
-### vscode
+## vscode
 
 VS code extension
+
+
+# todo
+- vscode ext talks to console app
