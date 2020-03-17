@@ -16,4 +16,7 @@ VS code extension
 
 
 # todo
-- vscode ext talks to console app
+- vscode: single shortcut to get to search
+- vscode: custom text for search box
+- vscode: rename command
+- bundle jar with extension?
