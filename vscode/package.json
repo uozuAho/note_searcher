@@ -10,7 +10,8 @@
 		"Other"
 	],
 	"activationEvents": [
-		"onCommand:extension.search"
+		"onCommand:extension.search",
+		"onCommand:extension.index"
 	],
 	"main": "./out/extension.js",
 	"contributes": {
@@ -18,12 +19,20 @@
 			{
 				"command": "extension.search",
 				"title": "Note searcher: search for docs"
+			},
+			{
+				"command": "extension.index",
+				"title": "Note searcher: index docs in the current workspace"
 			}
 		],
 		"keybindings": [
 			{
 				"command": "extension.search",
-				"key": "ctrl+alt+f"
+				"key": "ctrl+alt+s"
+			},
+			{
+				"command": "extension.index",
+				"key": "ctrl+alt+i"
 			}
 		]
 	},

@@ -4,10 +4,7 @@ import { newSearcher } from './search';
 export function activate(context: vscode.ExtensionContext) {
 	const searcher = newSearcher();
 
-	// The command has been defined in the package.json file
-	// Now provide the implementation of the command with registerCommand
-	// The commandId parameter must match the command field in package.json
-	let disposable = vscode.commands.registerCommand('extension.search', () => {
+	let search = vscode.commands.registerCommand('extension.search', () => {
 		vscode.window.showInputBox({
 			prompt: "Search for documents"
 		})
@@ -19,8 +16,15 @@ export function activate(context: vscode.ExtensionContext) {
 				}
 			});
 	});
+	context.subscriptions.push(search);
 
-	context.subscriptions.push(disposable);
+	let index = vscode.commands.registerCommand('extension.index', () => {
+		const folders = vscode.workspace.workspaceFolders;
+		if (folders) {
+			searcher.index(folders[0].uri.fsPath);
+		}
+	});
+	context.subscriptions.push(index);
 }
 
 export function deactivate() {}
