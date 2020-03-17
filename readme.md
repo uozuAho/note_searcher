@@ -17,6 +17,7 @@ VS code extension
 
 # todo
 - vscode
-    - add index current dir command
+    - show last entered query on search
+    - message on index start/complete
     - bundle jar with extension?
     - publish extension?

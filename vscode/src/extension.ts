@@ -10,9 +10,11 @@ export function activate(context: vscode.ExtensionContext) {
 		})
 			.then(input => {
 				if (input) {
+					const output = vscode.window.createOutputChannel('note searcher');
+					output.show();
 					searcher.search(input)
-						.then(result => console.log(result))
-						.catch(reason => console.error(reason));
+						.then(result => output.append(result))
+						.catch(reason => output.append(reason));
 				}
 			});
 	});
