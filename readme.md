@@ -14,10 +14,18 @@ Console app that does indexing and searching
 
 VS code extension
 
+Packaging the extension is a pain, see
+https://code.visualstudio.com/api/working-with-extensions/publishing-extension
+
+Maybe this will just work:
+
+> vsce package
 
 # todo
 - vscode
+    - package extension
+        - bundle jar with extension *done*
+        - make bundled jar usable during dev and by installed extension
     - show last entered query on search
     - message on index start/complete
-    - bundle jar with extension?
     - publish extension?

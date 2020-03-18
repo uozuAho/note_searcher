@@ -3,6 +3,11 @@
 	"displayName": "note-searcher",
 	"description": "searches notes",
 	"version": "0.0.1",
+	"publisher": "uozuaho",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/uozuAho/note_searcher"
+	},
 	"engines": {
 		"vscode": "^1.43.0"
 	},
@@ -37,7 +42,7 @@
 		]
 	},
 	"scripts": {
-		"vscode:prepublish": "npm run compile",
+		"vscode:prepublish": "sh prepublish.sh",
 		"compile": "tsc -p ./",
 		"lint": "eslint src --ext ts",
 		"watch": "tsc -watch -p ./",
