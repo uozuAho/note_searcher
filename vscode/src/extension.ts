@@ -33,8 +33,8 @@ const search = async (searcher: Searcher) => {
 		return;
 	}
 	try {
-		const result = await searcher.search(input);
-		vsutils.openInNewOutputChannel(result);
+		const results = await searcher.search(input);
+		vsutils.openInNewOutputChannel(results.map(r => r.fsPath).join('\n'));
 	}
 	catch (e) {
 		vsutils.openInNewEditor(e);
