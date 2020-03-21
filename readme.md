@@ -24,6 +24,6 @@ VS code extension
 
 # todo
 - vscode
-    - search results to output window for clickable links
+    - support spaces in filenames in search results (for clickable links)
     - show last entered query on search
     - e2e tests

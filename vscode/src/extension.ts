@@ -1,6 +1,7 @@
 import * as path from 'path';
 import * as vscode from 'vscode';
 import { newCliSearcher, Searcher } from './search';
+import * as vsutils from './vscode.utils';
 
 export function activate(context: vscode.ExtensionContext) {
 	const searcher = newCliSearcher(path.join(extensionDir()!, 'out/note_searcher.jar'));
@@ -33,10 +34,10 @@ const search = async (searcher: Searcher) => {
 	}
 	try {
 		const result = await searcher.search(input);
-		openInNewEditor(result);
+		vsutils.openInNewOutputChannel(result);
 	}
 	catch (e) {
-		openInNewEditor(e);
+		vsutils.openInNewEditor(e);
 	}
 };
 
@@ -56,14 +57,6 @@ const index = async (searcher: Searcher) => {
 		vscode.window.showInformationMessage('indexing complete');
 	}
 	catch (e) {
-		openInNewEditor(e);
+		vsutils.openInNewEditor(e);
 	}
 };
-
-async function openInNewEditor(content: string, language?: string) {
-    const document = await vscode.workspace.openTextDocument({
-        language,
-        content,
-    });
-    return await vscode.window.showTextDocument(document);
-}
