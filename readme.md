@@ -6,6 +6,13 @@ Lets you make your own zettelkasten! Inspired by https://zettelkasten.de/.
 
 # projects
 
+See each project dir for detailed docs. To build the whole lot:
+
+> ./build.all.sh
+
+This will build a vscode extension (vsix) in this directory, which
+you can install from vscode.
+
 ## cli
 
 Console app that does indexing and searching
@@ -14,15 +21,8 @@ Console app that does indexing and searching
 
 VS code extension
 
-Packaging the extension is a pain, see
-https://code.visualstudio.com/api/working-with-extensions/publishing-extension
-
-Maybe this will just work:
-
-> vsce package
 
 # todo
-- make 'build all' script at root dir
 - vscode
     - remove env var
     - remove 'get current dir' command
