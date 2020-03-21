@@ -5,33 +5,40 @@ import { newCliSearcher } from './search';
 export function activate(context: vscode.ExtensionContext) {
 	const searcher = newCliSearcher(path.join(extensionDir()!, 'out/note_searcher.jar'));
 
-	let search = vscode.commands.registerCommand('extension.search', () => {
-		vscode.window.showInputBox({
+	let search = vscode.commands.registerCommand('extension.search', async () => {
+		const input = await vscode.window.showInputBox({
 			prompt: "Search for documents"
-		}).then(input => {
-			if (input) {
-				searcher.search(input)
-					.then(result => openInNewEditor(result))
-					.catch(reason => openInNewEditor(reason));
-			}
 		});
+		if (!input) {
+			return;
+		}
+		try {
+			const result = await searcher.search(input);
+			openInNewEditor(result);
+		}
+		catch (e) {
+			openInNewEditor(e);
+		}
 	});
 	context.subscriptions.push(search);
 
-	let index = vscode.commands.registerCommand('extension.index', () => {
+	let index = vscode.commands.registerCommand('extension.index', async () => {
 		const folders = vscode.workspace.workspaceFolders;
-		if (folders) {
-			vscode.window.showInformationMessage('indexing current folder...');
-			searcher.index(folders[0].uri.fsPath)
-				.then(() => {
-					vscode.window.showInformationMessage('indexing complete');
-				})
-				.catch(reason => {
-					openInNewEditor(reason);
-				});
-		} else {
+
+		if (!folders) {
 			vscode.window.showErrorMessage(
 				'open a folder in vscode for indexing to work');
+			return;
+		}
+
+		vscode.window.showInformationMessage('indexing current folder...');
+
+		try {
+			await searcher.index(folders[0].uri.fsPath);
+			vscode.window.showInformationMessage('indexing complete');
+		}
+		catch (e) {
+			openInNewEditor(e);
 		}
 	});
 	context.subscriptions.push(index);
