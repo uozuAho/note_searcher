@@ -29,4 +29,5 @@ VS code extension
         - bundle jar with extension *done*
     - show last entered query on search
     - message on index start/complete
+    - e2e tests
     - publish extension?
