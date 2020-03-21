@@ -8,14 +8,13 @@ export function activate(context: vscode.ExtensionContext) {
 	let search = vscode.commands.registerCommand('extension.search', () => {
 		vscode.window.showInputBox({
 			prompt: "Search for documents"
-		})
-			.then(input => {
-				if (input) {
-					searcher.search(input)
-						.then(result => openInNewEditor(result))
-						.catch(reason => openInNewEditor(reason));
-				}
-			});
+		}).then(input => {
+			if (input) {
+				searcher.search(input)
+					.then(result => openInNewEditor(result))
+					.catch(reason => openInNewEditor(reason));
+			}
+		});
 	});
 	context.subscriptions.push(search);
 
@@ -24,11 +23,10 @@ export function activate(context: vscode.ExtensionContext) {
 		if (folders) {
 			vscode.window.showInformationMessage('indexing current folder...');
 			searcher.index(folders[0].uri.fsPath)
-				.then(msg => {
-					openInNewEditor('indexing complete. msg: ' + msg);
+				.then(() => {
+					vscode.window.showInformationMessage('indexing complete');
 				})
 				.catch(reason => {
-					console.log(reason);
 					openInNewEditor(reason);
 				});
 		} else {

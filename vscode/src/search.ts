@@ -16,16 +16,11 @@ class CliSearcher implements Searcher {
     public constructor(private jarPath: string) {}
 
     public search = async (query: string) => {
-        const dir = await getCurrentDir();
-        // const results = await this.runCliSearch(query);
-        // return `current dir: ${dir}\n` + results;
-        return dir;
+        return await this.runCliSearch(query);
     };
 
     public index = async (indexDir: string) => {
-        const dir = await getCurrentDir();
-        const indexOutput = await this.runCliIndex(indexDir);
-        return `current dir: ${dir}\n` + indexOutput;
+        return await this.runCliIndex(indexDir);
     };
 
     private runCliSearch = (query: string) => {
@@ -56,12 +51,3 @@ class CliSearcher implements Searcher {
 
     private runJarCmd = (args: string) => `java -jar ${this.jarPath} ${args}`;
 }
-
-const getCurrentDir = () => new Promise<string>((resolve, reject) => {
-    child_process.exec('cd', (err, stdout) => {
-        if (err) {
-            reject(err);
-        }
-        resolve(stdout);
-    });
-});

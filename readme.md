@@ -24,10 +24,6 @@ VS code extension
 
 # todo
 - vscode
-    - remove 'get current dir' command
-    - package extension
-        - bundle jar with extension *done*
+    - search results to output window for clickable links
     - show last entered query on search
-    - message on index start/complete
     - e2e tests
-    - publish extension?
