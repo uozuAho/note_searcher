@@ -22,7 +22,11 @@ Maybe this will just work:
 > vsce package
 
 # todo
+- make 'build all' script at root dir
 - vscode
+    - remove env var
+    - remove 'get current dir' command
+    - don't build jar every package build
     - package extension
         - bundle jar with extension *done*
         - make bundled jar usable during dev and by installed extension
