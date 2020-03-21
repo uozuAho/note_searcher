@@ -24,12 +24,9 @@ VS code extension
 
 # todo
 - vscode
-    - remove env var
     - remove 'get current dir' command
-    - don't build jar every package build
     - package extension
         - bundle jar with extension *done*
-        - make bundled jar usable during dev and by installed extension
     - show last entered query on search
     - message on index start/complete
     - publish extension?

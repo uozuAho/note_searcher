@@ -16,10 +16,7 @@
 			"outFiles": [
 				"${workspaceFolder}/out/**/*.js"
 			],
-			"preLaunchTask": "${defaultBuildTask}",
-			"env": {
-				"NOTE_SEARCHER_DEV": "true"
-			}
+			"preLaunchTask": "${defaultBuildTask}"
 		},
 		{
 			"name": "Extension Tests",

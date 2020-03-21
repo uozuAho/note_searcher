@@ -54,14 +54,8 @@ class CliSearcher implements Searcher {
         });
     };
 
-    // private jar = () => process.env.NOTE_SEARCHER_DEV
-    //     ? 'C:\\woz\\note_searcher2\\cli\\dist\\note_searcher.jar'
-    //     : 'note_searcher.jar';
-
     private runJarCmd = (args: string) => `java -jar ${this.jarPath} ${args}`;
 }
-
-// const jar = () => 'C:\\woz\\note_searcher2\\cli\\dist\\note_searcher.jar';
 
 const getCurrentDir = () => new Promise<string>((resolve, reject) => {
     child_process.exec('cd', (err, stdout) => {
