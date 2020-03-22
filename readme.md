@@ -27,7 +27,7 @@ Console app that does indexing and searching
 # todo
 - view
     - open doc on click
-    - connect search results
+    - remove output to output channel
     - activity bar icon
     - remove expand icon from search results
 - bug: quoted search only searches first word

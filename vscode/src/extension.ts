@@ -2,7 +2,7 @@ import * as path from 'path';
 import * as vscode from 'vscode';
 import { newCliSearcher, Searcher } from './search';
 import * as vsutils from './vscode.utils';
-import { DummyTreeData } from './dummyTreeData';
+import { SearchResultTree } from './searchResultTree';
 
 export function activate(context: vscode.ExtensionContext) {
 	const searcher = newCliSearcher(path.join(extensionDir()!, 'out/note_searcher.jar'));
@@ -39,7 +39,7 @@ const search = async (searcher: Searcher) => {
 		const results = await searcher.search(input);
 		vsutils.openInNewOutputChannel(results.map(r => r.fsPath).join('\n'));
 		vscode.window.createTreeView('noteSearcher-results', {
-			treeDataProvider: new DummyTreeData(folder)
+			treeDataProvider: new SearchResultTree(results)
 		});
 	}
 	catch (e) {
