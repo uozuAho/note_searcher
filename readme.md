@@ -3,6 +3,8 @@
 Full-text and tag-based searching of arbitrary directories and files.
 Lets you make your own zettelkasten! Inspired by https://zettelkasten.de/.
 
+Runs in VS code as an extension.
+
 
 # projects
 
@@ -13,17 +15,24 @@ See each project dir for detailed docs. To build the whole lot:
 This will build a vscode extension (vsix) in this directory, which
 you can install from vscode.
 
-## cli
-
-Console app that does indexing and searching
-
 ## vscode
 
 VS code extension
 
+## cli
+
+Console app that does indexing and searching
+
 
 # todo
-- vscode
-    - support spaces in filenames in search results (for clickable links)
-    - show last entered query on search
-    - e2e tests
+- view
+    - open doc on click
+    - connect search results
+    - activity bar icon
+    - remove expand icon from search results
+- bug: quoted search only searches first word
+- extract keywords & tags from current doc, show related docs
+- re-index on save
+- search results are _all_ clickable
+- show last entered query on search
+- e2e tests

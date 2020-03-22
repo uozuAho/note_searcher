@@ -16,10 +16,28 @@
 	],
 	"activationEvents": [
 		"onCommand:extension.search",
-		"onCommand:extension.index"
+		"onCommand:extension.index",
+		"onView:noteSearcher"
 	],
 	"main": "./out/extension.js",
 	"contributes": {
+		"viewsContainers": {
+			"activitybar": [
+				{
+					"id": "noteSearcher",
+					"title": "Note Searcher",
+					"icon": "star"
+				}
+			]
+		},
+		"views": {
+			"noteSearcher": [
+				{
+					"id": "noteSearcher-results",
+					"name": "Results"
+				}
+			]
+		},
 		"commands": [
 			{
 				"command": "extension.search",
