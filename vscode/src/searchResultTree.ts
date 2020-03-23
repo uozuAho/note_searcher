@@ -16,7 +16,9 @@ export class SearchResultTree implements vscode.TreeDataProvider<SearchResult> {
 }
 
 class SearchResult extends vscode.TreeItem {
-  constructor(uri: vscode.Uri) {
-    super(uri.fsPath, vscode.TreeItemCollapsibleState.Collapsed);
+  constructor(public uri: vscode.Uri) {
+    super(uri, vscode.TreeItemCollapsibleState.None);
   }
+
+  command = { command: 'searchResults.openFile', title: "Open File", arguments: [this.uri] };
 }

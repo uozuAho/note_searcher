@@ -18,6 +18,10 @@ export function activate(context: vscode.ExtensionContext) {
 		async () => await index(searcher)
 	);
 	context.subscriptions.push(indexCmd);
+
+	context.subscriptions.push(
+		vscode.commands.registerCommand(
+			'searchResults.openFile', file => vscode.window.showTextDocument(file)));
 }
 
 export function deactivate() {}
@@ -37,7 +41,6 @@ const search = async (searcher: Searcher) => {
 		const folder = rootPath();
 		if (!folder) { throw new Error('no!'); }
 		const results = await searcher.search(input);
-		vsutils.openInNewOutputChannel(results.map(r => r.fsPath).join('\n'));
 		vscode.window.createTreeView('noteSearcher-results', {
 			treeDataProvider: new SearchResultTree(results)
 		});
