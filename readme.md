@@ -28,9 +28,11 @@ Console app that does indexing and searching
 - activity bar icon
 - bug: quoted search only searches first word
 - bug: query '#word' gives same results as 'word'
-- search box in results view (not supported in tree view... use webview?)
+- auto-index
+    - on save
+    - on open
 - suggest tags
+- search box in results view (not supported in tree view... use webview?)
 - extract keywords & tags from current doc, show related docs
 - list all tags
-- re-index on save
 - e2e tests
