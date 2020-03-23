@@ -7,17 +7,13 @@ import { SearchResultTree } from './searchResultTree';
 export function activate(context: vscode.ExtensionContext) {
 	const searcher = newCliSearcher(path.join(extensionDir()!, 'out/note_searcher.jar'));
 
-	let searchCmd = vscode.commands.registerCommand(
-		'extension.search',
-		async () => await search(searcher)
-	);
-	context.subscriptions.push(searchCmd);
+	context.subscriptions.push(
+		vscode.commands.registerCommand(
+			'extension.search', async () => await search(searcher)));
 
-	let indexCmd = vscode.commands.registerCommand(
-		'extension.index',
-		async () => await index(searcher)
-	);
-	context.subscriptions.push(indexCmd);
+	context.subscriptions.push(
+		vscode.commands.registerCommand(
+			'extension.index', async () => await index(searcher)));
 
 	context.subscriptions.push(
 		vscode.commands.registerCommand(
@@ -30,13 +26,17 @@ const extensionDir = () => {
 	return vscode.extensions.getExtension('uozuaho.note-searcher')?.extensionPath;
 };
 
+let lastQuery: string;
+
 const search = async (searcher: Searcher) => {
 	const input = await vscode.window.showInputBox({
+		value: lastQuery,
 		prompt: "Search for documents"
 	});
 	if (!input) {
 		return;
 	}
+	lastQuery = input;
 	try {
 		const folder = rootPath();
 		if (!folder) { throw new Error('no!'); }

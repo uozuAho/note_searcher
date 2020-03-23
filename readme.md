@@ -25,14 +25,12 @@ Console app that does indexing and searching
 
 
 # todo
-- view
-    - open doc on click
-    - remove output to output channel
-    - activity bar icon
-    - remove expand icon from search results
+- activity bar icon
 - bug: quoted search only searches first word
+- bug: query '#word' gives same results as 'word'
+- search box in results view (not supported in tree view... use webview?)
+- suggest tags
 - extract keywords & tags from current doc, show related docs
+- list all tags
 - re-index on save
-- search results are _all_ clickable
-- show last entered query on search
 - e2e tests
