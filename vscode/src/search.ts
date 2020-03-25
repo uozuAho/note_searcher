@@ -29,30 +29,30 @@ class CliSearcher implements Searcher {
     };
 
     private runCliSearch = (query: string) => {
-        const cmd = this.runJarCmd(`search "${query}"`);
-
         return new Promise<string>((resolve, reject) => {
-            child_process.exec(cmd, (err, stdout, stderr) => {
-                if (err) {
-                    reject(err);
-                }
-                resolve(stdout ? stdout : stderr);
-            });
+            // todo: make this async
+            const result = child_process.spawnSync('java',
+                ['-jar', this.jarPath, 'search', query]);
+            if (result.error) {
+                reject(result.error);
+            }
+            const stdout = new String(result.stdout).toString();
+            const stderr = new String(result.stderr).toString();
+            resolve(stdout ? stdout : stderr);
         });
     };
 
     private runCliIndex = (dir: string) => {
-        const cmd = this.runJarCmd(`index ${dir}`);
-
         return new Promise<string>((resolve, reject) => {
-            child_process.exec(cmd, (err, stdout, stderr) => {
-                if (err) {
-                    reject(err);
-                }
-                resolve(stdout ? stdout : stderr);
-            });
+            // todo: make this async
+            const result = child_process.spawnSync('java',
+                ['-jar', this.jarPath, 'index', dir]);
+            if (result.error) {
+                reject(result.error);
+            }
+            const stdout = new String(result.stdout).toString();
+            const stderr = new String(result.stderr).toString();
+            resolve(stdout ? stdout : stderr);
         });
     };
-
-    private runJarCmd = (args: string) => `java -jar ${this.jarPath} ${args}`;
 }
