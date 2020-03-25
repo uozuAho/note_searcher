@@ -24,7 +24,7 @@ This builds the index next to the distributable jar.
 
 To run a search:
 
-> ./note_searcher.sh search "your search query"  # quotes are required for multiple words
+> ./note_searcher.sh search 'your search query'  # quotes are required for multiple words
 
 Search queries are expected to be in lucene classic parser syntax, see:
 https://lucene.apache.org/core/8_0_0/queryparser/org/apache/lucene/queryparser/classic/package-summary.html#package.description

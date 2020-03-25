@@ -10,14 +10,14 @@ import java.nio.file.Path;
 public class Main {
     public static void main(String[] args) {
         try {
-            var command = parseCommand(args);
+            var command = CliParser.parseCommand(args);
 
             switch (command) {
                 case index:
-                    runIndex(args);
+                    runIndex(CliParser.parseDirectoryToIndex(args));
                     break;
                 case search:
-                    runSearch(args);
+                    runSearch(CliParser.parseSearchQuery(args));
                     break;
             }
         }
@@ -26,40 +26,16 @@ public class Main {
         }
     }
 
-    enum Command {
-        search,
-        index
-    }
-
-    private static Command parseCommand(String[] args) {
-        if (args.length == 0) throw new IllegalStateException("need at least one arg");
-        if (args[0].trim().toLowerCase().equals("search")) return Command.search;
-        if (args[0].trim().toLowerCase().equals("index")) return Command.index;
-        throw new IllegalStateException("unknown command: " + args[0]);
-    }
-
-    private static void runIndex(String[] args) throws URISyntaxException, IOException {
+    private static void runIndex(Path dir) throws URISyntaxException, IOException {
         var indexPath = Paths.indexPath();
         var indexer = new Indexer(indexPath, EnglishWithTagsAnalyzer.create());
-        var dirToIndex = getDirectoryToIndex(args);
-        indexer.indexDirectory(dirToIndex, false);
+        indexer.indexDirectory(dir, false);
     }
 
-    private static void runSearch(String[] args) throws IOException, ParseException, URISyntaxException {
-        var queryString = getQueryText(args);
+    private static void runSearch(String query) throws IOException, ParseException, URISyntaxException {
         var searcher = new Searcher(Paths.indexPath(), EnglishWithTagsAnalyzer.create());
-        var results = searcher.search(queryString);
+        var results = searcher.search(query);
 
-        Searcher.printSearchResults(queryString, results);
-    }
-
-    private static String getQueryText(String[] args) {
-        if (args.length <= 1) throw new IllegalStateException("gimme a search phrase");
-        return args[1];
-    }
-
-    private static Path getDirectoryToIndex(String[] args) {
-        if (args.length <= 1) throw new IllegalStateException("gimme a directory to index");
-        return java.nio.file.Paths.get(args[1]);
+        Searcher.printSearchResults(query, results);
     }
 }
