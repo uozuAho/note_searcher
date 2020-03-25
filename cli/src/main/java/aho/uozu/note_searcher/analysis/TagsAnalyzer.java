@@ -28,9 +28,9 @@ public class TagsAnalyzer extends Analyzer {
         var stream = analyzer.tokenStream("field", new StringReader(text));
 
         // get the CharTermAttribute from the TokenStream...what???
-        var termAtt = stream.addAttribute(CharTermAttribute.class);
 
-        try {
+        try (stream) {
+            var termAtt = stream.addAttribute(CharTermAttribute.class);
             stream.reset();
 
             while (stream.incrementToken()) {
@@ -38,8 +38,6 @@ public class TagsAnalyzer extends Analyzer {
             }
 
             stream.end();
-        } finally {
-            stream.close();
         }
     }
 

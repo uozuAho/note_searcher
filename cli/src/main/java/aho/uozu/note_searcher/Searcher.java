@@ -1,10 +1,12 @@
 package aho.uozu.note_searcher;
 
+import aho.uozu.note_searcher.analysis.EnglishWithTagsAnalyzer;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.queryparser.classic.ParseException;
 import org.apache.lucene.queryparser.classic.QueryParser;
 import org.apache.lucene.search.IndexSearcher;
+import org.apache.lucene.search.Query;
 import org.apache.lucene.store.FSDirectory;
 
 import java.io.IOException;
@@ -14,12 +16,17 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 class Searcher {
-    private final Path _indexPath;
+    private final IndexSearcher _indexSearcher;
     private final Analyzer _analyzer;
 
-    public Searcher(Path indexPath, Analyzer analyzer) {
-        this._indexPath = indexPath;
-        this._analyzer = analyzer;
+    public Searcher(IndexSearcher searcher, Analyzer analyzer) {
+        _indexSearcher = searcher;
+        _analyzer = analyzer;
+    }
+
+    public static Searcher fromPath(Path indexPath, Analyzer analyzer) throws IOException {
+        var indexSearcher = fsIndexSearcher(indexPath);
+        return new Searcher(indexSearcher, analyzer);
     }
 
     public List<SearchResult> search(String queryString)
@@ -28,15 +35,12 @@ class Searcher {
         // todo: config for this
         final int searchResultLimit = 10;
 
-        var indexReader = DirectoryReader.open(FSDirectory.open(this._indexPath));
-        var searcher = new IndexSearcher(indexReader);
-        var queryParser = new QueryParser("contents", _analyzer);
+        var query = parseQuery(queryString);
 
-        var query = queryParser.parse(queryString);
-        var hits = searcher.search(query, searchResultLimit).scoreDocs;
+        var hits = _indexSearcher.search(query, searchResultLimit).scoreDocs;
 
         return Arrays.stream(hits)
-                .map(hit -> SearchResult.build(searcher, hit))
+                .map(hit -> SearchResult.build(_indexSearcher, hit))
                 .collect(Collectors.toList());
     }
 
@@ -50,5 +54,14 @@ class Searcher {
                 System.out.println(result.path);
             }
         }
+    }
+
+    private static IndexSearcher fsIndexSearcher(Path indexDir) throws IOException {
+        var indexReader = DirectoryReader.open(FSDirectory.open(indexDir));
+        return new IndexSearcher(indexReader);
+    }
+
+    private Query parseQuery(String queryText) throws ParseException {
+        return new QueryParser(EnglishWithTagsAnalyzer.CONTENT_FIELD, _analyzer).parse(queryText);
     }
 }

@@ -7,6 +7,7 @@ import org.apache.lucene.analysis.miscellaneous.PerFieldAnalyzerWrapper;
 import java.util.Map;
 
 public class EnglishWithTagsAnalyzer {
+    public static final String CONTENT_FIELD = "content";
     public static final String TAG_FIELD = "tag";
 
     public static Analyzer create() {

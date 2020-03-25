@@ -35,3 +35,6 @@ Console app that does indexing and searching
 - extract keywords & tags from current doc, show related docs
 - list all tags
 - e2e tests
+    - index and search using cli
+    - blocked for vscode extension: how to open folder before running tests?
+        - see extension tests for attempt

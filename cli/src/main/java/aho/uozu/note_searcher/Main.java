@@ -33,7 +33,7 @@ public class Main {
     }
 
     private static void runSearch(String query) throws IOException, ParseException, URISyntaxException {
-        var searcher = new Searcher(Paths.indexPath(), EnglishWithTagsAnalyzer.create());
+        var searcher = Searcher.fromPath(Paths.indexPath(), EnglishWithTagsAnalyzer.create());
         var results = searcher.search(query);
 
         Searcher.printSearchResults(query, results);

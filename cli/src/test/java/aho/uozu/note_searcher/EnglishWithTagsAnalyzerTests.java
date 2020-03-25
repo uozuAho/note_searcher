@@ -6,6 +6,7 @@ import org.apache.lucene.index.memory.MemoryIndex;
 import org.apache.lucene.queryparser.classic.ParseException;
 import org.apache.lucene.queryparser.classic.QueryParser;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -22,7 +23,7 @@ public class EnglishWithTagsAnalyzerTests {
                 "Demo Text, Including \"tags\" like #wow. Many dogs. Not a tag: # meat";
         _analyzer = EnglishWithTagsAnalyzer.create();
         _index = new MemoryIndex();
-        _index.addField("content", documentText, _analyzer);
+        _index.addField(EnglishWithTagsAnalyzer.CONTENT_FIELD, documentText, _analyzer);
         _index.addField(EnglishWithTagsAnalyzer.TAG_FIELD, documentText, _analyzer);
     }
 
@@ -44,22 +45,29 @@ public class EnglishWithTagsAnalyzerTests {
 
     @Test
     public void mustContainTag() throws ParseException {
-        // todo: how to index tags without the hash?
         float score = search("+tag:#wow");
 
         assertThat(score, greaterThan(0f));
     }
 
+    // todo: make this work
     @Test
-    public void scoresZeroWhenMustContainNonExistentTag() throws ParseException {
-        // todo: how to index tags without the hash?
+    @Disabled("todo: make this work, better than above")
+    public void mustContainTagBetter() throws ParseException {
+        float score = search("+tag:wow");
+
+        assertThat(score, greaterThan(0f));
+    }
+
+    @Test
+    public void mustNotContainTag() throws ParseException {
         float score = search("+tag:#jabba");
 
         assertThat(score, equalTo(0f));
     }
 
     private float search(String query) throws ParseException {
-        QueryParser parser = new QueryParser("content", _analyzer);
+        QueryParser parser = new QueryParser(EnglishWithTagsAnalyzer.CONTENT_FIELD, _analyzer);
         return _index.search(parser.parse(query));
     }
 }

@@ -22,7 +22,7 @@ class SearchResult {
         if (path != null) {
             return new SearchResult(path);
         } else {
-            throw new IllegalStateException("doc without a path??? how does this work?");
+            return new SearchResult("not from a file");
         }
     }
 }
