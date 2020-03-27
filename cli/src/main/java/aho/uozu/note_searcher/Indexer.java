@@ -90,7 +90,7 @@ class Indexer {
 
         doc.add(new StringField("path", file.toString(), Field.Store.YES));
         doc.add(new LongPoint("modified", lastModified));
-        doc.add(new TextField("contents", contents, Field.Store.YES));
+        doc.add(new TextField(EnglishWithTagsAnalyzer.CONTENT_FIELD, contents, Field.Store.YES));
         doc.add(new TextField(EnglishWithTagsAnalyzer.TAG_FIELD, contents, Field.Store.NO));
 
         if (writer.getConfig().getOpenMode() == IndexWriterConfig.OpenMode.CREATE) {

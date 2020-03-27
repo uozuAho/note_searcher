@@ -25,13 +25,13 @@ Console app that does indexing and searching
 
 
 # todo
-- bug: query '#word' gives same results as 'word'
+- extract keywords & tags from current doc, show related docs
 - auto-index
     - on save
     - on open
 - suggest tags
 - show view container on search complete
 - search box in results view (not supported in tree view... use webview?)
-- extract keywords & tags from current doc, show related docs
-- list all tags
 - e2e tests
+    - blocked for vscode extension: how to open folder before running tests?
+        - see extension tests for attempt
