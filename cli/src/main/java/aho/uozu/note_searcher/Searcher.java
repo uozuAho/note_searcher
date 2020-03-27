@@ -56,12 +56,17 @@ class Searcher {
         }
     }
 
+    public static String replaceTagShortcuts(String query) {
+        return query.replaceAll("(\\s|^)(#.+?)\\b", "$1tag:$2");
+    }
+
     private static IndexSearcher fsIndexSearcher(Path indexDir) throws IOException {
         var indexReader = DirectoryReader.open(FSDirectory.open(indexDir));
         return new IndexSearcher(indexReader);
     }
 
     private Query parseQuery(String queryText) throws ParseException {
+        queryText = replaceTagShortcuts(queryText);
         return new QueryParser(EnglishWithTagsAnalyzer.CONTENT_FIELD, _analyzer).parse(queryText);
     }
 }
