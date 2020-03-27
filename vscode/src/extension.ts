@@ -3,6 +3,7 @@ import * as vscode from 'vscode';
 import { newCliSearcher, Searcher } from './search';
 import * as vsutils from './vscode.utils';
 import { SearchResultTree } from './searchResultTree';
+import { extractKeywords } from './keywordExtractor';
 
 export function activate(context: vscode.ExtensionContext) {
 	const searcher = newCliSearcher(path.join(extensionDir()!, 'out/note_searcher.jar'));
@@ -44,6 +45,11 @@ const search = async (searcher: Searcher) => {
 		vscode.window.createTreeView('noteSearcher-results', {
 			treeDataProvider: new SearchResultTree(results)
 		});
+		const text = vscode.window.activeTextEditor?.document.getText();
+		if (text) {
+			const keywords = await extractKeywords(text);
+			console.log(keywords);
+		}
 	}
 	catch (e) {
 		vsutils.openInNewEditor(e);
