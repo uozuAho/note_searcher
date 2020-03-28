@@ -26,8 +26,7 @@ Console app that does indexing and searching
 
 # todo
 - show related docs to current doc
-    - exclude current doc
-- extract tags from current doc, show related docs
+    - tags use tag search
 - bug: ext does not activate on open note searcher
     - workaround: do a search or index to activate
 - auto-index

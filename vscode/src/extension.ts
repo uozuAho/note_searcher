@@ -102,7 +102,9 @@ const updateRelatedFiles = async (doc: vscode.TextDocument, searcher: Searcher) 
   }
   const keywords = await extractKeywords(text);
   const query = keywords.join(' ');
-  const results = await searcher.search(query);
+  const results = await searcher
+    .search(query)
+    .then(results => results.filter(r => r.fsPath !== doc.fileName));
   vscode.window.createTreeView('noteSearcher-related', {
     treeDataProvider: new SearchResultTree(results)
   });
