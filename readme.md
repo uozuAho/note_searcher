@@ -25,7 +25,11 @@ Console app that does indexing and searching
 
 
 # todo
-- extract keywords & tags from current doc, show related docs
+- show related docs to current doc
+    - on doc changed
+    - on editor changed
+    - exclude current doc
+- extract tags from current doc, show related docs
 - lint fix
 - auto-index
     - on save

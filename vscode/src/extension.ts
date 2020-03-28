@@ -19,6 +19,12 @@ export function activate(context: vscode.ExtensionContext) {
 	context.subscriptions.push(
 		vscode.commands.registerCommand(
 			'searchResults.openFile', file => vscode.window.showTextDocument(file)));
+
+	// onDidChangeTextDocument:
+	// todo: (after delay) get keywords, search, show in new view
+
+	// onDidChangeActiveTextEditor:
+	// todo: same as above
 }
 
 export function deactivate() {}
@@ -48,7 +54,12 @@ const search = async (searcher: Searcher) => {
 		const text = vscode.window.activeTextEditor?.document.getText();
 		if (text) {
 			const keywords = await extractKeywords(text);
-			console.log(keywords);
+			const query = keywords.join(' ');
+			console.log(`keyword query: ${query}`);
+			const results = await searcher.search(query);
+			vscode.window.createTreeView('noteSearcher-related', {
+				treeDataProvider: new SearchResultTree(results)
+			});
 		}
 	}
 	catch (e) {

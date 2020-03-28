@@ -34,7 +34,11 @@
 			"noteSearcher": [
 				{
 					"id": "noteSearcher-results",
-					"name": "Results"
+					"name": "Search results"
+				},
+				{
+					"id": "noteSearcher-related",
+					"name": "Related files"
 				}
 			]
 		},
