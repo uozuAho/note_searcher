@@ -11,4 +11,14 @@ suite('extractTags', () => {
     const tags = extractTags('meat pie #change and #stuff');
     assert.deepEqual(tags, ['#change', '#stuff']);
   });
+
+  test('extracts tag at start', () => {
+    const tags = extractTags('#blub nub nub');
+    assert.deepEqual(tags, ['#blub']);
+  });
+
+  test('does not extract non-tag', () => {
+    const tags = extractTags('this is no#t a tag');
+    assert.deepEqual(tags, []);
+  });
 });

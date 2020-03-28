@@ -5,6 +5,7 @@ set -eu
 echo "building jar..."
 pushd cli
 ./build.dist.sh
+mkdir -p ../vscode/out
 cp dist/note_searcher.jar ../vscode/out
 popd
 
