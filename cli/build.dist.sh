@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -eu
+
 ./gradlew shadowJar
 
 mkdir -p dist

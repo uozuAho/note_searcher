@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -eu
+
 echo "building jar..."
 pushd cli
 ./build.dist.sh
