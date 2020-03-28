@@ -25,10 +25,25 @@ Console app that does indexing and searching
 
 
 # todo
-- extract keywords & tags from current doc, show related docs
+- bug: ext does not activate on open note searcher
+    - workaround: do a search or index to activate
+- bug: '+' operator not working as expected:
+    - search for #work: no results
+    - search for book: many results
+    - search for +#work book:
+        - expected: no results
+        - actual:   many results
 - auto-index
-    - on save
-    - on open
+    - on save file
+    - on open directory
+- refactor:
+    - vscode facade
+    - extension class that uses vscode facade
+    - now write tests!
+- show related docs on changing active doc?
+    - this will obstruct browsing docs related to
+      the original doc, maybe don't implement this
+    - see onDidChangeActiveTextEditor
 - suggest tags
 - show view container on search complete
 - search box in results view (not supported in tree view... use webview?)
