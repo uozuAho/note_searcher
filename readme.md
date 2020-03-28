@@ -25,8 +25,6 @@ Console app that does indexing and searching
 
 
 # todo
-- show related docs to current doc
-    - tags use tag search
 - bug: ext does not activate on open note searcher
     - workaround: do a search or index to activate
 - bug: '+' operator not working as expected:

@@ -4,6 +4,8 @@ import { newCliSearcher, Searcher } from './search';
 import * as vsutils from './vscode.utils';
 import { SearchResultTree } from './searchResultTree';
 import { extractKeywords } from './keywordExtractor';
+import { extractTags } from './tagExtractor';
+import { createTagAndKeywordQuery } from './createTagAndKeywordQuery';
 
 export function activate(context: vscode.ExtensionContext) {
   const searcher = newCliSearcher(path.join(extensionDir()!, 'out/note_searcher.jar'));
@@ -100,8 +102,9 @@ const updateRelatedFiles = async (doc: vscode.TextDocument, searcher: Searcher) 
   if (text.length === 0) {
     return;
   }
+  const tags = extractTags(text);
   const keywords = await extractKeywords(text);
-  const query = keywords.join(' ');
+  const query = createTagAndKeywordQuery(tags, keywords);
   const results = await searcher
     .search(query)
     .then(results => results.filter(r => r.fsPath !== doc.fileName));
