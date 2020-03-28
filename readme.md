@@ -30,7 +30,6 @@ Console app that does indexing and searching
     - on editor changed
     - exclude current doc
 - extract tags from current doc, show related docs
-- lint fix
 - auto-index
     - on save
     - on open

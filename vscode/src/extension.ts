@@ -20,11 +20,22 @@ export function activate(context: vscode.ExtensionContext) {
     vscode.commands.registerCommand(
       'searchResults.openFile', file => vscode.window.showTextDocument(file)));
 
-  // onDidChangeTextDocument:
-  // todo: (after delay) get keywords, search, show in new view
+  context.subscriptions.push(
+    vscode.workspace.onDidChangeTextDocument(e => {
+      if (e.document === vscode.window.activeTextEditor?.document) {
+        console.log('document contents changed!');
+        handleDocumentContentsChanged(e.document, searcher);
+      }
+    })
+  );
 
-  // onDidChangeActiveTextEditor:
-  // todo: same as above
+  context.subscriptions.push(
+    vscode.window.onDidChangeActiveTextEditor(e => {
+      if (!e) { return; }
+      console.log('active editor changed!');
+      // todo: (after delay) get keywords, search, show in new view
+    })
+  );
 }
 
 export function deactivate() {}
@@ -51,16 +62,6 @@ const search = async (searcher: Searcher) => {
     vscode.window.createTreeView('noteSearcher-results', {
       treeDataProvider: new SearchResultTree(results)
     });
-    const text = vscode.window.activeTextEditor?.document.getText();
-    if (text) {
-      const keywords = await extractKeywords(text);
-      const query = keywords.join(' ');
-      console.log(`keyword query: ${query}`);
-      const results = await searcher.search(query);
-      vscode.window.createTreeView('noteSearcher-related', {
-        treeDataProvider: new SearchResultTree(results)
-      });
-    }
   }
   catch (e) {
     vsutils.openInNewEditor(e);
@@ -85,6 +86,32 @@ const index = async (searcher: Searcher) => {
   catch (e) {
     vsutils.openInNewEditor(e);
   }
+};
+
+const RELOAD_DELAY_MS = 500;
+let lastReload = Date.now();
+
+const handleDocumentContentsChanged = async (
+  doc: vscode.TextDocument, searcher: Searcher) =>
+{
+  const now = Date.now();
+  if (now - lastReload < RELOAD_DELAY_MS) { return; }
+  // todo: this reloads every 500ms on constant doc changes.
+  //       Instead, on doc changes, schedule a search that only
+  //       occurs if the last doc change was > timeout
+  console.log(`updating related docs`);
+  lastReload = now;
+  const text = doc.getText();
+  if (text.length === 0) {
+    return;
+  }
+  const keywords = await extractKeywords(text);
+  const query = keywords.join(' ');
+  // console.log(`keyword query: ${query}`);
+  const results = await searcher.search(query);
+  vscode.window.createTreeView('noteSearcher-related', {
+    treeDataProvider: new SearchResultTree(results)
+  });
 };
 
 const rootPath = (): string | null =>
