@@ -1,9 +1,14 @@
 import * as assert from 'assert';
 import { extractTags } from '../../tagExtractor';
 
-suite('tag extractor', () => {
-  test('Sample test', () => {
+suite('extractTags', () => {
+  test('extracts single tag', () => {
     const tags = extractTags('meat pie #change');
-    assert.equal(tags, ['#change']);
+    assert.deepEqual(tags, ['#change']);
+  });
+
+  test('extracts multiple tags', () => {
+    const tags = extractTags('meat pie #change and #stuff');
+    assert.deepEqual(tags, ['#change', '#stuff']);
   });
 });

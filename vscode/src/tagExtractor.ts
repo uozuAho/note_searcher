@@ -1,10 +1,11 @@
 export function extractTags(text: string): string[] {
-  // todo: use RegExp.prototype.exec() to get capture group 1
-  const matches = text.match(/(\s|^)(#.+?)\b/gm);
-
-  if (!matches) { return []; }
-
-  console.log(matches);
-
+  const matches = [];
+  let currentMatch;
+  // this is the dumbest thing ever written. Go javascript!
+  // string.matchAll looks nicer, not available yet tho
+  const regex = RegExp(/(\s|^)(#.+?)\b/gm);
+  while ((currentMatch = regex.exec(text)) !== null) {
+    matches.push(currentMatch[2].toString());
+  }
   return matches;
 }
