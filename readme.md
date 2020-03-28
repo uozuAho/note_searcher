@@ -29,6 +29,12 @@ Console app that does indexing and searching
     - tags use tag search
 - bug: ext does not activate on open note searcher
     - workaround: do a search or index to activate
+- bug: '+' operator not working as expected:
+    - search for #work: no results
+    - search for book: many results
+    - search for +#work book:
+        - expected: no results
+        - actual:   many results
 - auto-index
     - on save file
     - on open directory
