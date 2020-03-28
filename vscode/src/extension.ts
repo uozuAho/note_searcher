@@ -6,88 +6,88 @@ import { SearchResultTree } from './searchResultTree';
 import { extractKeywords } from './keywordExtractor';
 
 export function activate(context: vscode.ExtensionContext) {
-	const searcher = newCliSearcher(path.join(extensionDir()!, 'out/note_searcher.jar'));
+  const searcher = newCliSearcher(path.join(extensionDir()!, 'out/note_searcher.jar'));
 
-	context.subscriptions.push(
-		vscode.commands.registerCommand(
-			'extension.search', async () => await search(searcher)));
+  context.subscriptions.push(
+    vscode.commands.registerCommand(
+      'extension.search', async () => await search(searcher)));
 
-	context.subscriptions.push(
-		vscode.commands.registerCommand(
-			'extension.index', async () => await index(searcher)));
+  context.subscriptions.push(
+    vscode.commands.registerCommand(
+      'extension.index', async () => await index(searcher)));
 
-	context.subscriptions.push(
-		vscode.commands.registerCommand(
-			'searchResults.openFile', file => vscode.window.showTextDocument(file)));
+  context.subscriptions.push(
+    vscode.commands.registerCommand(
+      'searchResults.openFile', file => vscode.window.showTextDocument(file)));
 
-	// onDidChangeTextDocument:
-	// todo: (after delay) get keywords, search, show in new view
+  // onDidChangeTextDocument:
+  // todo: (after delay) get keywords, search, show in new view
 
-	// onDidChangeActiveTextEditor:
-	// todo: same as above
+  // onDidChangeActiveTextEditor:
+  // todo: same as above
 }
 
 export function deactivate() {}
 
 const extensionDir = () => {
-	return vscode.extensions.getExtension('uozuaho.note-searcher')?.extensionPath;
+  return vscode.extensions.getExtension('uozuaho.note-searcher')?.extensionPath;
 };
 
 let lastQuery: string;
 
 const search = async (searcher: Searcher) => {
-	const input = await vscode.window.showInputBox({
-		value: lastQuery,
-		prompt: "Search for documents"
-	});
-	if (!input) {
-		return;
-	}
-	lastQuery = input;
-	try {
-		const folder = rootPath();
-		if (!folder) { throw new Error('no!'); }
-		const results = await searcher.search(input);
-		vscode.window.createTreeView('noteSearcher-results', {
-			treeDataProvider: new SearchResultTree(results)
-		});
-		const text = vscode.window.activeTextEditor?.document.getText();
-		if (text) {
-			const keywords = await extractKeywords(text);
-			const query = keywords.join(' ');
-			console.log(`keyword query: ${query}`);
-			const results = await searcher.search(query);
-			vscode.window.createTreeView('noteSearcher-related', {
-				treeDataProvider: new SearchResultTree(results)
-			});
-		}
-	}
-	catch (e) {
-		vsutils.openInNewEditor(e);
-	}
+  const input = await vscode.window.showInputBox({
+    value: lastQuery,
+    prompt: "Search for documents"
+  });
+  if (!input) {
+    return;
+  }
+  lastQuery = input;
+  try {
+    const folder = rootPath();
+    if (!folder) { throw new Error('no!'); }
+    const results = await searcher.search(input);
+    vscode.window.createTreeView('noteSearcher-results', {
+      treeDataProvider: new SearchResultTree(results)
+    });
+    const text = vscode.window.activeTextEditor?.document.getText();
+    if (text) {
+      const keywords = await extractKeywords(text);
+      const query = keywords.join(' ');
+      console.log(`keyword query: ${query}`);
+      const results = await searcher.search(query);
+      vscode.window.createTreeView('noteSearcher-related', {
+        treeDataProvider: new SearchResultTree(results)
+      });
+    }
+  }
+  catch (e) {
+    vsutils.openInNewEditor(e);
+  }
 };
 
 const index = async (searcher: Searcher) => {
-	const folder = rootPath();
+  const folder = rootPath();
 
-	if (!folder) {
-		vscode.window.showErrorMessage(
-			'open a folder in vscode for indexing to work');
-		return;
-	}
+  if (!folder) {
+    vscode.window.showErrorMessage(
+      'open a folder in vscode for indexing to work');
+    return;
+  }
 
-	vscode.window.showInformationMessage('indexing current folder...');
+  vscode.window.showInformationMessage('indexing current folder...');
 
-	try {
-		await searcher.index(folder);
-		vscode.window.showInformationMessage('indexing complete');
-	}
-	catch (e) {
-		vsutils.openInNewEditor(e);
-	}
+  try {
+    await searcher.index(folder);
+    vscode.window.showInformationMessage('indexing complete');
+  }
+  catch (e) {
+    vsutils.openInNewEditor(e);
+  }
 };
 
 const rootPath = (): string | null =>
-	vscode.workspace.workspaceFolders
-	? vscode.workspace.workspaceFolders[0].uri.fsPath
-	: null;
+  vscode.workspace.workspaceFolders
+    ? vscode.workspace.workspaceFolders[0].uri.fsPath
+    : null;
