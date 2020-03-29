@@ -68,22 +68,24 @@
 		"compile": "tsc -p ./",
 		"lint": "eslint src --ext ts",
 		"watch": "tsc -watch -p ./",
-		"pretest": "npm run compile && npm run lint",
-		"test": "node ./out/test/runTest.js"
+		"pretest": "npm run lint",
+		"vstest": "node ./out/test/runTest.js",
+		"test": "jest"
 	},
 	"devDependencies": {
 		"@types/glob": "^7.1.1",
-		"@types/mocha": "^7.0.1",
+		"@types/jest": "^25.1.4",
 		"@types/node": "^12.11.7",
 		"@types/vscode": "^1.43.0",
 		"@typescript-eslint/eslint-plugin": "^2.18.0",
 		"@typescript-eslint/parser": "^2.18.0",
 		"eslint": "^6.8.0",
 		"glob": "^7.1.6",
-		"mocha": "^7.0.1",
+		"jest": "^25.2.3",
 		"retext": "^7.0.1",
 		"retext-keywords": "^6.0.0",
 		"retext-pos": "^3.0.0",
+		"ts-jest": "^25.2.1",
 		"typescript": "^3.7.5",
 		"vscode-test": "^1.3.0"
 	}

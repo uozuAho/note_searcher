@@ -1,29 +1,28 @@
-import * as assert from 'assert';
 import { extractTags } from '../../tagExtractor';
 
-suite('extractTags', () => {
-  test('extracts single tag', () => {
+describe('extractTags', () => {
+  it('extracts single tag', () => {
     const tags = extractTags('meat pie #change');
-    assert.deepEqual(tags, ['change']);
+    expect(tags).toEqual(['change']);
   });
 
-  test('extracts multiple tags', () => {
+  it('extracts multiple tags', () => {
     const tags = extractTags('meat pie #change and #stuff');
-    assert.deepEqual(tags, ['change', 'stuff']);
+    expect(tags).toEqual(['change', 'stuff']);
   });
 
-  test('extracts tag at start', () => {
+  it('extracts tag at start', () => {
     const tags = extractTags('#blub nub nub');
-    assert.deepEqual(tags, ['blub']);
+    expect(tags).toEqual(['blub']);
   });
 
-  test('does not extract non-tag', () => {
+  it('does not extract non-tag', () => {
     const tags = extractTags('this is no#t a tag');
-    assert.deepEqual(tags, []);
+    expect(tags).toEqual([]);
   });
 
-  test('does not extract 0-length tags', () => {
+  it('does not extract 0-length tags', () => {
     const tags = extractTags('# # beef #boop');
-    assert.deepEqual(tags, ['boop']);
+    expect(tags).toEqual(['boop']);
   });
 });
