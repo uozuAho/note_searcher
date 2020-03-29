@@ -6,13 +6,17 @@ import { SearchResultTree } from './searchResultTree';
 import { extractKeywords } from './keywordExtractor';
 import { extractTags } from './tagExtractor';
 import { createTagAndKeywordQuery } from './createTagAndKeywordQuery';
+import { VsCode } from './vscode';
+import { NoteSearcher } from './noteSearcher';
 
 export function activate(context: vscode.ExtensionContext) {
+  const ui = new VsCode();
   const searcher = newCliSearcher(path.join(extensionDir()!, 'out/note_searcher.jar'));
+  const noteSearcher = new NoteSearcher(ui, searcher);
 
   context.subscriptions.push(
     vscode.commands.registerCommand(
-      'extension.search', async () => await search(searcher)));
+      'extension.search', async () => await noteSearcher.search()));
 
   context.subscriptions.push(
     vscode.commands.registerCommand(
@@ -35,28 +39,6 @@ export function deactivate() {}
 
 const extensionDir = () => {
   return vscode.extensions.getExtension('uozuaho.note-searcher')?.extensionPath;
-};
-
-let lastQuery: string;
-
-const search = async (searcher: Searcher) => {
-  const input = await vscode.window.showInputBox({
-    value: lastQuery,
-    prompt: "Search for documents"
-  });
-  if (!input) {
-    return;
-  }
-  lastQuery = input;
-  try {
-    const results = (await searcher.search(input)).map(r => vscode.Uri.file(r));
-    vscode.window.createTreeView('noteSearcher-results', {
-      treeDataProvider: new SearchResultTree(results)
-    });
-  }
-  catch (e) {
-    vsutils.openInNewEditor(e);
-  }
 };
 
 const index = async (searcher: Searcher) => {

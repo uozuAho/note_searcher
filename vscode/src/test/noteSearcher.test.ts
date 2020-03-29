@@ -4,13 +4,26 @@ import { Searcher } from '../search';
 import * as tmoq from "typemoq";
 
 describe('NoteSearcher', () => {
-  it('should', async () => {
-    const searcher = tmoq.Mock.ofType<Searcher>();
-    const ui = tmoq.Mock.ofType<NoteSearcherUi>();
-    const ns = new NoteSearcher(ui.object, searcher.object);
+  let searcher: tmoq.IMock<Searcher>;
+  let ui: tmoq.IMock<NoteSearcherUi>;
+  let noteSearcher: NoteSearcher;
 
-    await ns.search();
+  const user_input_on_search = (input: string) => {
+    ui.setup(u => u.promptForSearch(tmoq.It.isAnyString())).returns(
+      () => Promise.resolve(input));
+  };
 
-    ui.verify(u => u.promptForSearch(tmoq.It.isAnyString()), tmoq.Times.once());
+  beforeEach(() => {
+    searcher = tmoq.Mock.ofType<Searcher>();
+    ui = tmoq.Mock.ofType<NoteSearcherUi>();
+    noteSearcher = new NoteSearcher(ui.object, searcher.object);
+  });
+
+  it('search passes input to searcher', async () => {
+    user_input_on_search('search phrase');
+
+    await noteSearcher.search();
+
+    searcher.verify(s => s.search('search phrase'), tmoq.Times.once());
   });
 });
