@@ -70,8 +70,8 @@
 		"watch": "tsc -watch -p ./",
 		"pretest": "npm run lint",
 		"vstest": "node ./out/test/runTest.js",
-    "test": "jest",
-    "test:watch": "jest --watch"
+		"test": "jest",
+		"test:watch": "jest --watch"
 	},
 	"devDependencies": {
 		"@types/glob": "^7.1.1",
@@ -87,6 +87,7 @@
 		"retext-keywords": "^6.0.0",
 		"retext-pos": "^3.0.0",
 		"ts-jest": "^25.2.1",
+		"typemoq": "^2.1.0",
 		"typescript": "^3.7.5",
 		"vscode-test": "^1.3.0"
 	}
