@@ -49,7 +49,7 @@ const search = async (searcher: Searcher) => {
   }
   lastQuery = input;
   try {
-    const results = await searcher.search(input);
+    const results = (await searcher.search(input)).map(r => vscode.Uri.file(r));
     vscode.window.createTreeView('noteSearcher-results', {
       treeDataProvider: new SearchResultTree(results)
     });
@@ -107,7 +107,9 @@ const updateRelatedFiles = async (doc: vscode.TextDocument, searcher: Searcher) 
   const query = createTagAndKeywordQuery(tags, keywords);
   const results = await searcher
     .search(query)
-    .then(results => results.filter(r => r.fsPath !== doc.fileName));
+    .then(results => results
+      .filter(r => r !== doc.fileName)
+      .map(r => vscode.Uri.file(r)));
   vscode.window.createTreeView('noteSearcher-related', {
     treeDataProvider: new SearchResultTree(results)
   });

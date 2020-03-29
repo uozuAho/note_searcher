@@ -1,8 +1,7 @@
 import * as child_process from 'child_process';
-import { Uri } from 'vscode';
 
 export interface Searcher {
-  search: (query: string) => Promise<Uri[]>;
+  search: (query: string) => Promise<string[]>;
   index: (dir: string) => Promise<void>;
 }
 
@@ -19,9 +18,7 @@ class CliSearcher implements Searcher {
   public search = async (query: string) => {
     const result = await this.runCliSearch(query);
     const lines = result.match(/[^\r\n]+/g);
-    return lines
-      ? lines.map(line => Uri.file(line))
-      : [];
+    return lines ? lines : [];
   };
 
   public index = async (indexDir: string) => {
