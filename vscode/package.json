@@ -70,7 +70,8 @@
 		"watch": "tsc -watch -p ./",
 		"pretest": "npm run lint",
 		"vstest": "node ./out/test/runTest.js",
-		"test": "jest"
+    "test": "jest",
+    "test:watch": "jest --watch"
 	},
 	"devDependencies": {
 		"@types/glob": "^7.1.1",

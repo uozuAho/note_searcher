@@ -1,4 +1,4 @@
-import { createTagAndKeywordQuery } from '../../createTagAndKeywordQuery';
+import { createTagAndKeywordQuery } from '../createTagAndKeywordQuery';
 
 describe('createTagAndKeywordQuery', () => {
   it('creates query', () => {
