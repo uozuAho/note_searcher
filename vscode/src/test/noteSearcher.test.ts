@@ -67,4 +67,39 @@ describe('NoteSearcher', () => {
       ui.verify(u => u.showError(error), tmoq.Times.once());
     });
   });
+
+  describe('index', () => {
+    beforeEach(() => {
+      searcher = tmoq.Mock.ofType<SearchService>();
+      ui = tmoq.Mock.ofType<NoteSearcherUi>();
+      noteSearcher = new NoteSearcher(ui.object, searcher.object);
+    });
+
+    it('shows index start and end notifications', async () => {
+      ui.setup(u => u.currentlyOpenDir()).returns(() => 'a directory');
+
+      await noteSearcher.index();
+
+      ui.verify(u => u.showNotification(tmoq.It.isAnyString()), tmoq.Times.exactly(2));
+      searcher.verify(s => s.index(tmoq.It.isAnyString()), tmoq.Times.once());
+    });
+
+    it('displays message when no open folder', async () => {
+      ui.setup(u => u.currentlyOpenDir()).returns(() => null);
+
+      await noteSearcher.index();
+
+      ui.verify(u => u.showNotification(tmoq.It.isAnyString()), tmoq.Times.once());
+      searcher.verify(s => s.index(tmoq.It.isAnyString()), tmoq.Times.never());
+    });
+
+    it('displays error when indexing throws', async () => {
+      const error = new Error('oh no!');
+      ui.setup(u => u.currentlyOpenDir()).returns(() => 'a directory');
+      searcher.setup(s => s.index('a directory')).throws(error);
+
+      await noteSearcher.index();
+      ui.verify(u => u.showError(error), tmoq.Times.once());
+    });
+  });
 });

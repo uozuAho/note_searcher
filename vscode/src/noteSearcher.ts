@@ -22,4 +22,22 @@ export class NoteSearcher {
       await this.ui.showError(e);
     }
   };
+
+  public index = async () => {
+    const folder = this.ui.currentlyOpenDir();
+    if (!folder) {
+      await this.ui.showNotification('open a folder first');
+      return;
+    }
+
+    this.ui.showNotification('indexing current folder...');
+
+    try {
+      await this.searcher.index(folder);
+      this.ui.showNotification('indexing complete');
+    }
+    catch (e) {
+      await this.ui.showError(e);
+    }
+  };
 }
