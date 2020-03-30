@@ -33,8 +33,11 @@ class CliSearcher implements Searcher {
       if (result.error) {
         reject(result.error);
       }
-      const stdout = new String(result.stdout).toString();
       const stderr = new String(result.stderr).toString();
+      if (stderr) {
+        reject(stderr);
+      }
+      const stdout = new String(result.stdout).toString();
       resolve(stdout ? stdout : stderr);
     });
   };
@@ -47,8 +50,11 @@ class CliSearcher implements Searcher {
       if (result.error) {
         reject(result.error);
       }
-      const stdout = new String(result.stdout).toString();
       const stderr = new String(result.stderr).toString();
+      if (stderr) {
+        reject(stderr);
+      }
+      const stdout = new String(result.stdout).toString();
       resolve(stdout ? stdout : stderr);
     });
   };

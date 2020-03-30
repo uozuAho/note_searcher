@@ -23,7 +23,8 @@ export class VsCode implements NoteSearcherUi {
   };
 
   public showError = async (e: any) => {
-    await openInNewEditor(e);
+    let msg = 'Argh! Something broke. Sorry! Details:\n\n' + e;
+    await openInNewEditor(msg);
   };
 }
 
