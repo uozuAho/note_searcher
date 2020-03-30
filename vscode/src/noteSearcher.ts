@@ -1,12 +1,12 @@
 import { NoteSearcherUi } from "./vscode";
-import { Searcher } from "./search";
+import { SearchService } from "./searchService";
 
 export class NoteSearcher {
   private previousQuery = '';
 
   constructor(
     private ui: NoteSearcherUi,
-    private searcher: Searcher) {}
+    private searcher: SearchService) {}
 
   public search = async () => {
     const input = await this.ui.promptForSearch(this.previousQuery);

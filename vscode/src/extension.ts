@@ -1,6 +1,5 @@
-import * as path from 'path';
 import * as vscode from 'vscode';
-import { newCliSearcher, Searcher } from './search';
+import { createService, SearchService } from './searchService';
 import * as vsutils from './vscode.utils';
 import { SearchResultTree } from './searchResultTree';
 import { extractKeywords } from './keywordExtractor';
@@ -11,7 +10,7 @@ import { NoteSearcher } from './noteSearcher';
 
 export function activate(context: vscode.ExtensionContext) {
   const ui = new VsCode();
-  const searcher = newCliSearcher(path.join(extensionDir()!, 'out/note_searcher.jar'));
+  const searcher = createService(extensionDir()!);
   const noteSearcher = new NoteSearcher(ui, searcher);
 
   context.subscriptions.push(
@@ -41,7 +40,7 @@ const extensionDir = () => {
   return vscode.extensions.getExtension('uozuaho.note-searcher')?.extensionPath;
 };
 
-const index = async (searcher: Searcher) => {
+const index = async (searcher: SearchService) => {
   const folder = rootPathOrThrow();
 
   vscode.window.showInformationMessage('indexing current folder...');
@@ -68,7 +67,7 @@ const RELOAD_DELAY_MS = 500;
 let lastReload = Date.now();
 
 const handleDocumentContentsChanged = async (
-  doc: vscode.TextDocument, searcher: Searcher) =>
+  doc: vscode.TextDocument, searcher: SearchService) =>
 {
   const now = Date.now();
   if (now - lastReload < RELOAD_DELAY_MS) { return; }
@@ -79,7 +78,7 @@ const handleDocumentContentsChanged = async (
   updateRelatedFiles(doc, searcher);
 };
 
-const updateRelatedFiles = async (doc: vscode.TextDocument, searcher: Searcher) => {
+const updateRelatedFiles = async (doc: vscode.TextDocument, searcher: SearchService) => {
   const text = doc.getText();
   if (text.length === 0) {
     return;

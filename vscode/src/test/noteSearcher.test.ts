@@ -1,10 +1,10 @@
 import { NoteSearcherUi } from '../vscode';
 import { NoteSearcher } from '../noteSearcher';
-import { Searcher } from '../search';
+import { SearchService } from '../searchService';
 import * as tmoq from "typemoq";
 
 describe('NoteSearcher', () => {
-  let searcher: tmoq.IMock<Searcher>;
+  let searcher: tmoq.IMock<SearchService>;
   let ui: tmoq.IMock<NoteSearcherUi>;
   let noteSearcher: NoteSearcher;
 
@@ -26,7 +26,7 @@ describe('NoteSearcher', () => {
 
   describe('search', () => {
     beforeEach(() => {
-      searcher = tmoq.Mock.ofType<Searcher>();
+      searcher = tmoq.Mock.ofType<SearchService>();
       ui = tmoq.Mock.ofType<NoteSearcherUi>();
       noteSearcher = new NoteSearcher(ui.object, searcher.object);
     });

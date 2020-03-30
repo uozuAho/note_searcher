@@ -1,18 +1,20 @@
+import * as path from 'path';
 import * as child_process from 'child_process';
 
-export interface Searcher {
+export interface SearchService {
   search: (query: string) => Promise<string[]>;
   index: (dir: string) => Promise<void>;
 }
 
 /**
- * @param jarPath location of the searcher java archive
+ * @param extensionDir location of this vscode extension's directory
  */
-export const newCliSearcher = (jarPath: string): Searcher => {
+export const createService = (extensionDir: string): SearchService => {
+  const jarPath = path.join(extensionDir, 'out/note_searcher.jar');
   return new CliSearcher(jarPath);
 };
 
-class CliSearcher implements Searcher {
+class CliSearcher implements SearchService {
   public constructor(private jarPath: string) {}
 
   public search = async (query: string) => {
