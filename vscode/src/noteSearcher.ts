@@ -19,7 +19,7 @@ export class NoteSearcher {
       await this.ui.showSearchResults(results);
     }
     catch (e) {
-      this.ui.showError(e);
+      await this.ui.showError(e);
     }
   };
 }

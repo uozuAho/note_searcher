@@ -57,13 +57,14 @@ describe('NoteSearcher', () => {
     });
 
     it('shows error when search throws', async () => {
+      user_input_on_search('search phrase');
       const error = new Error('boom');
       searcher.setup(s => s.search(tmoq.It.isAnyString())).throws(error);
 
       await noteSearcher.search();
 
       ui.verify(u => u.showSearchResults(tmoq.It.isAny()), tmoq.Times.never());
-      ui.verify(u => u.showError(tmoq.It.isAny()), tmoq.Times.once());
+      ui.verify(u => u.showError(error), tmoq.Times.once());
     });
   });
 });

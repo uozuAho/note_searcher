@@ -25,6 +25,10 @@ Console app that does indexing and searching
 
 
 # todo
+- refactor:
+    - vscode facade
+    - extension class that uses vscode facade
+    - now write tests!
 - bug: ext does not activate on open note searcher
     - workaround: do a search or index to activate
 - bug: '+' operator not working as expected:
@@ -36,10 +40,6 @@ Console app that does indexing and searching
 - auto-index
     - on save file
     - on open directory
-- refactor:
-    - vscode facade
-    - extension class that uses vscode facade
-    - now write tests!
 - show related docs on changing active doc?
     - this will obstruct browsing docs related to
       the original doc, maybe don't implement this

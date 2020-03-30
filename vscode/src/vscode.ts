@@ -4,7 +4,7 @@ import { SearchResultTree } from './searchResultTree';
 export interface NoteSearcherUi {
   promptForSearch: (prefill: string) => Promise<string | undefined>;
   showSearchResults: (files: string[]) => Promise<void>;
-  showError: (e: any) => void;
+  showError: (e: any) => Promise<void>;
 }
 
 export class VsCode implements NoteSearcherUi {
@@ -22,9 +22,9 @@ export class VsCode implements NoteSearcherUi {
     });
   };
 
-  public showError(e: any) {
-    openInNewEditor(e);
-  }
+  public showError = async (e: any) => {
+    await openInNewEditor(e);
+  };
 }
 
 async function openInNewEditor(content: string, language?: string) {
