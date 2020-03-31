@@ -1,4 +1,4 @@
-import { GoodSet } from "./goodSet";
+import { GoodSet } from "./utils/goodSet";
 
 export const createTagAndKeywordQuery = (
   tags: string[], keywords: string[]) =>

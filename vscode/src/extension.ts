@@ -1,10 +1,10 @@
 import * as vscode from 'vscode';
 import { createService, SearchService } from './searchService';
-import { SearchResultTree } from './searchResultTree';
-import { extractKeywords } from './keywordExtractor';
-import { extractTags } from './tagExtractor';
+import { SearchResultTree } from './ui/searchResultTree';
+import { extractKeywords } from './text_processing/keywordExtractor';
+import { extractTags } from './text_processing/tagExtractor';
 import { createTagAndKeywordQuery } from './createTagAndKeywordQuery';
-import { VsCode } from './vscode';
+import { VsCode } from './ui/vscode';
 import { NoteSearcher } from './noteSearcher';
 
 export function activate(context: vscode.ExtensionContext) {

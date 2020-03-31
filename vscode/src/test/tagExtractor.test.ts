@@ -1,4 +1,4 @@
-import { extractTags } from '../tagExtractor';
+import { extractTags } from '../text_processing/tagExtractor';
 
 describe('extractTags', () => {
   it('extracts single tag', () => {

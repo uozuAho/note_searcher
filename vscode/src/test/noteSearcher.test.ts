@@ -1,4 +1,4 @@
-import { NoteSearcherUi } from '../vscode';
+import { NoteSearcherUi } from '../ui/vscode';
 import { NoteSearcher } from '../noteSearcher';
 import { SearchService } from '../searchService';
 import * as tmoq from "typemoq";

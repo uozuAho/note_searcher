@@ -1,4 +1,4 @@
-import { NoteSearcherUi } from "./vscode";
+import { NoteSearcherUi } from "./ui/vscode";
 import { SearchService } from "./searchService";
 
 export class NoteSearcher {
