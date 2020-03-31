@@ -1,20 +1,21 @@
-import { NoteSearcherUi } from '../ui/vscode';
+import {
+  File} from "../ui/NoteSearcherUi";
 import { NoteSearcher } from '../noteSearcher';
 import { SearchService } from '../searchService';
 import * as tmoq from "typemoq";
+import { MockUi } from "./MockUi";
+
+class MockFile implements File {
+  constructor(private _text: string, private _path: string) {}
+
+  public text = () => this._text;
+  public path = () => this._path;
+}
 
 describe('NoteSearcher', () => {
+  let ui: MockUi;
   let searcher: tmoq.IMock<SearchService>;
-  let ui: tmoq.IMock<NoteSearcherUi>;
   let noteSearcher: NoteSearcher;
-
-  const user_input_on_search = (input: string) => {
-    ui.setup(u =>
-      u.promptForSearch(tmoq.It.isAnyString()))
-      .returns(
-        () => Promise.resolve(input)
-      );
-  };
 
   const searcher_returns = (results: string[]) => {
     searcher.setup(s =>
@@ -26,13 +27,13 @@ describe('NoteSearcher', () => {
 
   describe('search', () => {
     beforeEach(() => {
+      ui = new MockUi();
       searcher = tmoq.Mock.ofType<SearchService>();
-      ui = tmoq.Mock.ofType<NoteSearcherUi>();
-      noteSearcher = new NoteSearcher(ui.object, searcher.object);
+      noteSearcher = new NoteSearcher(ui, searcher.object);
     });
 
     it('passes input to searcher', async () => {
-      user_input_on_search('search phrase');
+      ui.promptForSearchReturns('search phrase');
 
       await noteSearcher.search();
 
@@ -40,7 +41,7 @@ describe('NoteSearcher', () => {
     });
 
     it('does nothing when input is empty', async () => {
-      user_input_on_search('');
+      ui.promptForSearchReturns('');
 
       await noteSearcher.search();
 
@@ -48,58 +49,73 @@ describe('NoteSearcher', () => {
     });
 
     it('shows search results', async () => {
-      user_input_on_search('search phrase');
+      ui.promptForSearchReturns('search phrase');
       searcher_returns(['a', 'b', 'c']);
 
       await noteSearcher.search();
 
-      ui.verify(u => u.showSearchResults(['a', 'b', 'c']), tmoq.Times.once());
+      ui.showedSearchResults(['a', 'b', 'c']);
     });
 
     it('shows error when search throws', async () => {
-      user_input_on_search('search phrase');
+      ui.promptForSearchReturns('search phrase');
       const error = new Error('boom');
       searcher.setup(s => s.search(tmoq.It.isAnyString())).throws(error);
 
       await noteSearcher.search();
 
-      ui.verify(u => u.showSearchResults(tmoq.It.isAny()), tmoq.Times.never());
-      ui.verify(u => u.showError(error), tmoq.Times.once());
+      ui.didNotShowSearchResults();
+      ui.showedError(error);
     });
   });
 
   describe('index', () => {
     beforeEach(() => {
+      ui = new MockUi();
       searcher = tmoq.Mock.ofType<SearchService>();
-      ui = tmoq.Mock.ofType<NoteSearcherUi>();
-      noteSearcher = new NoteSearcher(ui.object, searcher.object);
+      noteSearcher = new NoteSearcher(ui, searcher.object);
     });
 
     it('shows index start and end notifications', async () => {
-      ui.setup(u => u.currentlyOpenDir()).returns(() => 'a directory');
+      ui.currentlyOpenDirReturns('a directory');
 
       await noteSearcher.index();
 
-      ui.verify(u => u.showNotification(tmoq.It.isAnyString()), tmoq.Times.exactly(2));
+      ui.showedAnyNotification(2);
       searcher.verify(s => s.index(tmoq.It.isAnyString()), tmoq.Times.once());
     });
 
     it('displays message when no open folder', async () => {
-      ui.setup(u => u.currentlyOpenDir()).returns(() => null);
+      ui.currentlyOpenDirReturns(null);
 
       await noteSearcher.index();
 
-      ui.verify(u => u.showNotification(tmoq.It.isAnyString()), tmoq.Times.once());
+      ui.showedAnyNotification();
       searcher.verify(s => s.index(tmoq.It.isAnyString()), tmoq.Times.never());
     });
 
     it('displays error when indexing throws', async () => {
       const error = new Error('oh no!');
-      ui.setup(u => u.currentlyOpenDir()).returns(() => 'a directory');
+      ui.currentlyOpenDirReturns('a directory');
       searcher.setup(s => s.index('a directory')).throws(error);
 
       await noteSearcher.index();
-      ui.verify(u => u.showError(error), tmoq.Times.once());
+
+      ui.showedError(error);
+    });
+  });
+
+  describe('when current document changes', () => {
+    beforeEach(() => {
+      ui = new MockUi();
+      searcher = tmoq.Mock.ofType<SearchService>();
+      noteSearcher = new NoteSearcher(ui, searcher.object);
+    });
+
+    it('should show related files', () => {
+      // ui.currentFileChanged(new MockFile('contents', 'path'));
+
+      // assert show related files was called
     });
   });
 });
