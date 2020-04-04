@@ -2,9 +2,9 @@ import { NoteSearcherUi, File } from "./ui/NoteSearcherUi";
 import { SearchService } from "./searchService";
 import { extractTags } from "./text_processing/tagExtractor";
 import { extractKeywords } from "./text_processing/keywordExtractor";
-import { createTagAndKeywordQuery } from "./createTagAndKeywordQuery";
 import { newDiagnostics, Diagnostics } from "./diagnostics/diagnostics";
 import { DelayedExecutor } from "./utils/delayedExecutor";
+import { GoodSet } from "./utils/goodSet";
 
 const UPDATE_RELATED_FILES_DELAY_MS = 500;
 
@@ -54,14 +54,6 @@ export class NoteSearcher {
     }
   };
 
-  public notifyCurrentFileChanged = (file: File) => {
-    this.diagnostics.trace('file changed');
-
-    this.delayedExecutor.cancelAll();
-    this.delayedExecutor.executeInMs(UPDATE_RELATED_FILES_DELAY_MS,
-      () => this.updateRelatedFiles(file));
-  };
-
   public updateRelatedFiles = async (file: File) => {
     this.diagnostics.trace('updating related files');
 
@@ -78,10 +70,26 @@ export class NoteSearcher {
     this.ui.showRelatedFiles(relatedFiles);
   };
 
+  public createTagAndKeywordQuery = (tags: string[], keywords: string[]) => {
+    const keywordsMinusTags = Array.from(
+      new GoodSet(keywords).difference(new GoodSet(tags))
+    );
+    const tagsWithHashes = tags.map(tag => '#' + tag);
+    return tagsWithHashes.concat(keywordsMinusTags).join(' ');
+  };
+
+  private notifyCurrentFileChanged = (file: File) => {
+    this.diagnostics.trace('file changed');
+
+    this.delayedExecutor.cancelAll();
+    this.delayedExecutor.executeInMs(UPDATE_RELATED_FILES_DELAY_MS,
+      () => this.updateRelatedFiles(file));
+  };
+
   private searchForRelatedFiles = async (text: string) => {
     const tags = extractTags(text);
     const keywords = await extractKeywords(text);
-    const query = createTagAndKeywordQuery(tags, keywords);
+    const query = this.createTagAndKeywordQuery(tags, keywords);
 
     return await this.searcher.search(query);
   };

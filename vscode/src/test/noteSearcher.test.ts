@@ -145,4 +145,31 @@ describe('NoteSearcher', () => {
       ui.didNotShowRelatedFiles();
     });
   });
+
+  describe('createTagAndKeywordQuery', () => {
+    beforeEach(() => {
+      ui = new MockUi();
+      searcher = tmoq.Mock.ofType<SearchService>();
+
+      noteSearcher = new NoteSearcher(ui, searcher.object);
+    });
+
+    it('creates query', () => {
+      const tags = ['a', 'b', 'c'];
+      const keywords = ['d', 'e'];
+
+      const query = noteSearcher.createTagAndKeywordQuery(tags, keywords);
+
+      expect(query).toEqual('#a #b #c d e');
+    });
+
+    it('removes overlapping keywords', () => {
+      const tags = ['a', 'b', 'c'];
+      const keywords = ['c', 'd'];
+
+      const query = noteSearcher.createTagAndKeywordQuery(tags, keywords);
+
+      expect(query).toEqual('#a #b #c d');
+    });
+  });
 });

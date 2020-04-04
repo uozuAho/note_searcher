@@ -19,7 +19,7 @@
 		"onCommand:extension.index",
 		"onView:noteSearcher"
 	],
-	"main": "./out/extension.js",
+	"main": "./out/main.js",
 	"contributes": {
 		"viewsContainers": {
 			"activitybar": [
