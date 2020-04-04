@@ -2,6 +2,7 @@ import { NoteSearcher } from '../noteSearcher';
 import { SearchService } from '../searchService';
 import * as tmoq from "typemoq";
 import { MockUi, MockFile } from "./MockUi";
+import { MockTimeProvider } from './MockTimeProvider';
 
 describe('NoteSearcher', () => {
   let ui: MockUi;
@@ -97,24 +98,25 @@ describe('NoteSearcher', () => {
   });
 
   describe('when current document changes', () => {
+    let timeProvider: MockTimeProvider;
+
     beforeEach(() => {
       ui = new MockUi();
       searcher = tmoq.Mock.ofType<SearchService>();
+      timeProvider = new MockTimeProvider();
+
       noteSearcher = new NoteSearcher(ui, searcher.object);
     });
 
     it('should show related files', async () => {
       const relatedFiles = ['a', 'b', 'b'];
       searcher_returns(relatedFiles);
+      timeProvider.setCurrentTimeMs(1000);
 
-      ui.currentFileChanged(new MockFile('contents', 'path'));
+      const fileChangedResult = ui.currentFileChanged(new MockFile('contents', 'path'));
 
-      // todo: control time to avoid waiting here
-      await new Promise((resolve, reject) => {
-        setTimeout(() => {
-          resolve();
-        }, 1000);
-      });
+      expect(fileChangedResult).not.toBe(null);
+      await fileChangedResult;
 
       ui.showedRelatedFiles(relatedFiles);
     });

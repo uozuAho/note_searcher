@@ -75,12 +75,12 @@ export class MockUi implements NoteSearcherUi {
 
   public currentFileChanged = (file: MockFile) => {
     if (this._fileChangeListener) {
-      this._fileChangeListener(file);
+      return this._fileChangeListener(file);
     }
   };
 
-  public showRelatedFiles = async (files: string[]) => {
-    this._mock.object.showRelatedFiles(files);
+  public showRelatedFiles = (files: string[]) => {
+    return this._mock.object.showRelatedFiles(files);
   };
 
   public showedRelatedFiles(files: string[]) {
