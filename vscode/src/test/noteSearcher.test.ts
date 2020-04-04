@@ -2,7 +2,7 @@ import { NoteSearcher } from '../noteSearcher';
 import { SearchService } from '../searchService';
 import * as tmoq from "typemoq";
 import { MockUi, MockFile } from "./MockUi";
-import { MockTimeProvider } from './MockTimeProvider';
+import { DelayedExecutor } from '../utils/delayedExecutor';
 
 describe('NoteSearcher', () => {
   let ui: MockUi;
@@ -98,30 +98,23 @@ describe('NoteSearcher', () => {
   });
 
   describe('when current document changes', () => {
-    let timeProvider: MockTimeProvider;
+    let delayedExecutor: tmoq.IMock<DelayedExecutor>;
 
     beforeEach(() => {
       ui = new MockUi();
       searcher = tmoq.Mock.ofType<SearchService>();
-      timeProvider = new MockTimeProvider();
+      delayedExecutor = tmoq.Mock.ofType<DelayedExecutor>();
 
-      noteSearcher = new NoteSearcher(ui, searcher.object, timeProvider);
+      noteSearcher = new NoteSearcher(ui, searcher.object, delayedExecutor.object);
     });
 
-    it('should show related files', async () => {
-      const relatedFiles = ['a', 'b', 'c'];
-      searcher_returns(relatedFiles);
-      timeProvider.setCurrentTimeMs(1000);
+    it('should schedule show related files', async () => {
+      ui.currentFileChanged(new MockFile('contents', 'path'));
 
-      const fileChangedResult = ui.currentFileChanged(new MockFile('contents', 'path'));
-
-      expect(fileChangedResult).not.toBe(null);
-      await fileChangedResult;
-
-      ui.showedRelatedFiles(relatedFiles);
+      delayedExecutor.verify(d => d.cancelAll(), tmoq.Times.once());
+      delayedExecutor.verify(d =>
+        d.executeInMs(tmoq.It.isAnyNumber(), tmoq.It.isAny()), tmoq.Times.once());
     });
-
-    // it does not update files until 500ms after last doc changed
   });
 
   describe('update related files', () => {

@@ -4,22 +4,21 @@ import { extractTags } from "./text_processing/tagExtractor";
 import { extractKeywords } from "./text_processing/keywordExtractor";
 import { createTagAndKeywordQuery } from "./createTagAndKeywordQuery";
 import { newDiagnostics, Diagnostics } from "./diagnostics/diagnostics";
-import { TimeProvider, newTimeProvider } from "./utils/timeProvider";
+import { DelayedExecutor } from "./utils/delayedExecutor";
 
-const RELOAD_DELAY_MS = 500;
+const UPDATE_RELATED_FILES_DELAY_MS = 500;
 
 export class NoteSearcher {
   private previousQuery = '';
-  private lastReloadTime = 0;
   private diagnostics: Diagnostics;
 
   constructor(
     private ui: NoteSearcherUi,
     private searcher: SearchService,
-    private timeProvider: TimeProvider = newTimeProvider())
+    private delayedExecutor: DelayedExecutor = new DelayedExecutor())
   {
     ui.addCurrentDocumentChangeListener(this.notifyCurrentFileChanged);
-    this.diagnostics = newDiagnostics('noteSearcher', timeProvider);
+    this.diagnostics = newDiagnostics('noteSearcher');
   }
 
   public search = async () => {
@@ -55,17 +54,12 @@ export class NoteSearcher {
     }
   };
 
-  public notifyCurrentFileChanged = (file: File): Promise<void> => {
-    const now = this.timeProvider.currentTimeMs();
+  public notifyCurrentFileChanged = (file: File) => {
     this.diagnostics.trace('file changed');
 
-    if (now - this.lastReloadTime < RELOAD_DELAY_MS) { return Promise.resolve(); }
-
-    // todo: this reloads every 500ms on constant doc changes.
-    //       Instead, on doc changes, schedule a search that only
-    //       occurs if the last doc change was > timeout
-    this.lastReloadTime = now;
-    return this.updateRelatedFiles(file);
+    this.delayedExecutor.cancelAll();
+    this.delayedExecutor.executeInMs(UPDATE_RELATED_FILES_DELAY_MS,
+      () => this.updateRelatedFiles(file));
   };
 
   public updateRelatedFiles = async (file: File) => {

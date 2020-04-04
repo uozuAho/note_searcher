@@ -14,4 +14,4 @@ export interface File {
   path: () => string;
 }
 
-export type FileChangeListener = (file: File) => Promise<void>;
+export type FileChangeListener = (file: File) => void;
