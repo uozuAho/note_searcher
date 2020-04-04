@@ -2,7 +2,7 @@
 	"name": "note-searcher",
 	"displayName": "note-searcher",
 	"description": "searches notes",
-	"version": "0.0.1",
+	"version": "0.0.2",
 	"publisher": "uozuaho",
 	"repository": {
 		"type": "git",
@@ -15,8 +15,8 @@
 		"Other"
 	],
 	"activationEvents": [
-		"onCommand:extension.search",
-		"onCommand:extension.index",
+		"onCommand:noteSearcher.search",
+		"onCommand:noteSearcher.index",
 		"onView:noteSearcher-results"
 	],
 	"main": "./out/main.js",
@@ -44,21 +44,21 @@
 		},
 		"commands": [
 			{
-				"command": "extension.search",
+				"command": "noteSearcher.search",
 				"title": "Note searcher: search for docs"
 			},
 			{
-				"command": "extension.index",
+				"command": "noteSearcher.index",
 				"title": "Note searcher: index docs in the current workspace"
 			}
 		],
 		"keybindings": [
 			{
-				"command": "extension.search",
+				"command": "noteSearcher.search",
 				"key": "ctrl+alt+s"
 			},
 			{
-				"command": "extension.index",
+				"command": "noteSearcher.index",
 				"key": "ctrl+alt+i"
 			}
 		]

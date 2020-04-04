@@ -8,20 +8,26 @@ export function activate(context: vscode.ExtensionContext) {
   const searcher = createService(extensionDir()!);
   const noteSearcher = new NoteSearcher(ui, searcher);
 
-  context.subscriptions.push(
-    vscode.commands.registerCommand(
-      'extension.search', async () => await noteSearcher.search()));
+  const search = vscode.commands.registerCommand(
+    'noteSearcher.search', async () => await noteSearcher.search());
+
+  const index = vscode.commands.registerCommand(
+    'noteSearcher.index', async () => await noteSearcher.index());
+
+  const openFile = vscode.commands.registerCommand(
+    'noteSearcher.searchResults.openFile',
+    file => vscode.window.showTextDocument(file));
+
+  const docChangeHandler = ui.createOnDidChangeTextDocumentHandler();
+  const docSaveHandler = ui.createOnDidSaveDocumentHandler();
 
   context.subscriptions.push(
-    vscode.commands.registerCommand(
-      'extension.index', async () => await noteSearcher.index()));
-
-  context.subscriptions.push(
-    vscode.commands.registerCommand(
-      'searchResults.openFile', file => vscode.window.showTextDocument(file)));
-
-  context.subscriptions.push(ui.createOnDidChangeTextDocumentHandler());
-  context.subscriptions.push(ui.createOnDidSaveDocumentHandler());
+    search,
+    index,
+    openFile,
+    docChangeHandler,
+    docSaveHandler
+  );
 }
 
 export function deactivate() {}
