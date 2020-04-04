@@ -18,6 +18,7 @@ export class NoteSearcher {
     private delayedExecutor: DelayedExecutor = new DelayedExecutor())
   {
     ui.addCurrentDocumentChangeListener(this.notifyCurrentFileChanged);
+    ui.addDocumentSavedListener(this.notifyFileSaved);
     this.diagnostics = newDiagnostics('noteSearcher');
   }
 
@@ -84,6 +85,11 @@ export class NoteSearcher {
     this.delayedExecutor.cancelAll();
     this.delayedExecutor.executeInMs(UPDATE_RELATED_FILES_DELAY_MS,
       () => this.updateRelatedFiles(file));
+  };
+
+  private notifyFileSaved = (file: File) => {
+    this.diagnostics.trace('file saved');
+    this.index();
   };
 
   private searchForRelatedFiles = async (text: string) => {

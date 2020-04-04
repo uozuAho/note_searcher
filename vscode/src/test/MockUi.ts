@@ -83,11 +83,23 @@ export class MockUi implements NoteSearcherUi {
     return this._mock.object.showRelatedFiles(files);
   };
 
-  public showedRelatedFiles(files: string[]) {
+  public showedRelatedFiles = (files: string[]) => {
     this._mock.verify(m => m.showRelatedFiles(files), tmoq.Times.once());
-  }
+  };
 
-  public didNotShowRelatedFiles() {
+  public didNotShowRelatedFiles = () => {
     this._mock.verify(m => m.showRelatedFiles(tmoq.It.isAny()), tmoq.Times.never());
-  }
+  };
+
+  private _fileSavedListener: FileChangeListener | null = null;
+
+  public addDocumentSavedListener = (listener: FileChangeListener) => {
+    this._fileSavedListener = listener;
+  };
+
+  public saveFile = (file: MockFile) => {
+    if (this._fileSavedListener) {
+      this._fileSavedListener(file);
+    }
+  };
 }

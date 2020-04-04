@@ -3,10 +3,11 @@ export interface NoteSearcherUi {
   currentlyOpenDir: () => string | null;
   promptForSearch: (prefill: string) => Promise<string | undefined>;
   showSearchResults: (files: string[]) => Promise<void>;
+  showRelatedFiles: (files: string[]) => void;
   showNotification: (message: string) => Promise<void>;
   showError: (e: any) => Promise<void>;
   addCurrentDocumentChangeListener: (listener: FileChangeListener) => void;
-  showRelatedFiles: (files: string[]) => void;
+  addDocumentSavedListener: (listener: FileChangeListener) => void;
 }
 
 export interface File {

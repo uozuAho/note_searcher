@@ -21,6 +21,7 @@ export function activate(context: vscode.ExtensionContext) {
       'searchResults.openFile', file => vscode.window.showTextDocument(file)));
 
   context.subscriptions.push(ui.createOnDidChangeTextDocumentHandler());
+  context.subscriptions.push(ui.createOnDidSaveDocumentHandler());
 }
 
 export function deactivate() {}

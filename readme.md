@@ -25,9 +25,6 @@ Console app that does indexing and searching
 
 
 # todo
-- auto-index
-    - on save file
-    - on open directory
 - bug: ext does not activate on open note searcher
     - workaround: do a search or index to activate
 - show view container on search complete

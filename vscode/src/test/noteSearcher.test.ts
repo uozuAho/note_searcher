@@ -97,6 +97,23 @@ describe('NoteSearcher', () => {
     });
   });
 
+  describe('when file is saved', () => {
+    beforeEach(() => {
+      ui = new MockUi();
+      searcher = tmoq.Mock.ofType<SearchService>();
+      noteSearcher = new NoteSearcher(ui, searcher.object);
+    });
+
+    it('updates index', () => {
+      const file = new MockFile('content', 'path');
+      const indexSpy = spyOn(noteSearcher, 'index');
+
+      ui.saveFile(file);
+
+      expect(indexSpy).toHaveBeenCalled();
+    });
+  });
+
   describe('when current document changes', () => {
     let delayedExecutor: tmoq.IMock<DelayedExecutor>;
 

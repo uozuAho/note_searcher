@@ -4,6 +4,7 @@ import { NoteSearcherUi, File, FileChangeListener } from './NoteSearcherUi';
 
 export class VsCode implements NoteSearcherUi {
   private currentDocChangeListener: FileChangeListener | null = null;
+  private documentSavedListener: FileChangeListener | null = null;
 
   public getCurrentFile = () => 
     vscode.window.activeTextEditor
@@ -49,6 +50,10 @@ export class VsCode implements NoteSearcherUi {
     this.currentDocChangeListener = listener;
   };
 
+  public addDocumentSavedListener = (listener: FileChangeListener) => {
+    this.documentSavedListener = listener;
+  };
+
   public createOnDidChangeTextDocumentHandler = () => {
     return vscode.workspace.onDidChangeTextDocument(e => {
       if (e.document === vscode.window.activeTextEditor?.document) {
@@ -56,6 +61,15 @@ export class VsCode implements NoteSearcherUi {
           const file = new VsCodeFile(e.document);
           this.currentDocChangeListener(file);
         }
+      }
+    });
+  };
+
+  public createOnDidSaveDocumentHandler = () => {
+    return vscode.workspace.onDidSaveTextDocument(doc => {
+      if (this.documentSavedListener) {
+        const file = new VsCodeFile(doc);
+        this.documentSavedListener(file);
       }
     });
   };
