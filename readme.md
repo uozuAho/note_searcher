@@ -26,6 +26,7 @@ Console app that does indexing and searching
 
 # todo
 - show view container on search complete
+- publish
 - suggest tags
 - bug: '+' operator not working as expected:
     - search for #work: no results
