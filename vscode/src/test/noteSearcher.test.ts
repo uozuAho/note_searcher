@@ -105,11 +105,11 @@ describe('NoteSearcher', () => {
       searcher = tmoq.Mock.ofType<SearchService>();
       timeProvider = new MockTimeProvider();
 
-      noteSearcher = new NoteSearcher(ui, searcher.object);
+      noteSearcher = new NoteSearcher(ui, searcher.object, timeProvider);
     });
 
     it('should show related files', async () => {
-      const relatedFiles = ['a', 'b', 'b'];
+      const relatedFiles = ['a', 'b', 'c'];
       searcher_returns(relatedFiles);
       timeProvider.setCurrentTimeMs(1000);
 
@@ -121,8 +121,35 @@ describe('NoteSearcher', () => {
       ui.showedRelatedFiles(relatedFiles);
     });
 
-    // it does not include current file in search results
     // it does not update files until 500ms after last doc changed
-    // it does not update files if current file is empty
+  });
+
+  describe('update related files', () => {
+    beforeEach(() => {
+      ui = new MockUi();
+      searcher = tmoq.Mock.ofType<SearchService>();
+
+      noteSearcher = new NoteSearcher(ui, searcher.object);
+    });
+
+    it('does not include current file in related files', async () => {
+      const currentFile = new MockFile('asdf', 'path/file/a');
+      const relatedFiles = [currentFile.path(), 'path/file/b', 'path/file/c'];
+      searcher_returns(relatedFiles);
+
+      await noteSearcher.updateRelatedFiles(currentFile);
+
+      ui.showedRelatedFiles(['path/file/b', 'path/file/c']);
+    });
+
+    it('does not update files if current file is empty', async () => {
+      const currentFile = new MockFile('', 'path/file/a');
+      const relatedFiles = [currentFile.path(), 'path/file/b', 'path/file/c'];
+      searcher_returns(relatedFiles);
+
+      await noteSearcher.updateRelatedFiles(currentFile);
+
+      ui.didNotShowRelatedFiles();
+    });
   });
 });

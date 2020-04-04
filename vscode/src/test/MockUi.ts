@@ -86,4 +86,8 @@ export class MockUi implements NoteSearcherUi {
   public showedRelatedFiles(files: string[]) {
     this._mock.verify(m => m.showRelatedFiles(files), tmoq.Times.once());
   }
+
+  public didNotShowRelatedFiles() {
+    this._mock.verify(m => m.showRelatedFiles(tmoq.It.isAny()), tmoq.Times.never());
+  }
 }

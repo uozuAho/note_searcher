@@ -68,7 +68,7 @@ export class NoteSearcher {
     return this.updateRelatedFiles(file);
   };
 
-  private updateRelatedFiles = async (file: File) => {
+  public updateRelatedFiles = async (file: File) => {
     this.diagnostics.trace('updating related files');
 
     const text = file.text();

@@ -8,10 +8,12 @@ export const newDiagnostics = (
   label: string,
   timeProvider: TimeProvider = newTimeProvider()) =>
 {
-  return new ConsoleDiagnostics(label, timeProvider);
+  // todo: config
+  // return new ConsoleDiagnostics(label, timeProvider);
+  return new NullDiagnostics();
 };
 
-class ConsoleDiagnostics {
+class ConsoleDiagnostics implements Diagnostics {
   constructor(
     private label: string,
     private timeProvider: TimeProvider) {}
@@ -21,4 +23,8 @@ class ConsoleDiagnostics {
 
     console.log(`${now}: ${this.label}: ${message}`);
   };
+}
+
+class NullDiagnostics implements Diagnostics {
+  public trace = (message: string) => {};
 }
