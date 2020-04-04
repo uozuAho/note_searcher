@@ -48,6 +48,17 @@ export class VsCode implements NoteSearcherUi {
   public addCurrentDocumentChangeListener = (listener: FileChangeListener) => {
     this.currentDocChangeListener = listener;
   };
+
+  public createOnDidChangeTextDocumentHandler = () => {
+    return vscode.workspace.onDidChangeTextDocument(e => {
+      if (e.document === vscode.window.activeTextEditor?.document) {
+        if (this.currentDocChangeListener) {
+          const file = new VsCodeFile(e.document);
+          this.currentDocChangeListener(file);
+        }
+      }
+    });
+  };
 }
 
 class VsCodeFile implements File {
