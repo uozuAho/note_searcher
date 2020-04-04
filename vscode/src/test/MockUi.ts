@@ -1,8 +1,14 @@
 import * as tmoq from "typemoq";
 import { NoteSearcherUi, File, FileChangeListener } from "../ui/NoteSearcherUi";
 
-export class MockUi implements NoteSearcherUi {
+export class MockFile implements File {
+  constructor(private _text: string, private _path: string) {}
 
+  public text = () => this._text;
+  public path = () => this._path;
+}
+
+export class MockUi implements NoteSearcherUi {
   private _mock: tmoq.IMock<NoteSearcherUi>;
 
   constructor() {
@@ -61,5 +67,23 @@ export class MockUi implements NoteSearcherUi {
     this._mock.verify(m => m.showError(error), tmoq.Times.once());
   };
 
-  public addCurrentDocumentChangeListener = (listener: FileChangeListener) => { };
+  private _fileChangeListener: FileChangeListener | null = null;
+
+  public addCurrentDocumentChangeListener = (listener: FileChangeListener) => {
+    this._fileChangeListener = listener;
+  };
+
+  public currentFileChanged = (file: MockFile) => {
+    if (this._fileChangeListener) {
+      this._fileChangeListener(file);
+    }
+  };
+
+  public showRelatedFiles = async (files: string[]) => {
+    this._mock.object.showRelatedFiles(files);
+  };
+
+  public showedRelatedFiles(files: string[]) {
+    this._mock.verify(m => m.showRelatedFiles(files), tmoq.Times.once());
+  }
 }

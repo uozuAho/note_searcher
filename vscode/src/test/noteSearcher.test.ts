@@ -1,16 +1,7 @@
-import {
-  File} from "../ui/NoteSearcherUi";
 import { NoteSearcher } from '../noteSearcher';
 import { SearchService } from '../searchService';
 import * as tmoq from "typemoq";
-import { MockUi } from "./MockUi";
-
-class MockFile implements File {
-  constructor(private _text: string, private _path: string) {}
-
-  public text = () => this._text;
-  public path = () => this._path;
-}
+import { MockUi, MockFile } from "./MockUi";
 
 describe('NoteSearcher', () => {
   let ui: MockUi;
@@ -112,10 +103,24 @@ describe('NoteSearcher', () => {
       noteSearcher = new NoteSearcher(ui, searcher.object);
     });
 
-    it('should show related files', () => {
-      // ui.currentFileChanged(new MockFile('contents', 'path'));
+    it('should show related files', async () => {
+      const relatedFiles = ['a', 'b', 'b'];
+      searcher_returns(relatedFiles);
 
-      // assert show related files was called
+      ui.currentFileChanged(new MockFile('contents', 'path'));
+
+      // todo: control time to avoid waiting here
+      await new Promise((resolve, reject) => {
+        setTimeout(() => {
+          resolve();
+        }, 1000);
+      });
+
+      ui.showedRelatedFiles(relatedFiles);
     });
+
+    // it does not include current file in search results
+    // it does not update files until 500ms after last doc changed
+    // it does not update files if current file is empty
   });
 });

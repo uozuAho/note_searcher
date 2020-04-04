@@ -1,18 +1,24 @@
-import { NoteSearcherUi } from "./ui/NoteSearcherUi";
+import { NoteSearcherUi, File } from "./ui/NoteSearcherUi";
 import { SearchService } from "./searchService";
 import { extractTags } from "./text_processing/tagExtractor";
 import { extractKeywords } from "./text_processing/keywordExtractor";
 import { createTagAndKeywordQuery } from "./createTagAndKeywordQuery";
+import { newDiagnostics, Diagnostics } from "./diagnostics/diagnostics";
 
 const RELOAD_DELAY_MS = 500;
 
 export class NoteSearcher {
   private previousQuery = '';
-  private lastReloadTime = Date.now();
+  private lastReloadTime = 0;
+  private diagnostics: Diagnostics;
 
   constructor(
     private ui: NoteSearcherUi,
-    private searcher: SearchService) {}
+    private searcher: SearchService)
+  {
+    ui.addCurrentDocumentChangeListener(this.notifyCurrentFileChanged);
+    this.diagnostics = newDiagnostics('noteSearcher');
+  }
 
   public search = async () => {
     const input = await this.ui.promptForSearch(this.previousQuery);
@@ -47,31 +53,33 @@ export class NoteSearcher {
     }
   };
 
-  public notifyCurrentFileChanged = () => {
+  public notifyCurrentFileChanged = (file: File) => {
     const now = Date.now();
+    this.diagnostics.trace('file changed');
+
     if (now - this.lastReloadTime < RELOAD_DELAY_MS) { return; }
+
     // todo: this reloads every 500ms on constant doc changes.
     //       Instead, on doc changes, schedule a search that only
     //       occurs if the last doc change was > timeout
     this.lastReloadTime = now;
-    this.updateRelatedFiles();
+    this.updateRelatedFiles(file);
   };
 
-  private updateRelatedFiles = async () => {
-    const currentFile = this.ui.getCurrentFile();
+  private updateRelatedFiles = async (file: File) => {
+    this.diagnostics.trace('updating related files');
 
-    if (!currentFile) { throw new Error('no file is open!'); }
-
-    const text = currentFile.text();
+    const text = file.text();
 
     if (text.length === 0) { return; }
 
     const relatedFiles = await this
       .searchForRelatedFiles(text)
       .then(results => results
-        .filter(r => r !== currentFile.path()));
+        .filter(r => r !== file.path()));
 
-    // this.ui.showRelatedFiles(relatedFiles);
+    this.diagnostics.trace('showing related files');
+    this.ui.showRelatedFiles(relatedFiles);
   };
 
   private searchForRelatedFiles = async (text: string) => {
