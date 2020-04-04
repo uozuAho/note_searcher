@@ -25,8 +25,6 @@ Console app that does indexing and searching
 
 
 # todo
-- bug: ext does not activate on open note searcher
-    - workaround: do a search or index to activate
 - show view container on search complete
 - suggest tags
 - bug: '+' operator not working as expected:

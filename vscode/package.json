@@ -17,7 +17,7 @@
 	"activationEvents": [
 		"onCommand:extension.search",
 		"onCommand:extension.index",
-		"onView:noteSearcher"
+		"onView:noteSearcher-results"
 	],
 	"main": "./out/main.js",
 	"contributes": {
