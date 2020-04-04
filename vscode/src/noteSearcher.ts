@@ -75,7 +75,7 @@ export class NoteSearcher {
         .filter(r => r !== file.path()));
 
     this.diagnostics.trace('showing related files');
-    return this.ui.showRelatedFiles(relatedFiles);
+    this.ui.showRelatedFiles(relatedFiles);
   };
 
   private searchForRelatedFiles = async (text: string) => {

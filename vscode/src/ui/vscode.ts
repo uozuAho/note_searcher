@@ -29,6 +29,13 @@ export class VsCode implements NoteSearcherUi {
     });
   };
 
+  public showRelatedFiles = (files: string[]) => {
+    const uris = files.map(f => vscode.Uri.file(f));
+    vscode.window.createTreeView('noteSearcher-related', {
+      treeDataProvider: new SearchResultTree(uris)
+    });
+  };
+
   public showNotification = async (message: string) => {
     await vscode.window.showInformationMessage(message);
   };
