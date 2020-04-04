@@ -26,8 +26,8 @@ Console app that does indexing and searching
 
 # todo
 - show view container on search complete
-- publish
 - suggest tags
+- bug: search before index breaks - re-index if there's an index problem
 - bug: '+' operator not working as expected:
     - search for #work: no results
     - search for book: many results
