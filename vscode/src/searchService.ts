@@ -1,27 +1,26 @@
+import * as path from 'path';
 import * as child_process from 'child_process';
-import { Uri } from 'vscode';
 
-export interface Searcher {
-  search: (query: string) => Promise<Uri[]>;
+export interface SearchService {
+  search: (query: string) => Promise<string[]>;
   index: (dir: string) => Promise<void>;
 }
 
 /**
- * @param jarPath location of the searcher java archive
+ * @param extensionDir location of this vscode extension's directory
  */
-export const newCliSearcher = (jarPath: string): Searcher => {
+export const createService = (extensionDir: string): SearchService => {
+  const jarPath = path.join(extensionDir, 'out/note_searcher.jar');
   return new CliSearcher(jarPath);
 };
 
-class CliSearcher implements Searcher {
+class CliSearcher implements SearchService {
   public constructor(private jarPath: string) {}
 
   public search = async (query: string) => {
     const result = await this.runCliSearch(query);
     const lines = result.match(/[^\r\n]+/g);
-    return lines
-      ? lines.map(line => Uri.file(line))
-      : [];
+    return lines ? lines : [];
   };
 
   public index = async (indexDir: string) => {
@@ -36,8 +35,11 @@ class CliSearcher implements Searcher {
       if (result.error) {
         reject(result.error);
       }
-      const stdout = new String(result.stdout).toString();
       const stderr = new String(result.stderr).toString();
+      if (stderr) {
+        reject(stderr);
+      }
+      const stdout = new String(result.stdout).toString();
       resolve(stdout ? stdout : stderr);
     });
   };
@@ -50,8 +52,11 @@ class CliSearcher implements Searcher {
       if (result.error) {
         reject(result.error);
       }
-      const stdout = new String(result.stdout).toString();
       const stderr = new String(result.stderr).toString();
+      if (stderr) {
+        reject(stderr);
+      }
+      const stdout = new String(result.stdout).toString();
       resolve(stdout ? stdout : stderr);
     });
   };
