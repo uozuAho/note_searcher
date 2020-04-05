@@ -9,7 +9,7 @@ may work on [OpenJDK 13](https://jdk.java.net/13/) on all OS's!
 
 ## How to use this extension
 
-![extension screenshot](img/ext_screenshot.png)
+![extension screenshot](https://github.com/uozuAho/note_searcher/blob/master/vscode/img/ext_screenshot.png)
 
 When active, this extension indexes all .md, .txt and .log files in the
 currently open folder. As you are modifying a file, the extension window will
@@ -18,9 +18,11 @@ extracted from the current file.
 
 You can also search for files by pressing ctrl+alt+s. Some example queries:
 
-`apple banana +carrot`  # file contains the word carrot, and possibly apple or banana
-`apple banana -carrot`  # file does not contain carrot, but either apple and/or banana
-`apple banana #food`    # file contains apple, banana, and/or the tag #food
+```
+apple banana +carrot  # file contains the word carrot, and possibly apple or banana
+apple banana -carrot  # file does not contain carrot, but either apple and/or banana
+apple banana #food    # file contains apple, banana, and/or the tag #food
+```
 
 Any word starting with a '#' character is considered a tag, allowing for
 tag-based searching.
