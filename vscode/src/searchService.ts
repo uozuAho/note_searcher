@@ -10,7 +10,7 @@ export interface SearchService {
  * @param extensionDir location of this vscode extension's directory
  */
 export const createService = (extensionDir: string): SearchService => {
-  const jarPath = path.join(extensionDir, 'out/note_searcher.jar');
+  const jarPath = path.join(extensionDir, 'dist/note_searcher.jar');
   return new CliSearcher(jarPath);
 };
 

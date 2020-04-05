@@ -20,5 +20,9 @@ class SearchResult extends vscode.TreeItem {
     super(uri, vscode.TreeItemCollapsibleState.None);
   }
 
-  command = { command: 'searchResults.openFile', title: "Open File", arguments: [this.uri] };
+  command = {
+    title: "Open File",
+    command: 'noteSearcher.searchResults.openFile',
+    arguments: [this.uri]
+  };
 }
