@@ -25,6 +25,7 @@ Console app that does indexing and searching
 
 
 # todo
+- publish script
 - show view container on search complete
 - suggest tags
 - bug: search before index breaks - re-index if there's an index problem

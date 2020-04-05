@@ -4,6 +4,10 @@ All notable changes to the "note-searcher" extension will be documented in this 
 
 ## [Unreleased]
 
+## [0.0.4] - 2020-04-05
+### Fixed
+- remove local search index from distributed package
+
 ## [0.0.3] - 2020-04-05
 ### Fixed
 - 'command not found' on any extension action
