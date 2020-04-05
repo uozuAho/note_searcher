@@ -25,7 +25,14 @@ Console app that does indexing and searching
 
 
 # todo
-- publish script
+- publish script/process
+    - test all
+    - build all
+    - bump version
+    - package
+    - install package locally + test
+    - tag
+    - vsce publish
 - show view container on search complete
 - suggest tags
 - bug: search before index breaks - re-index if there's an index problem
