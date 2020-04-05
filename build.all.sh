@@ -5,17 +5,16 @@ set -eu
 echo "building jar..."
 pushd cli
 ./build.dist.sh
-mkdir -p ../vscode/out
-cp dist/note_searcher.jar ../vscode/out
+mkdir -p ../vscode/dist
+cp dist/note_searcher.jar ../vscode/dist
 popd
 
 echo
 echo "building vscode extension..."
 pushd vscode
 ./build.extension.sh
-cp *.vsix ..
 popd
 
 echo
-echo "done! vscode extension copied to this dir:"
-ls *.vsix
+echo "done! vscode extension output:"
+ls vscode/*.vsix

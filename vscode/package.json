@@ -65,8 +65,7 @@
 	},
 	"scripts": {
 		"vscode:prepublish": "webpack --mode production",
-    "compile": "tsc -p ./",
-    "webpack": "webpack --mode development",
+		"webpack": "webpack --mode development",
 		"lint": "eslint src --ext ts",
 		"pretest": "npm run lint",
 		"test": "jest",
