@@ -27,8 +27,11 @@ apple banana #food    # file contains apple, banana, and/or the tag #food
 Any word starting with a '#' character is considered a tag, allowing for
 tag-based searching.
 
-Note that with VS Code, you can add links to other files using the syntax
-`[](relative/file/path)`. These become hyperlinks to your local files!
+Note that with VS Code, you can add links to local files using markdown
+syntax. These become hyperlinks to your local files! Examples:
+
+- `[](file/relative/to/current/dir)`
+- `[](/file/relative/to/currently/open/dir/in/vscode)`
 
 
 ## UNDER CONSTRUCTION
