@@ -26,6 +26,7 @@ Console app that does indexing and searching
 
 # todo
 - detect dead links
+- show dead links
 - quick enable/disable indexing
 - moving indexing progress to status bar
 - separate view for search results + related files etc.

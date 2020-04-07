@@ -16,7 +16,6 @@
 	],
 	"activationEvents": [
 		"onCommand:noteSearcher.search",
-		"onCommand:noteSearcher.index",
 		"onView:noteSearcher-results"
 	],
 	"main": "./dist/noteSearcher.js",
@@ -46,20 +45,12 @@
 			{
 				"command": "noteSearcher.search",
 				"title": "Note searcher: search for docs"
-			},
-			{
-				"command": "noteSearcher.index",
-				"title": "Note searcher: index docs in the current workspace"
 			}
 		],
 		"keybindings": [
 			{
 				"command": "noteSearcher.search",
 				"key": "ctrl+alt+s"
-			},
-			{
-				"command": "noteSearcher.index",
-				"key": "ctrl+alt+i"
 			}
 		]
 	},
