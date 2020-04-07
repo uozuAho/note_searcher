@@ -33,6 +33,11 @@ Console app that does indexing and searching
     - install package locally + test
     - tag
     - vsce publish
+- detect dead links
+- quick enable/disable indexing
+- moving indexing progress to status bar
+- separate view for search results + related files etc.
+    - I want to see file tree at same time
 - show view container on search complete
 - suggest tags
 - bug: search before index breaks - re-index if there's an index problem
@@ -42,4 +47,4 @@ Console app that does indexing and searching
     - search for +#work book:
         - expected: no results
         - actual:   many results
-- search box in results view (not supported in tree view... use webview?)
+- search box in results view. not supported in tree view
