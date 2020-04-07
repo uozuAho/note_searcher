@@ -25,14 +25,6 @@ Console app that does indexing and searching
 
 
 # todo
-- publish script/process
-    - test all
-    - build all
-    - bump version
-    - package
-    - install package locally + test
-    - tag
-    - vsce publish
 - detect dead links
 - quick enable/disable indexing
 - moving indexing progress to status bar
