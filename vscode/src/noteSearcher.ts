@@ -1,4 +1,5 @@
-import { NoteSearcherUi, File } from "./ui/NoteSearcherUi";
+import { NoteSearcherUi } from "./ui/NoteSearcherUi";
+import { File } from "./utils/File";
 import { SearchService } from "./searchService";
 import { extractTags } from "./text_processing/tagExtractor";
 import { extractKeywords } from "./text_processing/keywordExtractor";

@@ -1,3 +1,5 @@
+import { File } from "../utils/File";
+
 export interface NoteSearcherUi {
   getCurrentFile: () => File | null;
   currentlyOpenDir: () => string | null;
@@ -8,11 +10,6 @@ export interface NoteSearcherUi {
   showError: (e: Error) => Promise<void>;
   addCurrentDocumentChangeListener: (listener: FileChangeListener) => void;
   addDocumentSavedListener: (listener: FileChangeListener) => void;
-}
-
-export interface File {
-  text: () => string;
-  path: () => string;
 }
 
 export type FileChangeListener = (file: File) => void;

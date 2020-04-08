@@ -1,12 +1,7 @@
 import * as tmoq from "typemoq";
-import { NoteSearcherUi, File, FileChangeListener } from "../ui/NoteSearcherUi";
-
-export class MockFile implements File {
-  constructor(private _text: string, private _path: string) {}
-
-  public text = () => this._text;
-  public path = () => this._path;
-}
+import { NoteSearcherUi, FileChangeListener } from "../ui/NoteSearcherUi";
+import { File } from "../utils/File";
+import { MockFile } from "./MockFile";
 
 export class MockUi implements NoteSearcherUi {
   private _mock: tmoq.IMock<NoteSearcherUi>;
