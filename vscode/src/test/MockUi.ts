@@ -67,6 +67,13 @@ export class MockUi implements NoteSearcherUi {
     this._mock.verify(m => m.showError(error), tmoq.Times.once());
   };
 
+  public showedErrorContaining = (expectedErrorMessage: string) => {
+    this._mock.verify(m =>
+      m.showError(tmoq.It.is(e =>
+        e.message.includes(expectedErrorMessage))),
+    tmoq.Times.once());
+  };
+
   private _fileChangeListener: FileChangeListener | null = null;
 
   public addCurrentDocumentChangeListener = (listener: FileChangeListener) => {

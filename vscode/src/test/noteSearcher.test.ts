@@ -3,10 +3,12 @@ import { SearchService } from '../searchService';
 import * as tmoq from "typemoq";
 import { MockUi, MockFile } from "./MockUi";
 import { DelayedExecutor } from '../utils/delayedExecutor';
+import { DeadLinkFinder, DeadLink } from '../DeadLinkFinder';
 
 describe('NoteSearcher', () => {
   let ui: MockUi;
   let searcher: tmoq.IMock<SearchService>;
+  let deadLinkFinder: tmoq.IMock<DeadLinkFinder>;
   let noteSearcher: NoteSearcher;
 
   const searcher_returns = (results: string[]) => {
@@ -21,7 +23,9 @@ describe('NoteSearcher', () => {
     beforeEach(() => {
       ui = new MockUi();
       searcher = tmoq.Mock.ofType<SearchService>();
-      noteSearcher = new NoteSearcher(ui, searcher.object);
+      deadLinkFinder = tmoq.Mock.ofType<DeadLinkFinder>();
+
+      noteSearcher = new NoteSearcher(ui, searcher.object, deadLinkFinder.object);
     });
 
     it('passes input to searcher', async () => {
@@ -65,7 +69,9 @@ describe('NoteSearcher', () => {
     beforeEach(() => {
       ui = new MockUi();
       searcher = tmoq.Mock.ofType<SearchService>();
-      noteSearcher = new NoteSearcher(ui, searcher.object);
+      deadLinkFinder = tmoq.Mock.ofType<DeadLinkFinder>();
+
+      noteSearcher = new NoteSearcher(ui, searcher.object, deadLinkFinder.object);
     });
 
     it('shows index start and end notifications', async () => {
@@ -101,7 +107,11 @@ describe('NoteSearcher', () => {
     beforeEach(() => {
       ui = new MockUi();
       searcher = tmoq.Mock.ofType<SearchService>();
-      noteSearcher = new NoteSearcher(ui, searcher.object);
+      deadLinkFinder = tmoq.Mock.ofType<DeadLinkFinder>();
+
+      ui.currentlyOpenDirReturns('a directory');
+
+      noteSearcher = new NoteSearcher(ui, searcher.object, deadLinkFinder.object);
     });
 
     it('updates index', () => {
@@ -112,6 +122,23 @@ describe('NoteSearcher', () => {
 
       expect(indexSpy).toHaveBeenCalled();
     });
+
+    it('displays dead links as error', () => {
+      const file = new MockFile('content', 'path');
+      const deadLinks = [
+        new DeadLink('/some/file', 33, '/link/to/nowhere')
+      ];
+      deadLinkFinder.setup(d => d.findDeadLinks(tmoq.It.isAny())).returns(() => deadLinks);
+
+      const expectedErrorMessage =
+        '/some/file:line 34: contains a dead link to /link/to/nowhere';
+
+      // act
+      ui.saveFile(file);
+
+      // assert
+      ui.showedErrorContaining(expectedErrorMessage);
+    });
   });
 
   describe('when current document changes', () => {
@@ -120,9 +147,11 @@ describe('NoteSearcher', () => {
     beforeEach(() => {
       ui = new MockUi();
       searcher = tmoq.Mock.ofType<SearchService>();
+      deadLinkFinder = tmoq.Mock.ofType<DeadLinkFinder>();
       delayedExecutor = tmoq.Mock.ofType<DelayedExecutor>();
 
-      noteSearcher = new NoteSearcher(ui, searcher.object, delayedExecutor.object);
+      noteSearcher = new NoteSearcher(
+        ui, searcher.object, deadLinkFinder.object, delayedExecutor.object);
     });
 
     it('should schedule show related files', async () => {
@@ -138,8 +167,9 @@ describe('NoteSearcher', () => {
     beforeEach(() => {
       ui = new MockUi();
       searcher = tmoq.Mock.ofType<SearchService>();
+      deadLinkFinder = tmoq.Mock.ofType<DeadLinkFinder>();
 
-      noteSearcher = new NoteSearcher(ui, searcher.object);
+      noteSearcher = new NoteSearcher(ui, searcher.object, deadLinkFinder.object);
     });
 
     it('does not include current file in related files', async () => {
@@ -167,8 +197,9 @@ describe('NoteSearcher', () => {
     beforeEach(() => {
       ui = new MockUi();
       searcher = tmoq.Mock.ofType<SearchService>();
+      deadLinkFinder = tmoq.Mock.ofType<DeadLinkFinder>();
 
-      noteSearcher = new NoteSearcher(ui, searcher.object);
+      noteSearcher = new NoteSearcher(ui, searcher.object, deadLinkFinder.object);
     });
 
     it('creates query', () => {

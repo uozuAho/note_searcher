@@ -5,6 +5,7 @@ import { extractKeywords } from "./text_processing/keywordExtractor";
 import { newDiagnostics, Diagnostics } from "./diagnostics/diagnostics";
 import { DelayedExecutor } from "./utils/delayedExecutor";
 import { GoodSet } from "./utils/goodSet";
+import { DeadLinkFinder } from "./DeadLinkFinder";
 
 const UPDATE_RELATED_FILES_DELAY_MS = 500;
 
@@ -15,6 +16,7 @@ export class NoteSearcher {
   constructor(
     private ui: NoteSearcherUi,
     private searcher: SearchService,
+    private deadLinkFinder: DeadLinkFinder,
     private delayedExecutor: DelayedExecutor = new DelayedExecutor())
   {
     ui.addCurrentDocumentChangeListener(this.notifyCurrentFileChanged);

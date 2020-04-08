@@ -25,9 +25,10 @@ Console app that does indexing and searching
 
 
 # todo
-- detect dead links
-- show dead links
+- detect dead links & show as error
 - quick enable/disable indexing
+- show dead links while editing
+- link autocomplete
 - moving indexing progress to status bar
 - separate view for search results + related files etc.
     - I want to see file tree at same time
