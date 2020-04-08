@@ -6,12 +6,11 @@ import { FileReader } from "../utils/FileReader";
 
 describe('DeadLinkFinder', () => {
   describe('find dead links', () => {
-    // todo: unskip once link extractor is working
-    it.skip('finds dead links', () => {
+    it('finds dead links', () => {
       const root = '/root';
       const fileWithDeadLink = new MockFile(
         'hello here is a file with a [dead link](/to/nowhere)',
-        root + '/me'
+        root + '/stuff.txt'
       );
       const walker = tmoq.Mock.ofType<DirWalker>();
       walker.setup(w => w.allFilesUnderPath(root)).returns(() => [fileWithDeadLink.path()]);
@@ -26,7 +25,7 @@ describe('DeadLinkFinder', () => {
       // assert
       expect(deadLinks.length).toBe(1);
       const deadLink = deadLinks[0];
-      expect(deadLink.sourcePath).toBe(fileWithDeadLink.path);
+      expect(deadLink.sourcePath).toBe(fileWithDeadLink.path());
       expect(deadLink.sourceLine).toBe(1);
       expect(deadLink.targetPath).toBe('/to/nowhere');
     });
@@ -35,4 +34,6 @@ describe('DeadLinkFinder', () => {
   // todo: line numbers
   // todo: file extensions
   // todo: no dead links
+  // todo: empty
+  // todo: all valid links
 });

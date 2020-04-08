@@ -26,6 +26,8 @@ Console app that does indexing and searching
 
 # todo
 - detect dead links & show as error
+    - in progress: get e2e working ASAP
+        - node dir walker and file reader
 - quick enable/disable indexing
 - show dead links while editing
 - link autocomplete
