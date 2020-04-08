@@ -63,15 +63,16 @@ export class MockUi implements NoteSearcherUi {
     await this._mock.object.showError(e);
   };
 
-  public showedError = (error: Error) => {
-    this._mock.verify(m => m.showError(error), tmoq.Times.once());
+  public showedError = (error?: Error) => {
+    if (!error) {
+      this._mock.verify(m => m.showError(tmoq.It.isAny()), tmoq.Times.once());
+    } else {
+      this._mock.verify(m => m.showError(error), tmoq.Times.once());
+    }
   };
 
-  public showedErrorContaining = (expectedErrorMessage: string) => {
-    this._mock.verify(m =>
-      m.showError(tmoq.It.is(e =>
-        e.message.includes(expectedErrorMessage))),
-    tmoq.Times.once());
+  public didNotShowError = () => {
+    this._mock.verify(m => m.showError(tmoq.It.isAny()), tmoq.Times.never());
   };
 
   private _fileChangeListener: FileChangeListener | null = null;

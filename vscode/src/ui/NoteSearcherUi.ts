@@ -5,7 +5,7 @@ export interface NoteSearcherUi {
   showSearchResults: (files: string[]) => Promise<void>;
   showRelatedFiles: (files: string[]) => void;
   showNotification: (message: string) => Promise<void>;
-  showError: (e: any) => Promise<void>;
+  showError: (e: Error) => Promise<void>;
   addCurrentDocumentChangeListener: (listener: FileChangeListener) => void;
   addDocumentSavedListener: (listener: FileChangeListener) => void;
 }

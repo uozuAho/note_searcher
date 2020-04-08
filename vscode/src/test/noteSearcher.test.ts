@@ -103,6 +103,36 @@ describe('NoteSearcher', () => {
     });
   });
 
+  describe('show dead links', () => {
+    beforeEach(() => {
+      ui = new MockUi();
+      searcher = tmoq.Mock.ofType<SearchService>();
+      deadLinkFinder = tmoq.Mock.ofType<DeadLinkFinder>();
+
+      ui.currentlyOpenDirReturns('a directory');
+
+      noteSearcher = new NoteSearcher(ui, searcher.object, deadLinkFinder.object);
+    });
+
+    it('shows dead links as error', () => {
+      deadLinkFinder.setup(d => d.findDeadLinks(tmoq.It.isAny())).returns(() => [
+        new DeadLink('/some/path', 23, '/path/to/nowhere')
+      ]);
+
+      noteSearcher.showDeadLinks();
+
+      ui.showedError();
+    });
+
+    it('does not show anything when there are no dead links', () => {
+      deadLinkFinder.setup(d => d.findDeadLinks(tmoq.It.isAny())).returns(() => []);
+
+      noteSearcher.showDeadLinks();
+
+      ui.didNotShowError();
+    });
+  });
+
   describe('when file is saved', () => {
     beforeEach(() => {
       ui = new MockUi();
@@ -110,6 +140,7 @@ describe('NoteSearcher', () => {
       deadLinkFinder = tmoq.Mock.ofType<DeadLinkFinder>();
 
       ui.currentlyOpenDirReturns('a directory');
+      deadLinkFinder.setup(d => d.findDeadLinks(tmoq.It.isAny())).returns(() => []);
 
       noteSearcher = new NoteSearcher(ui, searcher.object, deadLinkFinder.object);
     });
@@ -123,21 +154,13 @@ describe('NoteSearcher', () => {
       expect(indexSpy).toHaveBeenCalled();
     });
 
-    it('displays dead links as error', () => {
+    it('checks for dead links', () => {
       const file = new MockFile('content', 'path');
-      const deadLinks = [
-        new DeadLink('/some/file', 33, '/link/to/nowhere')
-      ];
-      deadLinkFinder.setup(d => d.findDeadLinks(tmoq.It.isAny())).returns(() => deadLinks);
+      const showDeadLinks = spyOn(noteSearcher, 'showDeadLinks');
 
-      const expectedErrorMessage =
-        '/some/file:line 34: contains a dead link to /link/to/nowhere';
-
-      // act
       ui.saveFile(file);
 
-      // assert
-      ui.showedErrorContaining(expectedErrorMessage);
+      expect(showDeadLinks).toHaveBeenCalled();
     });
   });
 
