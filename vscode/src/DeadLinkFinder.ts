@@ -5,7 +5,6 @@ import { extractLinks } from "./text_processing/LinkExtractor";
 export class DeadLink {
   constructor(
     public sourcePath: string,
-    public sourceLine: number,
     public targetPath: string) {}
 }
 
@@ -28,7 +27,7 @@ export class DeadLinkFinder {
       const links = this.extractLinksFromFile(path);
       for (const link of links) {
         if (!allFiles.has(link)) {
-          deadLinks.push(new DeadLink(path, 1, link));
+          deadLinks.push(new DeadLink(path, link));
         }
       }
     }
@@ -38,7 +37,7 @@ export class DeadLinkFinder {
 
   private extractLinksFromFile = (path: string): string[] => {
     const contents = this.fileReader.readFile(path);
-    return extractLinks(contents);
+    return extractLinks(contents).filter(link => !link.startsWith('http'));
   };
 
   private static shouldCheckFile = (path: string) => {

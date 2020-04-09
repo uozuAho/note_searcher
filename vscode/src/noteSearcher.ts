@@ -92,7 +92,7 @@ export class NoteSearcher {
     }
 
     const deadLinkMessage = deadLinks
-      .map(d => `${d.sourcePath}:${d.sourceLine}: dead link to ${d.targetPath}`)
+      .map(d => `${d.sourcePath}: dead link to ${d.targetPath}`)
       .join('\n');
 
     this.ui.showError(new Error(deadLinkMessage));
