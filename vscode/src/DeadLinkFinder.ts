@@ -17,13 +17,13 @@ export class DeadLinkFinder {
 
     // pass 1: find all files
     for (const path of this.dirWalker.allFilesUnderPath(rootPath)) {
-      if (!DeadLinkFinder.shouldCheckFile(path)) { continue; }
-
       allFiles.add(path);
     }
 
     // pass 2: check links
     for (const path of allFiles) {
+      if (!DeadLinkFinder.shouldCheckFile(path)) { continue; }
+
       const links = this.extractLinksFromFile(path);
       for (const link of links) {
         if (!allFiles.has(link)) {

@@ -72,6 +72,17 @@ describe('DeadLinkFinder', () => {
       expect(deadLinks.length).toBe(0);
     });
 
+    it('handles links to non-text files', () => {
+      setupDir([
+        new MockFile('[link](/some/non/text/file)', 'a_file.txt'),
+        new MockFile('I am not text',               '/some/non/text/file'),
+      ]);
+
+      const deadLinks = finder.findDeadLinks('dont care');
+
+      expect(deadLinks.length).toBe(0);
+    });
+
     it.each(['md', 'txt', 'log'])('cares about %s files', (ext) => {
       const fileWithDeadLink = new MockFile('[dead link](/to/nowhere)', `stuff.${ext}`);
       setupDir([fileWithDeadLink]);

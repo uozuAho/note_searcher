@@ -117,7 +117,7 @@ describe('NoteSearcher', () => {
 
     it('shows dead links as error', () => {
       deadLinkFinder.setup(d => d.findDeadLinks(tmoq.It.isAny())).returns(() => [
-        new DeadLink('/some/path', 23, '/path/to/nowhere')
+        new DeadLink('/some/path', '/path/to/nowhere')
       ]);
 
       noteSearcher.showDeadLinks();

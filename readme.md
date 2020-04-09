@@ -26,8 +26,11 @@ Console app that does indexing and searching
 
 # todo
 - detect dead links & show as error
-    - in progress: get e2e working ASAP
-        - node dir walker and file reader
+    - abs links still don't quite work: use my dir as example
+    - support relative links
+    - add user configuration: it's really annoying!
+        - off by default, until I find out a better way
+- don't show dead links as error
 - quick enable/disable indexing
 - show dead links while editing
 - link autocomplete
