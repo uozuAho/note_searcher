@@ -36,4 +36,7 @@ describe('DeadLinkFinder', () => {
   // todo: no dead links
   // todo: empty
   // todo: all valid links
+  // todo: ignore web links
+  // todo: relative links
+  // todo: links from root
 });

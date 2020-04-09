@@ -2,11 +2,15 @@ import * as vscode from 'vscode';
 import { createService } from './searchService';
 import { VsCode } from './ui/vscode';
 import { NoteSearcher } from './noteSearcher';
+import { DeadLinkFinder } from './DeadLinkFinder';
+import { createDirWalker } from './utils/dirWalker';
+import { createFileReader } from './utils/FileReader';
 
 export function activate(context: vscode.ExtensionContext) {
   const ui = new VsCode();
   const searcher = createService(extensionDir()!);
-  const noteSearcher = new NoteSearcher(ui, searcher);
+  const deadLinkFinder = new DeadLinkFinder(createDirWalker(), createFileReader());
+  const noteSearcher = new NoteSearcher(ui, searcher, deadLinkFinder);
 
   const search = vscode.commands.registerCommand(
     'noteSearcher.search', async () => await noteSearcher.search());
