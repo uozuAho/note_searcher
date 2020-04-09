@@ -72,20 +72,6 @@ describe('DeadLinkFinder', () => {
       expect(deadLinks.length).toBe(0);
     });
 
-    it('supports relative links', () => {
-      setupDir([
-        new MockFile('[link](file2.txt)',          '/mydir/file1.txt'),
-        new MockFile('[link](mysubdir/file3.txt)', '/mydir/file2.txt'),
-        new MockFile('some text',                  '/mydir/mysubdir/file3.txt'),
-      ]);
-
-      // act
-      const deadLinks = finder.findDeadLinks('dont care');
-
-      // assert
-      expect(deadLinks.length).toBe(0);
-    });
-
     it.each(['md', 'txt', 'log'])('cares about %s files', (ext) => {
       const fileWithDeadLink = new MockFile('[dead link](/to/nowhere)', `stuff.${ext}`);
       setupDir([fileWithDeadLink]);
