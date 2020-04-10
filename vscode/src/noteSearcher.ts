@@ -1,10 +1,13 @@
-import { NoteSearcherUi, File } from "./ui/NoteSearcherUi";
+import { NoteSearcherUi } from "./ui/NoteSearcherUi";
+import { File } from "./utils/File";
 import { SearchService } from "./searchService";
 import { extractTags } from "./text_processing/tagExtractor";
 import { extractKeywords } from "./text_processing/keywordExtractor";
 import { newDiagnostics, Diagnostics } from "./diagnostics/diagnostics";
 import { DelayedExecutor } from "./utils/delayedExecutor";
 import { GoodSet } from "./utils/goodSet";
+import { DeadLinkFinder } from "./DeadLinkFinder";
+import { NoteSearcherConfigProvider } from "./NoteSearcherConfigProvider";
 
 const UPDATE_RELATED_FILES_DELAY_MS = 500;
 
@@ -15,6 +18,8 @@ export class NoteSearcher {
   constructor(
     private ui: NoteSearcherUi,
     private searcher: SearchService,
+    private deadLinkFinder: DeadLinkFinder,
+    private configProvider: NoteSearcherConfigProvider,
     private delayedExecutor: DelayedExecutor = new DelayedExecutor())
   {
     ui.addCurrentDocumentChangeListener(this.notifyCurrentFileChanged);
@@ -38,9 +43,11 @@ export class NoteSearcher {
   };
 
   public index = async () => {
+    this.diagnostics.trace('index');
     const folder = this.ui.currentlyOpenDir();
     if (!folder) {
       await this.ui.showNotification('open a folder first');
+      this.diagnostics.trace('index: no directory open');
       return;
     }
 
@@ -49,6 +56,7 @@ export class NoteSearcher {
     try {
       await this.searcher.index(folder);
       this.ui.showNotification('indexing complete');
+      this.diagnostics.trace('indexing complete');
     }
     catch (e) {
       await this.ui.showError(e);
@@ -71,6 +79,27 @@ export class NoteSearcher {
     this.ui.showRelatedFiles(relatedFiles);
   };
 
+  public showDeadLinks = () => {
+    this.diagnostics.trace('show dead links');
+    const root = this.ui.currentlyOpenDir();
+    if (!root) {
+      this.diagnostics.trace('show dead links: no open directory');
+      return;
+    }
+
+    const deadLinks = this.deadLinkFinder.findDeadLinks(root);
+    if (deadLinks.length === 0) {
+      this.diagnostics.trace('show dead links: no dead links');
+      return;
+    }
+
+    const deadLinkMessage = deadLinks
+      .map(d => `${d.sourcePath}: dead link to ${d.targetPath}`)
+      .join('\n');
+
+    this.ui.showError(new Error(deadLinkMessage));
+  };
+
   public createTagAndKeywordQuery = (tags: string[], keywords: string[]) => {
     const keywordsMinusTags = Array.from(
       new GoodSet(keywords).difference(new GoodSet(tags))
@@ -90,6 +119,9 @@ export class NoteSearcher {
   private notifyFileSaved = (file: File) => {
     this.diagnostics.trace('file saved');
     this.index();
+    if (this.configProvider.getConfig().deadLinks.showOnSave) {
+      this.showDeadLinks();
+    }
   };
 
   private searchForRelatedFiles = async (text: string) => {

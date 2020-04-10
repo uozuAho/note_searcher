@@ -1,6 +1,7 @@
 import * as vscode from 'vscode';
 import { SearchResultTree } from './searchResultTree';
-import { NoteSearcherUi, File, FileChangeListener } from './NoteSearcherUi';
+import { NoteSearcherUi, FileChangeListener } from './NoteSearcherUi';
+import { File } from "../utils/File";
 
 export class VsCode implements NoteSearcherUi {
   private currentDocChangeListener: FileChangeListener | null = null;
