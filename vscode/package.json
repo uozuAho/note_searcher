@@ -2,9 +2,9 @@
 	"name": "note-searcher",
 	"displayName": "note-searcher",
 	"description": "searches notes",
-	"version": "0.0.4",
-  "publisher": "uozuaho",
-  "preview": true,
+	"version": "0.0.5",
+	"publisher": "uozuaho",
+	"preview": true,
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/uozuAho/note_searcher"
@@ -53,17 +53,17 @@
 				"command": "noteSearcher.search",
 				"key": "ctrl+alt+s"
 			}
-    ],
-    "configuration": {
-      "title": "Note Searcher",
-      "properties": {
-        "noteSearcher.deadLinks.showOnSave": {
-          "description": "Search all files for dead links, and display any in a new editor",
-          "type": "boolean",
-          "default": false
-        }
-      }
-    }
+		],
+		"configuration": {
+			"title": "Note Searcher",
+			"properties": {
+				"noteSearcher.deadLinks.showOnSave": {
+					"description": "Search all files for dead links, and display any in a new editor",
+					"type": "boolean",
+					"default": false
+				}
+			}
+		}
 	},
 	"scripts": {
 		"vscode:prepublish": "webpack --mode production",

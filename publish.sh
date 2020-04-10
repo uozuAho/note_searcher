@@ -20,7 +20,7 @@ popd
 ./build.all.sh
 
 echo
-echo Please install the package and make sure it works :)
+echo Please install the package and make sure it works
 echo Then open publish.sh and uncomment the following steps:
 
 # git add .
