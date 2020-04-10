@@ -1,5 +1,5 @@
 import { DirWalker } from "./utils/dirWalker";
-import { FileReader } from "./utils/FileReader";
+import { FileSystem } from "./utils/FileSystem";
 import { extractLinks } from "./text_processing/LinkExtractor";
 
 export class DeadLink {
@@ -9,7 +9,7 @@ export class DeadLink {
 }
 
 export class DeadLinkFinder {
-  constructor(private dirWalker: DirWalker, private fileReader: FileReader) {}
+  constructor(private dirWalker: DirWalker, private fileSystem: FileSystem) {}
 
   public findDeadLinks = (rootPath: string) => {
     const deadLinks = [];
@@ -20,7 +20,7 @@ export class DeadLinkFinder {
 
       const links = this.extractLinksFromFile(path);
       for (const link of links) {
-        if (!this.fileReader.exists(link)) {
+        if (!this.fileSystem.fileExists(link)) {
           deadLinks.push(new DeadLink(path, link));
         }
       }
@@ -30,7 +30,7 @@ export class DeadLinkFinder {
   };
 
   private extractLinksFromFile = (path: string): string[] => {
-    const contents = this.fileReader.readFile(path);
+    const contents = this.fileSystem.readFile(path);
     return extractLinks(contents).filter(link => !link.startsWith('http'));
   };
 
