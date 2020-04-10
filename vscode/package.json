@@ -52,7 +52,17 @@
 				"command": "noteSearcher.search",
 				"key": "ctrl+alt+s"
 			}
-		]
+    ],
+    "configuration": {
+      "title": "Note Searcher",
+      "properties": {
+        "noteSearcher.deadLinks.showOnSave": {
+          "description": "Search all files for dead links, and display any in a new editor",
+          "type": "boolean",
+          "default": false
+        }
+      }
+    }
 	},
 	"scripts": {
 		"vscode:prepublish": "webpack --mode production",

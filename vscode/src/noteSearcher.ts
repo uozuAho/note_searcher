@@ -7,6 +7,7 @@ import { newDiagnostics, Diagnostics } from "./diagnostics/diagnostics";
 import { DelayedExecutor } from "./utils/delayedExecutor";
 import { GoodSet } from "./utils/goodSet";
 import { DeadLinkFinder } from "./DeadLinkFinder";
+import { NoteSearcherConfigProvider } from "./NoteSearcherConfigProvider";
 
 const UPDATE_RELATED_FILES_DELAY_MS = 500;
 
@@ -18,6 +19,7 @@ export class NoteSearcher {
     private ui: NoteSearcherUi,
     private searcher: SearchService,
     private deadLinkFinder: DeadLinkFinder,
+    private configProvider: NoteSearcherConfigProvider,
     private delayedExecutor: DelayedExecutor = new DelayedExecutor())
   {
     ui.addCurrentDocumentChangeListener(this.notifyCurrentFileChanged);
@@ -117,7 +119,9 @@ export class NoteSearcher {
   private notifyFileSaved = (file: File) => {
     this.diagnostics.trace('file saved');
     this.index();
-    this.showDeadLinks();
+    if (this.configProvider.getConfig().deadLinks.showOnSave) {
+      this.showDeadLinks();
+    }
   };
 
   private searchForRelatedFiles = async (text: string) => {
