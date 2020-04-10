@@ -25,9 +25,13 @@ Console app that does indexing and searching
 
 
 # todo
+- quick enable/disable indexing
+- docs
+    - get readme working in extension preview in vscode
+    - make screenshot show in extension preview
+    - prevent github link replacement in example file links
 - dead links: strip root path when showing dead links
 - dead links: don't show as error
-- quick enable/disable indexing
 - show dead links while editing
 - link autocomplete
 - moving indexing progress to status bar

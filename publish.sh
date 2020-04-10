@@ -23,9 +23,12 @@ echo
 echo Please install the package and make sure it works
 echo Then open publish.sh and uncomment the following steps:
 
+# update changelog
 # git add .
 # git commit -m "increment version to XXX"
 # git tag XXX
 # git push
 # git push --tags
+# pushd vscode
 # vsce publish
+# popd
