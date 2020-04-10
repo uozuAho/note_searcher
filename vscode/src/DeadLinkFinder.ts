@@ -1,4 +1,3 @@
-import { DirWalker } from "./utils/dirWalker";
 import { FileSystem } from "./utils/FileSystem";
 import { extractLinks } from "./text_processing/LinkExtractor";
 import _path = require('path');
@@ -10,11 +9,11 @@ export class DeadLink {
 }
 
 export class DeadLinkFinder {
-  constructor(private dirWalker: DirWalker, private fileSystem: FileSystem) {}
+  constructor(private fileSystem: FileSystem) {}
 
   public findDeadLinks = (rootPath: string) => {
     const deadLinks = [];
-    const allFiles = this.dirWalker.allFilesUnderPath(rootPath);
+    const allFiles = this.fileSystem.allFilesUnderPath(rootPath);
 
     for (const sourceFile of allFiles) {
       if (!this.shouldCheckFile(sourceFile)) { continue; }
