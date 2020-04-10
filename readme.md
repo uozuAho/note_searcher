@@ -26,14 +26,13 @@ Console app that does indexing and searching
 
 # todo
 - detect dead links & show as error
-    - abs links still don't quite work: use my dir as example
-    - support relative links
     - add user configuration: it's really annoying!
         - off by default, until I find out a better way
 - make docs clear that this thing currently sucks :)
     - "under construction" message at top
     - mark as preview/prerelease
-- don't show dead links as error
+- dead links: strip root path when showing dead links
+- dead links: don't show as error
 - quick enable/disable indexing
 - show dead links while editing
 - link autocomplete

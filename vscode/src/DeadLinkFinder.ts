@@ -1,6 +1,7 @@
 import { DirWalker } from "./utils/dirWalker";
 import { FileSystem } from "./utils/FileSystem";
 import { extractLinks } from "./text_processing/LinkExtractor";
+import _path = require('path');
 
 export class DeadLink {
   constructor(
@@ -15,13 +16,14 @@ export class DeadLinkFinder {
     const deadLinks = [];
     const allFiles = this.dirWalker.allFilesUnderPath(rootPath);
 
-    for (const path of allFiles) {
-      if (!DeadLinkFinder.shouldCheckFile(path)) { continue; }
+    for (const sourceFile of allFiles) {
+      if (!this.shouldCheckFile(sourceFile)) { continue; }
 
-      const links = this.extractLinksFromFile(path);
+      const links = this.extractLinksFromFile(sourceFile);
       for (const link of links) {
-        if (!this.fileSystem.fileExists(link)) {
-          deadLinks.push(new DeadLink(path, link));
+        const absLink = this.toAbsolutePath(link, rootPath, sourceFile);
+        if (!this.fileSystem.fileExists(absLink)) {
+          deadLinks.push(new DeadLink(sourceFile, link));
         }
       }
     }
@@ -29,17 +31,26 @@ export class DeadLinkFinder {
     return deadLinks;
   };
 
-  private extractLinksFromFile = (path: string): string[] => {
-    const contents = this.fileSystem.readFile(path);
-    return extractLinks(contents).filter(link => !link.startsWith('http'));
-  };
-
-  private static shouldCheckFile = (path: string) => {
+  private shouldCheckFile = (path: string) => {
     for (const ext of ['md', 'txt', 'log']) {
       if (path.endsWith(ext)) {
         return true;
       }
     }
     return false;
+  };
+
+  private extractLinksFromFile = (path: string): string[] => {
+    const contents = this.fileSystem.readFile(path);
+    return extractLinks(contents).filter(link => !link.startsWith('http'));
+  };
+
+  private toAbsolutePath = (link: string, root: string, sourcePath: string) => {
+    const platformPath = link.startsWith('/')
+      ? _path.join(root, link)
+      : _path.join(_path.dirname(sourcePath), link);
+
+    // don't care about windows for now
+    return platformPath.replace(/\\/g, '/');
   };
 }
