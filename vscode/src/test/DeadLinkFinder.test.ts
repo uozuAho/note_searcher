@@ -27,8 +27,9 @@ describe('DeadLinkFinder', () => {
 
   describe('find dead links', () => {
     it('finds dead links', () => {
-      const fileWithDeadLink = new MockFile('[dead link](/to/nowhere)', '/stuff.txt');
+      const fileWithDeadLink = new MockFile('[link](/to/nowhere)', '/stuff.txt');
       setupDir([fileWithDeadLink]);
+      reader.setup(r => r.exists(tmoq.It.isAny())).returns(() => false);
 
       // act
       const deadLinks = finder.findDeadLinks('some dir');
@@ -42,10 +43,10 @@ describe('DeadLinkFinder', () => {
 
     it('returns empty when all links are good', () => {
       setupDir([
-        new MockFile('[link](/me/file2.txt)', '/me/file1.txt'),
-        new MockFile('[link](/me/file3.txt)', '/me/file2.txt'),
-        new MockFile('[link](/me/file1.txt)', '/me/file3.txt'),
+        new MockFile('[](asdf)', '/me/file1.txt'),
+        new MockFile('[](qwer)', '/me/file2.txt'),
       ]);
+      reader.setup(r => r.exists(tmoq.It.isAny())).returns(() => true);
 
       // act
       const deadLinks = finder.findDeadLinks('dont care');
@@ -66,6 +67,7 @@ describe('DeadLinkFinder', () => {
       setupDir([
         new MockFile('[link](https://www.stuff.com)', '/me/file1.txt'),
       ]);
+      reader.setup(r => r.exists(tmoq.It.isAny())).returns(() => false);
 
       const deadLinks = finder.findDeadLinks('dont care');
 
@@ -75,17 +77,35 @@ describe('DeadLinkFinder', () => {
     it('handles links to non-text files', () => {
       setupDir([
         new MockFile('[link](/some/non/text/file)', 'a_file.txt'),
-        new MockFile('I am not text',               '/some/non/text/file'),
       ]);
+      reader.setup(r => r.exists('/some/non/text/file')).returns(() => true);
 
       const deadLinks = finder.findDeadLinks('dont care');
 
       expect(deadLinks.length).toBe(0);
     });
 
+    // it('handles links from root directory', () => {
+    //   const root = '/some/root/dir';
+    //   setupDir([
+    //     new MockFile('[link](/to/another/file)', 'a_file.txt'),
+    //   ]);
+    //   reader.setup(r => r.exists('/to/another/file')).returns(() => true);
+    //   reader.setup(r => r.exists('/to/another/file')).returns(() => true);
+
+    //   const deadLinks = finder.findDeadLinks('dont care');
+
+    //   expect(deadLinks.length).toBe(0);
+    // });
+
+    // it('handles relative links', () => {
+
+    // });
+
     it.each(['md', 'txt', 'log'])('cares about %s files', (ext) => {
       const fileWithDeadLink = new MockFile('[dead link](/to/nowhere)', `stuff.${ext}`);
       setupDir([fileWithDeadLink]);
+      reader.setup(r => r.exists(tmoq.It.isAny())).returns(() => false);
 
       expect(finder.findDeadLinks('some path').length).toBe(1);
     });
@@ -94,6 +114,7 @@ describe('DeadLinkFinder', () => {
     it.each(['py', 'html', 'sh'])('ignores %s files', (ext) => {
       const fileWithDeadLink = new MockFile('[dead link](/to/nowhere)', `stuff.${ext}`);
       setupDir([fileWithDeadLink]);
+      reader.setup(r => r.exists(tmoq.It.isAny())).returns(() => false);
 
       expect(finder.findDeadLinks('some path').length).toBe(0);
     });

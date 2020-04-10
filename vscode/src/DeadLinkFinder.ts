@@ -13,20 +13,14 @@ export class DeadLinkFinder {
 
   public findDeadLinks = (rootPath: string) => {
     const deadLinks = [];
-    const allFiles = new Set<string>();
+    const allFiles = this.dirWalker.allFilesUnderPath(rootPath);
 
-    // pass 1: find all files
-    for (const path of this.dirWalker.allFilesUnderPath(rootPath)) {
-      allFiles.add(path);
-    }
-
-    // pass 2: check links
     for (const path of allFiles) {
       if (!DeadLinkFinder.shouldCheckFile(path)) { continue; }
 
       const links = this.extractLinksFromFile(path);
       for (const link of links) {
-        if (!allFiles.has(link)) {
+        if (!this.fileReader.exists(link)) {
           deadLinks.push(new DeadLink(path, link));
         }
       }

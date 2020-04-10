@@ -30,6 +30,9 @@ Console app that does indexing and searching
     - support relative links
     - add user configuration: it's really annoying!
         - off by default, until I find out a better way
+- make docs clear that this thing currently sucks :)
+    - "under construction" message at top
+    - mark as preview/prerelease
 - don't show dead links as error
 - quick enable/disable indexing
 - show dead links while editing
