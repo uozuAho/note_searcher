@@ -3,7 +3,8 @@
 	"displayName": "note-searcher",
 	"description": "searches notes",
 	"version": "0.0.4",
-	"publisher": "uozuaho",
+  "publisher": "uozuaho",
+  "preview": true,
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/uozuAho/note_searcher"

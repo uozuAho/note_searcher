@@ -43,7 +43,9 @@ export class VsCode implements NoteSearcherUi {
   };
 
   public showError = async (e: any) => {
-    let msg = 'Argh! Something broke. Sorry! Details:\n\n' + e;
+    let msg = 'Note Searcher: Argh! Something broke. Sorry!\n\n' +
+              'If you have time, please create an issue at https://github.com/uozuAho/note_searcher/issues\n\n' +
+              'Please include the error details: \n\n' + e;
     await openInNewEditor(msg);
   };
 

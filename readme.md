@@ -25,12 +25,6 @@ Console app that does indexing and searching
 
 
 # todo
-- detect dead links & show as error
-    - add user configuration: it's really annoying!
-        - off by default, until I find out a better way
-- make docs clear that this thing currently sucks :)
-    - "under construction" message at top
-    - mark as preview/prerelease
 - dead links: strip root path when showing dead links
 - dead links: don't show as error
 - quick enable/disable indexing
