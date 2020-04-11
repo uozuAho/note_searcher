@@ -98,6 +98,7 @@ export class NoteSearcher {
       .join('\n');
 
     this.ui.showError(new Error(deadLinkMessage));
+    this.diagnostics.trace('show dead links completed');
   };
 
   public createTagAndKeywordQuery = (tags: string[], keywords: string[]) => {
@@ -118,6 +119,12 @@ export class NoteSearcher {
 
   private notifyFileSaved = (file: File) => {
     this.diagnostics.trace('file saved');
+
+    if (!this.configProvider.isEnabledInCurrentDir()) { 
+      this.diagnostics.trace('updates disabled, doing nothing');
+      return;
+    }
+
     this.index();
     if (this.configProvider.getConfig().deadLinks.showOnSave) {
       this.showDeadLinks();

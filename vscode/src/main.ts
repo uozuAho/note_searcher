@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import { createService } from './searchService';
+import { createService as createSearchService } from './searchService';
 import { VsCode } from './ui/vscode';
 import { NoteSearcher } from './noteSearcher';
 import { DeadLinkFinder } from './DeadLinkFinder';
@@ -10,10 +10,12 @@ export const extensionId = 'uozuaho.note-searcher';
 
 export function activate(context: vscode.ExtensionContext) {
   const ui = new VsCode();
-  const searcher = createService(extensionDir()!);
+  const searcher = createSearchService(extensionDir()!);
   const deadLinkFinder = new DeadLinkFinder(createFileSystem());
-  const configProvider = new NoteSearcherConfigProvider();
-  const noteSearcher = new NoteSearcher(ui, searcher, deadLinkFinder, configProvider);
+  const configProvider = new NoteSearcherConfigProvider(context);
+
+  const noteSearcher = new NoteSearcher(ui,
+    searcher, deadLinkFinder, configProvider);
 
   const search = vscode.commands.registerCommand(
     'noteSearcher.search', async () => await noteSearcher.search());

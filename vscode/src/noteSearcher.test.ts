@@ -158,6 +158,7 @@ describe('NoteSearcher', () => {
       deadLinkFinder = tmoq.Mock.ofType<DeadLinkFinder>();
       configProvider = tmoq.Mock.ofType<NoteSearcherConfigProvider>();
       configProvider.setup(c => c.getConfig()).returns(() => defaultConfig());
+      configProvider.setup(c => c.isEnabledInCurrentDir()).returns(() => true);
 
       ui.currentlyOpenDirReturns('a directory');
       deadLinkFinder.setup(d => d.findDeadLinks(tmoq.It.isAny())).returns(() => []);
@@ -193,6 +194,18 @@ describe('NoteSearcher', () => {
 
       ui.saveFile(new MockFile('content', 'path'));
 
+      expect(showDeadLinks).not.toHaveBeenCalled();
+    });
+
+    it('does nothing if updates are disabled', () => {
+      configProvider.reset();
+      configProvider.setup(c => c.isEnabledInCurrentDir()).returns(() => false);
+      const index = spyOn(noteSearcher, 'index');
+      const showDeadLinks = spyOn(noteSearcher, 'showDeadLinks');
+
+      ui.saveFile(new MockFile('content', 'path'));
+
+      expect(index).not.toHaveBeenCalled();
       expect(showDeadLinks).not.toHaveBeenCalled();
     });
   });
