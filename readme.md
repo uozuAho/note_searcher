@@ -27,7 +27,10 @@ Console app that does indexing and searching
 # todo
 - quick enable/disable indexing
     - add way for user to enable
+    - add way for user to disable
     - manual test
+        - test across open/close sessions
+    - notification to enable on search/view
 - show view container on search complete
 - moving indexing progress to status bar
 - docs

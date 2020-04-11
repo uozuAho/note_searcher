@@ -268,6 +268,36 @@ describe('NoteSearcher', () => {
     });
   });
 
+  describe('enable/disable', () => {
+    beforeEach(() => {
+      ui = new MockUi();
+      searcher = tmoq.Mock.ofType<SearchService>();
+      deadLinkFinder = tmoq.Mock.ofType<DeadLinkFinder>();
+      configProvider = tmoq.Mock.ofType<NoteSearcherConfigProvider>();
+
+      noteSearcher = new NoteSearcher(ui,
+        searcher.object, deadLinkFinder.object, configProvider.object);
+    });
+
+    it('enable works', () => {
+      const currentDir = 'my dir';
+      ui.currentlyOpenDirReturns(currentDir);
+
+      noteSearcher.enable();
+
+      configProvider.verify(c => c.enableInCurrentDir(currentDir), tmoq.Times.once());
+    });
+
+    it('disable works', () => {
+      const currentDir = 'my dir';
+      ui.currentlyOpenDirReturns(currentDir);
+
+      noteSearcher.disable();
+
+      configProvider.verify(c => c.disableInCurrentDir(currentDir), tmoq.Times.once());
+    });
+  });
+
   describe('createTagAndKeywordQuery', () => {
     beforeEach(() => {
       ui = new MockUi();

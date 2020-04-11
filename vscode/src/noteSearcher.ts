@@ -101,6 +101,28 @@ export class NoteSearcher {
     this.diagnostics.trace('show dead links completed');
   };
 
+  public enable = () => {
+    const currentDir = this.ui.currentlyOpenDir();
+
+    if (!currentDir) {
+      this.ui.showNotification('open a directory first!');
+      return;
+    }
+
+    this.configProvider.enableInCurrentDir(currentDir);
+  };
+
+  public disable = () => {
+    const currentDir = this.ui.currentlyOpenDir();
+
+    if (!currentDir) {
+      this.ui.showNotification('open a directory first!');
+      return;
+    }
+
+    this.configProvider.disableInCurrentDir(currentDir);
+  };
+
   public createTagAndKeywordQuery = (tags: string[], keywords: string[]) => {
     const keywordsMinusTags = Array.from(
       new GoodSet(keywords).difference(new GoodSet(tags))

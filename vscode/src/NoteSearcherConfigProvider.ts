@@ -1,5 +1,7 @@
 import * as vscode from 'vscode';
 
+const EnabledDirectoriesKey = 'noteSearcher.enabledDirectories';
+
 export class NoteSearcherConfigProvider {
   constructor(private context: vscode.ExtensionContext) {}
 
@@ -13,16 +15,34 @@ export class NoteSearcherConfigProvider {
 
     if (!currentDir) { return false; }
 
-    const enabledDirs = this.context.globalState.get<Array<string>>(
-      'noteSearcher.enabledDirectories') ?? [];
-
-    return enabledDirs.includes(currentDir);
+    return this.enabledDirs().includes(currentDir);
   }
+
+  public enableInCurrentDir = (currentDir: string) => {
+    const enabledDirs = this.enabledDirs();
+
+    if (enabledDirs.includes(currentDir)) { return; }
+
+    enabledDirs.push(currentDir);
+
+    this.context.globalState.update(EnabledDirectoriesKey, enabledDirs);
+  };
+
+  public disableInCurrentDir = (currentDir: string) => {
+    const enabledDirs = this
+      .enabledDirs()
+      .filter(d => d !== currentDir);
+
+    this.context.globalState.update(EnabledDirectoriesKey, enabledDirs);
+  };
 
   private currentlyOpenDir = () =>
     vscode.workspace.workspaceFolders
       ? vscode.workspace.workspaceFolders[0].uri.fsPath
       : null;
+
+  private enabledDirs = () => this.context.globalState.get<Array<string>>(
+    EnabledDirectoriesKey) ?? [];
 }
 
 export interface NoteSearcherConfig {
