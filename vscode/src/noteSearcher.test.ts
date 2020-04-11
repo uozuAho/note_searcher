@@ -158,7 +158,7 @@ describe('NoteSearcher', () => {
       deadLinkFinder = tmoq.Mock.ofType<DeadLinkFinder>();
       configProvider = tmoq.Mock.ofType<NoteSearcherConfigProvider>();
       configProvider.setup(c => c.getConfig()).returns(() => defaultConfig());
-      configProvider.setup(c => c.isEnabledInCurrentDir()).returns(() => true);
+      configProvider.setup(c => c.isEnabledInDir(tmoq.It.isAny())).returns(() => true);
 
       ui.currentlyOpenDirReturns('a directory');
       deadLinkFinder.setup(d => d.findDeadLinks(tmoq.It.isAny())).returns(() => []);
@@ -199,7 +199,7 @@ describe('NoteSearcher', () => {
 
     it('does nothing if updates are disabled', () => {
       configProvider.reset();
-      configProvider.setup(c => c.isEnabledInCurrentDir()).returns(() => false);
+      configProvider.setup(c => c.isEnabledInDir(tmoq.It.isAny())).returns(() => false);
       const index = spyOn(noteSearcher, 'index');
       const showDeadLinks = spyOn(noteSearcher, 'showDeadLinks');
 
@@ -285,7 +285,7 @@ describe('NoteSearcher', () => {
 
       noteSearcher.enable();
 
-      configProvider.verify(c => c.enableInCurrentDir(currentDir), tmoq.Times.once());
+      configProvider.verify(c => c.enableInDir(currentDir), tmoq.Times.once());
     });
 
     it('disable works', () => {
@@ -294,7 +294,7 @@ describe('NoteSearcher', () => {
 
       noteSearcher.disable();
 
-      configProvider.verify(c => c.disableInCurrentDir(currentDir), tmoq.Times.once());
+      configProvider.verify(c => c.disableInDir(currentDir), tmoq.Times.once());
     });
   });
 

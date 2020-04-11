@@ -109,7 +109,7 @@ export class NoteSearcher {
       return;
     }
 
-    this.configProvider.enableInCurrentDir(currentDir);
+    this.configProvider.enableInDir(currentDir);
   };
 
   public disable = () => {
@@ -120,7 +120,7 @@ export class NoteSearcher {
       return;
     }
 
-    this.configProvider.disableInCurrentDir(currentDir);
+    this.configProvider.disableInDir(currentDir);
   };
 
   public createTagAndKeywordQuery = (tags: string[], keywords: string[]) => {
@@ -142,7 +142,9 @@ export class NoteSearcher {
   private notifyFileSaved = (file: File) => {
     this.diagnostics.trace('file saved');
 
-    if (!this.configProvider.isEnabledInCurrentDir()) { 
+    const currentDir = this.ui.currentlyOpenDir();
+
+    if (currentDir && !this.configProvider.isEnabledInDir(currentDir)) { 
       this.diagnostics.trace('updates disabled, doing nothing');
       return;
     }
