@@ -1,8 +1,13 @@
 # Change Log
 
-All notable changes to the "note-searcher" extension will be documented in this file.
+All notable changes to the "note-searcher" extension will be documented in this file. Format inspired by https://keepachangelog.com/en/1.0.0/
+
 
 ## [Unreleased]
+
+## [0.0.5] - 2020-04-10
+### Added
+- Show dead links on save (undocumented)
 
 ## [0.0.4] - 2020-04-05
 ### Fixed
