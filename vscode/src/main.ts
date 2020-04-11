@@ -17,25 +17,21 @@ export function activate(context: vscode.ExtensionContext) {
   const noteSearcher = new NoteSearcher(ui,
     searcher, deadLinkFinder, configProvider);
 
-  const search = vscode.commands.registerCommand(
-    'noteSearcher.search', async () => await noteSearcher.search());
-
-  const index = vscode.commands.registerCommand(
-    'noteSearcher.index', async () => await noteSearcher.index());
-
-  const openFile = vscode.commands.registerCommand(
-    'noteSearcher.searchResults.openFile',
-    file => vscode.window.showTextDocument(file));
-
-  const docChangeHandler = ui.createOnDidChangeTextDocumentHandler();
-  const docSaveHandler = ui.createOnDidSaveDocumentHandler();
-
   context.subscriptions.push(
-    search,
-    index,
-    openFile,
-    docChangeHandler,
-    docSaveHandler
+    vscode.commands.registerCommand(
+      'noteSearcher.search', async () => await noteSearcher.search()),
+    vscode.commands.registerCommand(
+      'noteSearcher.index', async () => await noteSearcher.index()),
+    vscode.commands.registerCommand(
+      'noteSearcher.searchResults.openFile',
+      file => vscode.window.showTextDocument(file)),
+    vscode.commands.registerCommand(
+      'noteSearcher.enableCurrentDir', () => noteSearcher.enable()),
+    vscode.commands.registerCommand(
+      'noteSearcher.disableCurrentDir', () => noteSearcher.disable()),
+
+    ui.createOnDidChangeTextDocumentHandler(),
+    ui.createOnDidSaveDocumentHandler()
   );
 }
 

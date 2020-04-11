@@ -220,6 +220,9 @@ describe('NoteSearcher', () => {
       configProvider = tmoq.Mock.ofType<NoteSearcherConfigProvider>();
       delayedExecutor = tmoq.Mock.ofType<DelayedExecutor>();
 
+      ui.currentlyOpenDirReturns('a directory');
+      configProvider.setup(c => c.isEnabledInDir(tmoq.It.isAny())).returns(() => true);
+
       noteSearcher = new NoteSearcher(ui,
         searcher.object,
         deadLinkFinder.object,
@@ -227,12 +230,22 @@ describe('NoteSearcher', () => {
         delayedExecutor.object);
     });
 
-    it('should schedule show related files', async () => {
+    it('schedules show related files', async () => {
       ui.currentFileChanged(new MockFile('contents', 'path'));
 
       delayedExecutor.verify(d => d.cancelAll(), tmoq.Times.once());
       delayedExecutor.verify(d =>
         d.executeInMs(tmoq.It.isAnyNumber(), tmoq.It.isAny()), tmoq.Times.once());
+    });
+
+    it('does not schedule show related files if disabled', () => {
+      configProvider.reset();
+      configProvider.setup(c => c.isEnabledInDir(tmoq.It.isAny())).returns(() => false);
+      ui.currentFileChanged(new MockFile('contents', 'path'));
+
+      delayedExecutor.verify(d => d.cancelAll(), tmoq.Times.never());
+      delayedExecutor.verify(d =>
+        d.executeInMs(tmoq.It.isAnyNumber(), tmoq.It.isAny()), tmoq.Times.never());
     });
   });
 
