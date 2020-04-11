@@ -1,4 +1,4 @@
-import { GoodSet } from '../utils/goodSet';
+import { GoodSet } from './goodSet';
 
 function assertIsSameSet<T>(a: GoodSet<T>, b: GoodSet<T>) {
   const avals = Array.from(a.values());
