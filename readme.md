@@ -26,18 +26,20 @@ Console app that does indexing and searching
 
 # todo
 - quick enable/disable indexing
+- show view container on search complete
+- moving indexing progress to status bar
 - docs
     - get readme working in extension preview in vscode
     - make screenshot show in extension preview
     - prevent github link replacement in example file links
-- dead links: strip root path when showing dead links
-- dead links: don't show as error
-- show dead links while editing
-- link autocomplete
-- moving indexing progress to status bar
 - separate view for search results + related files etc.
     - I want to see file tree at same time
-- show view container on search complete
+    - search box in results view. not supported in tree view
+- show incoming/outgoing links
+- dead links: strip root path when showing dead links
+- dead links: don't show as error
+- highlight dead links while editing
+- link autocomplete or copy/paste
 - suggest tags
 - bug: search before index breaks - re-index if there's an index problem
 - bug: '+' operator not working as expected:
@@ -46,4 +48,3 @@ Console app that does indexing and searching
     - search for +#work book:
         - expected: no results
         - actual:   many results
-- search box in results view. not supported in tree view
