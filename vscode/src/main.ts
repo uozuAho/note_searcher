@@ -33,6 +33,8 @@ export function activate(context: vscode.ExtensionContext) {
     ui.createOnDidChangeTextDocumentHandler(),
     ui.createOnDidSaveDocumentHandler()
   );
+
+  noteSearcher.notifyExtensionActivated();
 }
 
 export function deactivate() {}

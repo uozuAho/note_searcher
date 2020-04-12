@@ -26,8 +26,7 @@ Console app that does indexing and searching
 
 # todo
 - quick enable/disable indexing
-    - notification to enable on view
-    - notification to enable on search
+    - index on activation if enabled
 - show view container on search complete
 - moving indexing progress to status bar
 - dead links: don't show as error

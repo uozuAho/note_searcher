@@ -28,6 +28,90 @@ describe('NoteSearcher', () => {
     }
   });
 
+  describe('enable note searcher prompt', () => {
+    beforeEach(() => {
+      ui = new MockUi();
+      searcher = tmoq.Mock.ofType<SearchService>();
+      deadLinkFinder = tmoq.Mock.ofType<DeadLinkFinder>();
+      configProvider = tmoq.Mock.ofType<NoteSearcherConfigProvider>();
+
+      noteSearcher = new NoteSearcher(ui,
+        searcher.object, deadLinkFinder.object, configProvider.object);
+    });
+
+    it('is shown on extension activated', () => {
+      ui.currentlyOpenDirReturns('some dir');
+      configProvider.setup(c => c.isEnabledInDir(tmoq.It.isAny())).returns(() => false);
+      const promptToActivate = spyOn(noteSearcher, 'promptUserToEnable');
+
+      noteSearcher.notifyExtensionActivated();
+
+      expect(promptToActivate).toHaveBeenCalled();
+    });
+
+    it('is not shown if no folder is open', () => {
+      ui.currentlyOpenDirReturns(null);
+      configProvider.setup(c => c.isEnabledInDir(tmoq.It.isAny())).returns(() => false);
+      const promptToActivate = spyOn(noteSearcher, 'promptUserToEnable');
+
+      noteSearcher.notifyExtensionActivated();
+
+      expect(promptToActivate).not.toHaveBeenCalled();
+    });
+
+    it('is not shown if already enabled', () => {
+      ui.currentlyOpenDirReturns('some dir');
+      configProvider.setup(c => c.isEnabledInDir(tmoq.It.isAny())).returns(() => true);
+      const promptToActivate = spyOn(noteSearcher, 'promptUserToEnable');
+
+      noteSearcher.notifyExtensionActivated();
+
+      expect(promptToActivate).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('when user enables note searcher via prompt', () => {
+    beforeEach(() => {
+      ui = new MockUi();
+      searcher = tmoq.Mock.ofType<SearchService>();
+      deadLinkFinder = tmoq.Mock.ofType<DeadLinkFinder>();
+      configProvider = tmoq.Mock.ofType<NoteSearcherConfigProvider>();
+
+      noteSearcher = new NoteSearcher(ui,
+        searcher.object, deadLinkFinder.object, configProvider.object);
+    });
+
+    it('calls enable', async () => {
+      const enable = spyOn(noteSearcher, 'enable');
+      ui.promptToEnableReturns(true);
+
+      await noteSearcher.promptUserToEnable();
+
+      expect(enable).toHaveBeenCalled();
+    });
+  });
+
+  describe('when user does not enable note searcher via prompt', () => {
+    beforeEach(() => {
+      ui = new MockUi();
+      searcher = tmoq.Mock.ofType<SearchService>();
+      deadLinkFinder = tmoq.Mock.ofType<DeadLinkFinder>();
+      configProvider = tmoq.Mock.ofType<NoteSearcherConfigProvider>();
+
+      noteSearcher = new NoteSearcher(ui,
+        searcher.object, deadLinkFinder.object, configProvider.object);
+    });
+
+    it('does not call enable', async () => {
+      const enable = spyOn(noteSearcher, 'enable');
+      ui.promptToEnableReturns(false);
+
+      await noteSearcher.promptUserToEnable();
+
+      expect(enable).not.toHaveBeenCalled();
+    });
+  });
+
   describe('search', () => {
     beforeEach(() => {
       ui = new MockUi();
@@ -281,7 +365,7 @@ describe('NoteSearcher', () => {
     });
   });
 
-  describe('enable/disable', () => {
+  describe('enable', () => {
     beforeEach(() => {
       ui = new MockUi();
       searcher = tmoq.Mock.ofType<SearchService>();
@@ -292,7 +376,7 @@ describe('NoteSearcher', () => {
         searcher.object, deadLinkFinder.object, configProvider.object);
     });
 
-    it('enable works', () => {
+    it('updates config', () => {
       const currentDir = 'my dir';
       ui.currentlyOpenDirReturns(currentDir);
 
@@ -301,7 +385,29 @@ describe('NoteSearcher', () => {
       configProvider.verify(c => c.enableInDir(currentDir), tmoq.Times.once());
     });
 
-    it('disable works', () => {
+    it('runs index', () => {
+      const currentDir = 'my dir';
+      ui.currentlyOpenDirReturns(currentDir);
+      const index = spyOn(noteSearcher, 'index');
+
+      noteSearcher.enable();
+
+      expect(index).toHaveBeenCalled();
+    });
+  });
+
+  describe('disable', () => {
+    beforeEach(() => {
+      ui = new MockUi();
+      searcher = tmoq.Mock.ofType<SearchService>();
+      deadLinkFinder = tmoq.Mock.ofType<DeadLinkFinder>();
+      configProvider = tmoq.Mock.ofType<NoteSearcherConfigProvider>();
+
+      noteSearcher = new NoteSearcher(ui,
+        searcher.object, deadLinkFinder.object, configProvider.object);
+    });
+
+    it('updates config', () => {
       const currentDir = 'my dir';
       ui.currentlyOpenDirReturns(currentDir);
 

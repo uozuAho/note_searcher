@@ -102,6 +102,7 @@ export class NoteSearcher {
   };
 
   public enable = () => {
+    this.diagnostics.trace('enable');
     const currentDir = this.ui.currentlyOpenDir();
 
     if (!currentDir) {
@@ -110,9 +111,11 @@ export class NoteSearcher {
     }
 
     this.configProvider.enableInDir(currentDir);
+    this.index();
   };
 
   public disable = () => {
+    this.diagnostics.trace('disable');
     const currentDir = this.ui.currentlyOpenDir();
 
     if (!currentDir) {
@@ -121,6 +124,19 @@ export class NoteSearcher {
     }
 
     this.configProvider.disableInDir(currentDir);
+  };
+
+  public notifyExtensionActivated = () => {
+    if (!this.ui.currentlyOpenDir())  { return; }
+    if (this.isEnabledInCurrentDir()) { return; }
+
+    this.promptUserToEnable();
+  };
+
+  public promptUserToEnable = async () => {
+    const shouldEnable = await this.ui.promptToEnable();
+
+    if (shouldEnable) { this.enable(); }
   };
 
   public createTagAndKeywordQuery = (tags: string[], keywords: string[]) => {
