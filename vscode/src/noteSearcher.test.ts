@@ -28,7 +28,7 @@ describe('NoteSearcher', () => {
     }
   });
 
-  describe('enable note searcher prompt', () => {
+  describe('on extension activated', () => {
     beforeEach(() => {
       ui = new MockUi();
       searcher = tmoq.Mock.ofType<SearchService>();
@@ -39,7 +39,17 @@ describe('NoteSearcher', () => {
         searcher.object, deadLinkFinder.object, configProvider.object);
     });
 
-    it('is shown on extension activated', () => {
+    it('updates index if enabled', () => {
+      ui.currentlyOpenDirReturns('some dir');
+      configProvider.setup(c => c.isEnabledInDir(tmoq.It.isAny())).returns(() => true);
+      const index = spyOn(noteSearcher, 'index');
+
+      noteSearcher.notifyExtensionActivated();
+
+      expect(index).toHaveBeenCalled();
+    });
+
+    it('prompts user to enable in this directory', () => {
       ui.currentlyOpenDirReturns('some dir');
       configProvider.setup(c => c.isEnabledInDir(tmoq.It.isAny())).returns(() => false);
       const promptToActivate = spyOn(noteSearcher, 'promptUserToEnable');
@@ -49,7 +59,7 @@ describe('NoteSearcher', () => {
       expect(promptToActivate).toHaveBeenCalled();
     });
 
-    it('is not shown if no folder is open', () => {
+    it('does not prompt user to enable when no directory is open', () => {
       ui.currentlyOpenDirReturns(null);
       configProvider.setup(c => c.isEnabledInDir(tmoq.It.isAny())).returns(() => false);
       const promptToActivate = spyOn(noteSearcher, 'promptUserToEnable');
@@ -59,7 +69,7 @@ describe('NoteSearcher', () => {
       expect(promptToActivate).not.toHaveBeenCalled();
     });
 
-    it('is not shown if already enabled', () => {
+    it('does not prompt user to enable when already enabled', () => {
       ui.currentlyOpenDirReturns('some dir');
       configProvider.setup(c => c.isEnabledInDir(tmoq.It.isAny())).returns(() => true);
       const promptToActivate = spyOn(noteSearcher, 'promptUserToEnable');

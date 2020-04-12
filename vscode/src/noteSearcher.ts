@@ -127,8 +127,12 @@ export class NoteSearcher {
   };
 
   public notifyExtensionActivated = () => {
-    if (!this.ui.currentlyOpenDir())  { return; }
-    if (this.isEnabledInCurrentDir()) { return; }
+    if (!this.ui.currentlyOpenDir()) { return; }
+
+    if (this.isEnabledInCurrentDir()) {
+      this.index();
+      return;
+    }
 
     this.promptUserToEnable();
   };
