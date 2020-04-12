@@ -1,6 +1,7 @@
 import { File } from "../utils/File";
 
 export interface NoteSearcherUi {
+  promptToEnable: () => Promise<boolean>;
   getCurrentFile: () => File | null;
   currentlyOpenDir: () => string | null;
   promptForSearch: (prefill: string) => Promise<string | undefined>;

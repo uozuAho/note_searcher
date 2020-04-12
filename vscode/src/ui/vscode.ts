@@ -17,6 +17,18 @@ export class VsCode implements NoteSearcherUi {
       ? vscode.workspace.workspaceFolders[0].uri.fsPath
       : null;
 
+  public promptToEnable = async (): Promise<boolean> => {
+    const msg = 'Enable Note Searcher in this directory? Note Searcher can ' +
+                'also be enabled/disabled via the command palette';
+
+    const enable = 'Enable';
+    const dontEnable = 'Do not enable';
+
+    const response = await vscode.window.showInformationMessage(msg, enable, dontEnable);
+
+    return response === enable;
+  };
+
   public promptForSearch = async (prefill: string) => {
     return await vscode.window.showInputBox({
       value: prefill,
@@ -26,9 +38,14 @@ export class VsCode implements NoteSearcherUi {
 
   public showSearchResults = async (files: string[]) => {
     const uris = files.map(f => vscode.Uri.file(f));
-    vscode.window.createTreeView('noteSearcher-results', {
-      treeDataProvider: new SearchResultTree(uris)
+    const view = vscode.window.createTreeView('noteSearcher-results', {
+      treeDataProvider: new SearchResultTree(uris),
     });
+    // view.onDidChangeVisibility(e => {
+    //   if (e.visible) {
+    //     vscode.window.showInformationMessage('activate?', 'yes', 'no');
+    //   }
+    // });
   };
 
   public showRelatedFiles = (files: string[]) => {

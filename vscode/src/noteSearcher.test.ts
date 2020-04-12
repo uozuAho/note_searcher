@@ -28,6 +28,100 @@ describe('NoteSearcher', () => {
     }
   });
 
+  describe('on extension activated', () => {
+    beforeEach(() => {
+      ui = new MockUi();
+      searcher = tmoq.Mock.ofType<SearchService>();
+      deadLinkFinder = tmoq.Mock.ofType<DeadLinkFinder>();
+      configProvider = tmoq.Mock.ofType<NoteSearcherConfigProvider>();
+
+      noteSearcher = new NoteSearcher(ui,
+        searcher.object, deadLinkFinder.object, configProvider.object);
+    });
+
+    it('updates index if enabled', () => {
+      ui.currentlyOpenDirReturns('some dir');
+      configProvider.setup(c => c.isEnabledInDir(tmoq.It.isAny())).returns(() => true);
+      const index = spyOn(noteSearcher, 'index');
+
+      noteSearcher.notifyExtensionActivated();
+
+      expect(index).toHaveBeenCalled();
+    });
+
+    it('prompts user to enable in this directory', () => {
+      ui.currentlyOpenDirReturns('some dir');
+      configProvider.setup(c => c.isEnabledInDir(tmoq.It.isAny())).returns(() => false);
+      const promptToActivate = spyOn(noteSearcher, 'promptUserToEnable');
+
+      noteSearcher.notifyExtensionActivated();
+
+      expect(promptToActivate).toHaveBeenCalled();
+    });
+
+    it('does not prompt user to enable when no directory is open', () => {
+      ui.currentlyOpenDirReturns(null);
+      configProvider.setup(c => c.isEnabledInDir(tmoq.It.isAny())).returns(() => false);
+      const promptToActivate = spyOn(noteSearcher, 'promptUserToEnable');
+
+      noteSearcher.notifyExtensionActivated();
+
+      expect(promptToActivate).not.toHaveBeenCalled();
+    });
+
+    it('does not prompt user to enable when already enabled', () => {
+      ui.currentlyOpenDirReturns('some dir');
+      configProvider.setup(c => c.isEnabledInDir(tmoq.It.isAny())).returns(() => true);
+      const promptToActivate = spyOn(noteSearcher, 'promptUserToEnable');
+
+      noteSearcher.notifyExtensionActivated();
+
+      expect(promptToActivate).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('when user enables note searcher via prompt', () => {
+    beforeEach(() => {
+      ui = new MockUi();
+      searcher = tmoq.Mock.ofType<SearchService>();
+      deadLinkFinder = tmoq.Mock.ofType<DeadLinkFinder>();
+      configProvider = tmoq.Mock.ofType<NoteSearcherConfigProvider>();
+
+      noteSearcher = new NoteSearcher(ui,
+        searcher.object, deadLinkFinder.object, configProvider.object);
+    });
+
+    it('calls enable', async () => {
+      const enable = spyOn(noteSearcher, 'enable');
+      ui.promptToEnableReturns(true);
+
+      await noteSearcher.promptUserToEnable();
+
+      expect(enable).toHaveBeenCalled();
+    });
+  });
+
+  describe('when user does not enable note searcher via prompt', () => {
+    beforeEach(() => {
+      ui = new MockUi();
+      searcher = tmoq.Mock.ofType<SearchService>();
+      deadLinkFinder = tmoq.Mock.ofType<DeadLinkFinder>();
+      configProvider = tmoq.Mock.ofType<NoteSearcherConfigProvider>();
+
+      noteSearcher = new NoteSearcher(ui,
+        searcher.object, deadLinkFinder.object, configProvider.object);
+    });
+
+    it('does not call enable', async () => {
+      const enable = spyOn(noteSearcher, 'enable');
+      ui.promptToEnableReturns(false);
+
+      await noteSearcher.promptUserToEnable();
+
+      expect(enable).not.toHaveBeenCalled();
+    });
+  });
+
   describe('search', () => {
     beforeEach(() => {
       ui = new MockUi();
@@ -158,6 +252,7 @@ describe('NoteSearcher', () => {
       deadLinkFinder = tmoq.Mock.ofType<DeadLinkFinder>();
       configProvider = tmoq.Mock.ofType<NoteSearcherConfigProvider>();
       configProvider.setup(c => c.getConfig()).returns(() => defaultConfig());
+      configProvider.setup(c => c.isEnabledInDir(tmoq.It.isAny())).returns(() => true);
 
       ui.currentlyOpenDirReturns('a directory');
       deadLinkFinder.setup(d => d.findDeadLinks(tmoq.It.isAny())).returns(() => []);
@@ -195,6 +290,18 @@ describe('NoteSearcher', () => {
 
       expect(showDeadLinks).not.toHaveBeenCalled();
     });
+
+    it('does nothing if updates are disabled', () => {
+      configProvider.reset();
+      configProvider.setup(c => c.isEnabledInDir(tmoq.It.isAny())).returns(() => false);
+      const index = spyOn(noteSearcher, 'index');
+      const showDeadLinks = spyOn(noteSearcher, 'showDeadLinks');
+
+      ui.saveFile(new MockFile('content', 'path'));
+
+      expect(index).not.toHaveBeenCalled();
+      expect(showDeadLinks).not.toHaveBeenCalled();
+    });
   });
 
   describe('when current document changes', () => {
@@ -207,6 +314,9 @@ describe('NoteSearcher', () => {
       configProvider = tmoq.Mock.ofType<NoteSearcherConfigProvider>();
       delayedExecutor = tmoq.Mock.ofType<DelayedExecutor>();
 
+      ui.currentlyOpenDirReturns('a directory');
+      configProvider.setup(c => c.isEnabledInDir(tmoq.It.isAny())).returns(() => true);
+
       noteSearcher = new NoteSearcher(ui,
         searcher.object,
         deadLinkFinder.object,
@@ -214,12 +324,22 @@ describe('NoteSearcher', () => {
         delayedExecutor.object);
     });
 
-    it('should schedule show related files', async () => {
+    it('schedules show related files', async () => {
       ui.currentFileChanged(new MockFile('contents', 'path'));
 
       delayedExecutor.verify(d => d.cancelAll(), tmoq.Times.once());
       delayedExecutor.verify(d =>
         d.executeInMs(tmoq.It.isAnyNumber(), tmoq.It.isAny()), tmoq.Times.once());
+    });
+
+    it('does not schedule show related files if disabled', () => {
+      configProvider.reset();
+      configProvider.setup(c => c.isEnabledInDir(tmoq.It.isAny())).returns(() => false);
+      ui.currentFileChanged(new MockFile('contents', 'path'));
+
+      delayedExecutor.verify(d => d.cancelAll(), tmoq.Times.never());
+      delayedExecutor.verify(d =>
+        d.executeInMs(tmoq.It.isAnyNumber(), tmoq.It.isAny()), tmoq.Times.never());
     });
   });
 
@@ -252,6 +372,58 @@ describe('NoteSearcher', () => {
       await noteSearcher.updateRelatedFiles(currentFile);
 
       ui.didNotShowRelatedFiles();
+    });
+  });
+
+  describe('enable', () => {
+    beforeEach(() => {
+      ui = new MockUi();
+      searcher = tmoq.Mock.ofType<SearchService>();
+      deadLinkFinder = tmoq.Mock.ofType<DeadLinkFinder>();
+      configProvider = tmoq.Mock.ofType<NoteSearcherConfigProvider>();
+
+      noteSearcher = new NoteSearcher(ui,
+        searcher.object, deadLinkFinder.object, configProvider.object);
+    });
+
+    it('updates config', () => {
+      const currentDir = 'my dir';
+      ui.currentlyOpenDirReturns(currentDir);
+
+      noteSearcher.enable();
+
+      configProvider.verify(c => c.enableInDir(currentDir), tmoq.Times.once());
+    });
+
+    it('runs index', () => {
+      const currentDir = 'my dir';
+      ui.currentlyOpenDirReturns(currentDir);
+      const index = spyOn(noteSearcher, 'index');
+
+      noteSearcher.enable();
+
+      expect(index).toHaveBeenCalled();
+    });
+  });
+
+  describe('disable', () => {
+    beforeEach(() => {
+      ui = new MockUi();
+      searcher = tmoq.Mock.ofType<SearchService>();
+      deadLinkFinder = tmoq.Mock.ofType<DeadLinkFinder>();
+      configProvider = tmoq.Mock.ofType<NoteSearcherConfigProvider>();
+
+      noteSearcher = new NoteSearcher(ui,
+        searcher.object, deadLinkFinder.object, configProvider.object);
+    });
+
+    it('updates config', () => {
+      const currentDir = 'my dir';
+      ui.currentlyOpenDirReturns(currentDir);
+
+      noteSearcher.disable();
+
+      configProvider.verify(c => c.disableInDir(currentDir), tmoq.Times.once());
     });
   });
 

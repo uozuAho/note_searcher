@@ -26,6 +26,16 @@ export class MockUi implements NoteSearcherUi {
 
   public currentlyOpenDir = () => this._currentlyOpenDir;
 
+  private _enableReponse = false;
+
+  public promptToEnableReturns = (response: boolean) => {
+    this._enableReponse = response;
+  };
+
+  public promptToEnable = async () => {
+    return Promise.resolve(this._enableReponse);
+  };
+
   private _searchInput: string | undefined;
 
   public promptForSearchReturns = (input: string | undefined) => {

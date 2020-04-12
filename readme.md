@@ -25,9 +25,10 @@ Console app that does indexing and searching
 
 
 # todo
-- quick enable/disable indexing
 - show view container on search complete
 - moving indexing progress to status bar
+- dead links: don't show as error
+    - then document the feature
 - docs
     - get readme working in extension preview in vscode
     - make screenshot show in extension preview
@@ -35,9 +36,10 @@ Console app that does indexing and searching
 - separate view for search results + related files etc.
     - I want to see file tree at same time
     - search box in results view. not supported in tree view
+- e2e tests
+    - see https://developers.redhat.com/blog/2019/11/18/new-tools-for-automating-end-to-end-tests-for-vs-code-extensions/
 - show incoming/outgoing links
 - dead links: strip root path when showing dead links
-- dead links: don't show as error
 - highlight dead links while editing
 - link autocomplete or copy/paste
 - suggest tags

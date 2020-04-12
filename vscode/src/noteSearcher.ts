@@ -98,6 +98,49 @@ export class NoteSearcher {
       .join('\n');
 
     this.ui.showError(new Error(deadLinkMessage));
+    this.diagnostics.trace('show dead links completed');
+  };
+
+  public enable = () => {
+    this.diagnostics.trace('enable');
+    const currentDir = this.ui.currentlyOpenDir();
+
+    if (!currentDir) {
+      this.ui.showNotification('open a directory first!');
+      return;
+    }
+
+    this.configProvider.enableInDir(currentDir);
+    this.index();
+  };
+
+  public disable = () => {
+    this.diagnostics.trace('disable');
+    const currentDir = this.ui.currentlyOpenDir();
+
+    if (!currentDir) {
+      this.ui.showNotification('open a directory first!');
+      return;
+    }
+
+    this.configProvider.disableInDir(currentDir);
+  };
+
+  public notifyExtensionActivated = () => {
+    if (!this.ui.currentlyOpenDir()) { return; }
+
+    if (this.isEnabledInCurrentDir()) {
+      this.index();
+      return;
+    }
+
+    this.promptUserToEnable();
+  };
+
+  public promptUserToEnable = async () => {
+    const shouldEnable = await this.ui.promptToEnable();
+
+    if (shouldEnable) { this.enable(); }
   };
 
   public createTagAndKeywordQuery = (tags: string[], keywords: string[]) => {
@@ -111,6 +154,11 @@ export class NoteSearcher {
   private notifyCurrentFileChanged = (file: File) => {
     this.diagnostics.trace('file changed');
 
+    if (!this.isEnabledInCurrentDir()) {
+      this.diagnostics.trace('updates disabled, doing nothing');
+      return;
+    }
+
     this.delayedExecutor.cancelAll();
     this.delayedExecutor.executeInMs(UPDATE_RELATED_FILES_DELAY_MS,
       () => this.updateRelatedFiles(file));
@@ -118,10 +166,21 @@ export class NoteSearcher {
 
   private notifyFileSaved = (file: File) => {
     this.diagnostics.trace('file saved');
+
+    if (!this.isEnabledInCurrentDir()) {
+      this.diagnostics.trace('updates disabled, doing nothing');
+      return;
+    }
+
     this.index();
     if (this.configProvider.getConfig().deadLinks.showOnSave) {
       this.showDeadLinks();
     }
+  };
+
+  private isEnabledInCurrentDir = () => {
+    const currentDir = this.ui.currentlyOpenDir();
+    return currentDir && this.configProvider.isEnabledInDir(currentDir);
   };
 
   private searchForRelatedFiles = async (text: string) => {

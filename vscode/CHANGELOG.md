@@ -4,6 +4,12 @@ All notable changes to the "note-searcher" extension will be documented in this 
 
 
 ## [Unreleased]
+### Added
+- commands to enable/disable indexing in the current directory
+- prompt to enable indexing in current directory
+
+### Fixed
+- search doesn't work after opening new folder: index is now updated on activation
 
 ## [0.0.5] - 2020-04-10
 ### Added

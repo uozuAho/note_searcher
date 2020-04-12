@@ -16,7 +16,8 @@
 		"Other"
 	],
 	"activationEvents": [
-		"onCommand:noteSearcher.search",
+    "onCommand:noteSearcher.search",
+    "onCommand:noteSearcher.enableCurrentDir",
 		"onView:noteSearcher-results"
 	],
 	"main": "./dist/noteSearcher.js",
@@ -46,7 +47,15 @@
 			{
 				"command": "noteSearcher.search",
 				"title": "Note searcher: search for docs"
-			}
+      },
+      {
+        "command": "noteSearcher.enableCurrentDir",
+        "title": "Note searcher: enable in this directory"
+      },
+      {
+        "command": "noteSearcher.disableCurrentDir",
+        "title": "Note searcher: disable in this directory"
+      }
 		],
 		"keybindings": [
 			{
