@@ -1,9 +1,12 @@
 # Change Log
 
-All notable changes to the "note-searcher" extension will be documented in this file. Format inspired by https://keepachangelog.com/en/1.0.0/
+All notable changes to the "note-searcher" extension will be documented in this
+file. Format inspired by https://keepachangelog.com/en/1.0.0/
 
 
 ## [Unreleased]
+
+## [0.0.6] - 2020-04-12
 ### Added
 - commands to enable/disable indexing in the current directory
 - prompt to enable indexing in current directory

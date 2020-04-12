@@ -2,7 +2,7 @@
 	"name": "note-searcher",
 	"displayName": "note-searcher",
 	"description": "searches notes",
-	"version": "0.0.5",
+	"version": "0.0.6",
 	"publisher": "uozuaho",
 	"preview": true,
 	"repository": {
@@ -16,8 +16,8 @@
 		"Other"
 	],
 	"activationEvents": [
-    "onCommand:noteSearcher.search",
-    "onCommand:noteSearcher.enableCurrentDir",
+		"onCommand:noteSearcher.search",
+		"onCommand:noteSearcher.enableCurrentDir",
 		"onView:noteSearcher-results"
 	],
 	"main": "./dist/noteSearcher.js",
@@ -47,15 +47,15 @@
 			{
 				"command": "noteSearcher.search",
 				"title": "Note searcher: search for docs"
-      },
-      {
-        "command": "noteSearcher.enableCurrentDir",
-        "title": "Note searcher: enable in this directory"
-      },
-      {
-        "command": "noteSearcher.disableCurrentDir",
-        "title": "Note searcher: disable in this directory"
-      }
+			},
+			{
+				"command": "noteSearcher.enableCurrentDir",
+				"title": "Note searcher: enable in this directory"
+			},
+			{
+				"command": "noteSearcher.disableCurrentDir",
+				"title": "Note searcher: disable in this directory"
+			}
 		],
 		"keybindings": [
 			{
