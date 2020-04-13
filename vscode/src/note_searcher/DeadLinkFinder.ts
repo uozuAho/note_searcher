@@ -1,5 +1,5 @@
-import { FileSystem } from "./utils/FileSystem";
-import { extractLinks } from "./text_processing/LinkExtractor";
+import { FileSystem } from "../utils/FileSystem";
+import { extractLinks } from "../text_processing/LinkExtractor";
 import _path = require('path');
 
 export class DeadLink {

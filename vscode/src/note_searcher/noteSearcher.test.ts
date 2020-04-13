@@ -1,9 +1,9 @@
 import { NoteSearcher } from './noteSearcher';
 import { SearchService } from './searchService';
 import * as tmoq from "typemoq";
-import { MockUi } from "./mocks/MockUi";
-import { MockFile } from "./mocks/MockFile";
-import { DelayedExecutor } from './utils/delayedExecutor';
+import { MockUi } from "../mocks/MockUi";
+import { MockFile } from "../mocks/MockFile";
+import { DelayedExecutor } from '../utils/delayedExecutor';
 import { DeadLinkFinder, DeadLink } from './DeadLinkFinder';
 import { NoteSearcherConfigProvider, NoteSearcherConfig } from './NoteSearcherConfigProvider';
 
