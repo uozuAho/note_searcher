@@ -23,7 +23,7 @@ public class TagsAnalyzer extends Analyzer {
     private static class TagsTokenizer extends CharTokenizer {
         @Override
         protected boolean isTokenChar(int c) {
-            return Character.isLetterOrDigit(c) || c == '#';
+            return Character.isLetterOrDigit(c) || c == '#' || c == '-';
         }
     }
 

@@ -121,16 +121,8 @@ public class SearcherTests {
         public void supportsHyphenatedTags() throws IOException, ParseException {
             assertThat(searchFor("#meat-pie", "I want a #meat-pie"), isFound());
             assertThat(searchFor("#meat-pie", "I want a #meat"), isNotFound());
+            assertThat(searchFor("#meat", "I want a #meat-pie"), isNotFound());
         }
-
-        // todo: these
-//        @Test
-//        public void supportsUnderscoreTags() throws IOException, ParseException {
-//        }
-//
-//        @Test
-//        public void doesNotConfuseUnderscoreAndHyphenTags() throws IOException, ParseException {
-//        }
 
         @Test
         public void operatorsWork() throws IOException, ParseException {
