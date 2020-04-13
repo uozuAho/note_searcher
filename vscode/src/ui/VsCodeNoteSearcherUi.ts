@@ -3,7 +3,7 @@ import { SearchResultTree } from './searchResultTree';
 import { NoteSearcherUi, FileChangeListener } from './NoteSearcherUi';
 import { File } from "../utils/File";
 
-export class VsCode implements NoteSearcherUi {
+export class VsCodeNoteSearcherUi implements NoteSearcherUi {
   private currentDocChangeListener: FileChangeListener | null = null;
   private documentSavedListener: FileChangeListener | null = null;
 

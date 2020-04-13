@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
-import { createFullTextSearch as createSearchService } from './note_searcher/FullTextSearch';
-import { VsCode } from './ui/vscode';
+import { createFullTextSearch } from './note_searcher/FullTextSearch';
+import { VsCodeNoteSearcherUi } from './ui/VsCodeNoteSearcherUi';
 import { NoteSearcher } from './note_searcher/noteSearcher';
 import { DeadLinkFinder } from './note_searcher/DeadLinkFinder';
 import { createFileSystem } from './utils/FileSystem';
@@ -10,7 +10,7 @@ import { NoteSearcherUi } from './ui/NoteSearcherUi';
 export const extensionId = 'uozuaho.note-searcher';
 
 export function activate(context: vscode.ExtensionContext) {
-  const ui = new VsCode();
+  const ui = new VsCodeNoteSearcherUi();
   const noteSearcher = createNoteSearcher(context, ui);
 
   context.subscriptions.push(
@@ -36,7 +36,7 @@ export function activate(context: vscode.ExtensionContext) {
 export function deactivate() {}
 
 const createNoteSearcher = (context: vscode.ExtensionContext, ui: NoteSearcherUi) => {
-  const searcher = createSearchService(extensionDir()!);
+  const searcher = createFullTextSearch(extensionDir()!);
   const deadLinkFinder = new DeadLinkFinder(createFileSystem());
   const configProvider = new NoteSearcherConfigProvider(context);
 
