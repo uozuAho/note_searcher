@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import { createService as createSearchService } from './note_searcher/searchService';
+import { createFullTextSearch as createSearchService } from './note_searcher/FullTextSearch';
 import { VsCode } from './ui/vscode';
 import { NoteSearcher } from './note_searcher/noteSearcher';
 import { DeadLinkFinder } from './note_searcher/DeadLinkFinder';

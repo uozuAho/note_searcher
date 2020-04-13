@@ -1,6 +1,6 @@
 import { NoteSearcherUi } from "../ui/NoteSearcherUi";
 import { File } from "../utils/File";
-import { SearchService } from "./searchService";
+import { FullTextSearch } from "./FullTextSearch";
 import { extractTags } from "../text_processing/tagExtractor";
 import { extractKeywords } from "../text_processing/keywordExtractor";
 import { newDiagnostics, Diagnostics } from "../diagnostics/diagnostics";
@@ -17,7 +17,7 @@ export class NoteSearcher {
 
   constructor(
     private ui: NoteSearcherUi,
-    private searcher: SearchService,
+    private searcher: FullTextSearch,
     private deadLinkFinder: DeadLinkFinder,
     private configProvider: NoteSearcherConfigProvider,
     private delayedExecutor: DelayedExecutor = new DelayedExecutor())

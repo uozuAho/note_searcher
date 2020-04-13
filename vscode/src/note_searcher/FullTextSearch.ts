@@ -1,7 +1,7 @@
 import * as path from 'path';
 import * as child_process from 'child_process';
 
-export interface SearchService {
+export interface FullTextSearch {
   search: (query: string) => Promise<string[]>;
   index: (dir: string) => Promise<void>;
 }
@@ -9,12 +9,12 @@ export interface SearchService {
 /**
  * @param extensionDir location of this vscode extension's directory
  */
-export const createService = (extensionDir: string): SearchService => {
+export const createFullTextSearch = (extensionDir: string): FullTextSearch => {
   const jarPath = path.join(extensionDir, 'dist/note_searcher.jar');
   return new CliSearcher(jarPath);
 };
 
-class CliSearcher implements SearchService {
+class CliSearcher implements FullTextSearch {
   public constructor(private jarPath: string) {}
 
   public search = async (query: string) => {
