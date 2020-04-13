@@ -5,6 +5,8 @@ file. Format inspired by https://keepachangelog.com/en/1.0.0/
 
 
 ## [Unreleased]
+### Added
+- support for hyphenated tags, eg. #public-speaking
 
 ## [0.0.6] - 2020-04-12
 ### Added
