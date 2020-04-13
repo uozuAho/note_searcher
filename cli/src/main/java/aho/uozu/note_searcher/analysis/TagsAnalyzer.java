@@ -8,7 +8,6 @@ import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 import org.apache.lucene.analysis.util.CharTokenizer;
 
 import java.io.IOException;
-import java.io.StringReader;
 
 public class TagsAnalyzer extends Analyzer {
 
@@ -19,26 +18,6 @@ public class TagsAnalyzer extends Analyzer {
         final Tokenizer tokenizer = new TagsTokenizer();
         TokenStream stream = new TagsTokenFilter(tokenizer);
         return new TokenStreamComponents(tokenizer, stream);
-    }
-
-    public static void main(String[] args) throws IOException {
-        final String text = "Demo-text, Including \"tags\" like #wow. Not a tag: #";
-
-        var analyzer = new TagsAnalyzer();
-        var stream = analyzer.tokenStream("field", new StringReader(text));
-
-        // get the CharTermAttribute from the TokenStream...what???
-
-        try (stream) {
-            var termAtt = stream.addAttribute(CharTermAttribute.class);
-            stream.reset();
-
-            while (stream.incrementToken()) {
-                System.out.println(termAtt.toString());
-            }
-
-            stream.end();
-        }
     }
 
     private static class TagsTokenizer extends CharTokenizer {

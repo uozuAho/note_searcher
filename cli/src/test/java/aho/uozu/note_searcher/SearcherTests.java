@@ -118,6 +118,21 @@ public class SearcherTests {
         }
 
         @Test
+        public void supportsHyphenatedTags() throws IOException, ParseException {
+            assertThat(searchFor("#meat-pie", "I want a #meat-pie"), isFound());
+            assertThat(searchFor("#meat-pie", "I want a #meat"), isNotFound());
+        }
+
+        // todo: these
+//        @Test
+//        public void supportsUnderscoreTags() throws IOException, ParseException {
+//        }
+//
+//        @Test
+//        public void doesNotConfuseUnderscoreAndHyphenTags() throws IOException, ParseException {
+//        }
+
+        @Test
         public void operatorsWork() throws IOException, ParseException {
             assertThat(searchFor("#beef -#chowder", "The tags are #beef and #chowder"), isNotFound());
         }
@@ -137,17 +152,17 @@ public class SearcherTests {
     class TagQueryExpander {
         @Test
         public void replacesTag_atStartOfLine() {
-            assertThat(Searcher.replaceTagShortcuts("#tag"), equalTo("tag:#tag"));
+            assertThat(Searcher.expandQueryTags("#tag"), equalTo("tag:#tag"));
         }
 
         @Test
         public void replacesTag_inMiddleOfLine() {
-            assertThat(Searcher.replaceTagShortcuts("hello #tag boy"), equalTo("hello tag:#tag boy"));
+            assertThat(Searcher.expandQueryTags("hello #tag boy"), equalTo("hello tag:#tag boy"));
         }
 
         @Test
         public void doesNotModifyLuceneTagQuery() {
-            assertThat(Searcher.replaceTagShortcuts("tag:#thing"), equalTo("tag:#thing"));
+            assertThat(Searcher.expandQueryTags("tag:#thing"), equalTo("tag:#thing"));
         }
     }
 

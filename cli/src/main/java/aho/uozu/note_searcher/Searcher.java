@@ -56,7 +56,7 @@ class Searcher {
         }
     }
 
-    public static String replaceTagShortcuts(String query) {
+    public static String expandQueryTags(String query) {
         return query.replaceAll("(\\s|^)(#.+?)\\b", "$1tag:$2");
     }
 
@@ -66,7 +66,7 @@ class Searcher {
     }
 
     private Query parseQuery(String queryText) throws ParseException {
-        queryText = replaceTagShortcuts(queryText);
+        queryText = expandQueryTags(queryText);
         return new QueryParser(EnglishWithTagsAnalyzer.CONTENT_FIELD, _analyzer).parse(queryText);
     }
 }

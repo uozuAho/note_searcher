@@ -25,6 +25,10 @@ Console app that does indexing and searching
 
 
 # todo
+- ensure consistent tag format
+    - tag: #meat-pie
+    - should not be found by #meat #meat_pie
+- suggest tags
 - show view container on search complete
 - moving indexing progress to status bar
 - dead links: don't show as error
@@ -38,15 +42,14 @@ Console app that does indexing and searching
     - search box in results view. not supported in tree view
 - e2e tests
     - see https://developers.redhat.com/blog/2019/11/18/new-tools-for-automating-end-to-end-tests-for-vs-code-extensions/
-- show incoming/outgoing links
-- dead links: strip root path when showing dead links
-- highlight dead links while editing
-- link autocomplete or copy/paste
-- suggest tags
-- bug: search before index breaks - re-index if there's an index problem
 - bug: '+' operator not working as expected:
     - search for #work: no results
     - search for book: many results
     - search for +#work book:
         - expected: no results
         - actual:   many results
+- bug: search before index breaks - re-index if there's an index problem
+- show incoming/outgoing links
+- dead links: strip root path when showing dead links
+- highlight dead links while editing
+- link autocomplete or copy/paste
