@@ -2,7 +2,26 @@
 
 Open this directory with note seacher to test its features.
 
-Press `ctrl+alt+s` to search for files using full-text search.
 
-Add a [link](some_file.txt) to your files, and vscode makes them clickable
+## full text search
+
+Press `ctrl+alt+s` to search for files using full-text search. Some example
+queries:
+
+`cheese`
+`cheese -food`
+`cheese +train`
+
+
+## tags
+
+You can also put tags anywhere in your files, #weapons or #public-speaking.
+These are also searchable:
+
+`cheese +#transport`
+
+
+## links
+
+Add a [link](trains.md) to your files, and vscode makes them clickable
 hyperlinks.

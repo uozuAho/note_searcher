@@ -11,8 +11,28 @@ describe('extractTags', () => {
     expect(tags).toEqual(['change', 'stuff']);
   });
 
+  it('extracts hyphenated tag', () => {
+    const tags = extractTags('#meat-pie');
+    expect(tags).toEqual(['meat-pie']);
+  });
+
+  it('does not extract underscored tag', () => {
+    const tags = extractTags('#meat_pie');
+    expect(tags).toEqual([]);
+  });
+
   it('extracts tag at start', () => {
     const tags = extractTags('#blub nub nub');
+    expect(tags).toEqual(['blub']);
+  });
+
+  it('extracts tag at end of line', () => {
+    const tags = extractTags('nub nub #blub\ncheese');
+    expect(tags).toEqual(['blub']);
+  });
+
+  it('extracts tag before a full stop', () => {
+    const tags = extractTags('nub nub #blub. cheese');
     expect(tags).toEqual(['blub']);
   });
 

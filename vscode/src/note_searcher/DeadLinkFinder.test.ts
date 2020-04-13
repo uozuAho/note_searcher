@@ -1,8 +1,8 @@
 import * as tmoq from "typemoq";
 import { DeadLinkFinder } from "./DeadLinkFinder";
-import { MockFile } from "./mocks/MockFile";
-import { FileSystem } from "./utils/FileSystem";
-import { File } from "./utils/File";
+import { MockFile } from "../mocks/MockFile";
+import { FileSystem } from "../utils/FileSystem";
+import { File } from "../utils/File";
 
 describe('DeadLinkFinder', () => {
   let fileSystem: tmoq.IMock<FileSystem>;

@@ -32,7 +32,7 @@ apple banana #food    # file contains apple, banana, and/or the tag #food
 ```
 
 Any word starting with a '#' character is considered a tag, allowing for
-tag-based searching.
+tag-based searching. #hyphenated-tags are supported.
 
 Note that with VS Code, you can add links to local files using markdown
 syntax. These become hyperlinks to your local files! Examples:
