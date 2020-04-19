@@ -1,7 +1,5 @@
 #!/bin/bash
 
-# UNTESTED! HAVE FUN :)
-
 set -eu
 
 ## YOU THERE! SET THESE BEFORE RUNNING:
