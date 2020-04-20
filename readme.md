@@ -25,14 +25,15 @@ Console app that does indexing and searching
 
 
 # todo
-- ensure consistent tag format
-    - tag: #meat-pie
-    - should not be found by #meat #meat_pie
-- suggest tags
+- quick create new note (with timestamp prefix)
+- extract text to new note
+- copy note link from search results/file list
+- tag autocompletion
 - show view container on search complete
 - moving indexing progress to status bar
 - dead links: don't show as error
     - then document the feature
+- support wiki-style links, with id only (for archive users)
 - docs
     - get readme working in extension preview in vscode
     - make screenshot show in extension preview
@@ -52,4 +53,3 @@ Console app that does indexing and searching
 - show incoming/outgoing links
 - dead links: strip root path when showing dead links
 - highlight dead links while editing
-- link autocomplete or copy/paste
