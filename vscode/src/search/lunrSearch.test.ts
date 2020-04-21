@@ -1,35 +1,38 @@
-import { LunrSearch } from "./lunrSearch";
-import * as lunr from 'lunr';
+import * as tmoq from 'typemoq';
 
-const documents = [{
-  "name": "Lunr",
-  "text": "Like Solr, but much smaller, and not as bright."
-}, {
-  "name": "React",
-  "text": "A JavaScript library for building user interfaces."
-}, {
-  "name": "Lodash",
-  "text": "A modern JavaScript utility library delivering modularity, performance & extras."
-}];
+import { LunrSearch } from "./lunrSearch";
+import { FileSystem } from "../utils/FileSystem";
+import { File } from '../utils/File';
+import { MockFile } from '../mocks/MockFile';
+
 
 describe('lunr search', () => {
+  let fileSystem: tmoq.IMock<FileSystem>;
   let lunrSearcher: LunrSearch;
 
+  const setupFiles = (files: File[]) => {
+    fileSystem.setup(w => w.allFilesUnderPath(tmoq.It.isAny()))
+      .returns(() => files.map(f => f.path()));
+    for (const file of files) {
+      fileSystem.setup(r => r.readFile(file.path())).returns(() => file.text());
+    }
+  };
+
   beforeEach(() => {
-    lunrSearcher = new LunrSearch();
+    fileSystem = tmoq.Mock.ofType<FileSystem>();
+    lunrSearcher = new LunrSearch(fileSystem.object);
   });
 
-  it.only('searches', () => {
-    const idx = lunr(function () {
-      const _builder = this;
-      _builder.ref('name');
-      _builder.field('text');
+  it.only('searches', async () => {
+    setupFiles([
+      new MockFile('a/b', 'blah blah some stuff and things'),
+      new MockFile('a/b/c', 'what about shoes and biscuits'),
+    ]);
 
-      documents.forEach(function (doc) {
-        _builder.add(doc);
-      }, _builder);
-    });
+    lunrSearcher.index('some dir');
+    const results = await lunrSearcher.search('blah');
 
-    console.log(idx.search('solr'));
+    expect(results.length).toBe(1);
+    expect(results[0]).toBe('a/b');
   });
 });
