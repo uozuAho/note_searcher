@@ -14,10 +14,11 @@ declare global {
 }
 
 expect.extend({
-  async toBeFound(received: Promise<string[]>) {
-    return (await received).length > 0
+  async toBeFound(receivedPromise: Promise<string[]>) {
+    const received = await receivedPromise;
+    return received.length > 0
       ? {
-        message: () => '',
+        message: () => `expected no results, but found ${received.length}`,
         pass: true
       }
       : {
@@ -76,5 +77,27 @@ describe('lunr search', () => {
 
   it('findsStemmedWord', async () => {
     await expect(searchFor("bike", "I own several bikes")).toBeFound();
+  });
+
+  describe('or operator', () => {
+    it('isDefault', async () => {
+      await expect(searchFor("ham good", "the ham is good")).toBeFound();
+      await expect(searchFor("ham or good", "the ham is good")).toBeFound();
+    });
+
+    it('findsAtLeastOnePresentWord', async () => {
+      await expect(searchFor("ham jabberwocky turtle house cannon", "the ham is good")).toBeFound();
+    });
+  });
+
+  // note: lunr doesn't have an AND operator
+  describe('plus operator', () => {
+    it('finds multiple words', async () => {
+      await expect(searchFor("+ham +good", "the ham is good")).toBeFound();
+    });
+
+    it('rejects any missing words', async () => {
+      await expect(searchFor("+ham +pizza", "the ham is good")).not.toBeFound();
+    });
   });
 });
