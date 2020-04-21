@@ -23,7 +23,7 @@ describe('DeadLinkFinder', () => {
   });
 
   it('finds dead links', () => {
-    const fileWithDeadLink = new MockFile('[link](/to/nowhere)', '/stuff.txt');
+    const fileWithDeadLink = new MockFile('/stuff.txt', '[link](/to/nowhere)');
     setupDir([fileWithDeadLink]);
     fileSystem.setup(r => r.fileExists(tmoq.It.isAny())).returns(() => false);
 
@@ -39,8 +39,8 @@ describe('DeadLinkFinder', () => {
 
   it('returns empty when all links are good', () => {
     setupDir([
-      new MockFile('[](asdf)', '/me/file1.txt'),
-      new MockFile('[](qwer)', '/me/file2.txt'),
+      new MockFile('/me/file1.txt', '[](asdf)'),
+      new MockFile('/me/file2.txt', '[](qwer)'),
     ]);
     fileSystem.setup(r => r.fileExists(tmoq.It.isAny())).returns(() => true);
 
@@ -61,7 +61,7 @@ describe('DeadLinkFinder', () => {
 
   it('ignores links starting with http', () => {
     setupDir([
-      new MockFile('[link](https://www.stuff.com)', '/me/file1.txt'),
+      new MockFile('/me/file1.txt', '[link](https://www.stuff.com)'),
     ]);
     fileSystem.setup(r => r.fileExists(tmoq.It.isAny())).returns(() => false);
 
@@ -72,7 +72,7 @@ describe('DeadLinkFinder', () => {
 
   it('handles links to non-text files', () => {
     setupDir([
-      new MockFile('[link](/some/non/text/file)', 'a_file.txt'),
+      new MockFile('a_file.txt', '[link](/some/non/text/file)'),
     ]);
     fileSystem.setup(r => r.fileExists(tmoq.It.isAny())).returns(() => true);
 
@@ -85,7 +85,7 @@ describe('DeadLinkFinder', () => {
   it('handles "absolute" links', () => {
     const root = '/some/root/dir';
     setupDir([
-      new MockFile('[link](/to/another/file)', 'a_file.txt'),
+      new MockFile('a_file.txt', '[link](/to/another/file)'),
     ]);
     fileSystem.setup(r => r.fileExists(`${root}/to/another/file`)).returns(() => true);
     fileSystem.setup(r => r.fileExists('/to/another/file')).returns(() => false);
@@ -100,7 +100,7 @@ describe('DeadLinkFinder', () => {
   it('handles relative links', () => {
     const root = '/some/root/dir';
     setupDir([
-      new MockFile('[link](b_file.txt)', `${root}/mydir/a_file.txt`),
+      new MockFile(`${root}/mydir/a_file.txt`, '[link](b_file.txt)'),
     ]);
     fileSystem.setup(r => r.fileExists(`${root}/mydir/b_file.txt`)).returns(() => true);
 
@@ -115,7 +115,7 @@ describe('DeadLinkFinder', () => {
   it('handles paths with spaces', () => {
     const root = '/some/root dir';
     setupDir([
-      new MockFile('[link](b_file.txt)', `${root}/my dir/a_file.txt`),
+      new MockFile(`${root}/my dir/a_file.txt`, '[link](b_file.txt)'),
     ]);
     fileSystem.setup(r => r.fileExists(`${root}/my dir/b_file.txt`)).returns(() => true);
 
@@ -127,7 +127,7 @@ describe('DeadLinkFinder', () => {
   });
 
   it.each(['md', 'txt', 'log'])('cares about %s files', (ext) => {
-    const fileWithDeadLink = new MockFile('[dead link](/to/nowhere)', `stuff.${ext}`);
+    const fileWithDeadLink = new MockFile(`stuff.${ext}`, '[dead link](/to/nowhere)');
     setupDir([fileWithDeadLink]);
     fileSystem.setup(r => r.fileExists(tmoq.It.isAny())).returns(() => false);
 
@@ -136,7 +136,7 @@ describe('DeadLinkFinder', () => {
 
   // just some examples, but really, any extension except the above
   it.each(['py', 'html', 'sh'])('ignores %s files', (ext) => {
-    const fileWithDeadLink = new MockFile('[dead link](/to/nowhere)', `stuff.${ext}`);
+    const fileWithDeadLink = new MockFile(`stuff.${ext}`, '[dead link](/to/nowhere)');
     setupDir([fileWithDeadLink]);
     fileSystem.setup(r => r.fileExists(tmoq.It.isAny())).returns(() => false);
 
