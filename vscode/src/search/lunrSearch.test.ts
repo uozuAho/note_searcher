@@ -5,6 +5,28 @@ import { FileSystem } from "../utils/FileSystem";
 import { File } from '../utils/File';
 import { MockFile } from '../mocks/MockFile';
 
+declare global {
+  namespace jest {
+    interface Matchers<R, T> {
+      toBeFound: (results: R) => Promise<T>;
+    }
+  }
+}
+
+expect.extend({
+  async toBeFound(received: Promise<string[]>) {
+    return (await received).length > 0
+      ? {
+        message: () => '',
+        pass: true
+      }
+      : {
+        message: () => 'returned no results',
+        pass: false
+      };
+  }
+});
+
 
 describe('lunr search', () => {
   let fileSystem: tmoq.IMock<FileSystem>;
@@ -18,12 +40,20 @@ describe('lunr search', () => {
     }
   };
 
+  const searchFor = (query: string, text: string) => {
+    setupFiles([new MockFile('some/path', text)]);
+
+    lunrSearcher.index('some dir');
+
+    return lunrSearcher.search(query);
+  };
+
   beforeEach(() => {
     fileSystem = tmoq.Mock.ofType<FileSystem>();
     lunrSearcher = new LunrSearch(fileSystem.object);
   });
 
-  it.only('searches', async () => {
+  it('index and search example', async () => {
     setupFiles([
       new MockFile('a/b', 'blah blah some stuff and things'),
       new MockFile('a/b/c', 'what about shoes and biscuits'),
@@ -34,5 +64,17 @@ describe('lunr search', () => {
 
     expect(results.length).toBe(1);
     expect(results[0]).toBe('a/b');
+  });
+
+  it('findsSingleWord', async () => {
+    await expect(searchFor("ham", "the ham is good")).toBeFound();
+  });
+
+  it('doesNotFindMissingWord', async () => {
+    await expect(searchFor("pizza", "the ham is good")).not.toBeFound();
+  });
+
+  it('findsStemmedWord', async () => {
+    await expect(searchFor("bike", "I own several bikes")).toBeFound();
   });
 });
