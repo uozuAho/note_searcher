@@ -1,5 +1,5 @@
 import { NoteSearcher } from './noteSearcher';
-import { FullTextSearch } from './FullTextSearch';
+import { FullTextSearch } from '../search/FullTextSearch';
 import * as tmoq from "typemoq";
 import { MockUi } from "../mocks/MockUi";
 import { MockFile } from "../mocks/MockFile";

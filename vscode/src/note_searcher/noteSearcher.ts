@@ -1,6 +1,6 @@
 import { NoteSearcherUi } from "../ui/NoteSearcherUi";
 import { File } from "../utils/File";
-import { FullTextSearch } from "./FullTextSearch";
+import { FullTextSearch } from "../search/FullTextSearch";
 import { extractTags } from "../text_processing/tagExtractor";
 import { extractKeywords } from "../text_processing/keywordExtractor";
 import { newDiagnostics, Diagnostics } from "../diagnostics/diagnostics";

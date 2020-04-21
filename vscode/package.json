@@ -85,6 +85,7 @@
 	"devDependencies": {
 		"@types/glob": "^7.1.1",
 		"@types/jest": "^25.1.4",
+		"@types/lunr": "^2.3.3",
 		"@types/node": "^12.11.7",
 		"@types/vscode": "^1.43.0",
 		"@typescript-eslint/eslint-plugin": "^2.18.0",
@@ -92,6 +93,7 @@
 		"eslint": "^6.8.0",
 		"glob": "^7.1.6",
 		"jest": "^25.2.3",
+		"lunr": "^2.3.8",
 		"retext": "^7.0.1",
 		"retext-keywords": "^6.0.0",
 		"retext-pos": "^3.0.0",
