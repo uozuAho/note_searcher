@@ -25,9 +25,9 @@ Console app that does indexing and searching
 
 
 # todo
-- ensure consistent tag format
-    - tag: #meat-pie
-    - should not be found by #meat #meat_pie
+- release
+- support tags with lunr
+- use lunr by default
 - suggest tags
 - show view container on search complete
 - moving indexing progress to status bar

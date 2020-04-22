@@ -119,4 +119,10 @@ describe('lunr search', () => {
       await expect(searchFor('"ham is good"', "the ham is good")).not.toBeFound();
     });
   });
+
+  describe('tags', () => {
+    it('finds single tag', async () => {
+      await expect(searchFor("tags:beef", "The tags are #beef and #chowder")).toBeFound();
+    });
+  });
 });

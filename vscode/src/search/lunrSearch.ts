@@ -3,6 +3,7 @@ import * as lunr from 'lunr';
 import { FullTextSearch } from "./FullTextSearch";
 import { FileSystem } from "../utils/FileSystem";
 import { newDiagnostics } from '../diagnostics/diagnostics';
+import { extractTags } from '../text_processing/tagExtractor';
 
 const NUM_RESULTS = 10;
 
@@ -29,6 +30,7 @@ export class LunrSearch implements FullTextSearch {
     this._index = lunr(builder => {
       builder.ref('path');
       builder.field('text');
+      builder.field('tags');
 
       for (const path of this.fileSystem.allFilesUnderPath(dir)) {
         if (!this.shouldIndex(path)) { continue; }
@@ -36,7 +38,10 @@ export class LunrSearch implements FullTextSearch {
         this.trace(`indexing ${path}`);
 
         const text = this.fileSystem.readFile(path);
-        builder.add({path, text});
+        // hack: add tags as a single string that gets tokenized. This
+        // means I don't have to figure out how to make my own tokenizer
+        const tags = extractTags(text).join(' ');
+        builder.add({path, text, tags});
       }
     });
 
