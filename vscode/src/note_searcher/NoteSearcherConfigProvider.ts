@@ -37,7 +37,10 @@ export class NoteSearcherConfigProvider {
 }
 
 export interface NoteSearcherConfig {
+  search: {
+    useLunr: boolean
+  },
   deadLinks: {
-    showOnSave: boolean;
+    showOnSave: boolean
   },
 }

@@ -66,6 +66,11 @@
 		"configuration": {
 			"title": "Note Searcher",
 			"properties": {
+        "noteSearcher.search.useLunr": {
+          "description": "Use lunr full text search (experimental)",
+          "type": "boolean",
+          "default": false
+        },
 				"noteSearcher.deadLinks.showOnSave": {
 					"description": "Search all files for dead links, and display any in a new editor",
 					"type": "boolean",

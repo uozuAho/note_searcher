@@ -2,7 +2,7 @@ import * as child_process from 'child_process';
 
 import { FullTextSearch } from './FullTextSearch';
 
-export class LuceneCli implements FullTextSearch {
+export class LuceneCliSearch implements FullTextSearch {
 
   public constructor(private jarPath: string) { }
 
