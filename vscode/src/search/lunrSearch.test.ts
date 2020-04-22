@@ -102,4 +102,21 @@ describe('lunr search', () => {
       await expect(searchFor("+ham +pizza", "the ham is good")).not.toBeFound();
     });
   });
+
+  describe('not operator', () => {
+    it('finds word when excluded word is missing', async () => {
+      await expect(searchFor("ham -pizza", "the ham is good")).toBeFound();
+    });
+
+    it('does not find when excluded word is present', async () => {
+      await expect(searchFor("ham -good", "the ham is good")).not.toBeFound();
+    });
+  });
+
+  // lunr doesn't support exact phrase matching: https://github.com/olivernn/lunr.js/issues/62
+  describe('phrases', () => {
+    it('does not support phrases', async () => {
+      await expect(searchFor('"ham is good"', "the ham is good")).not.toBeFound();
+    });
+  });
 });
