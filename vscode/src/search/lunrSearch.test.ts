@@ -28,6 +28,8 @@ expect.extend({
   }
 });
 
+const aTextFilePath = '/a/b/c.txt';
+
 
 describe('lunr search', () => {
   let fileSystem: tmoq.IMock<FileSystem>;
@@ -42,7 +44,7 @@ describe('lunr search', () => {
   };
 
   const searchFor = (query: string, text: string) => {
-    setupFiles([new MockFile('some/path', text)]);
+    setupFiles([new MockFile(aTextFilePath, text)]);
 
     lunrSearcher.index('some dir');
 
@@ -56,15 +58,15 @@ describe('lunr search', () => {
 
   it('index and search example', async () => {
     setupFiles([
-      new MockFile('a/b', 'blah blah some stuff and things'),
-      new MockFile('a/b/c', 'what about shoes and biscuits'),
+      new MockFile('a/b.txt', 'blah blah some stuff and things'),
+      new MockFile('a/b/c.log', 'what about shoes and biscuits'),
     ]);
 
     lunrSearcher.index('some dir');
     const results = await lunrSearcher.search('blah');
 
     expect(results.length).toBe(1);
-    expect(results[0]).toBe('a/b');
+    expect(results[0]).toBe('a/b.txt');
   });
 
   it('findsSingleWord', async () => {

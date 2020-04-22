@@ -4,6 +4,8 @@ import { FullTextSearch } from "./FullTextSearch";
 import { FileSystem } from "../utils/FileSystem";
 import { newDiagnostics } from '../diagnostics/diagnostics';
 
+const NUM_RESULTS = 10;
+
 export class LunrSearch implements FullTextSearch {
   private _index: lunr.Index | null = null;
   private _diagnostics = newDiagnostics('LunrSearch');
@@ -15,7 +17,10 @@ export class LunrSearch implements FullTextSearch {
 
     if (!this._index) { return Promise.resolve([]); }
 
-    return Promise.resolve(this._index.search(query).map(r => r.ref));
+    return Promise.resolve(this._index
+      .search(query)
+      .slice(0, NUM_RESULTS)
+      .map(r => r.ref));
   };
 
   public index = (dir: string) => {
