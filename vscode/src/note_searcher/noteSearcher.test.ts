@@ -24,7 +24,7 @@ describe('NoteSearcher', () => {
 
   const defaultConfig = (): NoteSearcherConfig => ({
     search: {
-      useLunr: false
+      useLucene: false
     },
     deadLinks: {
       showOnSave: true

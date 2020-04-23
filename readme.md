@@ -25,8 +25,7 @@ Console app that does indexing and searching
 
 
 # todo
-- support tags with lunr
-- use lunr by default
+- document lunr stuff
 - release
 - suggest tags
 - show view container on search complete

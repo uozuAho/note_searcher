@@ -66,8 +66,8 @@
 		"configuration": {
 			"title": "Note Searcher",
 			"properties": {
-				"noteSearcher.search.useLunr": {
-					"description": "Use lunr full text search (experimental)",
+				"noteSearcher.search.useLucene": {
+					"description": "Use lucene for full text search (requires Java)",
 					"type": "boolean",
 					"default": false
 				},

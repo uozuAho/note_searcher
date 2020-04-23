@@ -50,8 +50,6 @@ export class LunrSearch implements FullTextSearch {
       for (const path of this.fileSystem.allFilesUnderPath(dir)) {
         if (!this.shouldIndex(path)) { continue; }
 
-        this.trace(`indexing ${path}`);
-
         const text = this.fileSystem.readFile(path);
         const tags = extractTags(text);
 

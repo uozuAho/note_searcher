@@ -18,10 +18,10 @@ export const createFullTextSearch = (
   config: NoteSearcherConfigProvider
 ): FullTextSearch =>
 {
-  if (config.getConfig().search.useLunr) {
-    return new LunrSearch(createFileSystem());
-  } else {
+  if (config.getConfig().search.useLucene) {
     const jarPath = path.join(extensionDir, 'dist/note_searcher.jar');
     return new LuceneCliSearch(jarPath);
+  } else {
+    return new LunrSearch(createFileSystem());
   }
 };
