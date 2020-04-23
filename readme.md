@@ -25,6 +25,7 @@ Console app that does indexing and searching
 
 
 # todo
+- improve indexing speed (currently 100 docs/s for 10000 file repo)
 - document lunr stuff
 - release
 - suggest tags

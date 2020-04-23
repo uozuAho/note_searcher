@@ -4,7 +4,7 @@ export interface Diagnostics {
   trace: (message: string) => void;
 }
 
-export const newDiagnostics = (
+export const createDiagnostics = (
   label: string,
   timeProvider: TimeProvider = newTimeProvider()) =>
 {
@@ -14,14 +14,20 @@ export const newDiagnostics = (
 };
 
 class ConsoleDiagnostics implements Diagnostics {
+  private start: number;
+
   constructor(
     private label: string,
-    private timeProvider: TimeProvider) {}
+    private timeProvider: TimeProvider)
+  {
+    this.start = timeProvider.currentTimeMs();
+  }
 
   public trace = (message: string) => {
-    const now = this.timeProvider.currentTimeMs();
+    const now_ms = this.timeProvider.currentTimeMs() - this.start;
+    const now_s = now_ms / 1000;
 
-    console.log(`${now}: ${this.label}: ${message}`);
+    console.log(`${now_s}: ${this.label}: ${message}`);
   };
 }
 

@@ -2,7 +2,7 @@ import * as lunr from 'lunr';
 
 import { FullTextSearch } from "./FullTextSearch";
 import { FileSystem } from "../utils/FileSystem";
-import { newDiagnostics } from '../diagnostics/diagnostics';
+import { createDiagnostics } from '../diagnostics/diagnostics';
 import { extractTags } from '../text_processing/tagExtractor';
 
 const NUM_RESULTS = 10;
@@ -22,7 +22,7 @@ lunr.tokenizer.separator = /\s+/;
 
 export class LunrSearch implements FullTextSearch {
   private _index: lunr.Index | null = null;
-  private _diagnostics = newDiagnostics('LunrSearch');
+  private _diagnostics = createDiagnostics('LunrSearch');
 
   constructor(private fileSystem: FileSystem) {}
 
@@ -63,7 +63,7 @@ export class LunrSearch implements FullTextSearch {
   };
 
   public expandQueryTags = (query: string) => {
-    return query.replace(/(\s|^|\+|-)#(.+?)\b/g, "$1tags:$2")
+    return query.replace(/(\s|^|\+|-)#(.+?)\b/g, "$1tags:$2");
   };
 
   private shouldIndex = (path: string) => {
