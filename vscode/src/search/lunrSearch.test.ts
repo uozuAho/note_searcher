@@ -39,14 +39,16 @@ describe('lunr search', () => {
     fileSystem.setup(w => w.allFilesUnderPath(tmoq.It.isAny()))
       .returns(() => files.map(f => f.path()));
     for (const file of files) {
-      fileSystem.setup(r => r.readFile(file.path())).returns(() => file.text());
+      fileSystem.setup(f =>
+        f.readFileAsync(file.path()))
+        .returns(() => Promise.resolve(file.text()));
     }
   };
 
-  const searchFor = (query: string, text: string) => {
+  const searchFor = async (query: string, text: string) => {
     setupFiles([new MockFile(aTextFilePath, text)]);
 
-    lunrSearcher.index('some dir');
+    await lunrSearcher.index('some dir');
 
     return lunrSearcher.search(query);
   };
@@ -62,7 +64,8 @@ describe('lunr search', () => {
       new MockFile('a/b/c.log', 'what about shoes and biscuits'),
     ]);
 
-    lunrSearcher.index('some dir');
+    await lunrSearcher.index('some dir');
+
     const results = await lunrSearcher.search('blah');
 
     expect(results.length).toBe(1);

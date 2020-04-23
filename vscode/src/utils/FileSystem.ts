@@ -5,6 +5,7 @@ import { createDiagnostics } from '../diagnostics/diagnostics';
 export interface FileSystem {
   fileExists: (path: string) => boolean;
   readFile: (path: string) => string;
+  readFileAsync: (path: string) => Promise<string>;
   allFilesUnderPath: (path: string) => Iterable<string>
 }
 
@@ -17,6 +18,11 @@ class NodeFileSystem implements FileSystem {
 
   public readFile = (path: string) => {
     return new String(fs.readFileSync(path)).toString();
+  };
+
+  public readFileAsync = (path: string) => {
+    return fs.promises.readFile(path)
+      .then(contents => new String(contents).toString());
   };
 
   public fileExists = (path: string) => fs.existsSync(path);

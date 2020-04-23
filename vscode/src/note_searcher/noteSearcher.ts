@@ -28,6 +28,8 @@ export class NoteSearcher {
   }
 
   public search = async () => {
+    this.diagnostics.trace('search');
+
     const input = await this.ui.promptForSearch(this.previousQuery);
     if (!input) {
       return;
@@ -36,6 +38,8 @@ export class NoteSearcher {
     try {
       const results = await this.searcher.search(input);
       await this.ui.showSearchResults(results);
+
+      this.diagnostics.trace('search complete');
     }
     catch (e) {
       await this.ui.showError(e);

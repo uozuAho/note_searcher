@@ -39,23 +39,47 @@ export class LunrSearch implements FullTextSearch {
       .map(r => r.ref));
   };
 
-  public index = (dir: string) => {
+  public index = async (dir: string) => {
     this.trace('index start');
 
-    this._index = lunr(builder => {
-      builder.ref('path');
-      builder.field('text');
-      builder.field('tags');
+    const jobs: Promise<void>[] = [];
 
-      for (const path of this.fileSystem.allFilesUnderPath(dir)) {
-        if (!this.shouldIndex(path)) { continue; }
+    const builder = new lunr.Builder();
 
-        const text = this.fileSystem.readFile(path);
-        const tags = extractTags(text);
+    builder.pipeline.add(
+      lunr.trimmer,
+      lunr.stopWordFilter,
+      lunr.stemmer
+    );
 
-        builder.add({path, text, tags});
-      }
-    });
+    builder.searchPipeline.add(
+      lunr.stemmer
+    );
+
+    builder.ref('path');
+    builder.field('text');
+    builder.field('tags');
+
+    for (const path of this.fileSystem.allFilesUnderPath(dir)) {
+      if (!this.shouldIndex(path)) { continue; }
+
+      const job = this.fileSystem.readFileAsync(path)
+        .then(text => {
+          const tags = extractTags(text);
+          // console.log({path, text, tags});
+          builder.add({path, text, tags});
+        });
+
+      jobs.push(job);
+    }
+
+    // console.log('about to wait for jobs');
+
+    await Promise.all(jobs);
+
+    this._index = builder.build();
+
+    // console.log('index complete');
 
     this.trace('index complete');
 
