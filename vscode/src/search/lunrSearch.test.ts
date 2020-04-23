@@ -141,12 +141,11 @@ describe('lunr search', () => {
       await expect(searchFor("#beef -#chowder", "The tags are #beef and #chowder")).not.toBeFound();
     });
 
-    // todo: support hyphen tags
-    // it('supports hyphenated tags', async () => {
-    //   await expect(searchFor("#meat-pie", "I want a #meat-pie")).toBeFound();
-    //   await expect(searchFor("#meat-pie", "I want a #meat")).not.toBeFound();
-    //   await expect(searchFor("#meat", "I want a #meat-pie")).not.toBeFound();
-    // });
+    it('supports hyphenated tags', async () => {
+      await expect(searchFor("#meat-pie", "I want a #meat-pie")).toBeFound();
+      await expect(searchFor("#meat-pie", "I want a #meat")).not.toBeFound();
+      await expect(searchFor("#meat", "I want a #meat-pie")).not.toBeFound();
+    });
   });
 
   describe('expand query tags', () => {
