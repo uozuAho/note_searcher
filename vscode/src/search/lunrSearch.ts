@@ -18,6 +18,8 @@ export class LunrSearch implements FullTextSearch {
 
     if (!this._index) { return Promise.resolve([]); }
 
+    query = this.expandQueryTags(query);
+
     return Promise.resolve(this._index
       .search(query)
       .slice(0, NUM_RESULTS)
@@ -48,6 +50,10 @@ export class LunrSearch implements FullTextSearch {
     this.trace('index complete');
 
     return Promise.resolve();
+  };
+
+  public expandQueryTags = (query: string) => {
+    return query.replace(/(\s|^|\+|-)#(.+?)\b/g, "$1tags:$2")
   };
 
   private shouldIndex = (path: string) => {
