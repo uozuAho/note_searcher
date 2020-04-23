@@ -25,10 +25,11 @@ Console app that does indexing and searching
 
 
 # todo
-- improve indexing speed (currently 100 docs/s for 10000 file repo)
+- clean up lunr indexing code
 - document lunr stuff
 - release
 - suggest tags
+- improve lunr indexing speed (currently ~150 docs/s for 5000 file repo)
 - show view container on search complete
 - moving indexing progress to status bar
 - dead links: don't show as error
