@@ -38,14 +38,9 @@ export class VsCodeNoteSearcherUi implements NoteSearcherUi {
 
   public showSearchResults = async (files: string[]) => {
     const uris = files.map(f => vscode.Uri.file(f));
-    const view = vscode.window.createTreeView('noteSearcher-results', {
+    vscode.window.createTreeView('noteSearcher-results', {
       treeDataProvider: new SearchResultTree(uris),
     });
-    // view.onDidChangeVisibility(e => {
-    //   if (e.visible) {
-    //     vscode.window.showInformationMessage('activate?', 'yes', 'no');
-    //   }
-    // });
   };
 
   public showRelatedFiles = (files: string[]) => {
