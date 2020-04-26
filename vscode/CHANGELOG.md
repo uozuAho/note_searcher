@@ -6,6 +6,11 @@ file. Format inspired by https://keepachangelog.com/en/1.0.0/
 
 ## [Unreleased]
 
+## [0.0.8] - 2020-04-26
+### Changed
+- Removed Java dependency by using lunr search engine
+- Added config option `noteSearcher.search.useLucene` (defaults to false)
+
 ## [0.0.7] - 2020-04-19
 ### Added
 - support for hyphenated tags, eg. #public-speaking

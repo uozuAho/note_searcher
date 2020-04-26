@@ -2,7 +2,7 @@
 	"name": "note-searcher",
 	"displayName": "note-searcher",
 	"description": "searches notes",
-	"version": "0.0.7",
+	"version": "0.0.8",
 	"publisher": "uozuaho",
 	"preview": true,
 	"repository": {
