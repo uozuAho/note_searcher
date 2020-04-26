@@ -1,5 +1,5 @@
 import { NoteSearcher } from './noteSearcher';
-import { FullTextSearch } from './FullTextSearch';
+import { FullTextSearch } from '../search/FullTextSearch';
 import * as tmoq from "typemoq";
 import { MockUi } from "../mocks/MockUi";
 import { MockFile } from "../mocks/MockFile";
@@ -23,6 +23,9 @@ describe('NoteSearcher', () => {
   };
 
   const defaultConfig = (): NoteSearcherConfig => ({
+    search: {
+      useLucene: false
+    },
     deadLinks: {
       showOnSave: true
     }
@@ -262,7 +265,7 @@ describe('NoteSearcher', () => {
     });
 
     it('updates index', () => {
-      const file = new MockFile('content', 'path');
+      const file = new MockFile('path', 'content');
       const indexSpy = spyOn(noteSearcher, 'index');
 
       ui.saveFile(file);
@@ -271,7 +274,7 @@ describe('NoteSearcher', () => {
     });
 
     it('checks for dead links', () => {
-      const file = new MockFile('content', 'path');
+      const file = new MockFile('path', 'content');
       const showDeadLinks = spyOn(noteSearcher, 'showDeadLinks');
 
       ui.saveFile(file);
@@ -286,7 +289,7 @@ describe('NoteSearcher', () => {
       configProvider.setup(c => c.getConfig()).returns(() => config);
       const showDeadLinks = spyOn(noteSearcher, 'showDeadLinks');
 
-      ui.saveFile(new MockFile('content', 'path'));
+      ui.saveFile(new MockFile('path', 'content'));
 
       expect(showDeadLinks).not.toHaveBeenCalled();
     });
@@ -297,7 +300,7 @@ describe('NoteSearcher', () => {
       const index = spyOn(noteSearcher, 'index');
       const showDeadLinks = spyOn(noteSearcher, 'showDeadLinks');
 
-      ui.saveFile(new MockFile('content', 'path'));
+      ui.saveFile(new MockFile('path', 'content'));
 
       expect(index).not.toHaveBeenCalled();
       expect(showDeadLinks).not.toHaveBeenCalled();
@@ -325,7 +328,7 @@ describe('NoteSearcher', () => {
     });
 
     it('schedules show related files', async () => {
-      ui.currentFileChanged(new MockFile('contents', 'path'));
+      ui.currentFileChanged(new MockFile('path', 'content'));
 
       delayedExecutor.verify(d => d.cancelAll(), tmoq.Times.once());
       delayedExecutor.verify(d =>
@@ -335,7 +338,7 @@ describe('NoteSearcher', () => {
     it('does not schedule show related files if disabled', () => {
       configProvider.reset();
       configProvider.setup(c => c.isEnabledInDir(tmoq.It.isAny())).returns(() => false);
-      ui.currentFileChanged(new MockFile('contents', 'path'));
+      ui.currentFileChanged(new MockFile('path', 'content'));
 
       delayedExecutor.verify(d => d.cancelAll(), tmoq.Times.never());
       delayedExecutor.verify(d =>
@@ -355,7 +358,7 @@ describe('NoteSearcher', () => {
     });
 
     it('does not include current file in related files', async () => {
-      const currentFile = new MockFile('asdf', 'path/file/a');
+      const currentFile = new MockFile('path/file/a', 'asdf');
       const relatedFiles = [currentFile.path(), 'path/file/b', 'path/file/c'];
       searcher_returns(relatedFiles);
 
@@ -365,7 +368,7 @@ describe('NoteSearcher', () => {
     });
 
     it('does not update files if current file is empty', async () => {
-      const currentFile = new MockFile('', 'path/file/a');
+      const currentFile = new MockFile('path/file/a', '');
       const relatedFiles = [currentFile.path(), 'path/file/b', 'path/file/c'];
       searcher_returns(relatedFiles);
 

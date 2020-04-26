@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import { createFullTextSearch } from './note_searcher/FullTextSearch';
+import { createFullTextSearch } from './search/FullTextSearch';
 import { VsCodeNoteSearcherUi } from './ui/VsCodeNoteSearcherUi';
 import { NoteSearcher } from './note_searcher/noteSearcher';
 import { DeadLinkFinder } from './note_searcher/DeadLinkFinder';
@@ -36,9 +36,9 @@ export function activate(context: vscode.ExtensionContext) {
 export function deactivate() {}
 
 const createNoteSearcher = (context: vscode.ExtensionContext, ui: NoteSearcherUi) => {
-  const searcher = createFullTextSearch(extensionDir()!);
-  const deadLinkFinder = new DeadLinkFinder(createFileSystem());
   const configProvider = new NoteSearcherConfigProvider(context);
+  const searcher = createFullTextSearch(extensionDir()!, configProvider);
+  const deadLinkFinder = new DeadLinkFinder(createFileSystem());
 
   return new NoteSearcher(ui, searcher, deadLinkFinder, configProvider);
 };

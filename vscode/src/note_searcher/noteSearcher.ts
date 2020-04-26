@@ -1,9 +1,9 @@
 import { NoteSearcherUi } from "../ui/NoteSearcherUi";
 import { File } from "../utils/File";
-import { FullTextSearch } from "./FullTextSearch";
+import { FullTextSearch } from "../search/FullTextSearch";
 import { extractTags } from "../text_processing/tagExtractor";
 import { extractKeywords } from "../text_processing/keywordExtractor";
-import { newDiagnostics, Diagnostics } from "../diagnostics/diagnostics";
+import { createDiagnostics, Diagnostics } from "../diagnostics/diagnostics";
 import { DelayedExecutor } from "../utils/delayedExecutor";
 import { GoodSet } from "../utils/goodSet";
 import { DeadLinkFinder } from "./DeadLinkFinder";
@@ -24,10 +24,12 @@ export class NoteSearcher {
   {
     ui.addCurrentDocumentChangeListener(this.notifyCurrentFileChanged);
     ui.addDocumentSavedListener(this.notifyFileSaved);
-    this.diagnostics = newDiagnostics('noteSearcher');
+    this.diagnostics = createDiagnostics('noteSearcher');
   }
 
   public search = async () => {
+    this.diagnostics.trace('search');
+
     const input = await this.ui.promptForSearch(this.previousQuery);
     if (!input) {
       return;
@@ -36,6 +38,8 @@ export class NoteSearcher {
     try {
       const results = await this.searcher.search(input);
       await this.ui.showSearchResults(results);
+
+      this.diagnostics.trace('search complete');
     }
     catch (e) {
       await this.ui.showError(e);

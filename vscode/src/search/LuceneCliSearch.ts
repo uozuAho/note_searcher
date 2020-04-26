@@ -1,21 +1,10 @@
-import * as path from 'path';
 import * as child_process from 'child_process';
 
-export interface FullTextSearch {
-  search: (query: string) => Promise<string[]>;
-  index: (dir: string) => Promise<void>;
-}
+import { FullTextSearch } from './FullTextSearch';
 
-/**
- * @param extensionDir location of this vscode extension's directory
- */
-export const createFullTextSearch = (extensionDir: string): FullTextSearch => {
-  const jarPath = path.join(extensionDir, 'dist/note_searcher.jar');
-  return new CliSearcher(jarPath);
-};
+export class LuceneCliSearch implements FullTextSearch {
 
-class CliSearcher implements FullTextSearch {
-  public constructor(private jarPath: string) {}
+  public constructor(private jarPath: string) { }
 
   public search = async (query: string) => {
     const result = await this.runCliSearch(query);
@@ -30,8 +19,7 @@ class CliSearcher implements FullTextSearch {
   private runCliSearch = (query: string) => {
     return new Promise<string>((resolve, reject) => {
       // todo: make this async
-      const result = child_process.spawnSync('java',
-        ['-jar', this.jarPath, 'search', query]);
+      const result = child_process.spawnSync('java', ['-jar', this.jarPath, 'search', query]);
       if (result.error) {
         reject(result.error);
       }
@@ -47,8 +35,7 @@ class CliSearcher implements FullTextSearch {
   private runCliIndex = (dir: string) => {
     return new Promise<string>((resolve, reject) => {
       // todo: make this async
-      const result = child_process.spawnSync('java',
-        ['-jar', this.jarPath, 'index', dir]);
+      const result = child_process.spawnSync('java', ['-jar', this.jarPath, 'index', dir]);
       if (result.error) {
         reject(result.error);
       }
