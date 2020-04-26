@@ -25,7 +25,6 @@ Console app that does indexing and searching
 
 
 # todo
-- document lunr stuff
 - release
 - feature: suggest tags
 - feature: extract text to new note

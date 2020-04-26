@@ -3,9 +3,6 @@
 Full-text and tag-based searching of arbitrary directories and files.
 Lets you make your own zettelkasten! Inspired by https://zettelkasten.de/.
 
-This extension requires Java. It's been tested with OpenJDK 11 on windows, and
-may work on [OpenJDK 13](https://jdk.java.net/13/) on all OS's!
-
 
 ## UNDER CONSTRUCTION
 
