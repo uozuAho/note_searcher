@@ -55,12 +55,20 @@
 			{
 				"command": "noteSearcher.disableCurrentDir",
 				"title": "Note searcher: disable in this directory"
+      },
+      {
+				"command": "noteSearcher.createNote",
+				"title": "Note searcher: create a new note"
 			}
 		],
 		"keybindings": [
 			{
 				"command": "noteSearcher.search",
 				"key": "ctrl+alt+s"
+      },
+      {
+				"command": "noteSearcher.createNote",
+				"key": "ctrl+alt+n"
 			}
 		],
 		"configuration": {
