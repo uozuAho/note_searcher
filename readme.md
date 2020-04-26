@@ -25,6 +25,9 @@ Console app that does indexing and searching
 
 
 # todo
+- e2e tests:
+    - different timeout when debugging
+    - document
 - feature: create note
     - create in dir of active file
     - if not active file, create in root dir
@@ -48,8 +51,6 @@ Console app that does indexing and searching
 - separate view for search results + related files etc.
     - I want to see file tree at same time
     - search box in results view. not supported in tree view
-- e2e tests
-    - see https://developers.redhat.com/blog/2019/11/18/new-tools-for-automating-end-to-end-tests-for-vs-code-extensions/
 - bug: '+' operator not working as expected:
     - using lucene
     - search for #work: no results

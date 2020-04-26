@@ -15,6 +15,12 @@
 				"kind": "build",
 				"isDefault": true
 			}
-		}
+    },
+    {
+      "label": "e2eCompile",
+			"type": "npm",
+			"script": "e2e:compile",
+			"isBackground": false,
+    },
 	]
 }
