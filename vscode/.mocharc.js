@@ -2,5 +2,5 @@ module.exports = {
   // todo: different value for debugging
   // todo: is this for a whole test, or
   // one promise?? seems to be a test
-  timeout: 20000
+  timeout: 60000
 }

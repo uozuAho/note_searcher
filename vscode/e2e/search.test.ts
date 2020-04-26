@@ -1,67 +1,30 @@
 const path = require('path');
 
-import {
-  Workbench,
-  WebDriver,
-  VSBrowser,
-  Notification,
-  InputBox,
-  ActivityBar,
-  CustomTreeSection
-} from 'vscode-extension-tester';
-
+// chai used since jest conflicts with mocha,
+// mocha is required by vscode-extension-tester
 import { expect } from 'chai';
 
-async function notificationExists(text: string): Promise<Notification | undefined> {
-  const notifications = await new Workbench().getNotifications();
-  for (const notification of notifications) {
-    const message = await notification.getMessage();
-    if (message.indexOf(text) >= 0) {
-      return notification as any;
-    }
-  }
-}
+import { VsCodeDriver } from './utils/VsCodeDriver';
+import { NoteSearcherDriver } from './utils/NoteSearcherDriver';
 
 describe('search', () => {
-  let driver: WebDriver;
+  let vscode: VsCodeDriver;
+  let noteSearcher: NoteSearcherDriver;
 
-  before(() => {
-    driver = VSBrowser.instance.driver;
+  before(async () => {
+    vscode = new VsCodeDriver();
+    noteSearcher = new NoteSearcherDriver(vscode);
+    await vscode.openDirectory(path.resolve(__dirname, '../demo_dir'));
   });
 
-  it('search', async () => {
-    // open dir
-    const workbench = new Workbench();
-    await workbench.executeCommand('Extest: Open Folder');
-    const folder = path.resolve(__dirname, '../demo_dir');
-    const input1 = await InputBox.create();
-    await input1.setText(folder);
-    await input1.confirm();
-
-    // enable note searcher
-    await workbench.executeCommand('Note searcher: enable in this directory');
-
-    // get note searcher sidebar
-    const activityBar = new ActivityBar();
-    const controls = activityBar.getViewControl('Note Searcher');
-    const sideBar = await controls.openView();
-
-    // search for cheese
-    await workbench.executeCommand('Note searcher: search for docs');
-    const input2 = await InputBox.create();
-    await input2.setText('cheese');
-    await input2.confirm();
-
-    // get results
-    const searchResults = await sideBar.getContent()
-      .getSection('Search results') as CustomTreeSection;
-
-    const cheeseFile = await searchResults.findItem('cheese.md');
+  it('open a file returned by a search', async () => {
+    await noteSearcher.enable();
+    await noteSearcher.search('cheese');
+    const cheeseFile = await noteSearcher.findSearchResult('cheese.md');
     expect(cheeseFile).not.to.be.undefined;
-    // todo: tsconfig is a bit wacky for these tests
     await cheeseFile!.click();
 
-    // expect(await notification.getMessage()).to.equal('Hello World!');
-    // expect(await notification.getType()).to.equal(NotificationType.Info);
+    const cheeseDoc = await vscode.findEditor('cheese.md');
+    expect(cheeseDoc).not.to.be.null;
   });
 });
