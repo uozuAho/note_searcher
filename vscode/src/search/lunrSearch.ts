@@ -42,8 +42,33 @@ export class LunrSearch implements FullTextSearch {
   public index = async (dir: string) => {
     this.trace('index start');
 
+    const builder = this.createIndexBuilder();
     const jobs: Promise<void>[] = [];
 
+    for (const path of this.fileSystem.allFilesUnderPath(dir)) {
+      if (!this.shouldIndex(path)) { continue; }
+
+      const job = this.fileSystem.readFileAsync(path)
+        .then(text => {
+          const tags = extractTags(text);
+          builder.add({path, text, tags});
+        });
+
+      jobs.push(job);
+    }
+
+    await Promise.all(jobs);
+
+    this._index = builder.build();
+
+    this.trace('index complete');
+  };
+
+  public expandQueryTags = (query: string) => {
+    return query.replace(/(\s|^|\+|-)#(.+?)\b/g, "$1tags:$2");
+  };
+
+  private createIndexBuilder = () => {
     const builder = new lunr.Builder();
 
     builder.pipeline.add(
@@ -60,34 +85,7 @@ export class LunrSearch implements FullTextSearch {
     builder.field('text');
     builder.field('tags');
 
-    for (const path of this.fileSystem.allFilesUnderPath(dir)) {
-      if (!this.shouldIndex(path)) { continue; }
-
-      const job = this.fileSystem.readFileAsync(path)
-        .then(text => {
-          const tags = extractTags(text);
-          // console.log({path, text, tags});
-          builder.add({path, text, tags});
-        });
-
-      jobs.push(job);
-    }
-
-    // console.log('about to wait for jobs');
-
-    await Promise.all(jobs);
-
-    this._index = builder.build();
-
-    // console.log('index complete');
-
-    this.trace('index complete');
-
-    return Promise.resolve();
-  };
-
-  public expandQueryTags = (query: string) => {
-    return query.replace(/(\s|^|\+|-)#(.+?)\b/g, "$1tags:$2");
+    return builder;
   };
 
   private shouldIndex = (path: string) => {

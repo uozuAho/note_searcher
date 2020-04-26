@@ -25,11 +25,17 @@ Console app that does indexing and searching
 
 
 # todo
-- clean up lunr indexing code
 - document lunr stuff
 - release
-- suggest tags
-- improve lunr indexing speed (currently ~150 docs/s for 5000 file repo)
+- feature: suggest tags
+- feature: extract text to new note
+- feature: create note
+- feature: copy note link from file list/search results
+- choose search engine:
+    - lunr:   pros: no deps, simple implementation
+              cons: slow, no incremental index (must rebuild from scratch)
+    - lucene: pros: fast, powerful
+              cons: needs java, complex impl (compared to lunr)
 - show view container on search complete
 - moving indexing progress to status bar
 - dead links: don't show as error
@@ -44,6 +50,7 @@ Console app that does indexing and searching
 - e2e tests
     - see https://developers.redhat.com/blog/2019/11/18/new-tools-for-automating-end-to-end-tests-for-vs-code-extensions/
 - bug: '+' operator not working as expected:
+    - using lucene
     - search for #work: no results
     - search for book: many results
     - search for +#work book:

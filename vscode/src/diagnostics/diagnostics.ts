@@ -9,8 +9,8 @@ export const createDiagnostics = (
   timeProvider: TimeProvider = newTimeProvider()) =>
 {
   // todo: config
-  return new ConsoleDiagnostics(label, timeProvider);
-  // return new NullDiagnostics();
+  // return new ConsoleDiagnostics(label, timeProvider);
+  return new NullDiagnostics();
 };
 
 class ConsoleDiagnostics implements Diagnostics {
