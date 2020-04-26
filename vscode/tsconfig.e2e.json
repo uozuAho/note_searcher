@@ -6,15 +6,15 @@
 		"lib": [
 			"es6"
 		],
-		"sourceMap": true,
-		"rootDir": "src",
+		"rootDir": "e2e",
     "strict": true,
-    "types": ["node", "jest"]
+    "sourceMap": true,
+    "types": ["node"]
 	},
 	"exclude": [
 		"node_modules",
     ".vscode-test",
     "test-resources",
-    "e2e"
+    "src"
   ],
 }
