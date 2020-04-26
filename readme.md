@@ -25,9 +25,6 @@ Console app that does indexing and searching
 
 
 # todo
-- e2e tests:
-    - different timeout when debugging
-    - document
 - feature: create note
     - create in dir of active file
     - if not active file, create in root dir
