@@ -50,13 +50,6 @@ export class VsCodeNoteSearcherUi implements NoteSearcherUi {
     });
   };
 
-  public createNote = (name: string) => {
-    // const edit = new vscode.WorkspaceEdit();
-    // const uri = vscode.Uri.file(name);
-    // edit.createFile()
-    // vscode.workspace.
-  };
-
   public showRelatedFiles = (files: string[]) => {
     const uris = files.map(f => vscode.Uri.file(f));
     vscode.window.createTreeView('noteSearcher-related', {

@@ -8,7 +8,6 @@ import { DelayedExecutor } from "../utils/delayedExecutor";
 import { GoodSet } from "../utils/goodSet";
 import { DeadLinkFinder } from "./DeadLinkFinder";
 import { NoteSearcherConfigProvider } from "./NoteSearcherConfigProvider";
-import { TimeProvider, newTimeProvider } from "../utils/timeProvider";
 
 const UPDATE_RELATED_FILES_DELAY_MS = 500;
 

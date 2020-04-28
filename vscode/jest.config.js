@@ -3,6 +3,7 @@ module.exports = {
   testEnvironment: 'node',
   testPathIgnorePatterns: [
     '/node_modules/',
-    '/out/'
+    '/out/',
+    '/e2e/'
   ]
 };
