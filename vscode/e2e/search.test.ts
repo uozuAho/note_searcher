@@ -1,5 +1,3 @@
-const path = require('path');
-
 // chai used since jest conflicts with mocha,
 // mocha is required by vscode-extension-tester
 import { expect } from 'chai';
@@ -14,10 +12,10 @@ describe('search', () => {
   before(async () => {
     vscode = new VsCodeDriver();
     noteSearcher = new NoteSearcherDriver(vscode);
-    await vscode.openDirectory(path.resolve(__dirname, '../demo_dir'));
+    await vscode.openDemoDirectory();
   });
 
-  it('open a file returned by a search', async () => {
+  it('opens a file returned by a search', async () => {
     await noteSearcher.enable();
     await noteSearcher.search('cheese');
     const cheeseFile = await noteSearcher.findSearchResult('cheese.md');

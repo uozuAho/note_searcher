@@ -25,6 +25,8 @@ export function activate(context: vscode.ExtensionContext) {
       'noteSearcher.enableCurrentDir', () => noteSearcher.enable()),
     vscode.commands.registerCommand(
       'noteSearcher.disableCurrentDir', () => noteSearcher.disable()),
+    vscode.commands.registerCommand(
+      'noteSearcher.createNote', () => noteSearcher.createNote()),
 
     ui.createOnDidChangeTextDocumentHandler(),
     ui.createOnDidSaveDocumentHandler()

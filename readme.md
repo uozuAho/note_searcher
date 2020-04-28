@@ -36,6 +36,7 @@ Console app that does indexing and searching
               cons: slow, no incremental index (must rebuild from scratch)
     - lucene: pros: fast, powerful
               cons: needs java, complex impl (compared to lunr)
+- e2e test throws unhandled promise rejection after test completes
 - show view container on search complete
 - moving indexing progress to status bar
 - dead links: don't show as error

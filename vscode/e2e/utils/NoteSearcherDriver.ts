@@ -8,7 +8,6 @@ import {
 import { VsCodeDriver } from './VsCodeDriver';
 
 export class NoteSearcherDriver {
-
   constructor(private vscode: VsCodeDriver) { }
 
   public enable = () => {
@@ -33,5 +32,9 @@ export class NoteSearcherDriver {
     const searchResults = await sidebar.getContent()
       .getSection('Search results') as CustomTreeSection;
     return await searchResults.findItem(name);
+  };
+
+  public initCreateNote = () => {
+    return this.vscode.runCommand('Note searcher: create a new note');
   };
 }

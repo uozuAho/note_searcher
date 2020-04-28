@@ -10,6 +10,8 @@
 
 ## e2e tests
 
-These are rather new and a bit flakey. You only need to run `npm run e2e:setup`
-once, then `npm run e2e` should be fine for subsequent test runs. You can debug
-the e2e tests with the 'Debug e2e tests' launch configuration.
+These are rather new and a bit flakey. You can debug the e2e tests with the
+'Debug e2e tests' launch configuration.
+
+Run `npm run e2e:setup` whenever app code changes. Otherwise, `npm run e2e`
+is enough to run the latest e2e tests.
