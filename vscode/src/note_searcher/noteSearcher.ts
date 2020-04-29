@@ -67,9 +67,11 @@ export class NoteSearcher {
     }
   };
 
-  public createNote = () => {
+  public createNote = async () => {
     const noteId = '1234';
-    this.ui.promptForNewNoteName(noteId);
+    const noteName = await this.ui.promptForNewNoteName(noteId);
+    if (!noteName) { return; }
+    this.ui.startNewTextDocument(noteName);
   };
 
   public updateRelatedFiles = async (file: File) => {

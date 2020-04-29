@@ -51,6 +51,12 @@ export class VsCodeNoteSearcherUi implements NoteSearcherUi {
     });
   };
 
+  public startNewTextDocument = async (name: string) => {
+    const uri = vscode.Uri.parse(`untitled://${name}`);
+    await vscode.workspace.openTextDocument(uri);
+    return;
+  };
+
   public showRelatedFiles = (files: string[]) => {
     const uris = files.map(f => vscode.Uri.file(f));
     vscode.window.createTreeView('noteSearcher-related', {
