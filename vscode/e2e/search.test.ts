@@ -22,7 +22,7 @@ describe('search', () => {
     expect(cheeseFile).not.to.be.undefined;
     await cheeseFile!.click();
 
-    const cheeseDoc = await vscode.findEditor('cheese.md');
+    const cheeseDoc = await vscode.findEditorByTitle(title => title === 'cheese.md');
     expect(cheeseDoc).not.to.be.null;
   });
 });

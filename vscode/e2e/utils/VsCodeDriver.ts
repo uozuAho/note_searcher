@@ -1,5 +1,7 @@
 const path = require('path');
 
+import { expect } from 'chai';
+
 import {
   Workbench,
   VSBrowser,
@@ -15,7 +17,7 @@ export class VsCodeDriver {
 
   public openDemoDirectory = () => {
     return this.openDirectory(path.resolve(__dirname, '../../demo_dir'));
-  }
+  };
 
   public openDirectory = async (dir: string) => {
     await this.workbench.executeCommand('Extest: Open Folder');
@@ -30,24 +32,55 @@ export class VsCodeDriver {
 
   public isShowingInputBox = async () => {
     const input = await InputBox.create();
-    return await input.isDisplayed();
-  }
+    expect(await input.isDisplayed()).to.be.true;
+  };
 
-  public findEditor = async (editorTitle: string) => {
+  public enterInputText = async (text: string) => {
+    const input = await InputBox.create();
+    await input.sendKeys(text);
+    await input.confirm();
+  };
+
+  public closeAllEditors = async () => {
+    const editorView = new EditorView();
+    await editorView.closeAllEditors();
+  };
+
+  public getOnlyOpenEditor = async () => {
+    const editorView = new EditorView();
+    const titles = await editorView.getOpenEditorTitles();
+    if (titles.length === 0) {
+      expect.fail('no editors open');
+    }
+    if (titles.length > 1) {
+      expect.fail('more than one editor open');
+    }
+    const title = titles[0];
+    return await editorView.openEditor(title);
+  };
+
+  public getOpenEditorTitles = () => {
+    return new EditorView().getOpenEditorTitles();
+  };
+
+  public findEditorByTitle = async (matcher: (editorTitle: string) => boolean) => {
     const editorView = new EditorView();
     // Was getting 'no editor found with title X' errors here without the delay.
     // There is a noticeable delay after the file is clicked on before the
     // editor opens.
     // Note: this may be causing a rejected promise after the end of the
     //       test run :(
-    const found = await this.driver.wait(async () => {
+    let matchedTitle: string | null = null;
+    await this.driver.wait(async () => {
       const titles = await editorView.getOpenEditorTitles();
       for (const title of titles) {
-        if (title === editorTitle) {
-          return true;
+        if (matcher(title)) {
+          matchedTitle = title;
+          return;
         }
       }
     }, 2000);
-    return found ? editorView.openEditor(editorTitle) : null;
+    if (!matchedTitle) { return null; }
+    return await editorView.openEditor(matchedTitle);
   };
 }

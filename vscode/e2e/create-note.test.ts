@@ -1,24 +1,7 @@
-// chai used since jest conflicts with mocha,
-// mocha is required by vscode-extension-tester
 import { expect } from 'chai';
 
 import { VsCodeDriver } from './utils/VsCodeDriver';
 import { NoteSearcherDriver } from './utils/NoteSearcherDriver';
-
-class NoteSearcherTestHarness {
-  constructor(
-    private vscode: VsCodeDriver,
-    private noteSearcher: NoteSearcherDriver
-  ) {}
-
-  public openDemoDirectory = () => {
-    // todo: move code here
-  };
-
-  public isShowingInputBox = async () => {
-    expect(await this.vscode.isShowingInputBox()).to.be.true('is not showing input box');
-  }
-}
 
 describe('create note', () => {
   let vscode: VsCodeDriver;
@@ -28,6 +11,7 @@ describe('create note', () => {
     vscode = new VsCodeDriver();
     noteSearcher = new NoteSearcherDriver(vscode);
     await vscode.openDemoDirectory();
+    await vscode.closeAllEditors();
     await noteSearcher.enable();
   });
 
@@ -38,9 +22,11 @@ describe('create note', () => {
   // file is created in root dir
   // file is opened in a new editor
 
-  it('opens input box when create note command is run', async () => {
+  it('opens note in new editor', async () => {
     await noteSearcher.initCreateNote();
-    // todo: nicer error message here. can't seem to catch webdriver timeout
-    expect(await vscode.isShowingInputBox()).to.be.true;
+    await vscode.isShowingInputBox();
+    await vscode.enterInputText('my_note');
+    const editor = await vscode.getOnlyOpenEditor();
+    expect(await editor.isDisplayed()).to.be.true;
   });
 });

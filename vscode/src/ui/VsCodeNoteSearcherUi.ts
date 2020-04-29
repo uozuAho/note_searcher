@@ -46,7 +46,8 @@ export class VsCodeNoteSearcherUi implements NoteSearcherUi {
   public promptForNewNoteName = async (noteId: string) => {
     return await vscode.window.showInputBox({
       value: noteId,
-      prompt: "Create a new note"
+      prompt: "Create a new note",
+      valueSelection: [noteId.length, noteId.length]
     });
   };
 
