@@ -19,8 +19,10 @@ describe('create note', () => {
   // enter 'new note' command
   // prompt for name, with id pre-filled
   // user completes name, presses enter
-  // file is created in root dir
   // file is opened in a new editor
+  // file has expected title
+  // save
+  // file is saved to the root dir
 
   it('opens note in new editor', async () => {
     await noteSearcher.initCreateNote();
@@ -28,5 +30,6 @@ describe('create note', () => {
     await vscode.enterInputText('my_note');
     const editor = await vscode.getOnlyOpenEditor();
     expect(await editor.isDisplayed()).to.be.true;
+    expect(editor.getTitle()).to.contain('my_note');
   });
 });
