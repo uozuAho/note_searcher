@@ -11,7 +11,7 @@ import { GoodSet } from "../utils/goodSet";
 import { DeadLinkFinder } from "./DeadLinkFinder";
 import { NoteSearcherConfigProvider } from "./NoteSearcherConfigProvider";
 import { TimeProvider, newTimeProvider } from "../utils/timeProvider";
-import { formatDateTime_YYYYMMddhhss } from "../utils/timeFormatter";
+import { formatDateTime_YYYYMMddhhmm } from "../utils/timeFormatter";
 
 const UPDATE_RELATED_FILES_DELAY_MS = 500;
 
@@ -74,12 +74,12 @@ export class NoteSearcher {
 
   public createNote = async () => {
     const now = this.timeProvider.currentTimeMs();
-    const noteId = formatDateTime_YYYYMMddhhss(now);
+    const noteId = formatDateTime_YYYYMMddhhmm(now);
     const noteName = await this.ui.promptForNewNoteName(noteId);
     if (!noteName) { return; }
     const dir = this.ui.currentlyOpenDir();
     const notePath = path.join(dir, noteName);
-    this.ui.startNewTextDocument(notePath);
+    this.ui.startNewNote(notePath);
   };
 
   public updateRelatedFiles = async (file: File) => {

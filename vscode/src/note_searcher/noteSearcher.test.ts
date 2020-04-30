@@ -174,10 +174,6 @@ describe('NoteSearcher', () => {
     });
   });
 
-  describe('create note', () => {
-    it('prompts for note name', () => {});
-  });
-
   describe('index', () => {
     beforeEach(() => {
       ui = new MockUi();

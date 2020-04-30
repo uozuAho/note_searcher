@@ -95,7 +95,7 @@
 		"pretest": "npm run lint",
 		"test": "jest",
 		"test:watch": "jest --watch",
-		"e2e": "npm run e2e:compile && extest run-tests out/create*.js",
+		"e2e": "npm run e2e:compile && extest run-tests out/*.js",
 		"e2e:setup": "extest setup-tests out/*.js",
 		"e2e:compile": "rm -rf out && tsc -p tsconfig.e2e.json"
 	},

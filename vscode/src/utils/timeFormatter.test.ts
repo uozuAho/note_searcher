@@ -1,4 +1,4 @@
-import { formatDateTime_YYYYMMddhhss } from "./timeFormatter";
+import { formatDateTime_YYYYMMddhhmm } from "./timeFormatter";
 
 describe('timeProvider', () => {
 
@@ -10,7 +10,7 @@ describe('timeProvider', () => {
       [1577883599000, '202001012359'],
       [1609419599000, '202012312359'],
     ])('works', (epochMs: number, expectedOutput: string) => {
-      const formattedTime = formatDateTime_YYYYMMddhhss(epochMs);
+      const formattedTime = formatDateTime_YYYYMMddhhmm(epochMs);
       expect(formattedTime).toBe(expectedOutput);
     });
   });

@@ -12,7 +12,7 @@ export class MockUi implements NoteSearcherUi {
 
   public promptForNewNoteName = (noteId: string) => Promise.resolve('asdf');
 
-  public startNewTextDocument = (noteName: string) => Promise.resolve();
+  public startNewNote = (noteName: string) => Promise.resolve();
 
   private _currentFile: File | null = null;
 

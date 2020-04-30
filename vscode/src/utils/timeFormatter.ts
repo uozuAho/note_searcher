@@ -1,4 +1,4 @@
-export const formatDateTime_YYYYMMddhhss = (epochMs: number) => {
+export const formatDateTime_YYYYMMddhhmm = (epochMs: number) => {
   const now = new Date(epochMs);
   const year = now.getFullYear();
   let month = (now.getMonth() + 1).toString().padStart(2, '0');
