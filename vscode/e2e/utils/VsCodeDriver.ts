@@ -81,7 +81,7 @@ export class VsCodeDriver {
       for (const title of titles) {
         if (matcher(title)) {
           matchedTitle = title;
-          return;
+          return true;
         }
       }
     }, 2000);

@@ -49,6 +49,7 @@ describe('create note', () => {
     const expectedPath = path.join(vscode.getDemoDirectory(), editorTitle);
     const fileExists = await checkWithTimeout(() => fs.existsSync(expectedPath));
     expect(fileExists).to.be.true;
+    await vscode.closeAllEditors();
     fs.unlinkSync(expectedPath);
   });
 });
