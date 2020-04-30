@@ -1,3 +1,5 @@
+const path = require('path');
+
 import { NoteSearcherUi } from "../ui/NoteSearcherUi";
 import { File } from "../utils/File";
 import { FullTextSearch } from "../search/FullTextSearch";
@@ -75,7 +77,9 @@ export class NoteSearcher {
     const noteId = formatDateTime_YYYYMMddhhss(now);
     const noteName = await this.ui.promptForNewNoteName(noteId);
     if (!noteName) { return; }
-    this.ui.startNewTextDocument(noteName);
+    const dir = this.ui.currentlyOpenDir();
+    const notePath = path.join(dir, noteName);
+    this.ui.startNewTextDocument(notePath);
   };
 
   public updateRelatedFiles = async (file: File) => {

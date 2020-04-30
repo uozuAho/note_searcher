@@ -6,7 +6,8 @@ import {
   Workbench,
   VSBrowser,
   InputBox,
-  EditorView
+  EditorView,
+  TextEditor
 } from 'vscode-extension-tester';
 
 export class VsCodeDriver {
@@ -16,7 +17,11 @@ export class VsCodeDriver {
   ) { }
 
   public openDemoDirectory = () => {
-    return this.openDirectory(path.resolve(__dirname, '../../demo_dir'));
+    return this.openDirectory(this.getDemoDirectory());
+  };
+
+  public getDemoDirectory = () => {
+    return path.resolve(__dirname, '../../demo_dir');
   };
 
   public openDirectory = async (dir: string) => {
@@ -56,7 +61,7 @@ export class VsCodeDriver {
       expect.fail('more than one editor open');
     }
     const title = titles[0];
-    return await editorView.openEditor(title);
+    return await editorView.openEditor(title) as TextEditor;
   };
 
   public getOpenEditorTitles = () => {
@@ -81,6 +86,6 @@ export class VsCodeDriver {
       }
     }, 2000);
     if (!matchedTitle) { return null; }
-    return await editorView.openEditor(matchedTitle);
+    return await editorView.openEditor(matchedTitle) as TextEditor;
   };
 }
