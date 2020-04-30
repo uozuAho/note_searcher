@@ -5,25 +5,7 @@ import { expect } from 'chai';
 
 import { VsCodeDriver } from './utils/VsCodeDriver';
 import { NoteSearcherDriver } from './utils/NoteSearcherDriver';
-
-const checkWithTimeout = (check: () => boolean, timeoutMs = 1000) => {
-  return new Promise((resolve, reject) => {
-    let start = Date.now();
-
-    const doCheck = () => {
-      if (Date.now() - start > timeoutMs) { 
-        reject('timed out');
-      }
-      if (!check()) {
-        setTimeout(() => doCheck(), 100);
-      } else {
-        resolve(true);
-      }
-    };
-
-    doCheck();
-  });
-};
+import { waitFor } from './utils/wait';
 
 describe('create note', () => {
   let vscode: VsCodeDriver;
@@ -47,7 +29,7 @@ describe('create note', () => {
     expect(editorTitle).to.match(/\d{12}_my_note/);
     await editor.save();
     const expectedPath = path.join(vscode.getDemoDirectory(), editorTitle);
-    const fileExists = await checkWithTimeout(() => fs.existsSync(expectedPath));
+    const fileExists = await waitFor(() => fs.existsSync(expectedPath));
     expect(fileExists).to.be.true;
     await vscode.closeAllEditors();
     fs.unlinkSync(expectedPath);

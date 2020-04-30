@@ -9,6 +9,7 @@ import {
   EditorView,
   TextEditor
 } from 'vscode-extension-tester';
+import { waitFor, waitForAsync } from './wait';
 
 export class VsCodeDriver {
   constructor(
@@ -73,10 +74,10 @@ export class VsCodeDriver {
     // Was getting 'no editor found with title X' errors here without the delay.
     // There is a noticeable delay after the file is clicked on before the
     // editor opens.
-    // Note: this may be causing a rejected promise after the end of the
+    // Note: this seems to be causing a rejected promise after the end of the
     //       test run :(
     let matchedTitle: string | null = null;
-    await this.driver.wait(async () => {
+    await waitForAsync(async () => {
       const titles = await editorView.getOpenEditorTitles();
       for (const title of titles) {
         if (matcher(title)) {
@@ -84,7 +85,8 @@ export class VsCodeDriver {
           return true;
         }
       }
-    }, 2000);
+      return false;
+    });
     if (!matchedTitle) { return null; }
     return await editorView.openEditor(matchedTitle) as TextEditor;
   };
