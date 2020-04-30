@@ -8,6 +8,8 @@ import { DelayedExecutor } from "../utils/delayedExecutor";
 import { GoodSet } from "../utils/goodSet";
 import { DeadLinkFinder } from "./DeadLinkFinder";
 import { NoteSearcherConfigProvider } from "./NoteSearcherConfigProvider";
+import { TimeProvider, newTimeProvider } from "../utils/timeProvider";
+import { formatDateTime_YYYYMMddhhss } from "../utils/timeFormatter";
 
 const UPDATE_RELATED_FILES_DELAY_MS = 500;
 
@@ -20,7 +22,8 @@ export class NoteSearcher {
     private searcher: FullTextSearch,
     private deadLinkFinder: DeadLinkFinder,
     private configProvider: NoteSearcherConfigProvider,
-    private delayedExecutor: DelayedExecutor = new DelayedExecutor())
+    private delayedExecutor: DelayedExecutor = new DelayedExecutor(),
+    private timeProvider: TimeProvider = newTimeProvider())
   {
     ui.addCurrentDocumentChangeListener(this.notifyCurrentFileChanged);
     ui.addDocumentSavedListener(this.notifyFileSaved);
@@ -68,7 +71,8 @@ export class NoteSearcher {
   };
 
   public createNote = async () => {
-    const noteId = '1234';
+    const now = this.timeProvider.currentTimeMs();
+    const noteId = formatDateTime_YYYYMMddhhss(now);
     const noteName = await this.ui.promptForNewNoteName(noteId);
     if (!noteName) { return; }
     this.ui.startNewTextDocument(noteName);

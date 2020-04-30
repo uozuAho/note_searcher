@@ -27,9 +27,9 @@ describe('create note', () => {
   it('opens note in new editor', async () => {
     await noteSearcher.initCreateNote();
     await vscode.isShowingInputBox();
-    await vscode.enterInputText('my_note');
+    await vscode.enterInputText('_my_note');
     const editor = await vscode.getOnlyOpenEditor();
     expect(await editor.isDisplayed()).to.be.true;
-    expect(editor.getTitle()).to.contain('my_note');
+    expect(editor.getTitle()).to.match(/\d{12}_my_note/);
   });
 });
