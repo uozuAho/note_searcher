@@ -2,7 +2,7 @@
 	"name": "note-searcher",
 	"displayName": "note-searcher",
 	"description": "searches notes",
-	"version": "0.0.8",
+	"version": "0.0.9",
 	"publisher": "uozuaho",
 	"preview": true,
 	"repository": {
@@ -17,8 +17,8 @@
 	],
 	"activationEvents": [
 		"onCommand:noteSearcher.search",
-    "onCommand:noteSearcher.enableCurrentDir",
-    "onCommand:noteSearcher.createNote",
+		"onCommand:noteSearcher.enableCurrentDir",
+		"onCommand:noteSearcher.createNote",
 		"onView:noteSearcher-results"
 	],
 	"main": "./dist/noteSearcher.js",

@@ -5,6 +5,8 @@ file. Format inspired by https://keepachangelog.com/en/1.0.0/
 
 
 ## [Unreleased]
+
+## [0.0.9] - 2020-05-02
 ### Added
 - create a new note
 
