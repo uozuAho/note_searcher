@@ -25,12 +25,9 @@ Console app that does indexing and searching
 
 
 # todo
-- feature: create note
-    - create in dir of active file
-    - if not active file, create in root dir
-- feature: extract text to new note
 - feature: copy note link from file list/search results
 - feature: suggest tags
+- feature: extract text to new note
 - choose search engine:
     - lunr:   pros: no deps, simple implementation
               cons: slow, no incremental index (must rebuild from scratch)

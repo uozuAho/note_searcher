@@ -2,6 +2,7 @@
 
 Full-text and tag-based searching of arbitrary directories and files.
 Lets you make your own zettelkasten! Inspired by https://zettelkasten.de/.
+Also contains some shortcuts for creating new notes.
 
 
 ## UNDER CONSTRUCTION
@@ -14,6 +15,9 @@ https://github.com/uozuAho/note_searcher/issues
 ## How to use this extension
 
 ![extension screenshot](./img/ext_screenshot.png)
+
+
+### Search
 
 When active, this extension indexes all .md, .txt and .log files in the
 currently open folder. As you are modifying a file, the extension window will
@@ -31,8 +35,16 @@ apple banana #food    # file contains apple, banana, and/or the tag #food
 Any word starting with a '#' character is considered a tag, allowing for
 tag-based searching. #hyphenated-tags are supported.
 
-Note that with VS Code, you can add links to local files using markdown
+
+### Linking notes
+
+With VS Code, you can add links to local files using markdown
 syntax. These become hyperlinks to your local files! Examples:
 
 - `[](path/relative/to/file)`
 - `[](/file/relative/to/currently/open/dir/in/vscode)`
+
+
+### Creating notes
+
+Press ctrl+alt+n to create a new note in the currently open directory.
