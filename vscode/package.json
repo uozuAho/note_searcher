@@ -17,7 +17,8 @@
 	],
 	"activationEvents": [
 		"onCommand:noteSearcher.search",
-		"onCommand:noteSearcher.enableCurrentDir",
+    "onCommand:noteSearcher.enableCurrentDir",
+    "onCommand:noteSearcher.createNote",
 		"onView:noteSearcher-results"
 	],
 	"main": "./dist/noteSearcher.js",
@@ -55,12 +56,20 @@
 			{
 				"command": "noteSearcher.disableCurrentDir",
 				"title": "Note searcher: disable in this directory"
+			},
+			{
+				"command": "noteSearcher.createNote",
+				"title": "Note searcher: create a new note"
 			}
 		],
 		"keybindings": [
 			{
 				"command": "noteSearcher.search",
 				"key": "ctrl+alt+s"
+			},
+			{
+				"command": "noteSearcher.createNote",
+				"key": "ctrl+alt+n"
 			}
 		],
 		"configuration": {
@@ -85,10 +94,10 @@
 		"lint": "eslint src --ext ts",
 		"pretest": "npm run lint",
 		"test": "jest",
-    "test:watch": "jest --watch",
-    "e2e": "npm run e2e:compile && extest run-tests out/*.js",
-    "e2e:setup": "extest setup-tests out/*.js",
-    "e2e:compile": "rm -rf out && tsc -p tsconfig.e2e.json"
+		"test:watch": "jest --watch",
+		"e2e": "npm run e2e:compile && extest run-tests out/*.js",
+		"e2e:setup": "extest setup-tests out/*.js",
+		"e2e:compile": "rm -rf out && tsc -p tsconfig.e2e.json"
 	},
 	"devDependencies": {
 		"@types/chai": "^4.2.11",

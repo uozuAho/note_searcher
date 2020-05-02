@@ -1,3 +1,5 @@
+const path = require('path');
+
 import { NoteSearcherUi } from "../ui/NoteSearcherUi";
 import { File } from "../utils/File";
 import { FullTextSearch } from "../search/FullTextSearch";
@@ -8,6 +10,8 @@ import { DelayedExecutor } from "../utils/delayedExecutor";
 import { GoodSet } from "../utils/goodSet";
 import { DeadLinkFinder } from "./DeadLinkFinder";
 import { NoteSearcherConfigProvider } from "./NoteSearcherConfigProvider";
+import { TimeProvider, newTimeProvider } from "../utils/timeProvider";
+import { formatDateTime_YYYYMMddhhmm } from "../utils/timeFormatter";
 
 const UPDATE_RELATED_FILES_DELAY_MS = 500;
 
@@ -20,7 +24,8 @@ export class NoteSearcher {
     private searcher: FullTextSearch,
     private deadLinkFinder: DeadLinkFinder,
     private configProvider: NoteSearcherConfigProvider,
-    private delayedExecutor: DelayedExecutor = new DelayedExecutor())
+    private delayedExecutor: DelayedExecutor = new DelayedExecutor(),
+    private timeProvider: TimeProvider = newTimeProvider())
   {
     ui.addCurrentDocumentChangeListener(this.notifyCurrentFileChanged);
     ui.addDocumentSavedListener(this.notifyFileSaved);
@@ -65,6 +70,16 @@ export class NoteSearcher {
     catch (e) {
       await this.ui.showError(e);
     }
+  };
+
+  public createNote = async () => {
+    const now = this.timeProvider.currentTimeMs();
+    const noteId = formatDateTime_YYYYMMddhhmm(now);
+    const noteName = await this.ui.promptForNewNoteName(noteId);
+    if (!noteName) { return; }
+    const dir = this.ui.currentlyOpenDir();
+    const notePath = path.join(dir, noteName);
+    this.ui.startNewNote(notePath);
   };
 
   public updateRelatedFiles = async (file: File) => {

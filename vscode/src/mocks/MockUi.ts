@@ -10,6 +10,10 @@ export class MockUi implements NoteSearcherUi {
     this._mock = tmoq.Mock.ofType<NoteSearcherUi>();
   }
 
+  public promptForNewNoteName = (noteId: string) => Promise.resolve('asdf');
+
+  public startNewNote = (noteName: string) => Promise.resolve();
+
   private _currentFile: File | null = null;
 
   public getCurrentFileReturns = (file: File | null) => {

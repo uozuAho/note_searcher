@@ -43,6 +43,21 @@ export class VsCodeNoteSearcherUi implements NoteSearcherUi {
     });
   };
 
+  public promptForNewNoteName = async (noteId: string) => {
+    return await vscode.window.showInputBox({
+      value: noteId,
+      prompt: "Create a new note",
+      valueSelection: [noteId.length, noteId.length]
+    });
+  };
+
+  public startNewNote = async (path: string) => {
+    const uri = vscode.Uri.parse(`untitled:${path}`);
+    const doc = await vscode.workspace.openTextDocument(uri);
+    await vscode.window.showTextDocument(doc);
+    return;
+  };
+
   public showRelatedFiles = (files: string[]) => {
     const uris = files.map(f => vscode.Uri.file(f));
     vscode.window.createTreeView('noteSearcher-related', {

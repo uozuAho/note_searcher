@@ -25,17 +25,15 @@ Console app that does indexing and searching
 
 
 # todo
-- feature: create note
-    - create in dir of active file
-    - if not active file, create in root dir
-- feature: extract text to new note
 - feature: copy note link from file list/search results
 - feature: suggest tags
+- feature: extract text to new note
 - choose search engine:
     - lunr:   pros: no deps, simple implementation
               cons: slow, no incremental index (must rebuild from scratch)
     - lucene: pros: fast, powerful
               cons: needs java, complex impl (compared to lunr)
+- e2e test throws unhandled promise rejection after test completes
 - show view container on search complete
 - moving indexing progress to status bar
 - dead links: don't show as error
