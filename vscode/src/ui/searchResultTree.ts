@@ -25,4 +25,8 @@ class SearchResult extends vscode.TreeItem {
     command: 'noteSearcher.searchResults.openFile',
     arguments: [this.uri]
   };
+
+  public copyRelativePath = () => {
+    vscode.env.clipboard.writeText(this.uri.toString());
+  };
 }

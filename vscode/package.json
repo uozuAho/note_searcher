@@ -60,8 +60,20 @@
 			{
 				"command": "noteSearcher.createNote",
 				"title": "Note searcher: create a new note"
-			}
-		],
+      },
+      {
+        "command": "noteSearcher.searchResults.copyRelativePath",
+        "title": "Copy relative path"
+      }
+    ],
+    "menus": {
+      "view/item/context": [
+        {
+          "command": "noteSearcher.searchResults.copyRelativePath",
+          "when": "view == noteSearcher-results"
+        }
+      ]
+    },
 		"keybindings": [
 			{
 				"command": "noteSearcher.search",
