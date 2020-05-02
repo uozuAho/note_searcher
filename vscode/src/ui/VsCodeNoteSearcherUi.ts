@@ -7,6 +7,10 @@ export class VsCodeNoteSearcherUi implements NoteSearcherUi {
   private currentDocChangeListener: FileChangeListener | null = null;
   private documentSavedListener: FileChangeListener | null = null;
 
+  public copyToClipboard = async (text: string) => {
+    return await vscode.env.clipboard.writeText(text);
+  };
+
   public getCurrentFile = () => 
     vscode.window.activeTextEditor
       ? new VsCodeFile(vscode.window.activeTextEditor.document)

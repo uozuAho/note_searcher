@@ -10,6 +10,8 @@ export class MockUi implements NoteSearcherUi {
     this._mock = tmoq.Mock.ofType<NoteSearcherUi>();
   }
 
+  public copyToClipboard = (text: string) => Promise.resolve();
+
   public promptForNewNoteName = (noteId: string) => Promise.resolve('asdf');
 
   public startNewNote = (noteName: string) => Promise.resolve();

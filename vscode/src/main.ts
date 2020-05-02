@@ -24,7 +24,7 @@ export function activate(context: vscode.ExtensionContext) {
       searchResult => vscode.window.showTextDocument(searchResult)),
     vscode.commands.registerCommand(
       'noteSearcher.searchResults.copyRelativePath',
-      searchResult => searchResult.copyRelativePath()),
+      searchResult => noteSearcher.relativePathToClipboard(searchResult.uri.fsPath)),
     vscode.commands.registerCommand(
       'noteSearcher.enableCurrentDir', () => noteSearcher.enable()),
     vscode.commands.registerCommand(

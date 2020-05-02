@@ -170,6 +170,20 @@ export class NoteSearcher {
     return tagsWithHashes.concat(keywordsMinusTags).join(' ');
   };
 
+  public relativePathToClipboard = (absPath: string) => {
+    const currentDir = this.ui.currentlyOpenDir() || '';
+    const len = Math.min(currentDir.length, absPath.length);
+    let i = 0;
+    while (i < len) {
+      if (currentDir[i] !== absPath[i]) {
+        break;
+      } else {
+        i++;
+      }
+    }
+    this.ui.copyToClipboard(absPath.slice(i, absPath.length));
+  };
+
   private notifyCurrentFileChanged = (file: File) => {
     this.diagnostics.trace('file changed');
 
