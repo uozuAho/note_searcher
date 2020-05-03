@@ -1,5 +1,6 @@
-import { expect } from 'chai';
 import * as clipboard from 'clipboardy';
+
+import { expect } from 'chai';
 
 import { VsCodeDriver } from './utils/VsCodeDriver';
 import { NoteSearcherDriver } from './utils/NoteSearcherDriver';
@@ -16,15 +17,10 @@ describe('copy note path', () => {
     noteSearcher = new NoteSearcherDriver(vscode);
   });
 
-  it('copies the link to a search result to a new editor', async () => {
+  it('puts a markdown link to a search result in the clipboard', async () => {
     await noteSearcher.search('cheese');
     const cheeseFile = await noteSearcher.findSearchResult('cheese.md');
-    expect(cheeseFile).not.to.be.undefined;
-
-    const menu = await cheeseFile!.openContextMenu();
-    const copyPath = await menu.getItem('Copy relative path');
-    if (!copyPath) { expect.fail('could not find "copy path" menu item'); }
-    await copyPath.click();
+    await cheeseFile.clickContextMenuItem('Copy relative path');
 
     expect(await clipboard.read()).to.equal('[](cheese.md)');
   });

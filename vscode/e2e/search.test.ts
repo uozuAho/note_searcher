@@ -20,8 +20,7 @@ describe('search', () => {
   it('opens a file returned by a search', async () => {
     await noteSearcher.search('cheese');
     const cheeseFile = await noteSearcher.findSearchResult('cheese.md');
-    expect(cheeseFile).not.to.be.undefined;
-    await cheeseFile!.click();
+    await cheeseFile.click();
 
     const cheeseDoc = await vscode.findEditorByTitle(title => title === 'cheese.md');
     expect(cheeseDoc).not.to.be.null;

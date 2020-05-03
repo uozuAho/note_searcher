@@ -9,7 +9,8 @@ import {
   EditorView,
   TextEditor
 } from 'vscode-extension-tester';
-import { waitFor, waitForAsync } from './wait';
+
+import { waitForAsync } from './wait';
 
 export class VsCodeDriver {
   constructor(
