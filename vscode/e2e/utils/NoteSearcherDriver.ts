@@ -1,3 +1,5 @@
+import { expect } from 'chai';
+
 import { 
   InputBox,
   ActivityBar,
@@ -27,14 +29,36 @@ export class NoteSearcherDriver {
     await input.confirm();
   };
 
-  public findSearchResult = async (name: string): Promise<TreeItem | undefined> => {
+  public findSearchResult = async (name: string): Promise<SearchResult> => {
     const sidebar = await this.openSidebar();
+
     const searchResults = await sidebar.getContent()
       .getSection('Search results') as CustomTreeSection;
-    return await searchResults.findItem(name);
+
+    const item = await searchResults.findItem(name);
+
+    if (!item) { expect.fail(`could not find search result '${name}'`); }
+
+    return new SearchResult(item);
   };
 
   public initCreateNote = () => {
     return this.vscode.runCommand('Note searcher: create a new note');
+  };
+}
+
+class SearchResult {
+  
+  constructor(private treeItem: TreeItem) {}
+
+  public click = () => {
+    return this.treeItem.click();
+  };
+
+  public clickContextMenuItem = async (itemName: string) => {
+    const menu = await this.treeItem.openContextMenu();
+    const menuItem = await menu.getItem(itemName);
+    if (!menuItem) { expect.fail(`could not find menu item '${itemName}'`); }
+    await menuItem.click();
   };
 }

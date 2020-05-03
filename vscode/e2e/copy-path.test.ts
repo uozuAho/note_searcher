@@ -1,12 +1,12 @@
-// chai used since jest conflicts with mocha,
-// mocha is required by vscode-extension-tester
+import * as clipboard from 'clipboardy';
+
 import { expect } from 'chai';
 
 import { VsCodeDriver } from './utils/VsCodeDriver';
 import { NoteSearcherDriver } from './utils/NoteSearcherDriver';
 import { globalBeforeAll } from './_before-all.test';
 
-describe('search', () => {
+describe('copy note path', () => {
   let vscode: VsCodeDriver;
   let noteSearcher: NoteSearcherDriver;
 
@@ -17,12 +17,11 @@ describe('search', () => {
     noteSearcher = new NoteSearcherDriver(vscode);
   });
 
-  it('opens a file returned by a search', async () => {
+  it('puts a markdown link to a search result in the clipboard', async () => {
     await noteSearcher.search('cheese');
     const cheeseFile = await noteSearcher.findSearchResult('cheese.md');
-    await cheeseFile.click();
+    await cheeseFile.clickContextMenuItem('Copy relative path');
 
-    const cheeseDoc = await vscode.findEditorByTitle(title => title === 'cheese.md');
-    expect(cheeseDoc).not.to.be.null;
+    expect(await clipboard.read()).to.equal('[](cheese.md)');
   });
 });

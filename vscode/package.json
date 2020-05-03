@@ -14,7 +14,12 @@
 	},
 	"categories": [
 		"Other"
-	],
+  ],
+  "keywords": [
+    "zettelkasten",
+    "markdown",
+    "search"
+  ],
 	"activationEvents": [
 		"onCommand:noteSearcher.search",
 		"onCommand:noteSearcher.enableCurrentDir",
@@ -60,8 +65,20 @@
 			{
 				"command": "noteSearcher.createNote",
 				"title": "Note searcher: create a new note"
+			},
+			{
+				"command": "noteSearcher.searchResults.copyRelativePath",
+				"title": "Copy relative path"
 			}
 		],
+		"menus": {
+			"view/item/context": [
+				{
+					"command": "noteSearcher.searchResults.copyRelativePath",
+					"when": "view == noteSearcher-results"
+				}
+			]
+		},
 		"keybindings": [
 			{
 				"command": "noteSearcher.search",
@@ -110,6 +127,7 @@
 		"@typescript-eslint/eslint-plugin": "^2.18.0",
 		"@typescript-eslint/parser": "^2.18.0",
 		"chai": "^4.2.0",
+		"clipboardy": "^2.3.0",
 		"eslint": "^6.8.0",
 		"glob": "^7.1.6",
 		"jest": "^25.2.3",

@@ -12,6 +12,7 @@ import { DeadLinkFinder } from "./DeadLinkFinder";
 import { NoteSearcherConfigProvider } from "./NoteSearcherConfigProvider";
 import { TimeProvider, newTimeProvider } from "../utils/timeProvider";
 import { formatDateTime_YYYYMMddhhmm } from "../utils/timeFormatter";
+import { relativePath } from "../utils/FileSystem";
 
 const UPDATE_RELATED_FILES_DELAY_MS = 500;
 
@@ -168,6 +169,12 @@ export class NoteSearcher {
     );
     const tagsWithHashes = tags.map(tag => '#' + tag);
     return tagsWithHashes.concat(keywordsMinusTags).join(' ');
+  };
+
+  public relativePathToClipboard = (filePath: string) => {
+    const currentDir = this.ui.currentlyOpenDir() || '';
+    const relPath = relativePath(currentDir, filePath);
+    this.ui.copyToClipboard(`[](${relPath})`);
   };
 
   private notifyCurrentFileChanged = (file: File) => {

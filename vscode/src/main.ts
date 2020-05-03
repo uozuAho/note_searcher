@@ -1,4 +1,5 @@
 import * as vscode from 'vscode';
+
 import { createFullTextSearch } from './search/FullTextSearch';
 import { VsCodeNoteSearcherUi } from './ui/VsCodeNoteSearcherUi';
 import { NoteSearcher } from './note_searcher/noteSearcher';
@@ -20,7 +21,10 @@ export function activate(context: vscode.ExtensionContext) {
       'noteSearcher.index', async () => await noteSearcher.index()),
     vscode.commands.registerCommand(
       'noteSearcher.searchResults.openFile',
-      file => vscode.window.showTextDocument(file)),
+      searchResult => vscode.window.showTextDocument(searchResult)),
+    vscode.commands.registerCommand(
+      'noteSearcher.searchResults.copyRelativePath',
+      searchResult => noteSearcher.relativePathToClipboard(searchResult.uri.fsPath)),
     vscode.commands.registerCommand(
       'noteSearcher.enableCurrentDir', () => noteSearcher.enable()),
     vscode.commands.registerCommand(
