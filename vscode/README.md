@@ -17,6 +17,13 @@ https://github.com/uozuAho/note_searcher/issues
 ![extension screenshot](./img/ext_screenshot.png)
 
 
+### Summary
+
+- Search for notes:  `ctrl+alt+s`
+- Create a new note: `ctrl+alt+n`
+- Copy link to note from search results
+
+
 ### Search
 
 When active, this extension indexes all .md, .txt and .log files in the
@@ -36,6 +43,11 @@ Any word starting with a '#' character is considered a tag, allowing for
 tag-based searching. #hyphenated-tags are supported.
 
 
+### Creating notes
+
+Press `ctrl+alt+n` to create a new note in the currently open directory.
+
+
 ### Linking notes
 
 With VS Code, you can add links to local files using markdown
@@ -44,7 +56,5 @@ syntax. These become hyperlinks to your local files! Examples:
 - `[](path/relative/to/file)`
 - `[](/file/relative/to/currently/open/dir/in/vscode)`
 
-
-### Creating notes
-
-Press ctrl+alt+n to create a new note in the currently open directory.
+You can copy a markdown-style link to a search result by right-clicking on
+the search result.

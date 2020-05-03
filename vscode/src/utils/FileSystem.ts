@@ -38,7 +38,7 @@ class NodeFileSystem implements FileSystem {
   };
 }
 
-/** Returns path2 relative to path1. Does not support ../ */
+/** Returns path2 relative to path1 */
 export const relativePath = (path1: string, path2: string) => {
   let relPath = _path
     .relative(path1, path2)
