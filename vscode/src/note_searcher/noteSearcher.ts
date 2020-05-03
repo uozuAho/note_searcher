@@ -181,7 +181,10 @@ export class NoteSearcher {
         i++;
       }
     }
-    this.ui.copyToClipboard(absPath.slice(i, absPath.length));
+    let relPath = absPath.slice(i, absPath.length);
+    relPath = relPath.replace('\\', '/');
+    if (relPath.startsWith('/')) { relPath = relPath.slice(1, relPath.length); }
+    this.ui.copyToClipboard(`[](${relPath})`);
   };
 
   private notifyCurrentFileChanged = (file: File) => {
