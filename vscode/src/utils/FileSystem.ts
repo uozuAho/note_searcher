@@ -38,6 +38,15 @@ class NodeFileSystem implements FileSystem {
   };
 }
 
+/** Returns path2 relative to path1. Does not support ../ */
+export const relativePath = (path1: string, path2: string) => {
+  let relPath = _path
+    .relative(path1, path2)
+    .replace('\\', '/');
+  if (relPath.startsWith('/')) { relPath = relPath.slice(1, relPath.length); }
+  return relPath;
+};
+
 function walkDir(dir: string, callback: (path: string) => void) {
   fs.readdirSync(dir).forEach(f => {
     const dirPath = _path.join(dir, f);
