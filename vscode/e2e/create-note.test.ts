@@ -6,17 +6,17 @@ import { expect } from 'chai';
 import { VsCodeDriver } from './utils/VsCodeDriver';
 import { NoteSearcherDriver } from './utils/NoteSearcherDriver';
 import { waitFor } from './utils/wait';
+import { globalBeforeAll } from './_before-all.test';
 
 describe('create note', () => {
   let vscode: VsCodeDriver;
   let noteSearcher: NoteSearcherDriver;
 
   before(async () => {
+    await globalBeforeAll();
+
     vscode = new VsCodeDriver();
     noteSearcher = new NoteSearcherDriver(vscode);
-    await vscode.openDemoDirectory();
-    await vscode.closeAllEditors();
-    await noteSearcher.enable();
   });
 
   it('opens note in new editor and saves to root directory', async () => {

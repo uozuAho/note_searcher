@@ -4,19 +4,20 @@ import { expect } from 'chai';
 
 import { VsCodeDriver } from './utils/VsCodeDriver';
 import { NoteSearcherDriver } from './utils/NoteSearcherDriver';
+import { globalBeforeAll } from './_before-all.test';
 
 describe('search', () => {
   let vscode: VsCodeDriver;
   let noteSearcher: NoteSearcherDriver;
 
   before(async () => {
+    await globalBeforeAll();
+
     vscode = new VsCodeDriver();
     noteSearcher = new NoteSearcherDriver(vscode);
-    await vscode.openDemoDirectory();
   });
 
   it('opens a file returned by a search', async () => {
-    await noteSearcher.enable();
     await noteSearcher.search('cheese');
     const cheeseFile = await noteSearcher.findSearchResult('cheese.md');
     expect(cheeseFile).not.to.be.undefined;
