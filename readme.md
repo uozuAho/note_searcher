@@ -25,7 +25,6 @@ Console app that does indexing and searching
 
 
 # todo
-- feature: copy note link from file list/search results
 - refactor: dead link finder
 - feature: suggest tags
 - feature: extract text to new note

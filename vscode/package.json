@@ -2,7 +2,7 @@
 	"name": "note-searcher",
 	"displayName": "note-searcher",
 	"description": "searches notes",
-	"version": "0.0.9",
+	"version": "0.0.10",
 	"publisher": "uozuaho",
 	"preview": true,
 	"repository": {
@@ -14,12 +14,12 @@
 	},
 	"categories": [
 		"Other"
-  ],
-  "keywords": [
-    "zettelkasten",
-    "markdown",
-    "search"
-  ],
+	],
+	"keywords": [
+		"zettelkasten",
+		"markdown",
+		"search"
+	],
 	"activationEvents": [
 		"onCommand:noteSearcher.search",
 		"onCommand:noteSearcher.enableCurrentDir",

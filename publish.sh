@@ -15,9 +15,10 @@ npm run e2e:setup
 # todo: e2e test runner fails (not the tests)
 npm run e2e
 npm version $VERSION_INCREMENT
+popd
+
 # build again to create the extension package with the incremented version number
 ./build.all.sh
-popd
 
 echo
 echo Please install the package and make sure it works
