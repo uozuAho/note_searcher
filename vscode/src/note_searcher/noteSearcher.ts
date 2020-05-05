@@ -78,9 +78,16 @@ export class NoteSearcher {
     const noteId = formatDateTime_YYYYMMddhhmm(now);
     const noteName = await this.ui.promptForNewNoteName(noteId);
     if (!noteName) { return; }
-    const dir = this.ui.currentlyOpenDir();
-    const notePath = path.join(dir, noteName);
+    const notePath = this.createNotePath(noteName);
     this.ui.startNewNote(notePath);
+  };
+
+  private createNotePath = (name: string) => {
+    const activeFile = this.ui.getCurrentFile();
+    const dir = activeFile
+      ? path.dirname(activeFile.path())
+      : this.ui.currentlyOpenDir();
+    return path.join(dir, name);
   };
 
   public updateRelatedFiles = async (file: File) => {

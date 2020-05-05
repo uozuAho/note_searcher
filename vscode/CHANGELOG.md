@@ -5,6 +5,9 @@ file. Format inspired by https://keepachangelog.com/en/1.0.0/
 
 
 ## [Unreleased]
+### Changed
+- created note is saved in same directory is currently open note
+- if notes are open, created note is saved in root directory
 
 ## [0.0.10] - 2020-05-03
 ### Added

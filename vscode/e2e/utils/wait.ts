@@ -1,10 +1,10 @@
-export const waitFor = (check: () => boolean, timeoutMs = 1000) => {
+export const waitFor = (check: () => boolean, timeoutMs = 1000, failMessage = 'timed out') => {
   return new Promise((resolve, reject) => {
     let start = Date.now();
 
     const doCheck = () => {
       if (Date.now() - start > timeoutMs) { 
-        reject('timed out');
+        reject(failMessage);
       }
       if (!check()) {
         setTimeout(() => doCheck(), 100);

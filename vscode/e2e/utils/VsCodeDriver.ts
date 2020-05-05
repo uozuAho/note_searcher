@@ -48,6 +48,13 @@ export class VsCodeDriver {
     await input.confirm();
   };
 
+  public openFile = async (absPath: string) => {
+    await this.workbench.executeCommand('Extest: Open File');
+    const input = await InputBox.create();
+    await input.setText(absPath);
+    await input.confirm();
+  };
+
   public closeAllEditors = async () => {
     const editorView = new EditorView();
     await editorView.closeAllEditors();

@@ -36,14 +36,14 @@
       }
     },
     {
-      "name": "Debug e2e tests",
+      "name": "Debug e2e file",
       "type": "node",
       "request": "launch",
       "program": "${workspaceFolder}/node_modules/.bin/extest",
       "preLaunchTask": "e2eCompile",
       "args": [
         "run-tests",
-        "${workspaceFolder}/out/*.js",
+        "${workspaceFolder}/out/${fileBasenameNoExtension}.js",
         // todo: this doesn't work:
         // "--mocha_config",
         // "${workspaceFolder}/e2e/.mocharc-debug.js"

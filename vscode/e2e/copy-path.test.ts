@@ -4,14 +4,14 @@ import { expect } from 'chai';
 
 import { VsCodeDriver } from './utils/VsCodeDriver';
 import { NoteSearcherDriver } from './utils/NoteSearcherDriver';
-import { globalBeforeAll } from './_before-all.test';
+import { openDemoDirAndCloseAllEditors } from './_before-all.test';
 
 describe('copy note path', () => {
   let vscode: VsCodeDriver;
   let noteSearcher: NoteSearcherDriver;
 
   before(async () => {
-    await globalBeforeAll();
+    await openDemoDirAndCloseAllEditors();
 
     vscode = new VsCodeDriver();
     noteSearcher = new NoteSearcherDriver(vscode);

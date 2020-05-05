@@ -25,6 +25,7 @@ Console app that does indexing and searching
 
 
 # todo
+- show view container on search complete
 - refactor: dead link finder
 - feature: suggest tags
 - feature: extract text to new note
@@ -34,7 +35,6 @@ Console app that does indexing and searching
     - lucene: pros: fast, powerful
               cons: needs java, complex impl (compared to lunr)
 - e2e test throws unhandled promise rejection after test completes
-- show view container on search complete
 - moving indexing progress to status bar
 - dead links: don't show as error
     - then document the feature

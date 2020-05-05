@@ -3,7 +3,7 @@ import { NoteSearcherDriver } from './utils/NoteSearcherDriver';
 
 let hasRun = false;
 
-export const globalBeforeAll = async () => {
+export const openDemoDirAndCloseAllEditors = async () => {
   if (hasRun) { return; }
 
   const vscode = new VsCodeDriver();
