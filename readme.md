@@ -26,7 +26,6 @@ Console app that does indexing and searching
 
 # todo
 - show view container on search complete
-- refactor: dead link finder
 - feature: suggest tags
 - feature: extract text to new note
 - choose search engine:

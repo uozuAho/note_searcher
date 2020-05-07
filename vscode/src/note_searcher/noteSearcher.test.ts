@@ -1,10 +1,11 @@
+import * as tmoq from "typemoq";
+
 import { NoteSearcher } from './noteSearcher';
 import { FullTextSearch } from '../search/FullTextSearch';
-import * as tmoq from "typemoq";
 import { MockUi } from "../mocks/MockUi";
 import { MockFile } from "../mocks/MockFile";
 import { DelayedExecutor } from '../utils/delayedExecutor';
-import { DeadLinkFinder, DeadLink } from './DeadLinkFinder';
+import { DeadLinkFinder, DeadLink } from '../dead_links/DeadLinkFinder';
 import { NoteSearcherConfigProvider, NoteSearcherConfig } from './NoteSearcherConfigProvider';
 
 describe('NoteSearcher', () => {

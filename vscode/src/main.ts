@@ -3,7 +3,7 @@ import * as vscode from 'vscode';
 import { createFullTextSearch } from './search/FullTextSearch';
 import { VsCodeNoteSearcherUi } from './ui/VsCodeNoteSearcherUi';
 import { NoteSearcher } from './note_searcher/noteSearcher';
-import { DeadLinkFinder } from './note_searcher/DeadLinkFinder';
+import { DeadLinkFinder } from './dead_links/DeadLinkFinder';
 import { createFileSystem } from './utils/FileSystem';
 import { NoteSearcherConfigProvider } from './note_searcher/NoteSearcherConfigProvider';
 import { NoteSearcherUi } from './ui/NoteSearcherUi';

@@ -8,7 +8,7 @@ import { extractKeywords } from "../text_processing/keywordExtractor";
 import { createDiagnostics, Diagnostics } from "../diagnostics/diagnostics";
 import { DelayedExecutor } from "../utils/delayedExecutor";
 import { GoodSet } from "../utils/goodSet";
-import { DeadLinkFinder } from "./DeadLinkFinder";
+import { DeadLinkFinder } from "../dead_links/DeadLinkFinder";
 import { NoteSearcherConfigProvider } from "./NoteSearcherConfigProvider";
 import { TimeProvider, newTimeProvider } from "../utils/timeProvider";
 import { formatDateTime_YYYYMMddhhmm } from "../utils/timeFormatter";
