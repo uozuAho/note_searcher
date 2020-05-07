@@ -1,5 +1,5 @@
 node_modules
-out
+e2e-out
 dist
 *.vsix
 .vscode-test

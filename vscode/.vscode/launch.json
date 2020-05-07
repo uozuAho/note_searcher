@@ -43,13 +43,13 @@
       "preLaunchTask": "e2eCompile",
       "args": [
         "run-tests",
-        "${workspaceFolder}/out/${fileBasenameNoExtension}.js",
+        "${workspaceFolder}/e2e-out/${fileBasenameNoExtension}.js",
         // todo: this doesn't work:
         // "--mocha_config",
         // "${workspaceFolder}/e2e/.mocharc-debug.js"
       ],
       "outFiles": [
-				"${workspaceFolder}/out/**/*.js"
+				"${workspaceFolder}/e2e-out/**/*.js"
 			],
       "console": "integratedTerminal",
       "internalConsoleOptions": "neverOpen",

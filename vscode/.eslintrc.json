@@ -9,7 +9,7 @@
         "@typescript-eslint"
     ],
     "ignorePatterns": [
-      "out",
+      "e2e-out",
       "dist"
     ],
     "rules": {

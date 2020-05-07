@@ -1,6 +1,6 @@
 .idea
 .vscode
-out/
+e2e-out/
 src/
 dist/index
 node_modules
