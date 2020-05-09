@@ -25,8 +25,10 @@ Console app that does indexing and searching
 
 
 # todo
+- feature: suggest tags while typing in note
+- feature: copy markdown link from editor tab
+- feature: suggest tags in search
 - show view container on search complete
-- feature: suggest tags
 - feature: extract text to new note
 - choose search engine:
     - lunr:   pros: no deps, simple implementation
