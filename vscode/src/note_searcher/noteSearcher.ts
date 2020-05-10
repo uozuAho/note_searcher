@@ -2,7 +2,7 @@ const path = require('path');
 
 import { NoteSearcherUi } from "../ui/NoteSearcherUi";
 import { File } from "../utils/File";
-import { FullTextSearch } from "../search/FullTextSearch";
+import { NoteIndex } from "../index/NoteIndex";
 import { extractTags } from "../text_processing/tagExtractor";
 import { extractKeywords } from "../text_processing/keywordExtractor";
 import { createDiagnostics, Diagnostics } from "../diagnostics/diagnostics";
@@ -22,7 +22,7 @@ export class NoteSearcher {
 
   constructor(
     private ui: NoteSearcherUi,
-    private searcher: FullTextSearch,
+    private noteIndex: NoteIndex,
     private deadLinkFinder: DeadLinkFinder,
     private configProvider: NoteSearcherConfigProvider,
     private delayedExecutor: DelayedExecutor = new DelayedExecutor(),
@@ -42,7 +42,7 @@ export class NoteSearcher {
     }
     this.previousQuery = input;
     try {
-      const results = await this.searcher.search(input);
+      const results = await this.noteIndex.search(input);
       await this.ui.showSearchResults(results);
 
       this.diagnostics.trace('search complete');
@@ -64,7 +64,7 @@ export class NoteSearcher {
     this.ui.showNotification('indexing current folder...');
 
     try {
-      await this.searcher.index(folder);
+      await this.noteIndex.index(folder);
       this.ui.showNotification('indexing complete');
       this.diagnostics.trace('indexing complete');
     }
@@ -221,6 +221,6 @@ export class NoteSearcher {
     const keywords = await extractKeywords(text);
     const query = this.createTagAndKeywordQuery(tags, keywords);
 
-    return await this.searcher.search(query);
+    return await this.noteIndex.search(query);
   };
 }

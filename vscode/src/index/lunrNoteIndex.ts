@@ -1,9 +1,10 @@
 import * as lunr from 'lunr';
 
-import { FullTextSearch } from "./FullTextSearch";
+import { NoteIndex } from "./NoteIndex";
 import { FileSystem } from "../utils/FileSystem";
 import { createDiagnostics } from '../diagnostics/diagnostics';
 import { extractTags } from '../text_processing/tagExtractor';
+import { GoodSet } from '../utils/goodSet';
 
 const NUM_RESULTS = 10;
 
@@ -20,8 +21,9 @@ lunr.tokenizer.separator = /\s+/;
 (lunr as any).QueryLexer.termSeparator = lunr.tokenizer.separator;
 
 
-export class LunrSearch implements FullTextSearch {
+export class LunrNoteIndex implements NoteIndex {
   private _index: lunr.Index | null = null;
+  private _tags: GoodSet<string> = new GoodSet();
   private _diagnostics = createDiagnostics('LunrSearch');
 
   constructor(private fileSystem: FileSystem) {}
@@ -51,6 +53,7 @@ export class LunrSearch implements FullTextSearch {
       const job = this.fileSystem.readFileAsync(path)
         .then(text => {
           const tags = extractTags(text);
+          tags.forEach(t => this._tags.add(t));
           builder.add({path, text, tags});
         });
 
@@ -66,6 +69,10 @@ export class LunrSearch implements FullTextSearch {
 
   public expandQueryTags = (query: string) => {
     return query.replace(/(\s|^|\+|-)#(.+?)\b/g, "$1tags:$2");
+  };
+
+  public allTags = () => {
+    return Array.from(this._tags.values());
   };
 
   private createIndexBuilder = () => {

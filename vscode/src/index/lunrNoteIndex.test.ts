@@ -1,6 +1,6 @@
 import * as tmoq from 'typemoq';
 
-import { LunrSearch } from "./lunrSearch";
+import { LunrNoteIndex } from "./lunrNoteIndex";
 import { FileSystem } from "../utils/FileSystem";
 import { File } from '../utils/File';
 import { MockFile } from '../mocks/MockFile';
@@ -31,9 +31,9 @@ expect.extend({
 const aTextFilePath = '/a/b/c.txt';
 
 
-describe('lunr search', () => {
+describe('lunr note index', () => {
   let fileSystem: tmoq.IMock<FileSystem>;
-  let lunrSearcher: LunrSearch;
+  let lunrNoteIndex: LunrNoteIndex;
 
   const setupFiles = (files: File[]) => {
     fileSystem.setup(w => w.allFilesUnderPath(tmoq.It.isAny()))
@@ -48,14 +48,14 @@ describe('lunr search', () => {
   const searchFor = async (query: string, text: string) => {
     setupFiles([new MockFile(aTextFilePath, text)]);
 
-    await lunrSearcher.index('some dir');
+    await lunrNoteIndex.index('some dir');
 
-    return lunrSearcher.search(query);
+    return lunrNoteIndex.search(query);
   };
 
   beforeEach(() => {
     fileSystem = tmoq.Mock.ofType<FileSystem>();
-    lunrSearcher = new LunrSearch(fileSystem.object);
+    lunrNoteIndex = new LunrNoteIndex(fileSystem.object);
   });
 
   it('index and search example', async () => {
@@ -64,9 +64,9 @@ describe('lunr search', () => {
       new MockFile('a/b/c.log', 'what about shoes and biscuits'),
     ]);
 
-    await lunrSearcher.index('some dir');
+    await lunrNoteIndex.index('some dir');
 
-    const results = await lunrSearcher.search('blah');
+    const results = await lunrNoteIndex.search('blah');
 
     expect(results.length).toBe(1);
     expect(results[0]).toBe('a/b.txt');
@@ -123,7 +123,7 @@ describe('lunr search', () => {
     });
   });
 
-  describe('tags', () => {
+  describe('search with tags', () => {
     it('finds single tag', async () => {
       await expect(searchFor("#beef", "The tags are #beef and #chowder")).toBeFound();
     });
@@ -154,32 +154,56 @@ describe('lunr search', () => {
   describe('expand query tags', () => {
     it('replaces tag at the start of a query', () => {
       const inputQuery = '#tag';
-      const expandedQuery = lunrSearcher.expandQueryTags(inputQuery);
+      const expandedQuery = lunrNoteIndex.expandQueryTags(inputQuery);
       expect(expandedQuery).toBe('tags:tag');
     });
 
     it('replaces tag in the middle of a query', () => {
       const inputQuery = 'hello #tag boy';
-      const expandedQuery = lunrSearcher.expandQueryTags(inputQuery);
+      const expandedQuery = lunrNoteIndex.expandQueryTags(inputQuery);
       expect(expandedQuery).toBe('hello tags:tag boy');
     });
 
     it('replaces multiple tags', () => {
       const inputQuery = 'hello #tag #boy';
-      const expandedQuery = lunrSearcher.expandQueryTags(inputQuery);
+      const expandedQuery = lunrNoteIndex.expandQueryTags(inputQuery);
       expect(expandedQuery).toBe('hello tags:tag tags:boy');
     });
 
     it('does not replace non tag', () => {
       const inputQuery = 'this is no#t a tag';
-      const expandedQuery = lunrSearcher.expandQueryTags(inputQuery);
+      const expandedQuery = lunrNoteIndex.expandQueryTags(inputQuery);
       expect(expandedQuery).toBe(inputQuery);
     });
 
     it('works with operators', () => {
       const inputQuery = 'dont include this -#tag';
-      const expandedQuery = lunrSearcher.expandQueryTags(inputQuery);
+      const expandedQuery = lunrNoteIndex.expandQueryTags(inputQuery);
       expect(expandedQuery).toBe('dont include this -tags:tag');
+    });
+  });
+
+  describe('allTags', () => {
+    it('returns all tags', async () => {
+      setupFiles([
+        new MockFile('a/b.txt', 'this has a #tag'),
+        new MockFile('a/b/c.log', 'this has a #different tag'),
+      ]);
+
+      await lunrNoteIndex.index('some dir');
+
+      expect(lunrNoteIndex.allTags()).toEqual(['tag', 'different']);
+    });
+
+    it('returns unique tags', async () => {
+      setupFiles([
+        new MockFile('a/b.txt', 'this has a #tag'),
+        new MockFile('a/b/c.log', 'this has the same #tag'),
+      ]);
+
+      await lunrNoteIndex.index('some dir');
+
+      expect(lunrNoteIndex.allTags()).toEqual(['tag']);
     });
   });
 });

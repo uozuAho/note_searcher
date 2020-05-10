@@ -1,18 +1,21 @@
 import * as vscode from 'vscode';
 
-import { createFullTextSearch } from './search/FullTextSearch';
+import { createNoteIndex } from './index/NoteIndex';
 import { VsCodeNoteSearcherUi } from './ui/VsCodeNoteSearcherUi';
 import { NoteSearcher } from './note_searcher/noteSearcher';
 import { DeadLinkFinder } from './dead_links/DeadLinkFinder';
 import { createFileSystem } from './utils/FileSystem';
 import { NoteSearcherConfigProvider } from './note_searcher/NoteSearcherConfigProvider';
-import { NoteSearcherUi } from './ui/NoteSearcherUi';
+import { TagCompleter } from './tag_completion/TagCompleter';
 
 export const extensionId = 'uozuaho.note-searcher';
 
 export function activate(context: vscode.ExtensionContext) {
   const ui = new VsCodeNoteSearcherUi();
-  const noteSearcher = createNoteSearcher(context, ui);
+  const configProvider = new NoteSearcherConfigProvider(context);
+  const noteIndex = createNoteIndex(extensionDir()!, configProvider);
+  const deadLinkFinder = new DeadLinkFinder(createFileSystem());
+  const noteSearcher = new NoteSearcher(ui, noteIndex, deadLinkFinder, configProvider);
 
   context.subscriptions.push(
     vscode.commands.registerCommand(
@@ -32,6 +35,9 @@ export function activate(context: vscode.ExtensionContext) {
     vscode.commands.registerCommand(
       'noteSearcher.createNote', () => noteSearcher.createNote()),
 
+    vscode.languages.registerCompletionItemProvider(['markdown', 'plaintext'],
+      new TagCompleter(noteIndex), '#'),
+
     ui.createOnDidChangeTextDocumentHandler(),
     ui.createOnDidSaveDocumentHandler()
   );
@@ -40,14 +46,6 @@ export function activate(context: vscode.ExtensionContext) {
 }
 
 export function deactivate() {}
-
-const createNoteSearcher = (context: vscode.ExtensionContext, ui: NoteSearcherUi) => {
-  const configProvider = new NoteSearcherConfigProvider(context);
-  const searcher = createFullTextSearch(extensionDir()!, configProvider);
-  const deadLinkFinder = new DeadLinkFinder(createFileSystem());
-
-  return new NoteSearcher(ui, searcher, deadLinkFinder, configProvider);
-};
 
 const extensionDir = () => {
   return vscode.extensions.getExtension(extensionId)?.extensionPath;

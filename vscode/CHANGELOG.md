@@ -5,6 +5,8 @@ file. Format inspired by https://keepachangelog.com/en/1.0.0/
 
 
 ## [Unreleased]
+### Added
+- tag completion within notes
 
 ## [0.0.11] - 2020-05-06
 ### Changed

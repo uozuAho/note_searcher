@@ -1,8 +1,8 @@
 import * as child_process from 'child_process';
 
-import { FullTextSearch } from './FullTextSearch';
+import { NoteIndex } from './NoteIndex';
 
-export class LuceneCliSearch implements FullTextSearch {
+export class CliNoteIndex implements NoteIndex {
 
   public constructor(private jarPath: string) { }
 
@@ -15,6 +15,8 @@ export class LuceneCliSearch implements FullTextSearch {
   public index = async (indexDir: string) => {
     await this.runCliIndex(indexDir);
   };
+
+  public allTags = () => { throw new Error('not implemented!'); };
 
   private runCliSearch = (query: string) => {
     return new Promise<string>((resolve, reject) => {
