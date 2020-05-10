@@ -2,7 +2,7 @@ const path = require('path');
 
 import { NoteSearcherUi } from "../ui/NoteSearcherUi";
 import { File } from "../utils/File";
-import { FullTextSearch } from "../search/FullTextSearch";
+import { NoteIndex } from "../index/NoteIndex";
 import { extractTags } from "../text_processing/tagExtractor";
 import { extractKeywords } from "../text_processing/keywordExtractor";
 import { createDiagnostics, Diagnostics } from "../diagnostics/diagnostics";
@@ -22,7 +22,7 @@ export class NoteSearcher {
 
   constructor(
     private ui: NoteSearcherUi,
-    private searcher: FullTextSearch,
+    private searcher: NoteIndex,
     private deadLinkFinder: DeadLinkFinder,
     private configProvider: NoteSearcherConfigProvider,
     private delayedExecutor: DelayedExecutor = new DelayedExecutor(),

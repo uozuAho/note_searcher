@@ -1,6 +1,6 @@
 import * as lunr from 'lunr';
 
-import { FullTextSearch } from "./FullTextSearch";
+import { NoteIndex } from "./NoteIndex";
 import { FileSystem } from "../utils/FileSystem";
 import { createDiagnostics } from '../diagnostics/diagnostics';
 import { extractTags } from '../text_processing/tagExtractor';
@@ -20,7 +20,7 @@ lunr.tokenizer.separator = /\s+/;
 (lunr as any).QueryLexer.termSeparator = lunr.tokenizer.separator;
 
 
-export class LunrSearch implements FullTextSearch {
+export class LunrNoteIndex implements NoteIndex {
   private _index: lunr.Index | null = null;
   private _diagnostics = createDiagnostics('LunrSearch');
 

@@ -1,8 +1,8 @@
 import * as child_process from 'child_process';
 
-import { FullTextSearch } from './FullTextSearch';
+import { NoteIndex } from './NoteIndex';
 
-export class LuceneCliSearch implements FullTextSearch {
+export class CliNoteIndex implements NoteIndex {
 
   public constructor(private jarPath: string) { }
 

@@ -1,11 +1,11 @@
 import * as path from 'path';
 
-import { LuceneCliSearch } from './LuceneCliSearch';
+import { CliNoteIndex } from './CliNoteIndex';
 import { NoteSearcherConfigProvider } from '../note_searcher/NoteSearcherConfigProvider';
-import { LunrSearch } from './lunrSearch';
+import { LunrNoteIndex } from './lunrNoteIndex';
 import { createFileSystem } from '../utils/FileSystem';
 
-export interface FullTextSearch {
+export interface NoteIndex {
   search: (query: string) => Promise<string[]>;
   index: (dir: string) => Promise<void>;
 }
@@ -13,15 +13,15 @@ export interface FullTextSearch {
 /**
  * @param extensionDir location of this vscode extension's directory
  */
-export const createFullTextSearch = (
+export const createNoteIndex = (
   extensionDir: string,
   config: NoteSearcherConfigProvider
-): FullTextSearch =>
+): NoteIndex =>
 {
   if (config.getConfig().search.useLucene) {
     const jarPath = path.join(extensionDir, 'dist/note_searcher.jar');
-    return new LuceneCliSearch(jarPath);
+    return new CliNoteIndex(jarPath);
   } else {
-    return new LunrSearch(createFileSystem());
+    return new LunrNoteIndex(createFileSystem());
   }
 };
