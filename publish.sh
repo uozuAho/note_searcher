@@ -26,7 +26,7 @@ echo Then open publish.sh and uncomment the following steps:
 
 # update changelog
 # git add .
-# git commit -m "increment version to XXX"
+# git commit -m "version XXX"
 # git tag XXX
 # git push
 # git push --tags
