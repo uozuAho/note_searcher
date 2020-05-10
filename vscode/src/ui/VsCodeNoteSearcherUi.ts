@@ -42,9 +42,17 @@ export class VsCodeNoteSearcherUi implements NoteSearcherUi {
 
   public showSearchResults = async (files: string[]) => {
     const uris = files.map(f => vscode.Uri.file(f));
-    vscode.window.createTreeView('noteSearcher-results', {
-      treeDataProvider: new SearchResultTree(uris),
+    const searchResults = new SearchResultTree(uris);
+    const view = vscode.window.createTreeView('noteSearcher-results', {
+      treeDataProvider: searchResults,
     });
+
+    // Hack: Show the view container if it's not currently visible.
+    //       Doesn't work if there's no search results :(
+    //       todo: find a way to show the container regardless of search results
+    if (uris.length > 0) {
+      return view.reveal(searchResults.getAllItems()[0]);
+    }
   };
 
   public promptForNewNoteName = async (noteId: string) => {

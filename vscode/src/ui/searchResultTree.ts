@@ -1,18 +1,31 @@
 import * as vscode from 'vscode';
 
 export class SearchResultTree implements vscode.TreeDataProvider<SearchResult> {
-  constructor(private results: vscode.Uri[]) {}
 
-  getTreeItem(element: SearchResult): vscode.TreeItem {
+  private results: SearchResult[];
+
+  constructor(results: vscode.Uri[]) {
+    this.results = results.map(r => new SearchResult(r));
+  }
+
+  public getTreeItem(element: SearchResult): vscode.TreeItem {
     return element;
   }
 
-  getChildren(element?: SearchResult): Thenable<SearchResult[]> {
+  public getChildren(element?: SearchResult): Thenable<SearchResult[]> {
     if (element) {
       return Promise.resolve([]);
     }
-    return Promise.resolve(this.results.map(r => new SearchResult(r)));
+    return Promise.resolve(this.results);
   }
+
+  public getParent = (element: SearchResult) => {
+    return null;
+  };
+
+  public getAllItems = (): SearchResult[] => {
+    return this.results;
+  };
 }
 
 class SearchResult extends vscode.TreeItem {

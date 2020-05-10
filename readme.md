@@ -26,17 +26,17 @@ Console app that does indexing and searching
 
 # todo
 - feature: suggest tags in search
-- show view container on search complete
 - feature: extract text to new note
+- dead links: don't show as error
+    - then document the feature
+- show view container on search complete, even if no search results
+- moving indexing progress to status bar
 - choose search engine:
     - lunr:   pros: no deps, simple implementation
               cons: slow, no incremental index (must rebuild from scratch)
     - lucene: pros: fast, powerful
               cons: needs java, complex impl (compared to lunr)
 - e2e test throws unhandled promise rejection after test completes
-- moving indexing progress to status bar
-- dead links: don't show as error
-    - then document the feature
 - support wiki-style links, with id only (for archive users)
 - docs
     - get readme working in extension preview in vscode
