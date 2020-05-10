@@ -4,6 +4,7 @@ import { NoteIndex } from "./NoteIndex";
 import { FileSystem } from "../utils/FileSystem";
 import { createDiagnostics } from '../diagnostics/diagnostics';
 import { extractTags } from '../text_processing/tagExtractor';
+import { GoodSet } from '../utils/goodSet';
 
 const NUM_RESULTS = 10;
 
@@ -22,6 +23,7 @@ lunr.tokenizer.separator = /\s+/;
 
 export class LunrNoteIndex implements NoteIndex {
   private _index: lunr.Index | null = null;
+  private _tags: GoodSet<string> = new GoodSet();
   private _diagnostics = createDiagnostics('LunrSearch');
 
   constructor(private fileSystem: FileSystem) {}
@@ -51,6 +53,7 @@ export class LunrNoteIndex implements NoteIndex {
       const job = this.fileSystem.readFileAsync(path)
         .then(text => {
           const tags = extractTags(text);
+          tags.forEach(t => this._tags.add(t));
           builder.add({path, text, tags});
         });
 
@@ -66,6 +69,10 @@ export class LunrNoteIndex implements NoteIndex {
 
   public expandQueryTags = (query: string) => {
     return query.replace(/(\s|^|\+|-)#(.+?)\b/g, "$1tags:$2");
+  };
+
+  public allTags = () => {
+    return Array.from(this._tags.values());
   };
 
   private createIndexBuilder = () => {

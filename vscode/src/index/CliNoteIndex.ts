@@ -16,6 +16,8 @@ export class CliNoteIndex implements NoteIndex {
     await this.runCliIndex(indexDir);
   };
 
+  public allTags = () => { throw new Error('not implemented!'); };
+
   private runCliSearch = (query: string) => {
     return new Promise<string>((resolve, reject) => {
       // todo: make this async

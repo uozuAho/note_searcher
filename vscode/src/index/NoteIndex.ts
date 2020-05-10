@@ -8,6 +8,7 @@ import { createFileSystem } from '../utils/FileSystem';
 export interface NoteIndex {
   search: (query: string) => Promise<string[]>;
   index: (dir: string) => Promise<void>;
+  allTags: () => string[];
 }
 
 /**
