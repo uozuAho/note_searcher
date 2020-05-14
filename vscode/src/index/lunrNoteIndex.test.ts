@@ -205,5 +205,19 @@ describe('lunr note index', () => {
 
       expect(lunrNoteIndex.allTags()).toEqual(['tag']);
     });
+
+    it('rebuilds on save', async () => {
+      setupFiles([new MockFile('a/b.txt', 'this has a #tag')]);
+
+      await lunrNoteIndex.index('some dir');
+
+      expect(lunrNoteIndex.allTags()).toEqual(['tag']);
+
+      setupFiles([new MockFile('a/b.txt', 'now there are no tags')]);
+
+      await lunrNoteIndex.index('some dir');
+
+      expect(lunrNoteIndex.allTags()).toEqual([]);
+    });
   });
 });

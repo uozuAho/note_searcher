@@ -23,7 +23,7 @@ lunr.tokenizer.separator = /\s+/;
 
 export class LunrNoteIndex implements NoteIndex {
   private _index: lunr.Index | null = null;
-  private _tags: GoodSet<string> = new GoodSet();
+  private _tagsIndex: GoodSet<string> = new GoodSet();
   private _diagnostics = createDiagnostics('LunrSearch');
 
   constructor(private fileSystem: FileSystem) {}
@@ -44,20 +44,13 @@ export class LunrNoteIndex implements NoteIndex {
   public index = async (dir: string) => {
     this.trace('index start');
 
+    this._tagsIndex = new GoodSet();
     const builder = this.createIndexBuilder();
     const jobs: Promise<void>[] = [];
 
     for (const path of this.fileSystem.allFilesUnderPath(dir)) {
       if (!this.shouldIndex(path)) { continue; }
-
-      const job = this.fileSystem.readFileAsync(path)
-        .then(text => {
-          const tags = extractTags(text);
-          tags.forEach(t => this._tags.add(t));
-          builder.add({path, text, tags});
-        });
-
-      jobs.push(job);
+      jobs.push(this.indexFile(builder, path));
     }
 
     await Promise.all(jobs);
@@ -72,7 +65,16 @@ export class LunrNoteIndex implements NoteIndex {
   };
 
   public allTags = () => {
-    return Array.from(this._tags.values());
+    return Array.from(this._tagsIndex.values());
+  };
+
+  private indexFile = (indexBuilder: lunr.Builder, path: string) => {
+    return this.fileSystem.readFileAsync(path)
+      .then(text => {
+        const tags = extractTags(text);
+        tags.forEach(t => this._tagsIndex.add(t));
+        indexBuilder.add({path, text, tags});
+      });
   };
 
   private createIndexBuilder = () => {
