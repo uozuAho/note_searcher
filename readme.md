@@ -25,6 +25,13 @@ Console app that does indexing and searching
 
 
 # todo
+- bug: tag completion: keeps old tags
+    - create dummy tag #asdf
+    - remove the tag
+    - start typeing #as: asdf is suggested
+- bug: not all tags in list
+    - eg. #ai #meat
+- feature: copy markdown link from editor tab
 - feature: suggest tags in search
 - feature: extract text to new note
 - dead links: don't show as error
