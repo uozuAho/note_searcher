@@ -44,18 +44,8 @@ export class LunrNoteIndex implements NoteIndex {
   public index = async (dir: string) => {
     this.trace('index start');
 
-    this._tagsIndex = new GoodSet();
-    const builder = this.createIndexBuilder();
-    const jobs: Promise<void>[] = [];
-
-    for (const path of this.fileSystem.allFilesUnderPath(dir)) {
-      if (!this.shouldIndex(path)) { continue; }
-      jobs.push(this.indexFile(builder, path));
-    }
-
-    await Promise.all(jobs);
-
-    this._index = builder.build();
+    this._tagsIndex.clear();
+    await this.indexAllFiles(dir);
 
     this.trace('index complete');
   };
@@ -68,13 +58,25 @@ export class LunrNoteIndex implements NoteIndex {
     return Array.from(this._tagsIndex.values());
   };
 
-  private indexFile = (indexBuilder: lunr.Builder, path: string) => {
-    return this.fileSystem.readFileAsync(path)
-      .then(text => {
-        const tags = extractTags(text);
-        tags.forEach(t => this._tagsIndex.add(t));
-        indexBuilder.add({path, text, tags});
-      });
+  private indexAllFiles = async (dir: string) => {
+    const builder = this.createIndexBuilder();
+    const jobs: Promise<void>[] = [];
+
+    for (const path of this.fileSystem.allFilesUnderPath(dir)) {
+      if (!this.shouldIndex(path)) { continue; }
+      jobs.push(this.indexFile(builder, path));
+    }
+
+    await Promise.all(jobs);
+
+    this._index = builder.build();
+  };
+
+  private indexFile = async (indexBuilder: lunr.Builder, path: string) => {
+    const text = await this.fileSystem.readFileAsync(path);
+    const tags = extractTags(text);
+    tags.forEach(t => this._tagsIndex.add(t));
+    indexBuilder.add({ path, text, tags });
   };
 
   private createIndexBuilder = () => {
