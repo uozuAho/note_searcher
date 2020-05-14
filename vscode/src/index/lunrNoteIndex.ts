@@ -23,7 +23,7 @@ lunr.tokenizer.separator = /\s+/;
 
 export class LunrNoteIndex implements NoteIndex {
   private _index: lunr.Index | null = null;
-  private _tags: GoodSet<string> = new GoodSet();
+  private _tagsIndex: GoodSet<string> = new GoodSet();
   private _diagnostics = createDiagnostics('LunrSearch');
 
   constructor(private fileSystem: FileSystem) {}
@@ -44,25 +44,8 @@ export class LunrNoteIndex implements NoteIndex {
   public index = async (dir: string) => {
     this.trace('index start');
 
-    const builder = this.createIndexBuilder();
-    const jobs: Promise<void>[] = [];
-
-    for (const path of this.fileSystem.allFilesUnderPath(dir)) {
-      if (!this.shouldIndex(path)) { continue; }
-
-      const job = this.fileSystem.readFileAsync(path)
-        .then(text => {
-          const tags = extractTags(text);
-          tags.forEach(t => this._tags.add(t));
-          builder.add({path, text, tags});
-        });
-
-      jobs.push(job);
-    }
-
-    await Promise.all(jobs);
-
-    this._index = builder.build();
+    this._tagsIndex.clear();
+    await this.indexAllFiles(dir);
 
     this.trace('index complete');
   };
@@ -72,7 +55,28 @@ export class LunrNoteIndex implements NoteIndex {
   };
 
   public allTags = () => {
-    return Array.from(this._tags.values());
+    return Array.from(this._tagsIndex.values());
+  };
+
+  private indexAllFiles = async (dir: string) => {
+    const builder = this.createIndexBuilder();
+    const jobs: Promise<void>[] = [];
+
+    for (const path of this.fileSystem.allFilesUnderPath(dir)) {
+      if (!this.shouldIndex(path)) { continue; }
+      jobs.push(this.indexFile(builder, path));
+    }
+
+    await Promise.all(jobs);
+
+    this._index = builder.build();
+  };
+
+  private indexFile = async (indexBuilder: lunr.Builder, path: string) => {
+    const text = await this.fileSystem.readFileAsync(path);
+    const tags = extractTags(text);
+    tags.forEach(t => this._tagsIndex.add(t));
+    indexBuilder.add({ path, text, tags });
   };
 
   private createIndexBuilder = () => {
