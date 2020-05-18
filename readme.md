@@ -25,6 +25,7 @@ Console app that does indexing and searching
 
 
 # todo
+- feature: copy link from editor tab
 - feature: suggest tags in search
     - not yet available: https://github.com/microsoft/vscode/issues/35785
 - dead links: don't show as error

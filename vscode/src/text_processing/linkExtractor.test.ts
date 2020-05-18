@@ -1,4 +1,4 @@
-import { extractLinks } from "./LinkExtractor";
+import { extractLinks } from "./linkExtractor";
 
 describe('link extractor', () => {
   it('extracts 1 link', () => {
