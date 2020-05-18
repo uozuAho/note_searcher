@@ -10,7 +10,7 @@ import { DelayedExecutor } from "../utils/delayedExecutor";
 import { GoodSet } from "../utils/goodSet";
 import { DeadLinkFinder } from "../dead_links/DeadLinkFinder";
 import { NoteSearcherConfigProvider } from "./NoteSearcherConfigProvider";
-import { TimeProvider, newTimeProvider } from "../utils/timeProvider";
+import { TimeProvider, createTimeProvider } from "../utils/timeProvider";
 import { formatDateTime_YYYYMMddhhmm } from "../utils/timeFormatter";
 import { relativePath } from "../utils/FileSystem";
 
@@ -26,7 +26,7 @@ export class NoteSearcher {
     private deadLinkFinder: DeadLinkFinder,
     private configProvider: NoteSearcherConfigProvider,
     private delayedExecutor: DelayedExecutor = new DelayedExecutor(),
-    private timeProvider: TimeProvider = newTimeProvider())
+    private timeProvider: TimeProvider = createTimeProvider())
   {
     ui.addCurrentDocumentChangeListener(this.notifyCurrentFileChanged);
     ui.addDocumentSavedListener(this.notifyFileSaved);
@@ -74,7 +74,7 @@ export class NoteSearcher {
   };
 
   public createNote = async () => {
-    const now = this.timeProvider.currentTimeMs();
+    const now = this.timeProvider.millisecondsSinceEpochUtc();
     const noteId = formatDateTime_YYYYMMddhhmm(now);
     const noteName = await this.ui.promptForNewNoteName(noteId);
     if (!noteName) { return; }

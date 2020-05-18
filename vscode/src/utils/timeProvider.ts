@@ -1,11 +1,15 @@
 export interface TimeProvider {
-  currentTimeMs: () => number;
+  /**
+   * Returns the current epoch time in milliseconds.
+   * Epoch time is time since 1970-01-01 00:00 UTC.
+   */
+  millisecondsSinceEpochUtc: () => number;
 }
 
-export const newTimeProvider = () => {
+export const createTimeProvider = () => {
   return new DateTimeProvider();
 };
 
 class DateTimeProvider implements TimeProvider {
-  public currentTimeMs = () => Date.now();
+  public millisecondsSinceEpochUtc = () => Date.now();
 }
