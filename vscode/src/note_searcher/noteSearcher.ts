@@ -82,6 +82,10 @@ export class NoteSearcher {
     this.ui.startNewNote(notePath);
   };
 
+  public createNoteId = (): string => {
+    return '';
+  };
+
   private createNotePath = (name: string) => {
     const activeFile = this.ui.getCurrentFile();
     const dir = activeFile

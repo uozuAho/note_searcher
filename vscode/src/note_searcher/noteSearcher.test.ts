@@ -216,6 +216,12 @@ describe('NoteSearcher', () => {
     });
   });
 
+  describe('create note id', () => {
+    it('should be local time', () => {
+
+    });
+  });
+
   describe('show dead links', () => {
     beforeEach(() => {
       ui = new MockUi();
