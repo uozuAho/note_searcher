@@ -1,4 +1,4 @@
-import { TimeProvider, newTimeProvider } from "../utils/timeProvider";
+import { TimeProvider, createTimeProvider } from "../utils/timeProvider";
 
 export interface Diagnostics {
   trace: (message: string) => void;
@@ -6,7 +6,7 @@ export interface Diagnostics {
 
 export const createDiagnostics = (
   label: string,
-  timeProvider: TimeProvider = newTimeProvider()) =>
+  timeProvider: TimeProvider = createTimeProvider()) =>
 {
   // todo: config
   // return new ConsoleDiagnostics(label, timeProvider);
@@ -20,11 +20,11 @@ class ConsoleDiagnostics implements Diagnostics {
     private label: string,
     private timeProvider: TimeProvider)
   {
-    this.start = timeProvider.currentTimeMs();
+    this.start = timeProvider.millisecondsSinceEpochUtc();
   }
 
   public trace = (message: string) => {
-    const now_ms = this.timeProvider.currentTimeMs() - this.start;
+    const now_ms = this.timeProvider.millisecondsSinceEpochUtc() - this.start;
     const now_s = now_ms / 1000;
 
     console.log(`${now_s}: ${this.label}: ${message}`);
