@@ -74,8 +74,7 @@ export class NoteSearcher {
   };
 
   public createNote = async () => {
-    const now = this.timeProvider.millisecondsSinceEpochUtc();
-    const noteId = formatDateTime_YYYYMMddhhmm(now);
+    const noteId = this.createNoteId();
     const noteName = await this.ui.promptForNewNoteName(noteId);
     if (!noteName) { return; }
     const notePath = this.createNotePath(noteName);
@@ -83,7 +82,8 @@ export class NoteSearcher {
   };
 
   public createNoteId = (): string => {
-    return '';
+    const now = this.timeProvider.millisecondsSinceEpochLocal();
+    return formatDateTime_YYYYMMddhhmm(now);
   };
 
   private createNotePath = (name: string) => {

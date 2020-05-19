@@ -218,7 +218,25 @@ describe('NoteSearcher', () => {
 
   describe('create note id', () => {
     it('should be local time', () => {
+      const now = new Date();
+      const localHour = now.getHours().toString().padStart(2, '0');
 
+      // ugh...
+      const yearPattern = '20\\d\\d';
+      const monthPattern = '\\d\\d';
+      const dayPattern = '\\d\\d';
+      const minutePattern = '\\d\\d';
+      const expectedPattern = [
+        yearPattern,
+        monthPattern,
+        dayPattern,
+        localHour,
+        minutePattern,
+      ].join('');
+      const regex = new RegExp(expectedPattern);
+
+      // act and assert
+      expect(noteSearcher.createNoteId()).toMatch(regex);
     });
   });
 
