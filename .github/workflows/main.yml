@@ -42,5 +42,6 @@ jobs:
 
       - name: e2e tests
         uses: GabrielBB/xvfb-action@v1.0
-        working-directory: vscode
-        run: npm run e2e
+        with:
+          working-directory: vscode
+          run: npm run e2e
