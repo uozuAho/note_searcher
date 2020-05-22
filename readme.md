@@ -26,13 +26,15 @@ Console app that does indexing and searching
 
 # todo
 - ci pipeline
+- improve: copy link: relative path to current doc
 - feature: copy link from editor tab
-- feature: suggest tags in search
-    - not yet available: https://github.com/microsoft/vscode/issues/35785
+- improve indexing notification
+    - make it disappear sooner
+    - https://code.visualstudio.com/updates/v1_22#_show-long-running-operations-as-notifications-with-cancellation-support
 - dead links: don't show as error
     - then document the feature
-- moving indexing progress to status bar
-    - https://code.visualstudio.com/updates/v1_22#_show-long-running-operations-as-notifications-with-cancellation-support
+- feature: suggest tags in search
+    - not yet available: https://github.com/microsoft/vscode/issues/35785
 - feature: extract text to new note
 - show view container on search complete, even if no search results
 - choose search engine:
