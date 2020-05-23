@@ -3,7 +3,7 @@ name: CI
 on: [push]
 
 jobs:
-  build:
+  test:
     strategy:
       matrix:
         os: [macos-latest, ubuntu-latest, windows-latest]
@@ -51,3 +51,26 @@ jobs:
         with:
           working-directory: vscode
           run: npm run e2e
+  package:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Install Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: 12.x
+      - name: Install java
+        uses: actions/setup-java@v1
+        with:
+          java-version: '11.0.4'
+      - run: ./build.jar.sh
+      - name: Package
+        working-directory: vscode
+        run: npm run package
+      - name: Upload package
+        uses: actions/upload-artifact@v2.0.1
+        with:
+          name: note-searcher.vsix
+          path: vscode/*.vsix

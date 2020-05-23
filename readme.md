@@ -26,6 +26,11 @@ Console app that does indexing and searching
 
 # todo
 - ci pipeline
+  - build, test & publish from master
+  - build, test & package from dev
+  - build & test for other branches
+  - fix run e2e test
+    - waiting for https://github.com/GabrielBB/xvfb-action/pull/9
 - improve: copy link: relative path to current doc
 - feature: copy link from editor tab
 - improve indexing notification
@@ -51,6 +56,9 @@ Console app that does indexing and searching
 - separate view for search results + related files etc.
     - I want to see file tree at same time
     - search box in results view. not supported in tree view
+- bug: weird search behaviour
+    - search for "#design-patterns": proxy does not appear, < 10 results
+    - search for "proxy pattern": proxy does appear
 - bug: '+' operator not working as expected:
     - using lucene
     - search for #work: no results
@@ -58,7 +66,6 @@ Console app that does indexing and searching
     - search for +#work book:
         - expected: no results
         - actual:   many results
-- bug: search before index breaks - re-index if there's an index problem
 - dead links: strip root path when showing dead links
 - highlight dead links while editing
 - show incoming/outgoing links
