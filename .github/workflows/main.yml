@@ -68,7 +68,9 @@ jobs:
       - run: ./build.jar.sh
       - name: Package
         working-directory: vscode
-        run: npm run package
+        run: |
+          npm install
+          npm run package
       - name: Upload package
         uses: actions/upload-artifact@v2.0.1
         with:
