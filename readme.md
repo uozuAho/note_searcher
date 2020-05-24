@@ -1,33 +1,52 @@
 # Notes searcher
 
-Full-text and tag-based searching of arbitrary directories and files.
-Lets you make your own zettelkasten! Inspired by https://zettelkasten.de/.
+VS code extension for managing a [zettelkasten](https://zettelkasten.de/posts/overview/).
 
-Runs in VS code as an extension.
+Features:
+- full text search
+- search by tags
+- shortcuts for creating and linking notes
+
+See the [extension marketplace](https://marketplace.visualstudio.com/items?itemName=uozuaho.note-searcher) for more details.
 
 
-# projects
+# Contributing
 
-See each project dir for detailed docs. To build the whole lot:
+## Requirements
 
-> ./build.all.sh
+- nodejs
+- java 11+
 
-This will build a vscode extension (vsix) in this directory, which
-you can install from vscode.
 
-## vscode
+## Run tests
 
-VS code extension
+```sh
+cd cli
+./gradlew test
+cd ..
+cd vscode
+npm install
+npm test
+npm run e2e:setup
+npm run e2e
+```
 
-## cli
 
-Console app that does indexing and searching
+## Run the extension locally
+
+Open the vscode directory with VS code, and run the `Run Extension`
+configuration.
+
+
+## Build the extension locally
+
+Run `npm run build_vsix` in the vscode directory.
 
 
 # todo
+- ci: publish from master when tagged
 - ci: fix run e2e test
     - waiting for https://github.com/GabrielBB/xvfb-action/pull/9
-- ci: publish from master
 - improve: copy link: path relative to current doc
     - also rename to 'copy markdown link'
 - feature: copy link from editor tab
