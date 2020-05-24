@@ -25,12 +25,9 @@ Console app that does indexing and searching
 
 
 # todo
-- ci pipeline
-  - build, test & package from dev
-  - build & test for other branches
 - ci: fix run e2e test
     - waiting for https://github.com/GabrielBB/xvfb-action/pull/9
-- ci: build, test & publish from master
+- ci: publish from master
 - improve: copy link: path relative to current doc
     - also rename to 'copy markdown link'
 - feature: copy link from editor tab
