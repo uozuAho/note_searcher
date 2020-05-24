@@ -1,6 +1,6 @@
 name: CI
 
-on: [push]
+on: [push, pull_request]
 
 jobs:
   test:
@@ -51,7 +51,8 @@ jobs:
         with:
           working-directory: vscode
           run: npm run e2e
-  package:
+  build_vsix:
+    if: github.ref == 'refs/heads/dev'
     needs: test
     runs-on: ubuntu-latest
     steps:
@@ -66,12 +67,12 @@ jobs:
         with:
           java-version: '11.0.4'
       - run: ./build.jar.sh
-      - name: Package
+      - name: Build VS extension
         working-directory: vscode
         run: |
           npm install
-          npm run package
-      - name: Upload package
+          npm run build_vsix
+      - name: Upload VS extension
         uses: actions/upload-artifact@v2.0.1
         with:
           name: note-searcher.vsix
