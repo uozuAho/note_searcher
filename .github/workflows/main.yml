@@ -1,9 +1,14 @@
 name: CI
 
-on: [push]
+on:
+  push:
+  pull_request:
+  release:
+    types:
+    - created
 
 jobs:
-  build:
+  all:
     strategy:
       matrix:
         os: [macos-latest, ubuntu-latest, windows-latest]
@@ -11,12 +16,64 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+
       - name: Install Node.js
         uses: actions/setup-node@v1
         with:
           node-version: 12.x
+
+      - name: Install java
+        uses: actions/setup-java@v1
+        with:
+          java-version: '11.0.4'
+
+      - name: Run java unit tests
+        working-directory: cli
+        run: ./gradlew test
+
       - run: npm install
         working-directory: vscode
-      - name: Run unit tests
+
+      - name: Run js unit tests
         working-directory: vscode
         run: npm test
+
+      # This isn't strictly necessary, but gives better
+      # build error output than npm run e2e:setup
+      - name: Run webpack
+        working-directory: vscode
+        run: npm run webpack
+
+      - name: Build cli jar
+        run: ./build.jar.sh
+
+      - name: e2e test setup
+        working-directory: vscode
+        run: npm run e2e:setup
+
+      - name: e2e tests
+        uses: GabrielBB/xvfb-action@v1.2
+        with:
+          working-directory: vscode
+          run: npm run e2e
+
+      - name: build
+        if: github.ref == 'refs/heads/dev' && matrix.os == 'ubuntu-latest'
+        working-directory: vscode
+        run: |
+          npm install
+          npm run build_vsix
+
+      - name: upload
+        if: github.ref == 'refs/heads/dev' && matrix.os == 'ubuntu-latest'
+        uses: actions/upload-artifact@v2.0.1
+        with:
+          name: note-searcher.vsix
+          path: vscode/*.vsix
+
+      - name: publish
+        if: success() && startsWith( github.ref, 'refs/tags/releases/') && matrix.os == 'ubuntu-latest'
+        working-directory: vscode
+        run: npm run publish
+        env:
+          VSCE_PAT: $VSCE_PAT

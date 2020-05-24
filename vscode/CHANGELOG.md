@@ -5,6 +5,8 @@ file. Format inspired by https://keepachangelog.com/en/1.0.0/
 
 
 ## [Unreleased]
+### Fixed
+- deleted tags showing up in tag completion
 
 ## [0.0.12] - 2020-05-10
 ### Added
