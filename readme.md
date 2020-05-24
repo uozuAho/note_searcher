@@ -44,7 +44,6 @@ Run `npm run build_vsix` in the vscode directory.
 
 
 # todo
-- ci: publish from master when tagged
 - ci: fix run e2e test
     - waiting for https://github.com/GabrielBB/xvfb-action/pull/9
 - improve: copy link: path relative to current doc

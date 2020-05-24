@@ -1,9 +1,14 @@
 name: CI
 
-on: [push, pull_request]
+on:
+  push:
+  pull_request:
+  release:
+    types:
+    - created
 
 jobs:
-  test:
+  all:
     strategy:
       matrix:
         os: [macos-latest, ubuntu-latest, windows-latest]
@@ -51,29 +56,24 @@ jobs:
         with:
           working-directory: vscode
           run: npm run e2e
-  build_vsix:
-    if: github.ref == 'refs/heads/dev'
-    needs: test
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-      - name: Install Node.js
-        uses: actions/setup-node@v1
-        with:
-          node-version: 12.x
-      - name: Install java
-        uses: actions/setup-java@v1
-        with:
-          java-version: '11.0.4'
-      - run: ./build.jar.sh
-      - name: Build VS extension
+
+      - name: build
+        if: github.ref == 'refs/heads/dev' && matrix.os == 'ubuntu-latest'
         working-directory: vscode
         run: |
           npm install
           npm run build_vsix
-      - name: Upload VS extension
+
+      - name: upload
+        if: github.ref == 'refs/heads/dev' && matrix.os == 'ubuntu-latest'
         uses: actions/upload-artifact@v2.0.1
         with:
           name: note-searcher.vsix
           path: vscode/*.vsix
+
+      - name: publish
+        if: success() && startsWith( github.ref, 'refs/tags/releases/') && matrix.os == 'ubuntu-latest'
+        working-directory: vscode
+        run: npm run publish
+        env:
+          VSCE_PAT: $VSCE_PAT
