@@ -1,9 +1,9 @@
 name: CI
 
-on: [push]
+on: [push, pull_request]
 
 jobs:
-  build:
+  test:
     strategy:
       matrix:
         os: [macos-latest, ubuntu-latest, windows-latest]
@@ -11,12 +11,69 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+
       - name: Install Node.js
         uses: actions/setup-node@v1
         with:
           node-version: 12.x
+
+      - name: Install java
+        uses: actions/setup-java@v1
+        with:
+          java-version: '11.0.4'
+
+      - name: Run java unit tests
+        working-directory: cli
+        run: ./gradlew test
+
       - run: npm install
         working-directory: vscode
-      - name: Run unit tests
+
+      - name: Run js unit tests
         working-directory: vscode
         run: npm test
+
+      # This isn't strictly necessary, but gives better
+      # build error output than npm run e2e:setup
+      - name: Run webpack
+        working-directory: vscode
+        run: npm run webpack
+
+      - name: Build cli jar
+        run: ./build.jar.sh
+
+      - name: e2e test setup
+        working-directory: vscode
+        run: npm run e2e:setup
+
+      - name: e2e tests
+        uses: GabrielBB/xvfb-action@v1.2
+        with:
+          working-directory: vscode
+          run: npm run e2e
+  build_vsix:
+    if: github.ref == 'refs/heads/dev'
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Install Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: 12.x
+      - name: Install java
+        uses: actions/setup-java@v1
+        with:
+          java-version: '11.0.4'
+      - run: ./build.jar.sh
+      - name: Build VS extension
+        working-directory: vscode
+        run: |
+          npm install
+          npm run build_vsix
+      - name: Upload VS extension
+        uses: actions/upload-artifact@v2.0.1
+        with:
+          name: note-searcher.vsix
+          path: vscode/*.vsix

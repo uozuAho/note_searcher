@@ -114,7 +114,8 @@
 		"test:watch": "jest --watch",
 		"e2e": "npm run e2e:compile && extest run-tests e2e-out/*.js",
 		"e2e:setup": "extest setup-tests e2e-out/*.js",
-		"e2e:compile": "rm -rf e2e-out && tsc -p tsconfig.e2e.json"
+    "e2e:compile": "rm -rf e2e-out && tsc -p tsconfig.e2e.json",
+    "build_vsix": "vsce package"
 	},
 	"devDependencies": {
 		"@types/chai": "^4.2.11",
@@ -140,7 +141,8 @@
 		"ts-loader": "^6.2.2",
 		"typemoq": "^2.1.0",
 		"typescript": "^3.7.5",
-		"vscode-extension-tester": "^3.0.0",
+		"vsce": "^1.75.0",
+		"vscode-extension-tester": "^3.0.1",
 		"vscode-extension-tester-native": "^3.0.0",
 		"vscode-test": "^1.3.0",
 		"webpack": "^4.42.1",
