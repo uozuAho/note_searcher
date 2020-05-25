@@ -182,10 +182,19 @@ export class NoteSearcher {
     return tagsWithHashes.concat(keywordsMinusTags).join(' ');
   };
 
-  public relativePathToClipboard = (filePath: string) => {
-    const currentDir = this.ui.currentlyOpenDir() || '';
-    const relPath = relativePath(currentDir, filePath);
-    this.ui.copyToClipboard(`[](${relPath})`);
+  public markdownLinkToClipboard = (filePath: string) => {
+    const link = this.generateMarkdownLinkTo(filePath);
+    this.ui.copyToClipboard(link);
+  };
+
+  public generateMarkdownLinkTo = (filePath: string) => {
+    const currentFilePath = this.ui.getCurrentFile()?.path();
+
+    let relPath = currentFilePath
+      ? relativePath(currentFilePath, filePath)
+      : path.basename(filePath);
+
+    return `[](${relPath})`;
   };
 
   private notifyCurrentFileChanged = (file: File) => {

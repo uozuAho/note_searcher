@@ -6,6 +6,12 @@ file. Format inspired by https://keepachangelog.com/en/1.0.0/
 
 ## [Unreleased]
 
+### Added
+- Copy markdown link from editor tab
+
+### Changed
+- Renamed 'Copy relative path' in search results to 'Copy link'
+
 ## [0.0.13] - 2020-05-24
 ### Fixed
 - deleted tags showing up in tag completion
