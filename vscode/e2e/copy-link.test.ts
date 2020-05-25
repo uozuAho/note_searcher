@@ -37,14 +37,12 @@ describe('copy link to note', () => {
       noteSearcher = new NoteSearcherDriver(vscode);
     });
 
+    // todo: how to open an editor tab's context menu?
+    // check for answer: https://github.com/redhat-developer/vscode-extension-tester/issues/118
     it.skip('puts a markdown link to a search result in the clipboard', async () => {
-      await noteSearcher.search('cheese');
-      const cheeseFile = await noteSearcher.findSearchResult('cheese.md');
-      await cheeseFile.click();
+      await vscode.openDemoDirFile('cheese.md');
       const editor = await vscode.getOnlyOpenEditor();
 
-      // todo: how to open an editor tab's context menu?
-      // check for answer: https://github.com/redhat-developer/vscode-extension-tester/issues/118
       const menu = await editor.openContextMenu();
 
       expect(await clipboard.read()).to.equal('[](cheese.md)');

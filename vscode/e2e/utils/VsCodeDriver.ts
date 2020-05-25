@@ -55,6 +55,11 @@ export class VsCodeDriver {
     await input.confirm();
   };
 
+  public openDemoDirFile = (relPath: string) => {
+    const absPath = path.join(this.getDemoDirectory(), relPath);
+    return this.openFile(absPath);
+  };
+
   public closeAllEditors = async () => {
     const editorView = new EditorView();
     await editorView.closeAllEditors();
