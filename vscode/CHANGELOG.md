@@ -6,6 +6,7 @@ file. Format inspired by https://keepachangelog.com/en/1.0.0/
 
 ## [Unreleased]
 
+## [0.0.14] - 2020-05-25
 ### Added
 - Copy markdown link from editor tab
 
