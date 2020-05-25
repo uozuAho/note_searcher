@@ -67,14 +67,14 @@
 				"title": "Note searcher: create a new note"
 			},
 			{
-				"command": "noteSearcher.searchResults.copyRelativePath",
-				"title": "Copy relative path"
+				"command": "noteSearcher.searchResults.copyLink",
+				"title": "Copy link"
 			}
 		],
 		"menus": {
 			"view/item/context": [
 				{
-					"command": "noteSearcher.searchResults.copyRelativePath",
+					"command": "noteSearcher.searchResults.copyLink",
 					"when": "view == noteSearcher-results"
 				}
 			]

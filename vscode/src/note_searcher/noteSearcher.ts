@@ -182,7 +182,7 @@ export class NoteSearcher {
     return tagsWithHashes.concat(keywordsMinusTags).join(' ');
   };
 
-  public relativePathToClipboard = (filePath: string) => {
+  public markdownLinkToClipboard = (filePath: string) => {
     const currentDir = this.ui.currentlyOpenDir() || '';
     const relPath = relativePath(currentDir, filePath);
     this.ui.copyToClipboard(`[](${relPath})`);
