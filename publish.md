@@ -9,4 +9,4 @@ Publishing is done by tagging master. Before you do:
 
 - Ensure the changelog is up to date
 - Merge/commit to master, tag as releases/x.x.x
-- Push, including tags `git push --tags`
+- Push, including tags `git push && git push --tags`

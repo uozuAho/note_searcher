@@ -116,7 +116,7 @@
 		"e2e:setup": "extest setup-tests e2e-out/*.js",
 		"e2e:compile": "rm -rf e2e-out && tsc -p tsconfig.e2e.json",
 		"build_vsix": "vsce package",
-		"publish": "vsce publish"
+		"publish": "vsce publish -p $VSCE_PAT"
 	},
 	"devDependencies": {
 		"@types/chai": "^4.2.11",
