@@ -7,6 +7,6 @@ Publishing is done by tagging master. Before you do:
     cd vscode
     npm version [major|minor|patch]
 
-- Ensure the changelog is up to date
+- Ensure the changelog & docs are up to date
 - Merge/commit to master, tag as releases/x.x.x
 - Push, including tags `git push && git push --tags`

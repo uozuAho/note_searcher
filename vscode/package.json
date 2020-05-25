@@ -2,7 +2,7 @@
 	"name": "note-searcher",
 	"displayName": "note-searcher",
 	"description": "searches notes",
-	"version": "0.0.13",
+	"version": "0.0.14",
 	"publisher": "uozuaho",
 	"preview": true,
 	"repository": {
@@ -24,6 +24,7 @@
 		"onCommand:noteSearcher.search",
 		"onCommand:noteSearcher.enableCurrentDir",
 		"onCommand:noteSearcher.createNote",
+		"onCommand:noteSearcher.editorTab.copyLink",
 		"onView:noteSearcher-results"
 	],
 	"main": "./dist/noteSearcher.js",
@@ -67,15 +68,24 @@
 				"title": "Note searcher: create a new note"
 			},
 			{
-				"command": "noteSearcher.searchResults.copyRelativePath",
-				"title": "Copy relative path"
+				"command": "noteSearcher.searchResults.copyLink",
+				"title": "Copy link"
+			},
+			{
+				"command": "noteSearcher.editorTab.copyLink",
+				"title": "Note searcher: Copy link"
 			}
 		],
 		"menus": {
 			"view/item/context": [
 				{
-					"command": "noteSearcher.searchResults.copyRelativePath",
+					"command": "noteSearcher.searchResults.copyLink",
 					"when": "view == noteSearcher-results"
+				}
+			],
+			"editor/title/context": [
+				{
+					"command": "noteSearcher.editorTab.copyLink"
 				}
 			]
 		},

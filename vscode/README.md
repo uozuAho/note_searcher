@@ -22,6 +22,7 @@ https://github.com/uozuAho/note_searcher/issues
 - Search for notes:  `ctrl+alt+s`
 - Create a new note: `ctrl+alt+n`
 - Copy link to note from search results
+- Copy link to note from editor tab
 
 
 ### Search
@@ -57,4 +58,4 @@ syntax. These become hyperlinks to your local files! Examples:
 - `[](/file/relative/to/currently/open/dir/in/vscode)`
 
 You can copy a markdown-style link to a search result by right-clicking on
-the search result.
+the search result. You can also copy this link from an editor tab.

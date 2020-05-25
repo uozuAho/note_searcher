@@ -4,8 +4,9 @@ describe('FileSystem', () => {
   describe('relativePath', () => {
     it.each([
       ['simple',                   '/a/b/c', '/a/b/c/d', 'd'],
-      ['trailing slash',           '/a/b/c/', '/a/b/c/d', 'd'],
-      ['nested dir',               '/a/b/c/', '/a/b/c/d/e', 'd/e'],
+      ['handles trailing slash',   '/a/b/c/', '/a/b/c/d', 'd'],
+      ['handles nested dir',       '/a/b/c/', '/a/b/c/d/e', 'd/e'],
+      ['handles extensions',       '/a/b/c.md', '/a/b/c/d.md', 'c/d.md'],
     ])('%s: %s, %s -> %s', (description: string, path1: string, path2: string, expectedPath: string) => {
       expect(relativePath(path1, path2)).toBe(expectedPath);
     });

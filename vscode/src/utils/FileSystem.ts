@@ -40,6 +40,10 @@ class NodeFileSystem implements FileSystem {
 
 /** Returns path2 relative to path1 */
 export const relativePath = (path1: string, path2: string) => {
+  if (_path.extname(path1) !== '') {
+    // ensure path 1 is a dir, otherwise path.relative doesn't work
+    path1 = _path.dirname(path1);
+  }
   let relPath = _path
     .relative(path1, path2)
     .replace('\\', '/');

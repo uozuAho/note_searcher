@@ -240,6 +240,42 @@ describe('NoteSearcher', () => {
     });
   });
 
+  describe('copy link', () => {
+    beforeEach(() => {
+      ui = new MockUi();
+      searcher = tmoq.Mock.ofType<NoteIndex>();
+      deadLinkFinder = tmoq.Mock.ofType<DeadLinkFinder>();
+      configProvider = tmoq.Mock.ofType<NoteSearcherConfigProvider>();
+
+      noteSearcher = new NoteSearcher(ui,
+        searcher.object, deadLinkFinder.object, configProvider.object);
+    });
+
+    it('copies link relative to open file', () => {
+      ui.getCurrentFileReturns(new MockFile('/a/b/c.md', ''));
+
+      const link = noteSearcher.generateMarkdownLinkTo('/a/b/c/d.md');
+
+      expect(link).toBe('[](c/d.md)');
+    });
+
+    it('copies filename only, when no file is open', () => {
+      ui.getCurrentFileReturns(null);
+      ui.currentlyOpenDirReturns('/a/b');
+
+      const link = noteSearcher.generateMarkdownLinkTo('/a/b/c/d.md');
+
+      expect(link).toBe('[](d.md)');
+    });
+
+    it('does not break when no file or directory is open', () => {
+      ui.getCurrentFileReturns(null);
+      ui.currentlyOpenDirReturns(null);
+
+      noteSearcher.generateMarkdownLinkTo('/a/b/c/d.md');
+    });
+  });
+
   describe('show dead links', () => {
     beforeEach(() => {
       ui = new MockUi();
