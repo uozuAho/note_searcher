@@ -58,6 +58,8 @@ Run `npm run build_vsix` in the vscode directory.
 - feature: suggest tags in search
     - not yet available: https://github.com/microsoft/vscode/issues/35785
 - feature: extract text to new note
+- feature: show recent notes
+- feature: show random notes
 - show view container on search complete, even if no search results
 - choose search engine:
     - lunr:   pros: no deps, simple implementation
