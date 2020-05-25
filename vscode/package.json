@@ -23,7 +23,8 @@
 	"activationEvents": [
 		"onCommand:noteSearcher.search",
 		"onCommand:noteSearcher.enableCurrentDir",
-		"onCommand:noteSearcher.createNote",
+    "onCommand:noteSearcher.createNote",
+    "onCommand:noteSearcher.editorTab.copyLink",
 		"onView:noteSearcher-results"
 	],
 	"main": "./dist/noteSearcher.js",
@@ -69,6 +70,10 @@
 			{
 				"command": "noteSearcher.searchResults.copyLink",
 				"title": "Copy link"
+      },
+      {
+				"command": "noteSearcher.editorTab.copyLink",
+				"title": "Note searcher: Copy link"
 			}
 		],
 		"menus": {
@@ -76,8 +81,13 @@
 				{
 					"command": "noteSearcher.searchResults.copyLink",
 					"when": "view == noteSearcher-results"
-				}
-			]
+        }
+      ],
+      "editor/title/context": [
+        {
+          "command": "noteSearcher.editorTab.copyLink"
+        }
+      ]
 		},
 		"keybindings": [
 			{

@@ -47,8 +47,6 @@ Run `npm run build_vsix` in the vscode directory.
 - ci: fix run e2e test
     - waiting for https://github.com/GabrielBB/xvfb-action/pull/9
 - improve: copy link: path relative to current doc
-    - also rename to 'copy markdown link'
-- feature: copy link from editor tab
 - bug: some tags not autocompleting, eg. #organisation
 - improve indexing notification
     - make it disappear sooner
