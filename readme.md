@@ -50,6 +50,7 @@ Run `npm run build_vsix` in the vscode directory.
 - improve indexing notification
     - make it disappear sooner
     - https://code.visualstudio.com/updates/v1_22#_show-long-running-operations-as-notifications-with-cancellation-support
+- feature: copy link from file explorer
 - break up noteSearcher.ts?
     - test file is unwieldy
 - dead links: don't show as error
