@@ -5,11 +5,12 @@ Lets you make your own zettelkasten! Inspired by https://zettelkasten.de/.
 Also contains some shortcuts for creating new notes.
 
 
-## UNDER CONSTRUCTION
+## Feature summary
 
-This extension is still under development, and has a bunch of rough edges.
-If you find any problems or have any questions, please create an issue at
-https://github.com/uozuAho/note_searcher/issues
+- Full text search for notes:  `ctrl+alt+s`
+- Create a new note: `ctrl+alt+n`
+- Copy markdown link to note from search results
+- Copy markdown link to note from editor tab
 
 
 ## How to use this extension
@@ -17,15 +18,7 @@ https://github.com/uozuAho/note_searcher/issues
 ![extension screenshot](./img/ext_screenshot.png)
 
 
-### Summary
-
-- Search for notes:  `ctrl+alt+s`
-- Create a new note: `ctrl+alt+n`
-- Copy link to note from search results
-- Copy link to note from editor tab
-
-
-### Search
+### Full text search
 
 When active, this extension indexes all .md, .txt and .log files in the
 currently open folder. As you are modifying a file, the extension window will
@@ -59,3 +52,10 @@ syntax. These become hyperlinks to your local files! Examples:
 
 You can copy a markdown-style link to a search result by right-clicking on
 the search result. You can also copy this link from an editor tab.
+
+
+## UNDER CONSTRUCTION
+
+This extension is still under development, and has a bunch of rough edges.
+If you find any problems or have any questions, please create an issue at
+https://github.com/uozuAho/note_searcher/issues
