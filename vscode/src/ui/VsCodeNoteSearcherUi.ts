@@ -81,6 +81,13 @@ export class VsCodeNoteSearcherUi implements NoteSearcherUi {
     await vscode.window.showInformationMessage(message);
   };
 
+  public notifyIndexingStarted = (indexingTask: Promise<void>) => {
+    vscode.window.withProgress({
+      location: vscode.ProgressLocation.Window,
+      title: 'Note Searcher: indexing...',
+    }, () => indexingTask);
+  };
+
   public showError = async (e: any) => {
     let msg = 'Note Searcher: Argh! Something broke. Sorry!\n\n' +
               'If you have time, please create an issue at https://github.com/uozuAho/note_searcher/issues\n\n' +

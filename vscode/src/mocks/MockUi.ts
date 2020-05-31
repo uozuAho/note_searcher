@@ -66,8 +66,16 @@ export class MockUi implements NoteSearcherUi {
     await this._mock.object.showNotification(message);
   };
 
-  public showedAnyNotification = async (times: number = 1) => {
+  public showedAnyNotification = (times: number = 1) => {
     this._mock.verify(m => m.showNotification(tmoq.It.isAnyString()), tmoq.Times.exactly(times));
+  };
+
+  public notifyIndexingStarted = (indexingTask: Promise<void>) => {
+    this._mock.object.notifyIndexingStarted(indexingTask);
+  };
+
+  public notifiedIndexingStarted = () => {
+    this._mock.verify(m => m.notifyIndexingStarted(tmoq.It.isAny()), tmoq.Times.once());
   };
 
   public showError = async (e: any) => {
