@@ -44,12 +44,8 @@ Run `npm run build_vsix` in the vscode directory.
 
 
 # todo
-- ci: fix run e2e test
-    - waiting for https://github.com/GabrielBB/xvfb-action/pull/9
-- bug: some tags not autocompleting, eg. #organisation
-- improve indexing notification
-    - make it disappear sooner
-    - https://code.visualstudio.com/updates/v1_22#_show-long-running-operations-as-notifications-with-cancellation-support
+- fix e2e: failing test doesn't fail ci
+- feature: copy link from file explorer
 - break up noteSearcher.ts?
     - test file is unwieldy
 - dead links: don't show as error

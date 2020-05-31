@@ -11,6 +11,11 @@ describe('extractTags', () => {
     expect(tags).toEqual(['change', 'stuff']);
   });
 
+  it('extracts consecutive tags', () => {
+    const tags = extractTags('#a #b #c');
+    expect(tags).toEqual(['a', 'b', 'c']);
+  });
+
   it('extracts hyphenated tag', () => {
     const tags = extractTags('#meat-pie');
     expect(tags).toEqual(['meat-pie']);
@@ -21,7 +26,7 @@ describe('extractTags', () => {
     expect(tags).toEqual([]);
   });
 
-  it('extracts tag at start', () => {
+  it('extracts tag at start of line', () => {
     const tags = extractTags('#blub nub nub');
     expect(tags).toEqual(['blub']);
   });
@@ -31,8 +36,9 @@ describe('extractTags', () => {
     expect(tags).toEqual(['blub']);
   });
 
-  it('extracts tag before a full stop', () => {
-    const tags = extractTags('nub nub #blub. cheese');
+  it.each(['.', '?', ',', '!'])
+  ('extracts tag before a %s', (char) => {
+    const tags = extractTags(`nub nub #blub${char} cheese`);
     expect(tags).toEqual(['blub']);
   });
 

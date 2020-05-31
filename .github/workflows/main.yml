@@ -52,7 +52,7 @@ jobs:
         run: npm run e2e:setup
 
       - name: e2e tests
-        uses: GabrielBB/xvfb-action@v1.2
+        uses: uozuAho/xvfb-action@718e1e1b3b7da996352f1a529fd5a8c3b32eff42
         with:
           working-directory: vscode
           run: npm run e2e

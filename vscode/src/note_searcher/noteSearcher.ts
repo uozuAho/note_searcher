@@ -61,11 +61,10 @@ export class NoteSearcher {
       return;
     }
 
-    this.ui.showNotification('indexing current folder...');
-
     try {
-      await this.noteIndex.index(folder);
-      this.ui.showNotification('indexing complete');
+      const indexingTask = this.noteIndex.index(folder);
+      this.ui.notifyIndexingStarted(indexingTask);
+      await indexingTask;
       this.diagnostics.trace('indexing complete');
     }
     catch (e) {

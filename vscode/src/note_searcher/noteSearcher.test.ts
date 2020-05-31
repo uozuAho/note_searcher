@@ -187,12 +187,12 @@ describe('NoteSearcher', () => {
         searcher.object, deadLinkFinder.object, configProvider.object);
     });
 
-    it('shows index start and end notifications', async () => {
+    it('shows indexing in progress', async () => {
       ui.currentlyOpenDirReturns('a directory');
 
       await noteSearcher.index();
 
-      ui.showedAnyNotification(2);
+      ui.notifiedIndexingStarted();
       searcher.verify(s => s.index(tmoq.It.isAnyString()), tmoq.Times.once());
     });
 
