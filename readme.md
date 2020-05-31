@@ -44,12 +44,16 @@ Run `npm run build_vsix` in the vscode directory.
 
 
 # todo
-- fix e2e: failing test doesn't fail ci
-- feature: copy link from file explorer
-- break up noteSearcher.ts?
-    - test file is unwieldy
 - dead links: don't show as error
     - then document the feature
+    - testing: use extest API? or shell? or js???
+        - for dir in e2e
+            - extest -o dir/settings.json dir/*.js
+- show incoming/outgoing links
+- feature: copy link from file explorer
+- fix e2e: failing test doesn't fail ci
+- break up noteSearcher.ts?
+    - test file is unwieldy
 - feature: suggest tags in search
     - not yet available: https://github.com/microsoft/vscode/issues/35785
 - feature: extract text to new note
@@ -67,19 +71,15 @@ Run `npm run build_vsix` in the vscode directory.
     - get readme working in extension preview in vscode
     - make screenshot show in extension preview
     - prevent github link replacement in example file links
-- separate view for search results + related files etc.
-    - I want to see file tree at same time
-    - search box in results view. not supported in tree view
-- bug: weird search behaviour
-    - search for "#design-patterns": proxy does not appear, < 10 results
-    - search for "proxy pattern": proxy does appear
-- bug: '+' operator not working as expected:
+- lucene search bug: '+' operator not working as expected:
     - using lucene
     - search for #work: no results
     - search for book: many results
     - search for +#work book:
         - expected: no results
         - actual:   many results
+- separate view for search results + related files etc.
+    - I want to see file tree at same time
+    - search box in results view. not supported in tree view
 - dead links: strip root path when showing dead links
 - highlight dead links while editing
-- show incoming/outgoing links
