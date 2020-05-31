@@ -5,6 +5,12 @@ file. Format inspired by https://keepachangelog.com/en/1.0.0/
 
 
 ## [Unreleased]
+### Fixed
+- Every second tag in a consecutive run not being indexed. Eg. For '#a #b #c',
+  '#b' was not indexed, thus didn't show up in autocomplete.
+
+### Changed
+- Tags before punctuation are now indexed, eg. '#a, #b? #c!'
 
 ## [0.0.14] - 2020-05-25
 ### Added
