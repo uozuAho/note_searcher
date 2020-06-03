@@ -6,7 +6,7 @@ import { expect } from 'chai';
 
 import { VsCodeDriver } from '../utils/VsCodeDriver';
 import { NoteSearcherDriver } from '../utils/NoteSearcherDriver';
-import { openDemoDirAndCloseAllEditors } from '../_before-all.test';
+import { openDemoDirAndCloseAllEditors } from '../utils/pretest';
 
 describe('copy link to note', () => {
   let vscode: VsCodeDriver;

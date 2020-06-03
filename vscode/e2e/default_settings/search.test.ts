@@ -4,7 +4,7 @@ import { expect } from 'chai';
 
 import { VsCodeDriver } from '../utils/VsCodeDriver';
 import { NoteSearcherDriver } from '../utils/NoteSearcherDriver';
-import { openDemoDirAndCloseAllEditors } from '../_before-all.test';
+import { openDemoDirAndCloseAllEditors } from '../utils/pretest';
 
 describe('search', () => {
   let vscode: VsCodeDriver;
@@ -24,5 +24,10 @@ describe('search', () => {
 
     const cheeseDoc = await vscode.findEditorByTitle(title => title === 'cheese.md');
     expect(cheeseDoc).not.to.be.null;
+
+    // prevent crash, see https://github.com/redhat-developer/vscode-extension-tester/issues/122
+    await new Promise((resolve) => {
+      setTimeout(() => resolve(), 1000);
+    });
   });
 });

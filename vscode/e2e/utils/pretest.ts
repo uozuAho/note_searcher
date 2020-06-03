@@ -1,5 +1,5 @@
-import { VsCodeDriver } from './utils/VsCodeDriver';
-import { NoteSearcherDriver } from './utils/NoteSearcherDriver';
+import { VsCodeDriver } from './VsCodeDriver';
+import { NoteSearcherDriver } from './NoteSearcherDriver';
 
 let hasRun = false;
 

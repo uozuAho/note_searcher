@@ -47,10 +47,10 @@ Run `npm run build_vsix` in the vscode directory.
 
 # todo
 - dead links: don't show as error
+    - update CI/docs to use test shell script
+    - does the test work? i didn't see the error message
     - then document the feature
-    - testing: use extest API? or shell? or js???
-        - for dir in e2e
-            - extest -o dir/settings.json dir/*.js
+- test copy link from editor tab: now supported (?)
 - show incoming/outgoing links
 - feature: configurable new note directory
     - if not set, use current behaviour
