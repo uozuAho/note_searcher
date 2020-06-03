@@ -2,9 +2,9 @@
 // mocha is required by vscode-extension-tester
 import { expect } from 'chai';
 
-import { VsCodeDriver } from './utils/VsCodeDriver';
-import { NoteSearcherDriver } from './utils/NoteSearcherDriver';
-import { openDemoDirAndCloseAllEditors } from './_before-all.test';
+import { VsCodeDriver } from '../utils/VsCodeDriver';
+import { NoteSearcherDriver } from '../utils/NoteSearcherDriver';
+import { openDemoDirAndCloseAllEditors } from '../_before-all.test';
 
 describe('search', () => {
   let vscode: VsCodeDriver;

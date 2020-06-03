@@ -122,7 +122,7 @@
 		"pretest": "npm run lint",
 		"test": "jest",
 		"test:watch": "jest --watch",
-		"e2e": "npm run e2e:compile && extest run-tests -o e2e/settings-dead-links-on.json 'e2e-out/*.js'",
+		"e2e": "npm run e2e:compile && node e2e-out/run_all_tests.js",
 		"e2e:setup": "extest setup-tests",
 		"e2e:compile": "rm -rf e2e-out && tsc -p tsconfig.e2e.json",
 		"build_vsix": "vsce package",

@@ -4,9 +4,9 @@ import * as clipboard from 'clipboardy';
 
 import { expect } from 'chai';
 
-import { VsCodeDriver } from './utils/VsCodeDriver';
-import { NoteSearcherDriver } from './utils/NoteSearcherDriver';
-import { openDemoDirAndCloseAllEditors } from './_before-all.test';
+import { VsCodeDriver } from '../utils/VsCodeDriver';
+import { NoteSearcherDriver } from '../utils/NoteSearcherDriver';
+import { openDemoDirAndCloseAllEditors } from '../_before-all.test';
 
 describe('copy link to note', () => {
   let vscode: VsCodeDriver;

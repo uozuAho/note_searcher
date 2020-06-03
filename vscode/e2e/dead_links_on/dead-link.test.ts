@@ -1,6 +1,6 @@
-import { VsCodeDriver } from './utils/VsCodeDriver';
-import { NoteSearcherDriver } from './utils/NoteSearcherDriver';
-import { openDemoDirAndCloseAllEditors } from './_before-all.test';
+import { VsCodeDriver } from '../utils/VsCodeDriver';
+import { NoteSearcherDriver } from '../utils/NoteSearcherDriver';
+import { openDemoDirAndCloseAllEditors } from '../_before-all.test';
 
 describe('dead links', () => {
   let vscode: VsCodeDriver;

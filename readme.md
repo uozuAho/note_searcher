@@ -31,6 +31,8 @@ npm run e2e:setup
 npm run e2e
 ```
 
+e2e tests use https://github.com/redhat-developer/vscode-extension-tester
+
 
 ## Run the extension locally
 
@@ -50,6 +52,9 @@ Run `npm run build_vsix` in the vscode directory.
         - for dir in e2e
             - extest -o dir/settings.json dir/*.js
 - show incoming/outgoing links
+- feature: configurable new note directory
+    - if not set, use current behaviour
+    - set in dotfile???
 - feature: copy link from file explorer
 - fix e2e: failing test doesn't fail ci
 - break up noteSearcher.ts?

@@ -1,12 +1,12 @@
-const fs = require ('fs');
-const path = require ('path');
+const fs = require('fs');
+const path = require('path');
 
 import { expect } from 'chai';
 
-import { VsCodeDriver } from './utils/VsCodeDriver';
-import { NoteSearcherDriver } from './utils/NoteSearcherDriver';
-import { waitFor } from './utils/wait';
-import { openDemoDirAndCloseAllEditors } from './_before-all.test';
+import { VsCodeDriver } from '../utils/VsCodeDriver';
+import { NoteSearcherDriver } from '../utils/NoteSearcherDriver';
+import { waitFor } from '../utils/wait';
+import { openDemoDirAndCloseAllEditors } from '../_before-all.test';
 
 describe('create note', () => {
   let vscode: VsCodeDriver;
