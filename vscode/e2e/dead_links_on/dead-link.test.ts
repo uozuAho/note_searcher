@@ -17,7 +17,8 @@ describe('dead links', () => {
 
   it('shows dead links on save', async () => {
     await vscode.openDemoDirFile('cheese.md');
-    const editor = await vscode.getOnlyOpenEditor();
+    const editor = await vscode.currentEditor();
+    if (!editor) { expect.fail('expected an editor to be open'); };
 
     await editor.typeText(6, 1, '[dead link](this/doesnt/exist.md)');
     await editor.save();

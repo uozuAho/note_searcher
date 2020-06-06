@@ -39,7 +39,8 @@ describe('copy link to note', () => {
 
     it('puts a markdown link to a search result in the clipboard', async () => {
       await vscode.openDemoDirFile('cheese.md');
-      const editor = await vscode.getOnlyOpenEditor();
+      const editor = await vscode.currentEditor();
+      if (!editor) { expect.fail('expected an editor to be open'); };
 
       const editorTab = await editor.getTab();
       const menu = await editorTab.openContextMenu();

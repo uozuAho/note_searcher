@@ -70,19 +70,6 @@ export class VsCodeDriver {
     const tab = await editorView.getActiveTab();
     if (!tab) { return null; }
     const title = await tab.getTitle();
-    return await editorView.openEditor(title);
-  };
-
-  public getOnlyOpenEditor = async () => {
-    const editorView = new EditorView();
-    const titles = await editorView.getOpenEditorTitles();
-    if (titles.length === 0) {
-      expect.fail('no editors open');
-    }
-    if (titles.length > 1) {
-      expect.fail('more than one editor open');
-    }
-    const title = titles[0];
     return await editorView.openEditor(title) as TextEditor;
   };
 
