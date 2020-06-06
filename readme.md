@@ -47,7 +47,6 @@ Run `npm run build_vsix` in the vscode directory.
 
 # todo
 - dead links: don't show as error
-    - does the test work? i didn't see the error message
     - then document the feature
 - unskip copy link from editor tab test, if supported
 - test copy link from editor tab: now supported (?)

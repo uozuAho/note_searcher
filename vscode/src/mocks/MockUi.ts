@@ -62,6 +62,18 @@ export class MockUi implements NoteSearcherUi {
     this._mock.verify(m => m.showSearchResults(tmoq.It.isAny()), tmoq.Times.never());
   };
 
+  public showDeadLinks = async (message: string) => {
+    return await this._mock.object.showDeadLinks(message);
+  };
+
+  public showedDeadLinks() {
+    this._mock.verify(m => m.showDeadLinks(tmoq.It.isAny()), tmoq.Times.once());
+  }
+
+  public didNotShowDeadLinks() {
+    this._mock.verify(m => m.showDeadLinks(tmoq.It.isAny()), tmoq.Times.never());
+  }
+
   public showNotification = async (message: string) => {
     await this._mock.object.showNotification(message);
   };
