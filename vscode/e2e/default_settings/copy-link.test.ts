@@ -37,13 +37,15 @@ describe('copy link to note', () => {
       noteSearcher = new NoteSearcherDriver(vscode);
     });
 
-    // todo: how to open an editor tab's context menu?
-    // check for answer: https://github.com/redhat-developer/vscode-extension-tester/issues/118
-    it.skip('puts a markdown link to a search result in the clipboard', async () => {
+    it('puts a markdown link to a search result in the clipboard', async () => {
       await vscode.openDemoDirFile('cheese.md');
       const editor = await vscode.getOnlyOpenEditor();
 
-      const menu = await editor.openContextMenu();
+      const editorTab = await editor.getTab();
+      const menu = await editorTab.openContextMenu();
+      const menuItem = await menu.getItem('Note searcher: Copy link');
+      if (!menuItem) { expect.fail(`could not find 'copy link' option`); }
+      await menuItem.click();
 
       expect(await clipboard.read()).to.equal('[](cheese.md)');
     });
