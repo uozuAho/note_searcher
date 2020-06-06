@@ -46,16 +46,11 @@ Run `npm run build_vsix` in the vscode directory.
 
 
 # todo
-- dead links: don't show as error
-    - then document the feature
-- unskip copy link from editor tab test, if supported
-- test copy link from editor tab: now supported (?)
 - show incoming/outgoing links
 - feature: configurable new note directory
     - if not set, use current behaviour
     - set in dotfile???
 - feature: copy link from file explorer
-- fix e2e: failing test doesn't fail ci
 - break up noteSearcher.ts?
     - test file is unwieldy
 - feature: suggest tags in search
@@ -69,7 +64,6 @@ Run `npm run build_vsix` in the vscode directory.
               cons: slow, no incremental index (must rebuild from scratch)
     - lucene: pros: fast, powerful
               cons: needs java, complex impl (compared to lunr)
-- e2e test throws unhandled promise rejection after test completes
 - support wiki-style links, with id only (for archive users)
 - docs
     - get readme working in extension preview in vscode
@@ -85,5 +79,4 @@ Run `npm run build_vsix` in the vscode directory.
 - separate view for search results + related files etc.
     - I want to see file tree at same time
     - search box in results view. not supported in tree view
-- dead links: strip root path when showing dead links
 - highlight dead links while editing
