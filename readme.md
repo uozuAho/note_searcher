@@ -28,7 +28,7 @@ cd vscode
 npm install
 npm test
 npm run e2e:setup
-npm run e2e
+./run_e2e.sh
 ```
 
 e2e tests use https://github.com/redhat-developer/vscode-extension-tester
@@ -47,9 +47,9 @@ Run `npm run build_vsix` in the vscode directory.
 
 # todo
 - dead links: don't show as error
-    - update CI/docs to use test shell script
     - does the test work? i didn't see the error message
     - then document the feature
+- unskip copy link from editor tab test, if supported
 - test copy link from editor tab: now supported (?)
 - show incoming/outgoing links
 - feature: configurable new note directory
