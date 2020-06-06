@@ -65,6 +65,14 @@ export class VsCodeDriver {
     await editorView.closeAllEditors();
   };
 
+  public currentEditor = async () => {
+    const editorView = new EditorView();
+    const tab = await editorView.getActiveTab();
+    if (!tab) { return null; }
+    const title = await tab.getTitle();
+    return await editorView.openEditor(title);
+  };
+
   public getOnlyOpenEditor = async () => {
     const editorView = new EditorView();
     const titles = await editorView.getOpenEditorTitles();

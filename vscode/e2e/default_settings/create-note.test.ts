@@ -26,7 +26,7 @@ describe('create note', () => {
       await vscode.enterInputText('_my_note.md');
       const editor = await vscode.getOnlyOpenEditor();
       expect(await editor.isDisplayed()).to.be.true;
-      const editorTitle = editor.getTitle();
+      const editorTitle = await editor.getTitle();
       expect(editorTitle).to.match(/\d{12}_my_note/);
       await editor.save();
       const expectedPath = path.join(vscode.getDemoDirectory(), editorTitle);
@@ -54,7 +54,7 @@ describe('create note', () => {
       await vscode.enterInputText('_my_note.md');
       const editor = await vscode.findEditorByTitle(t => t.includes('_my_note'));
       expect(editor).not.to.be.null;
-      const editorTitle = editor!.getTitle();
+      const editorTitle = await editor!.getTitle();
       await editor!.save();
       const expectedPath = path.join(subdir, editorTitle);
       const fileExists = await waitFor(() => fs.existsSync(expectedPath), 1000,

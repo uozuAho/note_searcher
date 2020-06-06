@@ -1,3 +1,5 @@
+import { expect } from 'chai';
+
 import { VsCodeDriver } from '../utils/VsCodeDriver';
 import { NoteSearcherDriver } from '../utils/NoteSearcherDriver';
 import { openDemoDirAndCloseAllEditors } from '../utils/pretest';
@@ -20,6 +22,9 @@ describe('dead links', () => {
     await editor.typeText(6, 1, '[dead link](this/doesnt/exist.md)');
     await editor.save();
 
-    console.log('yo');
+    const currentEditor = await vscode.currentEditor();
+    expect(currentEditor).not.to.be.null;
+    expect(await currentEditor!.getTitle()).not.to.contain('cheese');
+    expect(await currentEditor!.getText()).to.contain('dead link to');
   });
 });

@@ -1,7 +1,3 @@
-// A launch configuration that compiles the extension and then opens it inside a new window
-// Use IntelliSense to learn about possible attributes.
-// Hover to view descriptions of existing attributes.
-// For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
 {
 	"version": "0.2.0",
 	"configurations": [
@@ -43,9 +39,14 @@
       "preLaunchTask": "e2eCompile",
       "args": [
         "run-tests",
-        "-o",
-        "e2e/settings-dead-links-on.json",
-        "${workspaceFolder}/e2e-out/${fileBasenameNoExtension}.js",
+
+        // next two lines are for custom vscode settings:
+        // "-o",
+        // "e2e/dead_links_on/settings.json",
+
+        // this is the file you want to debug:
+        "${workspaceFolder}/e2e-out/default_settings/create-note.test.js",
+
         // todo: this doesn't work:
         // "--mocha_config",
         // "${workspaceFolder}/e2e/.mocharc-debug.js"
