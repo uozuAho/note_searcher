@@ -126,7 +126,7 @@ export class NoteSearcher {
     const removeRoot = (p: string) => p.replace(root, '').replace('\\', '/');
 
     const deadLinkMessage =
-      'Found the following dead links:\n\n' + deadLinks
+      'Note Searcher: Found the following dead links:\n\n' + deadLinks
         .map(d => `${removeRoot(d.sourcePath)}: dead link to ${d.targetPath}`)
         .join('\n');
 
