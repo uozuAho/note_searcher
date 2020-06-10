@@ -47,6 +47,7 @@ Run `npm run build_vsix` in the vscode directory.
 
 # todo
 - show incoming/outgoing links
+    - bring link indexing into indexer
 - feature: configurable new note directory
     - if not set, use current behaviour
     - set in dotfile???

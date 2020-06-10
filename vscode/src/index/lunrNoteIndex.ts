@@ -5,7 +5,8 @@ import { FileSystem } from "../utils/FileSystem";
 import { createDiagnostics } from '../diagnostics/diagnostics';
 import { extractTags } from '../text_processing/tagExtractor';
 import { GoodSet } from '../utils/goodSet';
-import { TagsProvider } from '../tag_completion/TagsProvider';
+import { TagsIndex } from '../tag_completion/TagsIndex';
+import { FullTextSearch } from './FullTextSearch';
 
 const NUM_RESULTS = 10;
 
@@ -22,7 +23,7 @@ lunr.tokenizer.separator = /\s+/;
 (lunr as any).QueryLexer.termSeparator = lunr.tokenizer.separator;
 
 
-export class LunrNoteIndex implements NoteIndex, TagsProvider {
+export class LunrNoteIndex implements NoteIndex, FullTextSearch, TagsIndex {
   private _index: lunr.Index | null = null;
   private _tagsIndex: GoodSet<string> = new GoodSet();
   private _diagnostics = createDiagnostics('LunrSearch');
