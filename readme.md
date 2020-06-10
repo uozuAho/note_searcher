@@ -50,6 +50,7 @@ Run `npm run build_vsix` in the vscode directory.
 - feature: configurable new note directory
     - if not set, use current behaviour
     - set in dotfile???
+- feature: ## tags for structure notes
 - feature: copy link from file explorer
 - break up noteSearcher.ts?
     - test file is unwieldy

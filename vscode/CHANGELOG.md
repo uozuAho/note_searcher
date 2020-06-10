@@ -4,7 +4,7 @@ All notable changes to the "note-searcher" extension will be documented in this
 file. Format inspired by https://keepachangelog.com/en/1.0.0/
 
 
-## Unreleased
+## [0.0.16] - 2020-06-10
 ### Added
 - Show dead links on save (enable in preferences - off by default)
 
