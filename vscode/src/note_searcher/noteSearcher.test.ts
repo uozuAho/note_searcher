@@ -290,14 +290,14 @@ describe('NoteSearcher', () => {
         searcher.object, deadLinkFinder.object, configProvider.object);
     });
 
-    it('shows dead links as error', () => {
+    it('shows dead links', () => {
       deadLinkFinder.setup(d => d.findDeadLinks(tmoq.It.isAny())).returns(() => [
         new DeadLink('/some/path', '/path/to/nowhere')
       ]);
 
       noteSearcher.showDeadLinks();
 
-      ui.showedError();
+      ui.showedDeadLinks();
     });
 
     it('does not show anything when there are no dead links', () => {
@@ -305,7 +305,7 @@ describe('NoteSearcher', () => {
 
       noteSearcher.showDeadLinks();
 
-      ui.didNotShowError();
+      ui.didNotShowDeadLinks();
     });
   });
 

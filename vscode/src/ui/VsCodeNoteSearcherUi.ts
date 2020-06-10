@@ -81,6 +81,10 @@ export class VsCodeNoteSearcherUi implements NoteSearcherUi {
     await vscode.window.showInformationMessage(message);
   };
 
+  public showDeadLinks = async (message: string) => {
+    await openInNewEditor(message);
+  };
+
   public notifyIndexingStarted = (indexingTask: Promise<void>) => {
     vscode.window.withProgress({
       location: vscode.ProgressLocation.Window,

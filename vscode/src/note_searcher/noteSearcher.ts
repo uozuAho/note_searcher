@@ -123,11 +123,14 @@ export class NoteSearcher {
       return;
     }
 
-    const deadLinkMessage = deadLinks
-      .map(d => `${d.sourcePath}: dead link to ${d.targetPath}`)
-      .join('\n');
+    const removeRoot = (p: string) => p.replace(root, '').replace('\\', '/');
 
-    this.ui.showError(new Error(deadLinkMessage));
+    const deadLinkMessage =
+      'Note Searcher: Found the following dead links:\n\n' + deadLinks
+        .map(d => `${removeRoot(d.sourcePath)}: dead link to ${d.targetPath}`)
+        .join('\n');
+
+    this.ui.showDeadLinks(deadLinkMessage);
     this.diagnostics.trace('show dead links completed');
   };
 
