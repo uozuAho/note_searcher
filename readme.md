@@ -46,6 +46,8 @@ Run `npm run build_vsix` in the vscode directory.
 
 
 # todo
+- fix dead link e2e fail on ubuntu
+- docs: add better subtitle than 'searches notes' in marketplace text
 - show incoming/outgoing links
     - bring link indexing into indexer
 - feature: configurable new note directory
@@ -57,9 +59,11 @@ Run `npm run build_vsix` in the vscode directory.
     - test file is unwieldy
 - feature: suggest tags in search
     - not yet available: https://github.com/microsoft/vscode/issues/35785
+- feature: paste image in clipboard as file + markdown link
 - feature: extract text to new note
 - feature: show recent notes
 - feature: show random notes
+- improve: don't index if already indexing, eg. saving multiple files
 - show view container on search complete, even if no search results
 - choose search engine:
     - lunr:   pros: no deps, simple implementation

@@ -4,9 +4,8 @@ import { NoteIndex } from "./NoteIndex";
 import { FileSystem } from "../utils/FileSystem";
 import { createDiagnostics } from '../diagnostics/diagnostics';
 import { extractTags } from '../text_processing/tagExtractor';
-import { GoodSet } from '../utils/goodSet';
-import { TagsIndex } from '../tag_completion/TagsIndex';
 import { FullTextSearch } from './FullTextSearch';
+import { TagsIndex, SetTagsIndex as TagsSet } from './TagsIndex';
 
 const NUM_RESULTS = 10;
 
@@ -25,7 +24,7 @@ lunr.tokenizer.separator = /\s+/;
 
 export class LunrNoteIndex implements NoteIndex, FullTextSearch, TagsIndex {
   private _index: lunr.Index | null = null;
-  private _tagsIndex: GoodSet<string> = new GoodSet();
+  private _tags = new TagsSet();
   private _diagnostics = createDiagnostics('LunrSearch');
 
   constructor(private fileSystem: FileSystem) {}
@@ -46,7 +45,7 @@ export class LunrNoteIndex implements NoteIndex, FullTextSearch, TagsIndex {
   public index = async (dir: string) => {
     this.trace('index start');
 
-    this._tagsIndex.clear();
+    this._tags.clear();
     await this.indexAllFiles(dir);
 
     this.trace('index complete');
@@ -57,7 +56,7 @@ export class LunrNoteIndex implements NoteIndex, FullTextSearch, TagsIndex {
   };
 
   public allTags = () => {
-    return Array.from(this._tagsIndex.values());
+    return this._tags.allTags();
   };
 
   private indexAllFiles = async (dir: string) => {
@@ -77,7 +76,7 @@ export class LunrNoteIndex implements NoteIndex, FullTextSearch, TagsIndex {
   private indexFile = async (indexBuilder: lunr.Builder, path: string) => {
     const text = await this.fileSystem.readFileAsync(path);
     const tags = extractTags(text);
-    tags.forEach(t => this._tagsIndex.add(t));
+    this._tags.addTags(tags);
     indexBuilder.add({ path, text, tags });
   };
 
