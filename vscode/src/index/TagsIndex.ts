@@ -4,7 +4,7 @@ export interface TagsIndex {
   allTags: () => string[];
 }
 
-export class SetTagsIndex implements TagsIndex {
+export class TagsSet implements TagsIndex {
   private _tagsIndex: GoodSet<string> = new GoodSet();
 
   public addTags = (tags: string[]) => {
