@@ -5,7 +5,7 @@ import { NoteSearcherConfigProvider } from '../note_searcher/NoteSearcherConfigP
 import { LunrNoteIndex } from './lunrNoteIndex';
 import { createFileSystem } from '../utils/FileSystem';
 import { FullTextSearch } from './FullTextSearch';
-import { TagsIndex } from '../tag_completion/TagsIndex';
+import { TagsIndex } from './TagsIndex';
 
 export type NoteIndex = FileSystemIndexer & FullTextSearch & TagsIndex;
 
