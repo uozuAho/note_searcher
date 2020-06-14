@@ -8,7 +8,7 @@ import { extractKeywords } from "../text_processing/keywordExtractor";
 import { createDiagnostics, Diagnostics } from "../diagnostics/diagnostics";
 import { DelayedExecutor } from "../utils/delayedExecutor";
 import { GoodSet } from "../utils/goodSet";
-import { DeadLinkFinder } from "../dead_links/DeadLinkFinder";
+import { NewDeadLinkFinder } from "../dead_links/NewDeadLinkFinder";
 import { NoteSearcherConfigProvider } from "./NoteSearcherConfigProvider";
 import { TimeProvider, createTimeProvider } from "../utils/timeProvider";
 import { formatDateTime_YYYYMMddhhmm } from "../utils/timeFormatter";
@@ -23,7 +23,7 @@ export class NoteSearcher {
   constructor(
     private ui: NoteSearcherUi,
     private noteIndex: NoteIndex,
-    private deadLinkFinder: DeadLinkFinder,
+    private deadLinkFinder: NewDeadLinkFinder,
     private configProvider: NoteSearcherConfigProvider,
     private delayedExecutor: DelayedExecutor = new DelayedExecutor(),
     private timeProvider: TimeProvider = createTimeProvider())
@@ -117,7 +117,7 @@ export class NoteSearcher {
       return;
     }
 
-    const deadLinks = this.deadLinkFinder.findDeadLinks(root);
+    const deadLinks = this.deadLinkFinder.findAllDeadLinks();
     if (deadLinks.length === 0) {
       this.diagnostics.trace('show dead links: no dead links');
       return;

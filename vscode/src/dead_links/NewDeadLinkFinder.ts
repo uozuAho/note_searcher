@@ -1,7 +1,12 @@
 import _path = require('path');
 
 import { NoteLinkIndex } from "../index/noteLinkIndex";
-import { Link } from "./DeadLinkFinder";
+
+export class Link {
+  constructor(
+    public sourcePath: string,
+    public targetPath: string) {}
+}
 
 export class NewDeadLinkFinder {
   constructor(private linkIndex: NoteLinkIndex) {}
