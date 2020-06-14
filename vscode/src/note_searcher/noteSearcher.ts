@@ -204,15 +204,17 @@ export class NoteSearcher {
 
     if (!this.isEnabledInCurrentDir()) {
       this.diagnostics.trace('updates disabled, doing nothing');
-      return;
+      return Promise.resolve();
     }
 
     this.delayedExecutor.cancelAll();
     this.delayedExecutor.executeInMs(UPDATE_RELATED_FILES_DELAY_MS,
       () => this.updateRelatedFiles(file));
+
+    return Promise.resolve();
   };
 
-  private notifyFileSaved = (file: File) => {
+  private notifyFileSaved = async (file: File) => {
     this.diagnostics.trace('file saved');
 
     if (!this.isEnabledInCurrentDir()) {
@@ -220,7 +222,7 @@ export class NoteSearcher {
       return;
     }
 
-    this.index();
+    await this.index();
     if (this.configProvider.getConfig().deadLinks.showOnSave) {
       this.showDeadLinks();
     }

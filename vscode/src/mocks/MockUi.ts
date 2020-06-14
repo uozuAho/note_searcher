@@ -136,9 +136,9 @@ export class MockUi implements NoteSearcherUi {
     this._fileSavedListener = listener;
   };
 
-  public saveFile = (file: MockFile) => {
+  public saveFile = async (file: MockFile) => {
     if (this._fileSavedListener) {
-      this._fileSavedListener(file);
+      await this._fileSavedListener(file);
     }
   };
 }
