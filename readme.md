@@ -65,11 +65,7 @@ Run `npm run build_vsix` in the vscode directory.
 - feature: show random notes
 - improve: don't index if already indexing, eg. saving multiple files
 - show view container on search complete, even if no search results
-- choose search engine:
-    - lunr:   pros: no deps, simple implementation
-              cons: slow, no incremental index (must rebuild from scratch)
-    - lucene: pros: fast, powerful
-              cons: needs java, complex impl (compared to lunr)
+- remove lucene/cli searcher
 - support wiki-style links, with id only (for archive users)
 - docs
     - get readme working in extension preview in vscode
