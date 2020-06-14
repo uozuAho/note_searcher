@@ -15,8 +15,8 @@ describe('map link index', () => {
     });
 
     it('contains added file', () => {
-      expect(index.containsFile(addedFile)).toBe(true);
-      expect(Array.from(index.files())).toEqual(['/a/b.txt']);
+      expect(index.containsNote(addedFile)).toBe(true);
+      expect(Array.from(index.notes())).toEqual(['/a/b.txt']);
     });
   });
 
@@ -26,10 +26,10 @@ describe('map link index', () => {
       const addedFile = '/a/b.txt';
       index.addFile(addedFile, 'a [link](to/thing)');
 
-      index.reset();
+      index.clear();
 
-      expect(index.containsFile(addedFile)).toBe(false);
-      expect(Array.from(index.files())).toHaveLength(0);
+      expect(index.containsNote(addedFile)).toBe(false);
+      expect(Array.from(index.notes())).toHaveLength(0);
       expect(index.linksFrom(addedFile)).toHaveLength(0);
     });
   });
@@ -40,7 +40,7 @@ describe('map link index', () => {
     index.addFile('/a/b.txt', 'a [link](http://to/internet/stuff)');
 
     expect(index.linksFrom(addedFile)).toEqual([]);
-    expect(index.containsFile(addedFile)).toBe(true);
-    expect(Array.from(index.files())).toEqual(['/a/b.txt']);
+    expect(index.containsNote(addedFile)).toBe(true);
+    expect(Array.from(index.notes())).toEqual(['/a/b.txt']);
   });
 });

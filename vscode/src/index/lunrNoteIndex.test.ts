@@ -123,4 +123,41 @@ describe('lunr note index', () => {
       expect(lunrNoteIndex.allTags()).toEqual([]);
     });
   });
+
+  describe('note index', () => {
+    it('indexes all notes', async () => {
+      const files = [
+        new MockFile('a/b.txt', ''),
+        new MockFile('a/b/c.log', ''),
+      ];
+      setupFiles(files);
+
+      await lunrNoteIndex.index('some dir');
+
+      const notes = Array.from(lunrNoteIndex.notes());
+      expect(notes).toEqual(files.map(f => f.path()));
+      expect(lunrNoteIndex.containsNote('a/b.txt')).toBe(true);
+    });
+
+    it('does not index non-text files', async () => {
+      setupFiles([new MockFile('source_file.cpp', '')]);
+
+      await lunrNoteIndex.index('some dir');
+
+      const notes = Array.from(lunrNoteIndex.notes());
+      expect(notes).toHaveLength(0);
+      expect(lunrNoteIndex.containsNote('source_file.cpp')).toBe(false);
+    });
+  });
+
+  describe('link index', () => {
+    it('indexes links', async () => {
+      setupFiles([new MockFile('/a/b.txt', '[a link](to/some/stuff)')]);
+
+      await lunrNoteIndex.index('some dir');
+
+      const links = lunrNoteIndex.linksFrom('/a/b.txt');
+      expect(links).toEqual(['to/some/stuff']);
+    });
+  });
 });

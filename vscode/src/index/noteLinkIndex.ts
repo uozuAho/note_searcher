@@ -1,8 +1,8 @@
 import { extractLinks } from "../text_processing/linkExtractor";
 
 export interface NoteLinkIndex {
-  files(): IterableIterator<string>;
-  containsFile(path: string): boolean;
+  notes(): IterableIterator<string>;
+  containsNote(path: string): boolean;
   linksFrom(path: string): string[];
 }
 
@@ -13,15 +13,15 @@ export class MapLinkIndex implements NoteLinkIndex {
     this._linksFrom = new Map();
   };
 
-  public reset = () => {
+  public clear = () => {
     this._linksFrom = new Map();
   };
 
-  public files = () => {
+  public notes = () => {
     return this._linksFrom.keys();
   };
 
-  public containsFile = (path: string) => {
+  public containsNote = (path: string) => {
     return this._linksFrom.has(path);
   };
 

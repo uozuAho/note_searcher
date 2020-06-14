@@ -4,10 +4,12 @@ import { FileSystem } from "../utils/FileSystem";
 import { extractTags } from '../text_processing/tagExtractor';
 import { TagsSet } from './TagsIndex';
 import { LunrFullTextSearch } from "./lunrFullTextSearch";
+import { MapLinkIndex } from "./noteLinkIndex";
 
 export class LunrNoteIndex implements NoteIndex {
   private _lunrSearch = new LunrFullTextSearch();
   private _tags = new TagsSet();
+  private _linkIndex = new MapLinkIndex();
 
   constructor(private fileSystem: FileSystem) {}
 
@@ -15,12 +17,17 @@ export class LunrNoteIndex implements NoteIndex {
 
   public index = (dir: string) => this.indexAllFiles(dir);
 
-  public allTags = () => {
-    return this._tags.allTags();
-  };
+  public allTags = () => this._tags.allTags();
+
+  public notes = () => this._linkIndex.notes();
+
+  public containsNote = (path: string) => this._linkIndex.containsNote(path);
+
+  public linksFrom = (path: string) => this._linkIndex.linksFrom(path);
 
   private indexAllFiles = async (dir: string) => {
     this._tags.clear();
+    this._linkIndex.clear();
     this._lunrSearch.reset();
     const jobs: Promise<void>[] = [];
 
@@ -35,6 +42,7 @@ export class LunrNoteIndex implements NoteIndex {
 
   private indexFile = async (path: string) => {
     const text = await this.fileSystem.readFileAsync(path);
+    this._linkIndex.addFile(path, text);
     const tags = extractTags(text);
     this._tags.addTags(tags);
     this._lunrSearch.indexFile(path, text, tags);

@@ -14,10 +14,10 @@ export class NewDeadLinkFinder {
   public findAllDeadLinks = (): Link[] => {
     const deadLinks = [];
 
-    for (const file of this.linkIndex.files()) {
+    for (const file of this.linkIndex.notes()) {
       for (const link of this.linkIndex.linksFrom(file)) {
         const absLinkPath = toAbsolutePath(file, link);
-        if (!this.linkIndex.containsFile(absLinkPath)) {
+        if (!this.linkIndex.containsNote(absLinkPath)) {
           deadLinks.push(new Link(file, link));
         }
       }
