@@ -2,7 +2,7 @@ import { FileSystem } from "../utils/FileSystem";
 import { extractLinks } from "../text_processing/linkExtractor";
 import _path = require('path');
 
-export class DeadLink {
+export class Link {
   constructor(
     public sourcePath: string,
     public targetPath: string) {}
@@ -22,7 +22,7 @@ export class DeadLinkFinder {
       for (const link of links) {
         const absLink = this.toAbsolutePath(link, rootPath, sourceFile);
         if (!this.fileSystem.fileExists(absLink)) {
-          deadLinks.push(new DeadLink(sourceFile, link));
+          deadLinks.push(new Link(sourceFile, link));
         }
       }
     }

@@ -5,7 +5,7 @@ import { NoteIndex } from '../index/NoteIndex';
 import { MockUi } from "../mocks/MockUi";
 import { MockFile } from "../mocks/MockFile";
 import { DelayedExecutor } from '../utils/delayedExecutor';
-import { DeadLinkFinder, DeadLink } from '../dead_links/DeadLinkFinder';
+import { DeadLinkFinder, Link } from '../dead_links/DeadLinkFinder';
 import { NoteSearcherConfigProvider, NoteSearcherConfig } from './NoteSearcherConfigProvider';
 
 describe('NoteSearcher', () => {
@@ -292,7 +292,7 @@ describe('NoteSearcher', () => {
 
     it('shows dead links', () => {
       deadLinkFinder.setup(d => d.findDeadLinks(tmoq.It.isAny())).returns(() => [
-        new DeadLink('/some/path', '/path/to/nowhere')
+        new Link('/some/path', '/path/to/nowhere')
       ]);
 
       noteSearcher.showDeadLinks();
