@@ -18,4 +18,4 @@ export interface NoteSearcherUi {
   addDocumentSavedListener: (listener: FileChangeListener) => void;
 }
 
-export type FileChangeListener = (file: File) => void;
+export type FileChangeListener = (file: File) => Promise<void>;

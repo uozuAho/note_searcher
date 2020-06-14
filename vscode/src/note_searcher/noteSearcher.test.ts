@@ -5,7 +5,7 @@ import { NoteIndex } from '../index/NoteIndex';
 import { MockUi } from "../mocks/MockUi";
 import { MockFile } from "../mocks/MockFile";
 import { DelayedExecutor } from '../utils/delayedExecutor';
-import { DeadLinkFinder, DeadLink } from '../dead_links/DeadLinkFinder';
+import { DeadLinkFinder, Link } from '../dead_links/DeadLinkFinder';
 import { NoteSearcherConfigProvider, NoteSearcherConfig } from './NoteSearcherConfigProvider';
 
 describe('NoteSearcher', () => {
@@ -291,8 +291,8 @@ describe('NoteSearcher', () => {
     });
 
     it('shows dead links', () => {
-      deadLinkFinder.setup(d => d.findDeadLinks(tmoq.It.isAny())).returns(() => [
-        new DeadLink('/some/path', '/path/to/nowhere')
+      deadLinkFinder.setup(d => d.findAllDeadLinks()).returns(() => [
+        new Link('/some/path', '/path/to/nowhere')
       ]);
 
       noteSearcher.showDeadLinks();
@@ -301,7 +301,7 @@ describe('NoteSearcher', () => {
     });
 
     it('does not show anything when there are no dead links', () => {
-      deadLinkFinder.setup(d => d.findDeadLinks(tmoq.It.isAny())).returns(() => []);
+      deadLinkFinder.setup(d => d.findAllDeadLinks()).returns(() => []);
 
       noteSearcher.showDeadLinks();
 
@@ -319,49 +319,49 @@ describe('NoteSearcher', () => {
       configProvider.setup(c => c.isEnabledInDir(tmoq.It.isAny())).returns(() => true);
 
       ui.currentlyOpenDirReturns('a directory');
-      deadLinkFinder.setup(d => d.findDeadLinks(tmoq.It.isAny())).returns(() => []);
+      deadLinkFinder.setup(d => d.findAllDeadLinks()).returns(() => []);
 
       noteSearcher = new NoteSearcher(ui,
         searcher.object, deadLinkFinder.object, configProvider.object);
     });
 
-    it('updates index', () => {
+    it('updates index', async () => {
       const file = new MockFile('path', 'content');
       const indexSpy = spyOn(noteSearcher, 'index');
 
-      ui.saveFile(file);
+      await ui.saveFile(file);
 
       expect(indexSpy).toHaveBeenCalled();
     });
 
-    it('checks for dead links', () => {
+    it('checks for dead links', async () => {
       const file = new MockFile('path', 'content');
       const showDeadLinks = spyOn(noteSearcher, 'showDeadLinks');
 
-      ui.saveFile(file);
+      await ui.saveFile(file);
 
       expect(showDeadLinks).toHaveBeenCalled();
     });
 
-    it('does not check for dead links when turned off in config', () => {
+    it('does not check for dead links when turned off in config', async () => {
       const config = defaultConfig();
       config.deadLinks.showOnSave = false;
       configProvider.reset();
       configProvider.setup(c => c.getConfig()).returns(() => config);
       const showDeadLinks = spyOn(noteSearcher, 'showDeadLinks');
 
-      ui.saveFile(new MockFile('path', 'content'));
+      await ui.saveFile(new MockFile('path', 'content'));
 
       expect(showDeadLinks).not.toHaveBeenCalled();
     });
 
-    it('does nothing if updates are disabled', () => {
+    it('does nothing if updates are disabled', async () => {
       configProvider.reset();
       configProvider.setup(c => c.isEnabledInDir(tmoq.It.isAny())).returns(() => false);
       const index = spyOn(noteSearcher, 'index');
       const showDeadLinks = spyOn(noteSearcher, 'showDeadLinks');
 
-      ui.saveFile(new MockFile('path', 'content'));
+      await ui.saveFile(new MockFile('path', 'content'));
 
       expect(index).not.toHaveBeenCalled();
       expect(showDeadLinks).not.toHaveBeenCalled();

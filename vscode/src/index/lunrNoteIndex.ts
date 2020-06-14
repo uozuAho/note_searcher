@@ -1,103 +1,51 @@
-import * as lunr from 'lunr';
-
 import { NoteIndex } from "./NoteIndex";
 import { FileSystem } from "../utils/FileSystem";
-import { createDiagnostics } from '../diagnostics/diagnostics';
+
 import { extractTags } from '../text_processing/tagExtractor';
-import { GoodSet } from '../utils/goodSet';
-import { TagsProvider } from '../tag_completion/TagsProvider';
+import { TagsSet } from './TagsIndex';
+import { LunrFullTextSearch } from "./lunrFullTextSearch";
+import { MapLinkIndex } from "./noteLinkIndex";
 
-const NUM_RESULTS = 10;
-
-// Overrides lunr's global token separator, which includes hyphens.
-// Removing hyphens allows hyphenated tags to be lexed into single
-// tokens.
-lunr.tokenizer.separator = /\s+/;
-
-// I think there's a bug/oversight in lunr 2.3.8 - overriding the token
-// separator doesn't override the separator for the query parser. Thus, I
-// override it here to ensure queries are tokenised in the same way document
-// text is.
-// An alternative is to implement my own query parser.
-(lunr as any).QueryLexer.termSeparator = lunr.tokenizer.separator;
-
-
-export class LunrNoteIndex implements NoteIndex, TagsProvider {
-  private _index: lunr.Index | null = null;
-  private _tagsIndex: GoodSet<string> = new GoodSet();
-  private _diagnostics = createDiagnostics('LunrSearch');
+export class LunrNoteIndex implements NoteIndex {
+  private _lunrSearch = new LunrFullTextSearch();
+  private _tags = new TagsSet();
+  private _linkIndex = new MapLinkIndex();
 
   constructor(private fileSystem: FileSystem) {}
 
-  public search = (query: string) => {
-    this.trace('search');
+  public search = (query: string) => this._lunrSearch.search(query);
 
-    if (!this._index) { return Promise.resolve([]); }
+  public index = (dir: string) => this.indexAllFiles(dir);
 
-    query = this.expandQueryTags(query);
+  public allTags = () => this._tags.allTags();
 
-    return Promise.resolve(this._index
-      .search(query)
-      .slice(0, NUM_RESULTS)
-      .map(r => r.ref));
-  };
+  public notes = () => this._linkIndex.notes();
 
-  public index = async (dir: string) => {
-    this.trace('index start');
+  public containsNote = (path: string) => this._linkIndex.containsNote(path);
 
-    this._tagsIndex.clear();
-    await this.indexAllFiles(dir);
-
-    this.trace('index complete');
-  };
-
-  public expandQueryTags = (query: string) => {
-    return query.replace(/(\s|^|\+|-)#(.+?)\b/g, "$1tags:$2");
-  };
-
-  public allTags = () => {
-    return Array.from(this._tagsIndex.values());
-  };
+  public linksFrom = (path: string) => this._linkIndex.linksFrom(path);
 
   private indexAllFiles = async (dir: string) => {
-    const builder = this.createIndexBuilder();
+    this._tags.clear();
+    this._linkIndex.clear();
+    this._lunrSearch.reset();
     const jobs: Promise<void>[] = [];
 
     for (const path of this.fileSystem.allFilesUnderPath(dir)) {
       if (!this.shouldIndex(path)) { continue; }
-      jobs.push(this.indexFile(builder, path));
+      jobs.push(this.indexFile(path));
     }
 
     await Promise.all(jobs);
-
-    this._index = builder.build();
+    this._lunrSearch.finalise();
   };
 
-  private indexFile = async (indexBuilder: lunr.Builder, path: string) => {
+  private indexFile = async (path: string) => {
     const text = await this.fileSystem.readFileAsync(path);
+    this._linkIndex.addFile(path, text);
     const tags = extractTags(text);
-    tags.forEach(t => this._tagsIndex.add(t));
-    indexBuilder.add({ path, text, tags });
-  };
-
-  private createIndexBuilder = () => {
-    const builder = new lunr.Builder();
-
-    builder.pipeline.add(
-      lunr.trimmer,
-      lunr.stopWordFilter,
-      lunr.stemmer
-    );
-
-    builder.searchPipeline.add(
-      lunr.stemmer
-    );
-
-    builder.ref('path');
-    builder.field('text');
-    builder.field('tags');
-
-    return builder;
+    this._tags.addTags(tags);
+    this._lunrSearch.indexFile(path, text, tags);
   };
 
   private shouldIndex = (path: string) => {
@@ -107,9 +55,5 @@ export class LunrNoteIndex implements NoteIndex, TagsProvider {
       }
     }
     return false;
-  };
-
-  private trace = (message: string) => {
-    this._diagnostics.trace(message);
   };
 }

@@ -152,7 +152,7 @@
 		"typemoq": "^2.1.0",
 		"typescript": "^3.9.3",
 		"vsce": "^1.75.0",
-		"vscode-extension-tester": "^3.0.1",
+		"vscode-extension-tester": "^3.0.2",
 		"vscode-extension-tester-native": "^3.0.0",
 		"vscode-test": "^1.4.0",
 		"webpack": "^4.43.0",
