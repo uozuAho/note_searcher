@@ -1,10 +1,10 @@
-import { NewDeadLinkFinder } from "./NewDeadLinkFinder";
+import { DeadLinkFinder } from "./DeadLinkFinder";
 import { MapLinkIndex } from "../index/noteLinkIndex";
 import { MockFile } from "../mocks/MockFile";
 
 describe('new dead link finder', () => {
   let linkIndex: MapLinkIndex;
-  let finder: NewDeadLinkFinder;
+  let finder: DeadLinkFinder;
 
   const setupLinks = (fileLinks: MockFile[]) => {
     for (const file of fileLinks) {
@@ -14,7 +14,7 @@ describe('new dead link finder', () => {
 
   beforeEach(() => {
     linkIndex = new MapLinkIndex();
-    finder = new NewDeadLinkFinder(linkIndex);
+    finder = new DeadLinkFinder(linkIndex);
   });
 
   it('finds dead link', () => {

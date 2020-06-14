@@ -8,7 +8,7 @@ import { extractKeywords } from "../text_processing/keywordExtractor";
 import { createDiagnostics, Diagnostics } from "../diagnostics/diagnostics";
 import { DelayedExecutor } from "../utils/delayedExecutor";
 import { GoodSet } from "../utils/goodSet";
-import { NewDeadLinkFinder } from "../dead_links/NewDeadLinkFinder";
+import { DeadLinkFinder } from "../dead_links/DeadLinkFinder";
 import { NoteSearcherConfigProvider } from "./NoteSearcherConfigProvider";
 import { TimeProvider, createTimeProvider } from "../utils/timeProvider";
 import { formatDateTime_YYYYMMddhhmm } from "../utils/timeFormatter";
@@ -23,7 +23,7 @@ export class NoteSearcher {
   constructor(
     private ui: NoteSearcherUi,
     private noteIndex: NoteIndex,
-    private deadLinkFinder: NewDeadLinkFinder,
+    private deadLinkFinder: DeadLinkFinder,
     private configProvider: NoteSearcherConfigProvider,
     private delayedExecutor: DelayedExecutor = new DelayedExecutor(),
     private timeProvider: TimeProvider = createTimeProvider())

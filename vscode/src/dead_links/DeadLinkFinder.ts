@@ -8,7 +8,7 @@ export class Link {
     public targetPath: string) {}
 }
 
-export class NewDeadLinkFinder {
+export class DeadLinkFinder {
   constructor(private linkIndex: NoteLinkIndex) {}
 
   public findAllDeadLinks = (): Link[] => {

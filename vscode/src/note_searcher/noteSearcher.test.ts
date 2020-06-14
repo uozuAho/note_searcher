@@ -5,13 +5,13 @@ import { NoteIndex } from '../index/NoteIndex';
 import { MockUi } from "../mocks/MockUi";
 import { MockFile } from "../mocks/MockFile";
 import { DelayedExecutor } from '../utils/delayedExecutor';
-import { NewDeadLinkFinder, Link } from '../dead_links/NewDeadLinkFinder';
+import { DeadLinkFinder, Link } from '../dead_links/DeadLinkFinder';
 import { NoteSearcherConfigProvider, NoteSearcherConfig } from './NoteSearcherConfigProvider';
 
 describe('NoteSearcher', () => {
   let ui: MockUi;
   let searcher: tmoq.IMock<NoteIndex>;
-  let deadLinkFinder: tmoq.IMock<NewDeadLinkFinder>;
+  let deadLinkFinder: tmoq.IMock<DeadLinkFinder>;
   let configProvider: tmoq.IMock<NoteSearcherConfigProvider>;
   let noteSearcher: NoteSearcher;
 
@@ -36,7 +36,7 @@ describe('NoteSearcher', () => {
     beforeEach(() => {
       ui = new MockUi();
       searcher = tmoq.Mock.ofType<NoteIndex>();
-      deadLinkFinder = tmoq.Mock.ofType<NewDeadLinkFinder>();
+      deadLinkFinder = tmoq.Mock.ofType<DeadLinkFinder>();
       configProvider = tmoq.Mock.ofType<NoteSearcherConfigProvider>();
 
       noteSearcher = new NoteSearcher(ui,
@@ -88,7 +88,7 @@ describe('NoteSearcher', () => {
     beforeEach(() => {
       ui = new MockUi();
       searcher = tmoq.Mock.ofType<NoteIndex>();
-      deadLinkFinder = tmoq.Mock.ofType<NewDeadLinkFinder>();
+      deadLinkFinder = tmoq.Mock.ofType<DeadLinkFinder>();
       configProvider = tmoq.Mock.ofType<NoteSearcherConfigProvider>();
 
       noteSearcher = new NoteSearcher(ui,
@@ -109,7 +109,7 @@ describe('NoteSearcher', () => {
     beforeEach(() => {
       ui = new MockUi();
       searcher = tmoq.Mock.ofType<NoteIndex>();
-      deadLinkFinder = tmoq.Mock.ofType<NewDeadLinkFinder>();
+      deadLinkFinder = tmoq.Mock.ofType<DeadLinkFinder>();
       configProvider = tmoq.Mock.ofType<NoteSearcherConfigProvider>();
 
       noteSearcher = new NoteSearcher(ui,
@@ -130,7 +130,7 @@ describe('NoteSearcher', () => {
     beforeEach(() => {
       ui = new MockUi();
       searcher = tmoq.Mock.ofType<NoteIndex>();
-      deadLinkFinder = tmoq.Mock.ofType<NewDeadLinkFinder>();
+      deadLinkFinder = tmoq.Mock.ofType<DeadLinkFinder>();
       configProvider = tmoq.Mock.ofType<NoteSearcherConfigProvider>();
       configProvider.setup(c => c.getConfig()).returns(() => defaultConfig());
 
@@ -179,7 +179,7 @@ describe('NoteSearcher', () => {
     beforeEach(() => {
       ui = new MockUi();
       searcher = tmoq.Mock.ofType<NoteIndex>();
-      deadLinkFinder = tmoq.Mock.ofType<NewDeadLinkFinder>();
+      deadLinkFinder = tmoq.Mock.ofType<DeadLinkFinder>();
       configProvider = tmoq.Mock.ofType<NoteSearcherConfigProvider>();
       configProvider.setup(c => c.getConfig()).returns(() => defaultConfig());
 
@@ -244,7 +244,7 @@ describe('NoteSearcher', () => {
     beforeEach(() => {
       ui = new MockUi();
       searcher = tmoq.Mock.ofType<NoteIndex>();
-      deadLinkFinder = tmoq.Mock.ofType<NewDeadLinkFinder>();
+      deadLinkFinder = tmoq.Mock.ofType<DeadLinkFinder>();
       configProvider = tmoq.Mock.ofType<NoteSearcherConfigProvider>();
 
       noteSearcher = new NoteSearcher(ui,
@@ -280,7 +280,7 @@ describe('NoteSearcher', () => {
     beforeEach(() => {
       ui = new MockUi();
       searcher = tmoq.Mock.ofType<NoteIndex>();
-      deadLinkFinder = tmoq.Mock.ofType<NewDeadLinkFinder>();
+      deadLinkFinder = tmoq.Mock.ofType<DeadLinkFinder>();
       configProvider = tmoq.Mock.ofType<NoteSearcherConfigProvider>();
       configProvider.setup(c => c.getConfig()).returns(() => defaultConfig());
 
@@ -313,7 +313,7 @@ describe('NoteSearcher', () => {
     beforeEach(() => {
       ui = new MockUi();
       searcher = tmoq.Mock.ofType<NoteIndex>();
-      deadLinkFinder = tmoq.Mock.ofType<NewDeadLinkFinder>();
+      deadLinkFinder = tmoq.Mock.ofType<DeadLinkFinder>();
       configProvider = tmoq.Mock.ofType<NoteSearcherConfigProvider>();
       configProvider.setup(c => c.getConfig()).returns(() => defaultConfig());
       configProvider.setup(c => c.isEnabledInDir(tmoq.It.isAny())).returns(() => true);
@@ -374,7 +374,7 @@ describe('NoteSearcher', () => {
     beforeEach(() => {
       ui = new MockUi();
       searcher = tmoq.Mock.ofType<NoteIndex>();
-      deadLinkFinder = tmoq.Mock.ofType<NewDeadLinkFinder>();
+      deadLinkFinder = tmoq.Mock.ofType<DeadLinkFinder>();
       configProvider = tmoq.Mock.ofType<NoteSearcherConfigProvider>();
       delayedExecutor = tmoq.Mock.ofType<DelayedExecutor>();
 
@@ -411,7 +411,7 @@ describe('NoteSearcher', () => {
     beforeEach(() => {
       ui = new MockUi();
       searcher = tmoq.Mock.ofType<NoteIndex>();
-      deadLinkFinder = tmoq.Mock.ofType<NewDeadLinkFinder>();
+      deadLinkFinder = tmoq.Mock.ofType<DeadLinkFinder>();
       configProvider = tmoq.Mock.ofType<NoteSearcherConfigProvider>();
 
       noteSearcher = new NoteSearcher(ui,
@@ -443,7 +443,7 @@ describe('NoteSearcher', () => {
     beforeEach(() => {
       ui = new MockUi();
       searcher = tmoq.Mock.ofType<NoteIndex>();
-      deadLinkFinder = tmoq.Mock.ofType<NewDeadLinkFinder>();
+      deadLinkFinder = tmoq.Mock.ofType<DeadLinkFinder>();
       configProvider = tmoq.Mock.ofType<NoteSearcherConfigProvider>();
 
       noteSearcher = new NoteSearcher(ui,
@@ -474,7 +474,7 @@ describe('NoteSearcher', () => {
     beforeEach(() => {
       ui = new MockUi();
       searcher = tmoq.Mock.ofType<NoteIndex>();
-      deadLinkFinder = tmoq.Mock.ofType<NewDeadLinkFinder>();
+      deadLinkFinder = tmoq.Mock.ofType<DeadLinkFinder>();
       configProvider = tmoq.Mock.ofType<NoteSearcherConfigProvider>();
 
       noteSearcher = new NoteSearcher(ui,
@@ -495,7 +495,7 @@ describe('NoteSearcher', () => {
     beforeEach(() => {
       ui = new MockUi();
       searcher = tmoq.Mock.ofType<NoteIndex>();
-      deadLinkFinder = tmoq.Mock.ofType<NewDeadLinkFinder>();
+      deadLinkFinder = tmoq.Mock.ofType<DeadLinkFinder>();
       configProvider = tmoq.Mock.ofType<NoteSearcherConfigProvider>();
 
       noteSearcher = new NoteSearcher(ui,
