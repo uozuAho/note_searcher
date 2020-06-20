@@ -46,13 +46,20 @@ Run `npm run build_vsix` in the vscode directory.
 
 
 # todo
-- fix dead link e2e fail on ubuntu
+- false dead links! booo
 - docs: add better subtitle than 'searches notes' in marketplace text
-- show incoming/outgoing links
-    - bring link indexing into indexer
 - feature: configurable new note directory
     - if not set, use current behaviour
     - set in dotfile???
+- improve: activate extension immediately if already enabled in
+  current dir (don't wait for activation events)
+- show incoming/outgoing links
+    - bring link indexing into indexer
+- fix dead link e2e fail on ubuntu
+- show dead links in side panel (tree view) instead of new file
+- better icon
+- feature: clickable links in dead link report
+- feature: set cursor inside [] when pasting link
 - feature: ## tags for structure notes
 - feature: copy link from file explorer
 - break up noteSearcher.ts?
