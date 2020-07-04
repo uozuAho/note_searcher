@@ -47,16 +47,18 @@ Run `npm run build_vsix` in the vscode directory.
 
 # todo
 - false dead links! booo
+- show dead links in side panel (tree view) instead of new file
 - docs: add better subtitle than 'searches notes' in marketplace text
+- improve: activate extension immediately if already enabled in
+  current dir (don't wait for activation events)
 - feature: configurable new note directory
     - if not set, use current behaviour
     - set in dotfile???
-- improve: activate extension immediately if already enabled in
-  current dir (don't wait for activation events)
 - show incoming/outgoing links
     - bring link indexing into indexer
+- show all tags in side panel
+    - search tag when clicked on
 - fix dead link e2e fail on ubuntu
-- show dead links in side panel (tree view) instead of new file
 - better icon
 - feature: clickable links in dead link report
 - feature: set cursor inside [] when pasting link
