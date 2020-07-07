@@ -1,8 +1,13 @@
+const _path = require('path');
+
 import { DeadLinkFinder } from "./DeadLinkFinder";
 import { MapLinkIndex } from "../index/noteLinkIndex";
 import { MockFile } from "../mocks/MockFile";
+import { LunrNoteIndex } from "../index/lunrNoteIndex";
+import { createFileSystem } from "../utils/FileSystem";
+import { NoteIndex } from "../index/NoteIndex";
 
-describe('new dead link finder', () => {
+describe('dead link finder, mocked filesystem', () => {
   let linkIndex: MapLinkIndex;
   let finder: DeadLinkFinder;
 
@@ -78,6 +83,24 @@ describe('new dead link finder', () => {
       new MockFile('/a/b.md', '[](c/d.txt)'),
       new MockFile('/a/c/d.txt', '')
     ]);
+
+    const deadLinks = finder.findAllDeadLinks();
+
+    expect(deadLinks).toHaveLength(0);
+  });
+});
+
+describe('dead link finder, real filesystem', () => {
+  let linkIndex: NoteIndex;
+  let finder: DeadLinkFinder;
+
+  beforeEach(() => {
+    linkIndex = new LunrNoteIndex(createFileSystem());
+    finder = new DeadLinkFinder(linkIndex);
+  });
+
+  it('finds no dead links in demo dir', async () => {
+    await linkIndex.index(_path.resolve(__dirname, '../../demo_dir'));
 
     const deadLinks = finder.findAllDeadLinks();
 

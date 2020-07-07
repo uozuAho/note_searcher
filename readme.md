@@ -55,6 +55,7 @@ Run `npm run build_vsix` in the vscode directory.
     - if not set, use current behaviour
     - set in dotfile???
 - show incoming/outgoing links
+    - like [markdown notes](https://github.com/kortina/vscode-markdown-notes)
     - bring link indexing into indexer
 - show all tags in side panel
     - search tag when clicked on

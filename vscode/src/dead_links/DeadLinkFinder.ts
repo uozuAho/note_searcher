@@ -28,10 +28,11 @@ export class DeadLinkFinder {
 }
 
 function toAbsolutePath(sourcePath: string, linkPath: string) {
-  if (linkPath.startsWith('/')) { return linkPath; }
+  // if (linkPath.startsWith('/')) { return linkPath; }
 
-  const absLinkPath = _path.join(_path.dirname(sourcePath), linkPath);
+  const absLinkPath = _path.resolve(_path.dirname(sourcePath), linkPath);
 
   // don't care about windows for now
-  return absLinkPath.replace(/\\/g, '/');
+  // return absLinkPath.replace(/\\/g, '/');
+  return absLinkPath;
 };
