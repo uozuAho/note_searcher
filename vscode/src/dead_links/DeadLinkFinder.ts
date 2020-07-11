@@ -1,6 +1,7 @@
 import _path = require('path');
 
 import { NoteLinkIndex } from "../index/noteLinkIndex";
+import { FileSystem } from '../utils/FileSystem';
 
 export class Link {
   constructor(
@@ -9,7 +10,9 @@ export class Link {
 }
 
 export class DeadLinkFinder {
-  constructor(private linkIndex: NoteLinkIndex) {}
+  constructor(
+    private linkIndex: NoteLinkIndex,
+    private fileSystem: FileSystem) {}
 
   public findAllDeadLinks = (): Link[] => {
     const deadLinks = [];
@@ -17,7 +20,7 @@ export class DeadLinkFinder {
     for (const file of this.linkIndex.notes()) {
       for (const link of this.linkIndex.linksFrom(file)) {
         const absLinkPath = toAbsolutePath(file, link);
-        if (!this.linkIndex.containsNote(absLinkPath)) {
+        if (!this.fileSystem.fileExists(absLinkPath)) {
           deadLinks.push(new Link(file, link));
         }
       }
@@ -28,10 +31,5 @@ export class DeadLinkFinder {
 }
 
 function toAbsolutePath(sourcePath: string, linkPath: string) {
-  if (linkPath.startsWith('/')) { return linkPath; }
-
-  const absLinkPath = _path.join(_path.dirname(sourcePath), linkPath);
-
-  // don't care about windows for now
-  return absLinkPath.replace(/\\/g, '/');
+  return _path.resolve(_path.dirname(sourcePath), linkPath);
 };

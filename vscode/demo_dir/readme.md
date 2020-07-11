@@ -24,4 +24,5 @@ These are also searchable:
 ## links
 
 Add a [link](trains.md) to your files, and vscode makes them clickable
-hyperlinks.
+hyperlinks. Files can be images or other non-text files, eg.
+[not a note](not_a_note.bin)

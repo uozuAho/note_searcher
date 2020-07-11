@@ -6,6 +6,10 @@ export interface FileSystem {
   fileExists: (path: string) => boolean;
   readFile: (path: string) => string;
   readFileAsync: (path: string) => Promise<string>;
+  /**
+   * Return all files under the given path, in the current OS's
+   * path format
+   */
   allFilesUnderPath: (path: string) => Iterable<string>
 }
 

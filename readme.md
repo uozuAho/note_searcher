@@ -48,13 +48,18 @@ Run `npm run build_vsix` in the vscode directory.
 # todo
 - false dead links! booo
 - show dead links in side panel (tree view) instead of new file
+    - remove config to show dead links - always show
 - docs: add better subtitle than 'searches notes' in marketplace text
+- copy link: ensure consistent path separators, don't mix forward/backward slash
 - improve: activate extension immediately if already enabled in
   current dir (don't wait for activation events)
+- bug: Words separated by slashes aren’t indexed eg. blah/boop, search for boop,
+  not found
 - feature: configurable new note directory
     - if not set, use current behaviour
     - set in dotfile???
 - show incoming/outgoing links
+    - like [markdown notes](https://github.com/kortina/vscode-markdown-notes)
     - bring link indexing into indexer
 - show all tags in side panel
     - search tag when clicked on
