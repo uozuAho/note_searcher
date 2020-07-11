@@ -37,10 +37,6 @@ export class DeadLinksTree implements vscode.TreeDataProvider<TreeNode> {
   public getParent = (element: TreeNode) => {
     return null;
   };
-
-  // public getAllItems = (): TreeNode[] => {
-  //   return this.files;
-  // };
 }
 
 type TreeNode = FileNode | LinkNode;

@@ -53,7 +53,8 @@ export class VsCodeNoteSearcherUi implements NoteSearcherUi {
     //       Doesn't work if there's no search results :(
     //       todo: find a way to show the container regardless of search results
     if (uris.length > 0) {
-      return view.reveal(searchResults.getAllItems()[0]);
+      const children = await searchResults.getChildren();
+      return view.reveal(children[0]);
     }
   };
 
@@ -83,15 +84,15 @@ export class VsCodeNoteSearcherUi implements NoteSearcherUi {
     await vscode.window.showInformationMessage(message);
   };
 
-  // public showDeadLinks = async (message: string) => {
-  //   await openInNewEditor(message);
-  // };
+  public showDeadLinks = async (links: Link[]) => {
+    const deadLinks = new DeadLinksTree(links);
 
-  public showDeadLinks = (links: Link[]) => {
-    vscode.window.createTreeView('noteSearcher-deadLinks', {
-      treeDataProvider: new DeadLinksTree(links)
+    const view = vscode.window.createTreeView('noteSearcher-deadLinks', {
+      treeDataProvider: deadLinks
     });
-    return Promise.resolve();
+
+    const children = await deadLinks.getChildren();
+    view.reveal(children[0]);
   };
 
   public notifyIndexingStarted = (indexingTask: Promise<void>) => {

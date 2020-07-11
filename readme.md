@@ -66,6 +66,7 @@ Run `npm run build_vsix` in the vscode directory.
     - search tag when clicked on
 - fix dead link e2e fail on ubuntu
 - better icon
+- remove related files feature
 - feature: clickable links in dead link report
 - feature: set cursor inside [] when pasting link
 - feature: ## tags for structure notes

@@ -113,14 +113,10 @@ export class NoteSearcher {
     this.diagnostics.trace('show dead links');
     const root = this.ui.currentlyOpenDir();
     if (!root) {
-      this.diagnostics.trace('show dead links: no open directory');
       return;
     }
 
     const deadLinks = this.deadLinkFinder.findAllDeadLinks();
-    if (deadLinks.length === 0) {
-      this.diagnostics.trace('show dead links: no dead links');
-    }
 
     this.ui.showDeadLinks(deadLinks);
     this.diagnostics.trace('show dead links completed');
