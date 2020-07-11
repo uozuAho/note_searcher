@@ -6,6 +6,7 @@ import { NoteSearcher } from './note_searcher/noteSearcher';
 import { DeadLinkFinder } from './dead_links/DeadLinkFinder';
 import { NoteSearcherConfigProvider } from './note_searcher/NoteSearcherConfigProvider';
 import { TagCompleter } from './tag_completion/TagCompleter';
+import { createFileSystem } from './utils/FileSystem';
 
 export const extensionId = 'uozuaho.note-searcher';
 
@@ -13,7 +14,7 @@ export function activate(context: vscode.ExtensionContext) {
   const ui = new VsCodeNoteSearcherUi();
   const configProvider = new NoteSearcherConfigProvider(context);
   const noteIndex = createNoteIndex(extensionDir()!, configProvider);
-  const deadLinkFinder = new DeadLinkFinder(noteIndex);
+  const deadLinkFinder = new DeadLinkFinder(noteIndex, createFileSystem());
   const noteSearcher = new NoteSearcher(ui, noteIndex, deadLinkFinder, configProvider);
 
   context.subscriptions.push(

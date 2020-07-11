@@ -1,19 +1,23 @@
 const _path = require('path');
 
+import * as tmoq from 'typemoq';
+
 import { DeadLinkFinder } from "./DeadLinkFinder";
 import { MapLinkIndex } from "../index/noteLinkIndex";
 import { MockFile } from "../mocks/MockFile";
 import { LunrNoteIndex } from "../index/lunrNoteIndex";
-import { createFileSystem } from "../utils/FileSystem";
+import { createFileSystem, FileSystem } from "../utils/FileSystem";
 import { NoteIndex } from "../index/NoteIndex";
 
 describe('dead link finder, mocked filesystem', () => {
+  let fileSystem: tmoq.IMock<FileSystem>;
   let linkIndex: MapLinkIndex;
   let finder: DeadLinkFinder;
 
   const setupLinks = (fileLinks: MockFile[]) => {
     for (const file of fileLinks) {
       linkIndex.addFile(file.path(), file.text());
+      fileSystem.setup(f => f.fileExists(file.path())).returns(() => true);
     }
   };
 
@@ -21,8 +25,9 @@ describe('dead link finder, mocked filesystem', () => {
     if (process.platform === 'win32') { return; }
 
     beforeEach(() => {
+      fileSystem = tmoq.Mock.ofType<FileSystem>();
       linkIndex = new MapLinkIndex();
-      finder = new DeadLinkFinder(linkIndex);
+      finder = new DeadLinkFinder(linkIndex, fileSystem.object);
     });
 
     it('finds dead link', () => {
@@ -91,14 +96,26 @@ describe('dead link finder, mocked filesystem', () => {
 
       expect(deadLinks).toHaveLength(0);
     });
+
+    it('supports non-note files', () => {
+      setupLinks([
+        new MockFile('/a/b.md', '[](c.png)'),
+        new MockFile('/a/c.png', '')
+      ]);
+
+      const deadLinks = finder.findAllDeadLinks();
+
+      expect(deadLinks).toHaveLength(0);
+    });
   });
 
   describe('windows paths', () => {
     if (process.platform !== 'win32') { return; }
 
     beforeEach(() => {
+      fileSystem = tmoq.Mock.ofType<FileSystem>();
       linkIndex = new MapLinkIndex();
-      finder = new DeadLinkFinder(linkIndex);
+      finder = new DeadLinkFinder(linkIndex, fileSystem.object);
     });
 
     it('finds dead link', () => {
@@ -167,6 +184,17 @@ describe('dead link finder, mocked filesystem', () => {
 
       expect(deadLinks).toHaveLength(0);
     });
+
+    it('supports non-note files', () => {
+      setupLinks([
+        new MockFile('c:\\a\\b.md', '[](c.png)'),
+        new MockFile('c:\\a\\c.png', '')
+      ]);
+
+      const deadLinks = finder.findAllDeadLinks();
+
+      expect(deadLinks).toHaveLength(0);
+    });
   });
 });
 
@@ -175,8 +203,9 @@ describe('dead link finder, real filesystem', () => {
   let finder: DeadLinkFinder;
 
   beforeEach(() => {
-    linkIndex = new LunrNoteIndex(createFileSystem());
-    finder = new DeadLinkFinder(linkIndex);
+    const fs = createFileSystem();
+    linkIndex = new LunrNoteIndex(fs);
+    finder = new DeadLinkFinder(linkIndex, fs);
   });
 
   it('finds no dead links in demo dir', async () => {

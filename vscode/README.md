@@ -54,7 +54,6 @@ With VS Code, you can add links to local files using markdown
 syntax. These become hyperlinks to your local files. Examples:
 
 - `[](path/relative/to/file)`
-- `[](/file/relative/to/currently/open/dir/in/vscode)`
 
 You can copy a markdown-style link to a search result by right-clicking on
 the search result. You can also copy this link from an editor tab.
