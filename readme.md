@@ -47,6 +47,8 @@ Run `npm run build_vsix` in the vscode directory.
 
 # todo
 - false dead links! booo
+    - just do notes for now (not images). want side panel dead links asap
+    - do later: show dead links to non-notes
 - show dead links in side panel (tree view) instead of new file
 - docs: add better subtitle than 'searches notes' in marketplace text
 - improve: activate extension immediately if already enabled in

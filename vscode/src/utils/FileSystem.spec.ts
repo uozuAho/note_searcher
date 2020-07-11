@@ -1,4 +1,4 @@
-import { relativePath, createFileSystem } from "./FileSystem";
+import { relativePath } from "./FileSystem";
 
 describe('FileSystem', () => {
   describe('relativePath', () => {
@@ -21,15 +21,5 @@ describe('FileSystem', () => {
         });
       });
     }
-  });
-});
-
-describe('createFileSystem', () => {
-  const fs = createFileSystem();
-
-  describe('all files under path', () => {
-    it('returns posix absolute paths', () => {
-      expect(fs.allFilesUnderPath(__dirname)).toContain('FileSystem.spec.ts');
-    });
   });
 });
