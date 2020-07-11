@@ -54,6 +54,8 @@ Run `npm run build_vsix` in the vscode directory.
 - docs: add better subtitle than 'searches notes' in marketplace text
 - improve: activate extension immediately if already enabled in
   current dir (don't wait for activation events)
+- bug: Words separated by slashes aren’t indexed eg. blah/boop, search for boop,
+  not found
 - feature: configurable new note directory
     - if not set, use current behaviour
     - set in dotfile???
