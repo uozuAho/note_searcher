@@ -44,10 +44,14 @@
 					"id": "noteSearcher-results",
 					"name": "Search results"
 				},
-				{
+        {
+					"id": "noteSearcher-deadLinks",
+					"name": "Dead links"
+        },
+        {
 					"id": "noteSearcher-related",
 					"name": "Related files"
-				}
+        }
 			]
 		},
 		"commands": [

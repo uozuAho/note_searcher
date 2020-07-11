@@ -29,6 +29,9 @@ export function activate(context: vscode.ExtensionContext) {
       'noteSearcher.searchResults.copyLink',
       searchResult => noteSearcher.markdownLinkToClipboard(searchResult.uri.fsPath)),
     vscode.commands.registerCommand(
+      'noteSearcher.deadLinksResults.openFile',
+      file => vscode.window.showTextDocument(file)),
+    vscode.commands.registerCommand(
       'noteSearcher.editorTab.copyLink',
       uri => noteSearcher.markdownLinkToClipboard(uri.fsPath)),
     vscode.commands.registerCommand(

@@ -1,41 +1,64 @@
 import * as vscode from 'vscode';
 
-export class DeadLinksTree implements vscode.TreeDataProvider<FileWithDeadLinks> {
+import { Link } from '../dead_links/DeadLinkFinder';
 
-  private results: FileWithDeadLinks[];
+export class DeadLinksTree implements vscode.TreeDataProvider<TreeNode> {
 
-  constructor(results: vscode.Uri[]) {
-    this.results = results.map(r => new FileWithDeadLinks(r));
+  /** map of sourcePath: links */
+  private linkMap: Map<string, string[]>;
+
+  constructor(links: Link[]) {
+    this.linkMap = new Map();
+
+    for (const link of links) {
+      let links = this.linkMap.get(link.sourcePath);
+      if (!links) {
+        this.linkMap.set(link.sourcePath, [link.targetPath]);
+      } else {
+        links.push(link.targetPath);
+      }
+    }
   }
 
-  public getTreeItem(element: FileWithDeadLinks): vscode.TreeItem {
+  public getTreeItem(element: TreeNode): vscode.TreeItem {
     return element;
   }
 
-  public getChildren(element?: FileWithDeadLinks): Thenable<FileWithDeadLinks[]> {
+  public getChildren(element?: TreeNode): Thenable<TreeNode[]> {
     if (element) {
-      return Promise.resolve([]);
+      const children = this.linkMap.get(element.path);
+      if (children) {
+        return Promise.resolve(children.map(c => new LinkNode(c)));
+      }
     }
-    return Promise.resolve(this.results);
+    return Promise.resolve(Array.from(this.linkMap.keys()).map(l => new FileNode(l)));
   }
 
-  public getParent = (element: FileWithDeadLinks) => {
+  public getParent = (element: TreeNode) => {
     return null;
   };
 
-  public getAllItems = (): FileWithDeadLinks[] => {
-    return this.results;
-  };
+  // public getAllItems = (): TreeNode[] => {
+  //   return this.files;
+  // };
 }
 
-class FileWithDeadLinks extends vscode.TreeItem {
-  constructor(public uri: vscode.Uri) {
-    super(uri, vscode.TreeItemCollapsibleState.None);
+type TreeNode = FileNode | LinkNode;
+
+class FileNode extends vscode.TreeItem {
+  constructor(public path: string) {
+    super(vscode.Uri.file(path), vscode.TreeItemCollapsibleState.Expanded);
   }
 
   command = {
     title: "Open File",
-    command: 'noteSearcher.searchResults.openFile',
-    arguments: [this.uri]
+    command: 'noteSearcher.deadLinksResults.openFile',
+    arguments: [this.resourceUri]
   };
+}
+
+class LinkNode extends vscode.TreeItem {
+  constructor(public path: string) {
+    super(path, vscode.TreeItemCollapsibleState.None);
+  }
 }

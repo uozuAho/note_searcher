@@ -1,4 +1,5 @@
 import { File } from "../utils/File";
+import { Link } from "../dead_links/DeadLinkFinder";
 
 export interface NoteSearcherUi {
   copyToClipboard: (text: string) => Promise<void>;
@@ -11,7 +12,7 @@ export interface NoteSearcherUi {
   showSearchResults: (files: string[]) => Promise<void>;
   showRelatedFiles: (files: string[]) => void;
   showNotification: (message: string) => Promise<void>;
-  showDeadLinks: (message: string) => Promise<void>;
+  showDeadLinks: (links: Link[]) => Promise<void>;
   notifyIndexingStarted: (indexingTask: Promise<void>) => void;
   showError: (e: Error) => Promise<void>;
   addCurrentDocumentChangeListener: (listener: FileChangeListener) => void;

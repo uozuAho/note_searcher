@@ -47,7 +47,9 @@ Run `npm run build_vsix` in the vscode directory.
 
 # todo
 - show dead links in side panel (tree view) instead of new file
+    - clean up commented out code etc
     - remove config to show dead links - always show
+    - update tests
 - docs: add better subtitle than 'searches notes' in marketplace text
 - copy link: ensure consistent path separators, don't mix forward/backward slash
 - improve: activate extension immediately if already enabled in
