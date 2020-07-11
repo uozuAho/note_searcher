@@ -299,14 +299,6 @@ describe('NoteSearcher', () => {
 
       ui.showedDeadLinks();
     });
-
-    it('does not show anything when there are no dead links', () => {
-      deadLinkFinder.setup(d => d.findAllDeadLinks()).returns(() => []);
-
-      noteSearcher.showDeadLinks();
-
-      ui.didNotShowDeadLinks();
-    });
   });
 
   describe('when file is saved', () => {
