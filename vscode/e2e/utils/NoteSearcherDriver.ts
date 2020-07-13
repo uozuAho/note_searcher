@@ -45,10 +45,20 @@ export class NoteSearcherDriver {
   public initCreateNote = () => {
     return this.vscode.runCommand('Note searcher: create a new note');
   };
+
+  public isShowingInDeadLinks = async (name: string) => {
+    const sidebar = await this.openSidebar();
+
+    const searchResults = await sidebar.getContent()
+      .getSection('Dead links') as CustomTreeSection;
+
+    const item = await searchResults.findItem(name);
+
+    return !!item;
+  };
 }
 
 class SearchResult {
-  
   constructor(private treeItem: TreeItem) {}
 
   public click = () => {
