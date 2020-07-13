@@ -87,12 +87,9 @@ export class VsCodeNoteSearcherUi implements NoteSearcherUi {
   public showDeadLinks = async (links: Link[]) => {
     const deadLinks = new DeadLinksTree(links);
 
-    const view = vscode.window.createTreeView('noteSearcher-deadLinks', {
+    vscode.window.createTreeView('noteSearcher-deadLinks', {
       treeDataProvider: deadLinks
     });
-
-    const children = await deadLinks.getChildren();
-    view.reveal(children[0]);
   };
 
   public notifyIndexingStarted = (indexingTask: Promise<void>) => {
