@@ -211,9 +211,7 @@ export class NoteSearcher {
     }
 
     await this.index();
-    if (this.configProvider.getConfig().deadLinks.showOnSave) {
-      this.showDeadLinks();
-    }
+    this.showDeadLinks();
   };
 
   private isEnabledInCurrentDir = () => {
