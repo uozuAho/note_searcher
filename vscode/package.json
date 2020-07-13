@@ -126,7 +126,7 @@
 		"pretest": "npm run lint",
 		"test": "jest",
 		"test:watch": "jest --watch",
-		"e2e:setup": "extest setup-tests",
+		"e2e:setup": "extest setup-tests --code_version 1.46.0",
 		"e2e:compile": "rm -rf e2e-out && tsc -p tsconfig.e2e.json",
 		"build_vsix": "vsce package",
 		"publish": "vsce publish -p $VSCE_PAT"
