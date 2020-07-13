@@ -2,6 +2,8 @@ import * as vscode from 'vscode';
 import { SearchResultTree } from './searchResultTree';
 import { NoteSearcherUi, FileChangeListener } from './NoteSearcherUi';
 import { File } from "../utils/File";
+import { Link } from '../dead_links/DeadLinkFinder';
+import { DeadLinksTree } from './DeadLinksTree';
 
 export class VsCodeNoteSearcherUi implements NoteSearcherUi {
   private currentDocChangeListener: FileChangeListener | null = null;
@@ -51,7 +53,8 @@ export class VsCodeNoteSearcherUi implements NoteSearcherUi {
     //       Doesn't work if there's no search results :(
     //       todo: find a way to show the container regardless of search results
     if (uris.length > 0) {
-      return view.reveal(searchResults.getAllItems()[0]);
+      const children = await searchResults.getChildren();
+      return view.reveal(children[0]);
     }
   };
 
@@ -81,8 +84,12 @@ export class VsCodeNoteSearcherUi implements NoteSearcherUi {
     await vscode.window.showInformationMessage(message);
   };
 
-  public showDeadLinks = async (message: string) => {
-    await openInNewEditor(message);
+  public showDeadLinks = async (links: Link[]) => {
+    const deadLinks = new DeadLinksTree(links);
+
+    vscode.window.createTreeView('noteSearcher-deadLinks', {
+      treeDataProvider: deadLinks
+    });
   };
 
   public notifyIndexingStarted = (indexingTask: Promise<void>) => {

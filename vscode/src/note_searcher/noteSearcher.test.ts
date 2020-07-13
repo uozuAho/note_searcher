@@ -26,9 +26,6 @@ describe('NoteSearcher', () => {
   const defaultConfig = (): NoteSearcherConfig => ({
     search: {
       useLucene: false
-    },
-    deadLinks: {
-      showOnSave: true
     }
   });
 
@@ -299,14 +296,6 @@ describe('NoteSearcher', () => {
 
       ui.showedDeadLinks();
     });
-
-    it('does not show anything when there are no dead links', () => {
-      deadLinkFinder.setup(d => d.findAllDeadLinks()).returns(() => []);
-
-      noteSearcher.showDeadLinks();
-
-      ui.didNotShowDeadLinks();
-    });
   });
 
   describe('when file is saved', () => {
@@ -341,18 +330,6 @@ describe('NoteSearcher', () => {
       await ui.saveFile(file);
 
       expect(showDeadLinks).toHaveBeenCalled();
-    });
-
-    it('does not check for dead links when turned off in config', async () => {
-      const config = defaultConfig();
-      config.deadLinks.showOnSave = false;
-      configProvider.reset();
-      configProvider.setup(c => c.getConfig()).returns(() => config);
-      const showDeadLinks = spyOn(noteSearcher, 'showDeadLinks');
-
-      await ui.saveFile(new MockFile('path', 'content'));
-
-      expect(showDeadLinks).not.toHaveBeenCalled();
     });
 
     it('does nothing if updates are disabled', async () => {

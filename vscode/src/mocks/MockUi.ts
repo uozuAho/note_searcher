@@ -2,6 +2,7 @@ import * as tmoq from "typemoq";
 import { NoteSearcherUi, FileChangeListener } from "../ui/NoteSearcherUi";
 import { File } from "../utils/File";
 import { MockFile } from "./MockFile";
+import { Link } from "../dead_links/DeadLinkFinder";
 
 export class MockUi implements NoteSearcherUi {
   private _mock: tmoq.IMock<NoteSearcherUi>;
@@ -62,8 +63,8 @@ export class MockUi implements NoteSearcherUi {
     this._mock.verify(m => m.showSearchResults(tmoq.It.isAny()), tmoq.Times.never());
   };
 
-  public showDeadLinks = async (message: string) => {
-    return await this._mock.object.showDeadLinks(message);
+  public showDeadLinks = async (links: Link[]) => {
+    return await this._mock.object.showDeadLinks(links);
   };
 
   public showedDeadLinks() {

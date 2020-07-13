@@ -61,13 +61,8 @@ the search result. You can also copy this link from an editor tab.
 
 ### Find dead links
 
-To find dead links, add the following line to your VS Code preferences:
-
-`"noteSearcher.deadLinks.showOnSave": true`
-
-Now whenever you save a file, all files will be searched for links to other
-files. If any links to non-existent files are found, they will be displayed
-in a new editor.
+Dead links to other notes & local files are shown in the sidebar. Dead links
+are updated whenever a file is saved.
 
 
 ## UNDER CONSTRUCTION
