@@ -12,7 +12,7 @@ import { DeadLinkFinder } from "../dead_links/DeadLinkFinder";
 import { NoteSearcherConfigProvider } from "./NoteSearcherConfigProvider";
 import { TimeProvider, createTimeProvider } from "../utils/timeProvider";
 import { formatDateTime_YYYYMMddhhmm } from "../utils/timeFormatter";
-import { relativePath } from "../utils/FileSystem";
+import { posixRelativePath } from "../utils/FileSystem";
 
 const UPDATE_RELATED_FILES_DELAY_MS = 500;
 
@@ -181,7 +181,7 @@ export class NoteSearcher {
     const currentFilePath = this.ui.getCurrentFile()?.path();
 
     let relPath = currentFilePath
-      ? relativePath(currentFilePath, filePath)
+      ? posixRelativePath(currentFilePath, filePath)
       : path.basename(filePath);
 
     return `[](${relPath})`;

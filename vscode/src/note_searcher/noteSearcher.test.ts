@@ -256,6 +256,14 @@ describe('NoteSearcher', () => {
       expect(link).toBe('[](c/d.md)');
     });
 
+    it('windows paths are converted to posix', () => {
+      ui.getCurrentFileReturns(new MockFile('c:\\a\\b.md', ''));
+
+      const link = noteSearcher.generateMarkdownLinkTo('c:\\a\\b\\c\\d.md');
+
+      expect(link).toBe('[](b/c/d.md)');
+    });
+
     it('copies filename only, when no file is open', () => {
       ui.getCurrentFileReturns(null);
       ui.currentlyOpenDirReturns('/a/b');

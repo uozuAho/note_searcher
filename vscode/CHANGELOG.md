@@ -5,7 +5,10 @@ file. Format inspired by https://keepachangelog.com/en/1.0.0/
 
 
 ## [Unreleased]
-### Change
+### Fixed
+- Copied markdown links on windows were not in posix format
+
+### Changed
 - Dead links are now shown in the sidebar. Config no longer necessary - this
   feature is always on.
 
