@@ -6,8 +6,8 @@ import { Link } from '../dead_links/DeadLinkFinder';
 import { DeadLinksTree } from './DeadLinksTree';
 
 export class VsCodeNoteSearcherUi implements NoteSearcherUi {
-  private currentDocChangeListener: FileChangeListener | null = null;
-  private documentSavedListener: FileChangeListener | null = null;
+  private currentNoteModifiedListener: FileChangeListener | null = null;
+  private noteSavedListener: FileChangeListener | null = null;
 
   public copyToClipboard = async (text: string) => {
     return await vscode.env.clipboard.writeText(text);
@@ -106,33 +106,43 @@ export class VsCodeNoteSearcherUi implements NoteSearcherUi {
     await openInNewEditor(msg);
   };
 
-  public addCurrentDocumentChangeListener = (listener: FileChangeListener) => {
-    this.currentDocChangeListener = listener;
+  public addCurrentNoteModifiedListener = (listener: FileChangeListener) => {
+    this.currentNoteModifiedListener = listener;
   };
 
-  public addDocumentSavedListener = (listener: FileChangeListener) => {
-    this.documentSavedListener = listener;
+  public addNoteSavedListener = (listener: FileChangeListener) => {
+    this.noteSavedListener = listener;
   };
 
-  public createOnDidChangeTextDocumentHandler = () => {
+  public createCurrentNoteModifiedHandler = () => {
     return vscode.workspace.onDidChangeTextDocument(e => {
       if (e.document === vscode.window.activeTextEditor?.document) {
-        if (this.currentDocChangeListener) {
+        if (this.currentNoteModifiedListener) {
           const file = new VsCodeFile(e.document);
-          this.currentDocChangeListener(file);
+          this.currentNoteModifiedListener(file);
         }
       }
     });
   };
 
-  public createOnDidSaveDocumentHandler = () => {
+  public createNoteSavedHandler = () => {
     return vscode.workspace.onDidSaveTextDocument(doc => {
-      if (this.documentSavedListener) {
+      if (this.noteSavedListener) {
         const file = new VsCodeFile(doc);
-        this.documentSavedListener(file);
+        this.noteSavedListener(file);
       }
     });
   };
+
+  // public createOnDidChangeActiveTextEditorHandler = () => {
+  //   return vscode.window.onDidChangeActiveTextEditor(e => {
+  //     if (!e) { return; }
+  //     if (this.currentDocChangeListener) {
+  //       const file = new VsCodeFile(e.document);
+  //       this.currentDocChangeListener(file);
+  //     }
+  //   });
+  // };
 }
 
 class VsCodeFile implements File {

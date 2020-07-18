@@ -44,8 +44,8 @@ export function activate(context: vscode.ExtensionContext) {
     vscode.languages.registerCompletionItemProvider(['markdown', 'plaintext'],
       new TagCompleter(noteIndex), '#'),
 
-    ui.createOnDidChangeTextDocumentHandler(),
-    ui.createOnDidSaveDocumentHandler()
+    ui.createCurrentNoteModifiedHandler(),
+    ui.createNoteSavedHandler()
   );
 
   noteSearcher.notifyExtensionActivated();

@@ -15,8 +15,8 @@ export interface NoteSearcherUi {
   showDeadLinks: (links: Link[]) => Promise<void>;
   notifyIndexingStarted: (indexingTask: Promise<void>) => void;
   showError: (e: Error) => Promise<void>;
-  addCurrentDocumentChangeListener: (listener: FileChangeListener) => void;
-  addDocumentSavedListener: (listener: FileChangeListener) => void;
+  addCurrentNoteModifiedListener: (listener: FileChangeListener) => void;
+  addNoteSavedListener: (listener: FileChangeListener) => void;
 }
 
 export type FileChangeListener = (file: File) => Promise<void>;

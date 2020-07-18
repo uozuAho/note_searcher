@@ -43,6 +43,10 @@
 				{
 					"id": "noteSearcher-results",
 					"name": "Search results"
+        },
+        {
+					"id": "noteSearcher-backLinks",
+					"name": "Backlinks"
 				},
 				{
 					"id": "noteSearcher-deadLinks",
