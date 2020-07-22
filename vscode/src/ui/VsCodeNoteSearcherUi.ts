@@ -4,10 +4,12 @@ import { NoteSearcherUi, FileChangeListener } from './NoteSearcherUi';
 import { File } from "../utils/File";
 import { Link } from '../dead_links/DeadLinkFinder';
 import { DeadLinksTree } from './DeadLinksTree';
+import { BacklinksTree } from './BacklinksTree';
 
 export class VsCodeNoteSearcherUi implements NoteSearcherUi {
   private currentNoteModifiedListener: FileChangeListener | null = null;
   private noteSavedListener: FileChangeListener | null = null;
+  private movedViewToDifferentNoteListener: FileChangeListener | null = null;
 
   public copyToClipboard = async (text: string) => {
     return await vscode.env.clipboard.writeText(text);
@@ -92,6 +94,15 @@ export class VsCodeNoteSearcherUi implements NoteSearcherUi {
     });
   };
 
+  public showBacklinks = async (links: string[]) => {
+    const uris = links.map(l => vscode.Uri.file(l));
+    const backlinks = new BacklinksTree(uris);
+
+    vscode.window.createTreeView('noteSearcher-backlinks', {
+      treeDataProvider: backlinks
+    });
+  };
+
   public notifyIndexingStarted = (indexingTask: Promise<void>) => {
     vscode.window.withProgress({
       location: vscode.ProgressLocation.Window,
@@ -114,6 +125,10 @@ export class VsCodeNoteSearcherUi implements NoteSearcherUi {
     this.noteSavedListener = listener;
   };
 
+  public addMovedViewToDifferentNoteListener = (listener: FileChangeListener) => {
+    this.movedViewToDifferentNoteListener = listener;
+  };
+
   public createCurrentNoteModifiedHandler = () => {
     return vscode.workspace.onDidChangeTextDocument(e => {
       if (e.document === vscode.window.activeTextEditor?.document) {
@@ -134,15 +149,15 @@ export class VsCodeNoteSearcherUi implements NoteSearcherUi {
     });
   };
 
-  // public createOnDidChangeActiveTextEditorHandler = () => {
-  //   return vscode.window.onDidChangeActiveTextEditor(e => {
-  //     if (!e) { return; }
-  //     if (this.currentDocChangeListener) {
-  //       const file = new VsCodeFile(e.document);
-  //       this.currentDocChangeListener(file);
-  //     }
-  //   });
-  // };
+  public createMovedViewToDifferentNoteHandler = () => {
+    return vscode.window.onDidChangeActiveTextEditor(e => {
+      if (!e) { return; }
+      if (this.movedViewToDifferentNoteListener) {
+        const file = new VsCodeFile(e.document);
+        this.movedViewToDifferentNoteListener(file);
+      }
+    });
+  };
 }
 
 class VsCodeFile implements File {

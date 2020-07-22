@@ -22,6 +22,9 @@ export function activate(context: vscode.ExtensionContext) {
       'noteSearcher.search', async () => await noteSearcher.search()),
     vscode.commands.registerCommand(
       'noteSearcher.index', async () => await noteSearcher.index()),
+    // todo: use this for opening search results & dead links, remove the other commands
+    vscode.commands.registerCommand(
+      'noteSearcher.openFile', uri => vscode.window.showTextDocument(uri)),
     vscode.commands.registerCommand(
       'noteSearcher.searchResults.openFile',
       searchResult => vscode.window.showTextDocument(searchResult)),
@@ -45,7 +48,8 @@ export function activate(context: vscode.ExtensionContext) {
       new TagCompleter(noteIndex), '#'),
 
     ui.createCurrentNoteModifiedHandler(),
-    ui.createNoteSavedHandler()
+    ui.createNoteSavedHandler(),
+    ui.createMovedViewToDifferentNoteHandler()
   );
 
   noteSearcher.notifyExtensionActivated();

@@ -30,6 +30,7 @@ export class NoteSearcher {
   {
     ui.addCurrentNoteModifiedListener(this.notifyCurrentNoteModified);
     ui.addNoteSavedListener(this.notifyNoteSaved);
+    ui.addMovedViewToDifferentNoteListener(this.notifyMovedVideToDifferentNote);
     this.diagnostics = createDiagnostics('noteSearcher');
   }
 
@@ -187,6 +188,13 @@ export class NoteSearcher {
     return `[](${relPath})`;
   };
 
+  public showBacklinks = () => {
+    const currentFilePath = this.ui.getCurrentFile()?.path();
+    if (!currentFilePath) { return; }
+    const backlinks = this.noteIndex.linksTo(currentFilePath);
+    this.ui.showBacklinks(backlinks);
+  };
+
   private notifyCurrentNoteModified = (file: File) => {
     this.diagnostics.trace('note modified');
 
@@ -212,6 +220,10 @@ export class NoteSearcher {
 
     await this.index();
     this.showDeadLinks();
+  };
+
+  private notifyMovedVideToDifferentNote = async (file: File) => {
+    this.showBacklinks();
   };
 
   private isEnabledInCurrentDir = () => {

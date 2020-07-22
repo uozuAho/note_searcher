@@ -13,10 +13,12 @@ export interface NoteSearcherUi {
   showRelatedFiles: (files: string[]) => void;
   showNotification: (message: string) => Promise<void>;
   showDeadLinks: (links: Link[]) => Promise<void>;
+  showBacklinks: (links: string[]) => Promise<void>;
   notifyIndexingStarted: (indexingTask: Promise<void>) => void;
   showError: (e: Error) => Promise<void>;
   addCurrentNoteModifiedListener: (listener: FileChangeListener) => void;
   addNoteSavedListener: (listener: FileChangeListener) => void;
+  addMovedViewToDifferentNoteListener: (listener: FileChangeListener) => void;
 }
 
 export type FileChangeListener = (file: File) => Promise<void>;

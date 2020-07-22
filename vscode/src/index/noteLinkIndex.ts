@@ -4,6 +4,7 @@ export interface NoteLinkIndex {
   notes(): IterableIterator<string>;
   containsNote(path: string): boolean;
   linksFrom(path: string): string[];
+  linksTo(path: string): string[];
 }
 
 export class MapLinkIndex implements NoteLinkIndex {
@@ -27,6 +28,11 @@ export class MapLinkIndex implements NoteLinkIndex {
 
   public linksFrom = (path: string): string[] => {
     return this._linksFrom.get(path) || [];
+  };
+
+  public linksTo = (path: string): string[] => {
+    // todo: make this links to!
+    return ['a', 'b', 'c'];
   };
 
   public addFile = (absPath: string, text: string) => {
