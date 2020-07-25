@@ -51,7 +51,6 @@ Run `npm run build_vsix` in the vscode directory.
 
 # todo
 - show incoming links
-    - clean up to-dos
     - remove related files feature
 - show dead links in side panel (tree view) instead of new file
     - update screenshot for docs

@@ -48,7 +48,7 @@ class FileNode extends vscode.TreeItem {
 
   command = {
     title: "Open File",
-    command: 'noteSearcher.deadLinksResults.openFile',
+    command: 'noteSearcher.openFile',
     arguments: [this.resourceUri]
   };
 }

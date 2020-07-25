@@ -31,7 +31,7 @@ class SearchResult extends vscode.TreeItem {
 
   command = {
     title: "Open File",
-    command: 'noteSearcher.searchResults.openFile',
+    command: 'noteSearcher.openFile',
     arguments: [this.uri]
   };
 }

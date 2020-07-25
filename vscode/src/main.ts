@@ -22,18 +22,11 @@ export function activate(context: vscode.ExtensionContext) {
       'noteSearcher.search', async () => await noteSearcher.search()),
     vscode.commands.registerCommand(
       'noteSearcher.index', async () => await noteSearcher.index()),
-    // todo: use this for opening search results & dead links, remove the other commands
     vscode.commands.registerCommand(
       'noteSearcher.openFile', uri => vscode.window.showTextDocument(uri)),
     vscode.commands.registerCommand(
-      'noteSearcher.searchResults.openFile',
-      searchResult => vscode.window.showTextDocument(searchResult)),
-    vscode.commands.registerCommand(
       'noteSearcher.searchResults.copyLink',
       searchResult => noteSearcher.markdownLinkToClipboard(searchResult.uri.fsPath)),
-    vscode.commands.registerCommand(
-      'noteSearcher.deadLinksResults.openFile',
-      file => vscode.window.showTextDocument(file)),
     vscode.commands.registerCommand(
       'noteSearcher.editorTab.copyLink',
       uri => noteSearcher.markdownLinkToClipboard(uri.fsPath)),
