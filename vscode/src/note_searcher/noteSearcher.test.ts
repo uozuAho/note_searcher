@@ -4,7 +4,6 @@ import { NoteSearcher } from './noteSearcher';
 import { NoteIndex } from '../index/NoteIndex';
 import { MockUi } from "../mocks/MockUi";
 import { MockFile } from "../mocks/MockFile";
-import { DelayedExecutor } from '../utils/delayedExecutor';
 import { DeadLinkFinder, Link } from '../dead_links/DeadLinkFinder';
 import { NoteSearcherConfigProvider, NoteSearcherConfig } from './NoteSearcherConfigProvider';
 
@@ -353,77 +352,6 @@ describe('NoteSearcher', () => {
     });
   });
 
-  describe('when current document changes', () => {
-    let delayedExecutor: tmoq.IMock<DelayedExecutor>;
-
-    beforeEach(() => {
-      ui = new MockUi();
-      searcher = tmoq.Mock.ofType<NoteIndex>();
-      deadLinkFinder = tmoq.Mock.ofType<DeadLinkFinder>();
-      configProvider = tmoq.Mock.ofType<NoteSearcherConfigProvider>();
-      delayedExecutor = tmoq.Mock.ofType<DelayedExecutor>();
-
-      ui.currentlyOpenDirReturns('a directory');
-      configProvider.setup(c => c.isEnabledInDir(tmoq.It.isAny())).returns(() => true);
-
-      noteSearcher = new NoteSearcher(ui,
-        searcher.object,
-        deadLinkFinder.object,
-        configProvider.object,
-        delayedExecutor.object);
-    });
-
-    it('schedules show related files', async () => {
-      ui.currentFileChanged(new MockFile('path', 'content'));
-
-      delayedExecutor.verify(d => d.cancelAll(), tmoq.Times.once());
-      delayedExecutor.verify(d =>
-        d.executeInMs(tmoq.It.isAnyNumber(), tmoq.It.isAny()), tmoq.Times.once());
-    });
-
-    it('does not schedule show related files if disabled', () => {
-      configProvider.reset();
-      configProvider.setup(c => c.isEnabledInDir(tmoq.It.isAny())).returns(() => false);
-      ui.currentFileChanged(new MockFile('path', 'content'));
-
-      delayedExecutor.verify(d => d.cancelAll(), tmoq.Times.never());
-      delayedExecutor.verify(d =>
-        d.executeInMs(tmoq.It.isAnyNumber(), tmoq.It.isAny()), tmoq.Times.never());
-    });
-  });
-
-  describe('update related files', () => {
-    beforeEach(() => {
-      ui = new MockUi();
-      searcher = tmoq.Mock.ofType<NoteIndex>();
-      deadLinkFinder = tmoq.Mock.ofType<DeadLinkFinder>();
-      configProvider = tmoq.Mock.ofType<NoteSearcherConfigProvider>();
-
-      noteSearcher = new NoteSearcher(ui,
-        searcher.object, deadLinkFinder.object, configProvider.object);
-    });
-
-    it('does not include current file in related files', async () => {
-      const currentFile = new MockFile('path/file/a', 'asdf');
-      const relatedFiles = [currentFile.path(), 'path/file/b', 'path/file/c'];
-      searcher_returns(relatedFiles);
-
-      await noteSearcher.updateRelatedFiles(currentFile);
-
-      ui.showedRelatedFiles(['path/file/b', 'path/file/c']);
-    });
-
-    it('does not update files if current file is empty', async () => {
-      const currentFile = new MockFile('path/file/a', '');
-      const relatedFiles = [currentFile.path(), 'path/file/b', 'path/file/c'];
-      searcher_returns(relatedFiles);
-
-      await noteSearcher.updateRelatedFiles(currentFile);
-
-      ui.didNotShowRelatedFiles();
-    });
-  });
-
   describe('enable', () => {
     beforeEach(() => {
       ui = new MockUi();
@@ -473,36 +401,6 @@ describe('NoteSearcher', () => {
       noteSearcher.disable();
 
       configProvider.verify(c => c.disableInDir(currentDir), tmoq.Times.once());
-    });
-  });
-
-  describe('createTagAndKeywordQuery', () => {
-    beforeEach(() => {
-      ui = new MockUi();
-      searcher = tmoq.Mock.ofType<NoteIndex>();
-      deadLinkFinder = tmoq.Mock.ofType<DeadLinkFinder>();
-      configProvider = tmoq.Mock.ofType<NoteSearcherConfigProvider>();
-
-      noteSearcher = new NoteSearcher(ui,
-        searcher.object, deadLinkFinder.object, configProvider.object);
-    });
-
-    it('creates query', () => {
-      const tags = ['a', 'b', 'c'];
-      const keywords = ['d', 'e'];
-
-      const query = noteSearcher.createTagAndKeywordQuery(tags, keywords);
-
-      expect(query).toEqual('#a #b #c d e');
-    });
-
-    it('removes overlapping keywords', () => {
-      const tags = ['a', 'b', 'c'];
-      const keywords = ['c', 'd'];
-
-      const query = noteSearcher.createTagAndKeywordQuery(tags, keywords);
-
-      expect(query).toEqual('#a #b #c d');
     });
   });
 });

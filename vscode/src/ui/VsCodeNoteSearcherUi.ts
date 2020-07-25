@@ -7,7 +7,6 @@ import { DeadLinksTree } from './DeadLinksTree';
 import { BacklinksTree } from './BacklinksTree';
 
 export class VsCodeNoteSearcherUi implements NoteSearcherUi {
-  private currentNoteModifiedListener: FileChangeListener | null = null;
   private noteSavedListener: FileChangeListener | null = null;
   private movedViewToDifferentNoteListener: FileChangeListener | null = null;
 
@@ -75,13 +74,6 @@ export class VsCodeNoteSearcherUi implements NoteSearcherUi {
     return;
   };
 
-  public showRelatedFiles = (files: string[]) => {
-    const uris = files.map(f => vscode.Uri.file(f));
-    vscode.window.createTreeView('noteSearcher-related', {
-      treeDataProvider: new SearchResultTree(uris)
-    });
-  };
-
   public showNotification = async (message: string) => {
     await vscode.window.showInformationMessage(message);
   };
@@ -117,27 +109,12 @@ export class VsCodeNoteSearcherUi implements NoteSearcherUi {
     await openInNewEditor(msg);
   };
 
-  public addCurrentNoteModifiedListener = (listener: FileChangeListener) => {
-    this.currentNoteModifiedListener = listener;
-  };
-
   public addNoteSavedListener = (listener: FileChangeListener) => {
     this.noteSavedListener = listener;
   };
 
   public addMovedViewToDifferentNoteListener = (listener: FileChangeListener) => {
     this.movedViewToDifferentNoteListener = listener;
-  };
-
-  public createCurrentNoteModifiedHandler = () => {
-    return vscode.workspace.onDidChangeTextDocument(e => {
-      if (e.document === vscode.window.activeTextEditor?.document) {
-        if (this.currentNoteModifiedListener) {
-          const file = new VsCodeFile(e.document);
-          this.currentNoteModifiedListener(file);
-        }
-      }
-    });
   };
 
   public createNoteSavedHandler = () => {

@@ -21,11 +21,9 @@ Tool for managing a knowledge base of text files, such as a zettelkasten.
 ### Full text search
 
 When active, this extension indexes all .md, .txt and .log files in the
-currently open folder. As you are modifying a file, the extension window will
-show a list of files related to the current file, based on keywords and tags
-extracted from the current file.
+currently open folder.
 
-You can also search for files by pressing `ctrl+alt+s`. Some example queries:
+You can search for files by pressing `ctrl+alt+s`. Some example queries:
 
 ```
 apple banana +carrot  # file contains the word carrot, and possibly apple or banana

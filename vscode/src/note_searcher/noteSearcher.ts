@@ -3,18 +3,12 @@ const path = require('path');
 import { NoteSearcherUi } from "../ui/NoteSearcherUi";
 import { File } from "../utils/File";
 import { NoteIndex } from "../index/NoteIndex";
-import { extractTags } from "../text_processing/tagExtractor";
-import { extractKeywords } from "../text_processing/keywordExtractor";
 import { createDiagnostics, Diagnostics } from "../diagnostics/diagnostics";
-import { DelayedExecutor } from "../utils/delayedExecutor";
-import { GoodSet } from "../utils/goodSet";
 import { DeadLinkFinder } from "../dead_links/DeadLinkFinder";
 import { NoteSearcherConfigProvider } from "./NoteSearcherConfigProvider";
 import { TimeProvider, createTimeProvider } from "../utils/timeProvider";
 import { formatDateTime_YYYYMMddhhmm } from "../utils/timeFormatter";
 import { posixRelativePath } from "../utils/FileSystem";
-
-const UPDATE_RELATED_FILES_DELAY_MS = 500;
 
 export class NoteSearcher {
   private previousQuery = '';
@@ -25,10 +19,8 @@ export class NoteSearcher {
     private noteIndex: NoteIndex,
     private deadLinkFinder: DeadLinkFinder,
     private configProvider: NoteSearcherConfigProvider,
-    private delayedExecutor: DelayedExecutor = new DelayedExecutor(),
     private timeProvider: TimeProvider = createTimeProvider())
   {
-    ui.addCurrentNoteModifiedListener(this.notifyCurrentNoteModified);
     ui.addNoteSavedListener(this.notifyNoteSaved);
     ui.addMovedViewToDifferentNoteListener(this.notifyMovedVideToDifferentNote);
     this.diagnostics = createDiagnostics('noteSearcher');
@@ -94,22 +86,6 @@ export class NoteSearcher {
     return path.join(dir, name);
   };
 
-  public updateRelatedFiles = async (file: File) => {
-    this.diagnostics.trace('updating related files');
-
-    const text = file.text();
-
-    if (text.length === 0) { return; }
-
-    const relatedFiles = await this
-      .searchForRelatedFiles(text)
-      .then(results => results
-        .filter(r => r !== file.path()));
-
-    this.diagnostics.trace('showing related files');
-    this.ui.showRelatedFiles(relatedFiles);
-  };
-
   public showDeadLinks = () => {
     this.diagnostics.trace('show dead links');
     const root = this.ui.currentlyOpenDir();
@@ -165,14 +141,6 @@ export class NoteSearcher {
     if (shouldEnable) { this.enable(); }
   };
 
-  public createTagAndKeywordQuery = (tags: string[], keywords: string[]) => {
-    const keywordsMinusTags = Array.from(
-      new GoodSet(keywords).difference(new GoodSet(tags))
-    );
-    const tagsWithHashes = tags.map(tag => '#' + tag);
-    return tagsWithHashes.concat(keywordsMinusTags).join(' ');
-  };
-
   public markdownLinkToClipboard = (filePath: string) => {
     const link = this.generateMarkdownLinkTo(filePath);
     this.ui.copyToClipboard(link);
@@ -195,21 +163,6 @@ export class NoteSearcher {
     this.ui.showBacklinks(backlinks);
   };
 
-  private notifyCurrentNoteModified = (file: File) => {
-    this.diagnostics.trace('note modified');
-
-    if (!this.isEnabledInCurrentDir()) {
-      this.diagnostics.trace('updates disabled, doing nothing');
-      return Promise.resolve();
-    }
-
-    this.delayedExecutor.cancelAll();
-    this.delayedExecutor.executeInMs(UPDATE_RELATED_FILES_DELAY_MS,
-      () => this.updateRelatedFiles(file));
-
-    return Promise.resolve();
-  };
-
   private notifyNoteSaved = async (file: File) => {
     this.diagnostics.trace('note saved');
 
@@ -229,13 +182,5 @@ export class NoteSearcher {
   private isEnabledInCurrentDir = () => {
     const currentDir = this.ui.currentlyOpenDir();
     return currentDir && this.configProvider.isEnabledInDir(currentDir);
-  };
-
-  private searchForRelatedFiles = async (text: string) => {
-    const tags = extractTags(text);
-    const keywords = await extractKeywords(text);
-    const query = this.createTagAndKeywordQuery(tags, keywords);
-
-    return await this.noteIndex.search(query);
   };
 }

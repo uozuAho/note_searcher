@@ -50,10 +50,6 @@ Run `npm run build_vsix` in the vscode directory.
 
 
 # todo
-- show incoming links
-    - remove related files feature
-- show dead links in side panel (tree view) instead of new file
-    - update screenshot for docs
 - show all tags in side panel
     - search tag when clicked on
 - docs:
@@ -61,6 +57,10 @@ Run `npm run build_vsix` in the vscode directory.
     - reference similar software
         - like [markdown notes](https://github.com/kortina/vscode-markdown-notes),
           zettlr etc.
+    - update screenshots
+      - dead links
+      - backlinks
+      - removed related files
 - improve: activate extension immediately if already enabled in
   current dir (don't wait for activation events)
 - bug: Words separated by slashes aren’t indexed eg. blah/boop, search for boop,

@@ -14,6 +14,7 @@ file. Format inspired by https://keepachangelog.com/en/1.0.0/
 ### Changed
 - Dead links are now shown in the sidebar. Config no longer necessary - this
   feature is always on.
+- Removed 'related files' section in sidebar
 
 ## [0.0.16] - 2020-06-10
 ### Added
