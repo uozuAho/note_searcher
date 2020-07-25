@@ -6,7 +6,6 @@ import { MockUi } from "../mocks/MockUi";
 import { MockFile } from "../mocks/MockFile";
 import { DeadLinkFinder, Link } from '../dead_links/DeadLinkFinder';
 import { NoteSearcherConfigProvider, NoteSearcherConfig } from './NoteSearcherConfigProvider';
-import { platform } from "os";
 
 describe('NoteSearcher', () => {
   let ui: MockUi;
