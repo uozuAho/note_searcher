@@ -6,6 +6,7 @@ import { MockUi } from "../mocks/MockUi";
 import { MockFile } from "../mocks/MockFile";
 import { DeadLinkFinder, Link } from '../dead_links/DeadLinkFinder';
 import { NoteSearcherConfigProvider, NoteSearcherConfig } from './NoteSearcherConfigProvider';
+import { platform } from "os";
 
 describe('NoteSearcher', () => {
   let ui: MockUi;
@@ -256,6 +257,9 @@ describe('NoteSearcher', () => {
     });
 
     it('windows paths are converted to posix', () => {
+      // only test on windows
+      if (process.platform !== 'win32') { return; }
+
       ui.getCurrentFileReturns(new MockFile('c:\\a\\b.md', ''));
 
       const link = noteSearcher.generateMarkdownLinkTo('c:\\a\\b\\c\\d.md');
