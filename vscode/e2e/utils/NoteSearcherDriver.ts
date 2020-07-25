@@ -29,17 +29,14 @@ export class NoteSearcherDriver {
     await input.confirm();
   };
 
-  public findSearchResult = async (name: string): Promise<SearchResult> => {
-    const sidebar = await this.openSidebar();
-
-    const searchResults = await sidebar.getContent()
-      .getSection('Search results') as CustomTreeSection;
+  public findSearchResult = async (name: string): Promise<SidebarItem> => {
+    const searchResults = await this.openSidebarSection('Search results');
 
     const item = await searchResults.findItem(name);
 
     if (!item) { expect.fail(`could not find search result '${name}'`); }
 
-    return new SearchResult(item);
+    return new SidebarItem(item);
   };
 
   public initCreateNote = () => {
@@ -47,18 +44,30 @@ export class NoteSearcherDriver {
   };
 
   public isShowingInDeadLinks = async (name: string) => {
-    const sidebar = await this.openSidebar();
+    const deadLinksSection = await this.openSidebarSection('Dead links');
 
-    const searchResults = await sidebar.getContent()
-      .getSection('Dead links') as CustomTreeSection;
-
-    const item = await searchResults.findItem(name);
+    const item = await deadLinksSection.findItem(name);
 
     return !!item;
   };
+
+  public findBacklinkByName = async (name: string): Promise<SidebarItem | null> => {
+    const backlinks = await this.openSidebarSection('Backlinks');
+
+    const item = await backlinks.findItem(name);
+
+    if (!item) { throw new Error(`could not find backlink named '${name}'`); }
+
+    return new SidebarItem(item);
+  };
+
+  private openSidebarSection = async (name: string) => {
+    const sidebar = await this.openSidebar();
+    return await sidebar.getContent().getSection(name) as CustomTreeSection;
+  };
 }
 
-class SearchResult {
+class SidebarItem {
   constructor(private treeItem: TreeItem) {}
 
   public click = () => {

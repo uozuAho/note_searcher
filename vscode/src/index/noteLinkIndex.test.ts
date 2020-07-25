@@ -3,20 +3,30 @@ import { MapLinkIndex } from "./noteLinkIndex";
 describe('map link index', () => {
   describe('when a file is added', () => {
     let index: MapLinkIndex;
-    const addedFile = '/a/b.txt';
+    const addedFile = process.platform === 'win32'
+      ? 'C:\\a\\b.txt'
+      : '/a/b.txt';
 
     beforeAll(() => {
       index = new MapLinkIndex();
-      index.addFile('/a/b.txt', 'a [link](to/thing)');
+      index.addFile(addedFile, 'a [link](to/thing)');
     });
 
-    it('extracts links from files', () => {
+    it('indexes links from files', () => {
       expect(index.linksFrom(addedFile)).toEqual(['to/thing']);
+    });
+
+    it('indexes links to files', () => {
+      if (process.platform === 'win32') {
+        expect(index.linksTo('C:\\a\\to\\thing')).toEqual([addedFile]);
+      } else {
+        expect(index.linksTo('/a/to/thing')).toEqual([addedFile]);
+      }
     });
 
     it('contains added file', () => {
       expect(index.containsNote(addedFile)).toBe(true);
-      expect(Array.from(index.notes())).toEqual(['/a/b.txt']);
+      expect(Array.from(index.notes())).toEqual([addedFile]);
     });
   });
 

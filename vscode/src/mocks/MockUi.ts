@@ -11,6 +11,10 @@ export class MockUi implements NoteSearcherUi {
     this._mock = tmoq.Mock.ofType<NoteSearcherUi>();
   }
 
+  public showBacklinks = (links: string[]) => Promise.resolve();
+
+  public addMovedViewToDifferentNoteListener = (listener: FileChangeListener) => {};
+
   public copyToClipboard = (text: string) => Promise.resolve();
 
   public promptForNewNoteName = (noteId: string) => Promise.resolve('asdf');
@@ -109,7 +113,7 @@ export class MockUi implements NoteSearcherUi {
 
   private _fileChangeListener: FileChangeListener | null = null;
 
-  public addCurrentDocumentChangeListener = (listener: FileChangeListener) => {
+  public addCurrentNoteModifiedListener = (listener: FileChangeListener) => {
     this._fileChangeListener = listener;
   };
 
@@ -133,7 +137,7 @@ export class MockUi implements NoteSearcherUi {
 
   private _fileSavedListener: FileChangeListener | null = null;
 
-  public addDocumentSavedListener = (listener: FileChangeListener) => {
+  public addNoteSavedListener = (listener: FileChangeListener) => {
     this._fileSavedListener = listener;
   };
 

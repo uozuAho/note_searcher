@@ -45,6 +45,10 @@
 					"name": "Search results"
 				},
 				{
+					"id": "noteSearcher-backlinks",
+					"name": "Backlinks"
+				},
+				{
 					"id": "noteSearcher-deadLinks",
 					"name": "Dead links"
 				},

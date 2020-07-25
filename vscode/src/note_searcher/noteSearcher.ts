@@ -28,8 +28,9 @@ export class NoteSearcher {
     private delayedExecutor: DelayedExecutor = new DelayedExecutor(),
     private timeProvider: TimeProvider = createTimeProvider())
   {
-    ui.addCurrentDocumentChangeListener(this.notifyCurrentFileChanged);
-    ui.addDocumentSavedListener(this.notifyFileSaved);
+    ui.addCurrentNoteModifiedListener(this.notifyCurrentNoteModified);
+    ui.addNoteSavedListener(this.notifyNoteSaved);
+    ui.addMovedViewToDifferentNoteListener(this.notifyMovedVideToDifferentNote);
     this.diagnostics = createDiagnostics('noteSearcher');
   }
 
@@ -187,8 +188,15 @@ export class NoteSearcher {
     return `[](${relPath})`;
   };
 
-  private notifyCurrentFileChanged = (file: File) => {
-    this.diagnostics.trace('file changed');
+  public showBacklinks = () => {
+    const currentFilePath = this.ui.getCurrentFile()?.path();
+    if (!currentFilePath) { return; }
+    const backlinks = this.noteIndex.linksTo(currentFilePath);
+    this.ui.showBacklinks(backlinks);
+  };
+
+  private notifyCurrentNoteModified = (file: File) => {
+    this.diagnostics.trace('note modified');
 
     if (!this.isEnabledInCurrentDir()) {
       this.diagnostics.trace('updates disabled, doing nothing');
@@ -202,8 +210,8 @@ export class NoteSearcher {
     return Promise.resolve();
   };
 
-  private notifyFileSaved = async (file: File) => {
-    this.diagnostics.trace('file saved');
+  private notifyNoteSaved = async (file: File) => {
+    this.diagnostics.trace('note saved');
 
     if (!this.isEnabledInCurrentDir()) {
       this.diagnostics.trace('updates disabled, doing nothing');
@@ -212,6 +220,10 @@ export class NoteSearcher {
 
     await this.index();
     this.showDeadLinks();
+  };
+
+  private notifyMovedVideToDifferentNote = async (file: File) => {
+    this.showBacklinks();
   };
 
   private isEnabledInCurrentDir = () => {

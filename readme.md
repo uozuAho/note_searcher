@@ -50,14 +50,18 @@ Run `npm run build_vsix` in the vscode directory.
 
 
 # todo
+- show incoming links
+    - clean up to-dos
+    - remove related files feature
 - show dead links in side panel (tree view) instead of new file
     - update screenshot for docs
-- show incoming/outgoing links
-    - like [markdown notes](https://github.com/kortina/vscode-markdown-notes)
-    - bring link indexing into indexer
 - show all tags in side panel
     - search tag when clicked on
-- docs: add better subtitle than 'searches notes' in marketplace text
+- docs:
+    - add better subtitle than 'searches notes' in marketplace text
+    - reference similar software
+        - like [markdown notes](https://github.com/kortina/vscode-markdown-notes),
+          zettlr etc.
 - improve: activate extension immediately if already enabled in
   current dir (don't wait for activation events)
 - bug: Words separated by slashes aren’t indexed eg. blah/boop, search for boop,
@@ -68,7 +72,6 @@ Run `npm run build_vsix` in the vscode directory.
     - set in dotfile???
 - fix dead link e2e fail on ubuntu
 - better icon
-- remove related files feature
 - feature: set cursor inside [] when pasting link
 - feature: ## tags for structure notes
 - feature: copy link from file explorer

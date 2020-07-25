@@ -5,6 +5,10 @@ import { NoteIndex } from './NoteIndex';
 export class CliNoteIndex implements NoteIndex {
 
   public constructor(private jarPath: string) { }
+  
+  public linksTo(path: string): string[] {
+    throw new Error("Method not implemented.");
+  }
 
   public search = async (query: string) => {
     const result = await this.runCliSearch(query);
