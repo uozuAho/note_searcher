@@ -21,6 +21,6 @@ describe('backlinks', () => {
     expect(backlink).not.to.be.null;
     await backlink!.click();
     const currentEditor = await vscode.currentEditor();
-    expect(currentEditor!.getTitle()).to.equal('readme.md');
+    expect(await currentEditor!.getTitle()).to.equal('readme.md');
   });
 });

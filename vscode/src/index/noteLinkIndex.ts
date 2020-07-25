@@ -58,10 +58,13 @@ export class MapLinkIndex implements NoteLinkIndex {
 
   private addBackwardLinks(absPath: string, targetPaths: string[]) {
     const absTargetPaths = targetPaths.map(t => toAbsolutePath(absPath, t));
-    if (existingLinks) {
-      absTargetPaths.forEach(t => existingLinks.add(t));
-    } else {
-      this._linksTo.set(absPath, new GoodSet(absTargetPaths));
+    for (const absTargetPath of absTargetPaths) {
+      const existingLinks = this._linksTo.get(absTargetPath);
+      if (existingLinks) {
+        existingLinks.add(absPath);
+      } else {
+        this._linksTo.set(absTargetPath, new GoodSet([absPath]));
+      }
     }
   }
 }
