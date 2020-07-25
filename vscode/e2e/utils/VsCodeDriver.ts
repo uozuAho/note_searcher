@@ -65,7 +65,7 @@ export class VsCodeDriver {
     await editorView.closeAllEditors();
   };
 
-  public currentEditor = async () => {
+  public currentEditor = async (): Promise<TextEditor | null> => {
     const editorView = new EditorView();
     const tab = await editorView.getActiveTab();
     if (!tab) { return null; }
