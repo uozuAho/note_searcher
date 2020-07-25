@@ -10,8 +10,16 @@ describe('map link index', () => {
       index.addFile('/a/b.txt', 'a [link](to/thing)');
     });
 
-    it('extracts links from files', () => {
+    it('indexes links from files', () => {
       expect(index.linksFrom(addedFile)).toEqual(['to/thing']);
+    });
+
+    it('indexes links to files', () => {
+      if (process.platform === 'win32') {
+        expect(index.linksTo('C:\\a\\to\\thing')).toEqual(['C:\\a\\b.txt']);
+      } else {
+        expect(index.linksTo('/a/to/thing')).toEqual(['/a/b.txt']);
+      }
     });
 
     it('contains added file', () => {

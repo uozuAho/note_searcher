@@ -1,4 +1,7 @@
+const _path = require('path');
+
 import { extractLinks } from "../text_processing/linkExtractor";
+import { GoodSet } from "../utils/goodSet";
 
 export interface NoteLinkIndex {
   notes(): IterableIterator<string>;
@@ -9,9 +12,11 @@ export interface NoteLinkIndex {
 
 export class MapLinkIndex implements NoteLinkIndex {
   private _linksFrom: Map<string, string[]>;
+  private _linksTo: Map<string, GoodSet<string>>;
 
   constructor() {
     this._linksFrom = new Map();
+    this._linksTo = new Map();
   };
 
   public clear = () => {
@@ -31,16 +36,18 @@ export class MapLinkIndex implements NoteLinkIndex {
   };
 
   public linksTo = (path: string): string[] => {
-    // todo: make this links to!
-    return ['a', 'b', 'c'];
+    const links = this._linksTo.get(path);
+    if (!links) { return []; }
+    return Array.from(links);
   };
 
   public addFile = (absPath: string, text: string) => {
     const links = extractLinks(text).filter(link => !link.startsWith('http'));
-    this.addLinks(absPath, links);
+    this.addForwardLinks(absPath, links);
+    this.addBackwardLinks(absPath, links);
   };
 
-  private addLinks(absPath: string, targetPaths: string[]) {
+  private addForwardLinks(absPath: string, targetPaths: string[]) {
     const existingLinks = this._linksFrom.get(absPath);
     if (existingLinks) {
       targetPaths.forEach(t => existingLinks.push(t));
@@ -48,4 +55,17 @@ export class MapLinkIndex implements NoteLinkIndex {
       this._linksFrom.set(absPath, targetPaths);
     }
   }
+
+  private addBackwardLinks(absPath: string, targetPaths: string[]) {
+    const absTargetPaths = targetPaths.map(t => toAbsolutePath(absPath, t));
+    if (existingLinks) {
+      absTargetPaths.forEach(t => existingLinks.add(t));
+    } else {
+      this._linksTo.set(absPath, new GoodSet(absTargetPaths));
+    }
+  }
+}
+
+function toAbsolutePath(source: string, target: string) {
+  return _path.resolve(_path.dirname(source), target);
 }
