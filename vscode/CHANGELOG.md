@@ -5,6 +5,9 @@ file. Format inspired by https://keepachangelog.com/en/1.0.0/
 
 
 ## [Unreleased]
+### Added
+- Show backlinks in sidebar
+
 ### Fixed
 - Copied markdown links on windows were not in posix format
 
