@@ -30,10 +30,7 @@ export class NoteSearcherDriver {
   };
 
   public findSearchResult = async (name: string): Promise<SidebarItem> => {
-    const sidebar = await this.openSidebar();
-
-    const searchResults = await sidebar.getContent()
-      .getSection('Search results') as CustomTreeSection;
+    const searchResults = await this.openSidebarSection('Search results');
 
     const item = await searchResults.findItem(name);
 
@@ -47,10 +44,7 @@ export class NoteSearcherDriver {
   };
 
   public isShowingInDeadLinks = async (name: string) => {
-    const sidebar = await this.openSidebar();
-
-    const deadLinksSection = await sidebar.getContent()
-      .getSection('Dead links') as CustomTreeSection;
+    const deadLinksSection = await this.openSidebarSection('Dead links');
 
     const item = await deadLinksSection.findItem(name);
 
@@ -58,16 +52,18 @@ export class NoteSearcherDriver {
   };
 
   public findBacklinkByName = async (name: string): Promise<SidebarItem | null> => {
-    const sidebar = await this.openSidebar();
+    const backlinks = await this.openSidebarSection('Backlinks');
 
-    const deadLinksSection = await sidebar.getContent()
-      .getSection('Backlinks') as CustomTreeSection;
-
-    const item = await deadLinksSection.findItem(name);
+    const item = await backlinks.findItem(name);
 
     if (!item) { throw new Error(`could not find backlink named '${name}'`); }
 
     return new SidebarItem(item);
+  };
+
+  private openSidebarSection = async (name: string) => {
+    const sidebar = await this.openSidebar();
+    return await sidebar.getContent().getSection(name) as CustomTreeSection;
   };
 }
 
