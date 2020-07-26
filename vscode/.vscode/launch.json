@@ -45,7 +45,7 @@
         // "e2e/dead_links_on/settings.json",
 
         // this is the file you want to debug:
-        "${workspaceFolder}/e2e-out/default_settings/tags.test.js",
+        "${workspaceFolder}/e2e-out/default_settings/search.test.js",
         // "${workspaceFolder}/e2e-out/dead_links_on/dead-link.test.js",
 
         // todo: this doesn't work:

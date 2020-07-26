@@ -125,7 +125,7 @@
 		"pretest": "npm run lint",
 		"test": "jest",
 		"test:watch": "jest --watch",
-		"e2e:setup": "extest setup-tests --code_version 1.46.0",
+		"e2e:setup": "extest setup-tests",
 		"e2e:compile": "rm -rf e2e-out && tsc -p tsconfig.e2e.json",
 		"build_vsix": "vsce package",
 		"publish": "vsce publish -p $VSCE_PAT"
@@ -152,7 +152,7 @@
 		"typemoq": "^2.1.0",
 		"typescript": "^3.9.3",
 		"vsce": "^1.77.0",
-		"vscode-extension-tester": "^3.0.2",
+		"vscode-extension-tester": "^3.1.0",
 		"vscode-extension-tester-native": "^3.0.0",
 		"vscode-test": "^1.4.0",
 		"webpack": "^4.43.0",

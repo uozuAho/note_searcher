@@ -16,7 +16,6 @@ describe('tags', () => {
   });
 
   it('tags do what I want', async () => {
-    await vscode.openDemoDirFile('trains.md');
     const tag = await noteSearcher.findTagInSidebar('transport');
     expect(tag).not.to.be.null;
 

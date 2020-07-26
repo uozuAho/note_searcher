@@ -65,15 +65,10 @@ export class NoteSearcherDriver {
     return new SidebarItem(item);
   };
 
-  /** Quirk: Returns null if the section is empty */
-  private openSidebarSection = async (name: string): Promise<CustomTreeSection | null> => {
+  /** Quirk: throws uncatchable error if section is empty */
+  private openSidebarSection = async (name: string): Promise<CustomTreeSection> => {
     const sidebar = await this.openSidebar();
-    try {
-      return await sidebar.getContent().getSection(name) as CustomTreeSection;
-    } catch (e) {
-      // ui test lib throws when the list is empty, so return null instead
-      return null;
-    }
+    return await sidebar.getContent().getSection(name) as CustomTreeSection;
   };
 
   private openSidebar = () => {
