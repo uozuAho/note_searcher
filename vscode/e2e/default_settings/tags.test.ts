@@ -27,6 +27,7 @@ describe('tags', () => {
     await trainsNoteSearchResult!.click();
 
     const trainsNoteEditor = await vscode.currentEditor();
+    if (!trainsNoteEditor) { expect.fail('expected train note to be open'); }
     await trainsNoteEditor.typeText(0, 0, '#new_tag ');
     await trainsNoteEditor.save();
 

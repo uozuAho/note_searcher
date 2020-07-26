@@ -31,6 +31,7 @@ export class NoteSearcherDriver {
     const searchResults = await this.openSidebarSection('Search results');
 
     const item = await searchResults.findItem(name);
+    if (!item) { return null; }
 
     return new SidebarItem(item);
   };
@@ -43,6 +44,7 @@ export class NoteSearcherDriver {
     const deadLinksSection = await this.openSidebarSection('Dead links');
 
     const item = await deadLinksSection.findItem(name);
+    if (!item) { return null; }
 
     return !!item;
   };
@@ -51,14 +53,16 @@ export class NoteSearcherDriver {
     const backlinks = await this.openSidebarSection('Backlinks');
 
     const item = await backlinks.findItem(name);
+    if (!item) { return null; }
 
     return new SidebarItem(item);
   };
 
   public findTagInSidebar = async (tag: string): Promise<SidebarItem | null> => {
-    const tags = await this.openSidebarSection('Tags');
+    const tags = await this.openSidebarSection('All Tags');
 
-    const item = await tags.findItem(name);
+    const item = await tags.findItem(tag);
+    if (!item) { return null; }
 
     return new SidebarItem(item);
   };
