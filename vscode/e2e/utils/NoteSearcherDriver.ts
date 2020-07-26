@@ -1,6 +1,4 @@
-import { expect } from 'chai';
-
-import { 
+import {
   InputBox,
   ActivityBar,
   CustomTreeSection, 
@@ -29,12 +27,10 @@ export class NoteSearcherDriver {
     await input.confirm();
   };
 
-  public findSearchResult = async (name: string): Promise<SidebarItem> => {
+  public findSearchResult = async (name: string): Promise<SidebarItem | null> => {
     const searchResults = await this.openSidebarSection('Search results');
 
     const item = await searchResults.findItem(name);
-
-    if (!item) { expect.fail(`could not find search result '${name}'`); }
 
     return new SidebarItem(item);
   };
@@ -56,7 +52,13 @@ export class NoteSearcherDriver {
 
     const item = await backlinks.findItem(name);
 
-    if (!item) { throw new Error(`could not find backlink named '${name}'`); }
+    return new SidebarItem(item);
+  };
+
+  public findTagInSidebar = async (tag: string): Promise<SidebarItem | null> => {
+    const tags = await this.openSidebarSection('Tags');
+
+    const item = await tags.findItem(name);
 
     return new SidebarItem(item);
   };
@@ -77,7 +79,7 @@ class SidebarItem {
   public clickContextMenuItem = async (itemName: string) => {
     const menu = await this.treeItem.openContextMenu();
     const menuItem = await menu.getItem(itemName);
-    if (!menuItem) { expect.fail(`could not find menu item '${itemName}'`); }
+    if (!menuItem) { throw new Error(`could not find menu item '${itemName}'`); }
     await menuItem.click();
   };
 }

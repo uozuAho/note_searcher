@@ -27,6 +27,10 @@ describe('tags', () => {
     await trainsNoteSearchResult!.click();
 
     const trainsNoteEditor = await vscode.currentEditor();
-    trainsNoteEditor.typeText('#new_tag');
+    await trainsNoteEditor.typeText(0, 0, '#new_tag ');
+    await trainsNoteEditor.save();
+
+    const newTag = await noteSearcher.findTagInSidebar('new_tag');
+    expect(newTag).not.to.be.null;
   });
 });
