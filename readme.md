@@ -51,7 +51,7 @@ Run `npm run build_vsix` in the vscode directory.
 
 # todo
 - show all tags in side panel
-    - search tag when clicked on
+    - finish e2e test
 - docs:
     - add better subtitle than 'searches notes' in marketplace text
     - reference similar software

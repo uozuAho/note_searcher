@@ -99,7 +99,7 @@ export class NoteSearcher {
     this.diagnostics.trace('show dead links completed');
   };
 
-  public enable = () => {
+  public enable = async () => {
     this.diagnostics.trace('enable');
     const currentDir = this.ui.currentlyOpenDir();
 
@@ -109,7 +109,8 @@ export class NoteSearcher {
     }
 
     this.configProvider.enableInDir(currentDir);
-    this.index();
+    await this.index();
+    this.showTags();
   };
 
   public disable = () => {

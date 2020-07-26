@@ -97,7 +97,7 @@ export class VsCodeNoteSearcherUi implements NoteSearcherUi {
   };
 
   public showTags = (tags: string[]) => {
-    const tagsTree = new TagsTree(tags);
+    const tagsTree = new TagsTree(tags.sort());
 
     vscode.window.createTreeView('noteSearcher-tags', {
       treeDataProvider: tagsTree
