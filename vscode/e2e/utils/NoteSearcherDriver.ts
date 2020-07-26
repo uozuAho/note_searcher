@@ -14,12 +14,6 @@ export class NoteSearcherDriver {
     return this.vscode.runCommand('Note searcher: enable in this directory');
   };
 
-  public openSidebar = () => {
-    const activityBar = new ActivityBar();
-    const sidebar = activityBar.getViewControl('Note Searcher');
-    return sidebar.openView();
-  };
-
   public search = async (query: string) => {
     await this.vscode.runCommand('Note searcher: search for docs');
     const input = await InputBox.create();
@@ -29,6 +23,7 @@ export class NoteSearcherDriver {
 
   public findSearchResult = async (name: string): Promise<SidebarItem | null> => {
     const searchResults = await this.openSidebarSection('Search results');
+    if (!searchResults) { return null; }
 
     const item = await searchResults.findItem(name);
     if (!item) { return null; }
@@ -42,6 +37,7 @@ export class NoteSearcherDriver {
 
   public isShowingInDeadLinks = async (name: string) => {
     const deadLinksSection = await this.openSidebarSection('Dead links');
+    if (!deadLinksSection) { return null; }
 
     const item = await deadLinksSection.findItem(name);
     if (!item) { return null; }
@@ -51,6 +47,7 @@ export class NoteSearcherDriver {
 
   public findBacklinkByName = async (name: string): Promise<SidebarItem | null> => {
     const backlinks = await this.openSidebarSection('Backlinks');
+    if (!backlinks) { return null; }
 
     const item = await backlinks.findItem(name);
     if (!item) { return null; }
@@ -60,6 +57,7 @@ export class NoteSearcherDriver {
 
   public findTagInSidebar = async (tag: string): Promise<SidebarItem | null> => {
     const tags = await this.openSidebarSection('All Tags');
+    if (!tags) { return null; }
 
     const item = await tags.findItem(tag);
     if (!item) { return null; }
@@ -67,9 +65,21 @@ export class NoteSearcherDriver {
     return new SidebarItem(item);
   };
 
-  private openSidebarSection = async (name: string) => {
+  /** Quirk: Returns null if the section is empty */
+  private openSidebarSection = async (name: string): Promise<CustomTreeSection | null> => {
     const sidebar = await this.openSidebar();
-    return await sidebar.getContent().getSection(name) as CustomTreeSection;
+    try {
+      return await sidebar.getContent().getSection(name) as CustomTreeSection;
+    } catch (e) {
+      // ui test lib throws when the list is empty, so return null instead
+      return null;
+    }
+  };
+
+  private openSidebar = () => {
+    const activityBar = new ActivityBar();
+    const sidebar = activityBar.getViewControl('Note Searcher');
+    return sidebar.openView();
   };
 }
 
