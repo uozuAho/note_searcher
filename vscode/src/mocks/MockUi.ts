@@ -11,6 +11,8 @@ export class MockUi implements NoteSearcherUi {
     this._mock = tmoq.Mock.ofType<NoteSearcherUi>();
   }
 
+  public showTags = (tags: string[]) => Promise.resolve();
+
   public showBacklinks = (links: string[]) => Promise.resolve();
 
   public addMovedViewToDifferentNoteListener = (listener: FileChangeListener) => {};

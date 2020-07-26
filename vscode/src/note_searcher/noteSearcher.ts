@@ -22,7 +22,7 @@ export class NoteSearcher {
     private timeProvider: TimeProvider = createTimeProvider())
   {
     ui.addNoteSavedListener(this.notifyNoteSaved);
-    ui.addMovedViewToDifferentNoteListener(this.notifyMovedVideToDifferentNote);
+    ui.addMovedViewToDifferentNoteListener(this.notifyMovedViewToDifferentNote);
     this.diagnostics = createDiagnostics('noteSearcher');
   }
 
@@ -124,15 +124,15 @@ export class NoteSearcher {
     this.configProvider.disableInDir(currentDir);
   };
 
-  public notifyExtensionActivated = () => {
+  public notifyExtensionActivated = async () => {
     if (!this.ui.currentlyOpenDir()) { return; }
 
     if (this.isEnabledInCurrentDir()) {
-      this.index();
-      return;
+      await this.index();
+      this.showTags();
+    } else {
+      this.promptUserToEnable();
     }
-
-    this.promptUserToEnable();
   };
 
   public promptUserToEnable = async () => {
@@ -163,6 +163,11 @@ export class NoteSearcher {
     this.ui.showBacklinks(backlinks);
   };
 
+  private showTags = () => {
+    const tags = this.noteIndex.allTags();
+    this.ui.showTags(tags);
+  };
+
   private notifyNoteSaved = async (file: File) => {
     this.diagnostics.trace('note saved');
 
@@ -175,7 +180,7 @@ export class NoteSearcher {
     this.showDeadLinks();
   };
 
-  private notifyMovedVideToDifferentNote = async (file: File) => {
+  private notifyMovedViewToDifferentNote = async (file: File) => {
     this.showBacklinks();
   };
 

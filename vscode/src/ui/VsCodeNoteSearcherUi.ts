@@ -5,6 +5,7 @@ import { File } from "../utils/File";
 import { Link } from '../dead_links/DeadLinkFinder';
 import { DeadLinksTree } from './DeadLinksTree';
 import { BacklinksTree } from './BacklinksTree';
+import { TagsTree } from './TagsTree';
 
 export class VsCodeNoteSearcherUi implements NoteSearcherUi {
   private noteSavedListener: FileChangeListener | null = null;
@@ -92,6 +93,14 @@ export class VsCodeNoteSearcherUi implements NoteSearcherUi {
 
     vscode.window.createTreeView('noteSearcher-backlinks', {
       treeDataProvider: backlinks
+    });
+  };
+
+  public showTags = (tags: string[]) => {
+    const tagsTree = new TagsTree(tags);
+
+    vscode.window.createTreeView('noteSearcher-tags', {
+      treeDataProvider: tagsTree
     });
   };
 

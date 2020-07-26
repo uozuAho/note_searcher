@@ -82,7 +82,7 @@
 			{
 				"command": "noteSearcher.editorTab.copyLink",
 				"title": "Note searcher: Copy link"
-			}
+      }
 		],
 		"menus": {
 			"view/item/context": [
