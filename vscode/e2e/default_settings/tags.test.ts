@@ -17,12 +17,14 @@ describe('tags', () => {
 
   it('tags do what I want', async () => {
     const tag = await noteSearcher.findTagInSidebar('transport');
-    expect(tag).not.to.be.null;
+    if (tag === null) { expect.fail('tags should be displayed from startup'); }
 
-    // await tag!.click();
+    // search for rubbish to ensure the search results are empty
+    await noteSearcher.search('laksdjflkajsdfkl');
 
-    // const trainsNoteSearchResult = await noteSearcher.findSearchResult('trains.md');
-    // expect(trainsNoteSearchResult).not.to.be.null;
+    await tag!.click();
+    const trainsNoteSearchResult = await noteSearcher.findSearchResult('trains.md');
+    if (trainsNoteSearchResult === null) { expect.fail('clicking on tag should search for that tag'); }
 
     // await trainsNoteSearchResult!.click();
 

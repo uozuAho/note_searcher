@@ -26,16 +26,19 @@ export class NoteSearcher {
     this.diagnostics = createDiagnostics('noteSearcher');
   }
 
-  public search = async () => {
+  public search = async (query: string | undefined = undefined) => {
     this.diagnostics.trace('search');
 
-    const input = await this.ui.promptForSearch(this.previousQuery);
-    if (!input) {
-      return;
+    if (!query) {
+      const input = await this.ui.promptForSearch(this.previousQuery);
+      if (!input) {
+        return;
+      }
+      query = input;
     }
-    this.previousQuery = input;
+    this.previousQuery = query;
     try {
-      const results = await this.noteIndex.search(input);
+      const results = await this.noteIndex.search(query);
       await this.ui.showSearchResults(results);
 
       this.diagnostics.trace('search complete');
