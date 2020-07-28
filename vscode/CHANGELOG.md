@@ -7,14 +7,13 @@ file. Format inspired by https://keepachangelog.com/en/1.0.0/
 ## [Unreleased]
 ### Added
 - Show backlinks in sidebar
-
-### Fixed
-- Copied markdown links on windows were not in posix format
+- Show all tags in sidebar
 
 ### Changed
 - Dead links are now shown in the sidebar. Config no longer necessary - this
   feature is always on.
 - Removed 'related files' section in sidebar
+- Copied markdown links on windows are now in posix format
 
 ## [0.0.16] - 2020-06-10
 ### Added
