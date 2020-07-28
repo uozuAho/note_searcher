@@ -180,6 +180,7 @@ export class NoteSearcher {
 
     await this.index();
     this.showDeadLinks();
+    this.showTags();
   };
 
   private notifyMovedViewToDifferentNote = async (file: File) => {

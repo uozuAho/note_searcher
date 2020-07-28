@@ -26,14 +26,14 @@ describe('tags', () => {
     const trainsNoteSearchResult = await noteSearcher.findSearchResult('trains.md');
     if (trainsNoteSearchResult === null) { expect.fail('clicking on tag should search for that tag'); }
 
-    // await trainsNoteSearchResult!.click();
+    await trainsNoteSearchResult!.click();
 
-    // const trainsNoteEditor = await vscode.currentEditor();
-    // if (!trainsNoteEditor) { expect.fail('expected train note to be open'); }
-    // await trainsNoteEditor.typeText(0, 0, '#new_tag ');
-    // await trainsNoteEditor.save();
+    const trainsNoteEditor = await vscode.currentEditor();
+    if (!trainsNoteEditor) { expect.fail('expected train note to be open'); }
+    await trainsNoteEditor.typeText(1, 1, '#new-tag ');
+    await trainsNoteEditor.save();
 
-    // const newTag = await noteSearcher.findTagInSidebar('new_tag');
-    // expect(newTag).not.to.be.null;
+    const newTag = await noteSearcher.findTagInSidebar('new-tag');
+    if (!newTag) { expect.fail('new tags should appear on save'); }
   });
 });

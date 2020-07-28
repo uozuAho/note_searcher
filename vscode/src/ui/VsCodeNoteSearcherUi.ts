@@ -79,7 +79,7 @@ export class VsCodeNoteSearcherUi implements NoteSearcherUi {
     await vscode.window.showInformationMessage(message);
   };
 
-  public showDeadLinks = async (links: Link[]) => {
+  public showDeadLinks = (links: Link[]) => {
     const deadLinks = new DeadLinksTree(links);
 
     vscode.window.createTreeView('noteSearcher-deadLinks', {
@@ -87,7 +87,7 @@ export class VsCodeNoteSearcherUi implements NoteSearcherUi {
     });
   };
 
-  public showBacklinks = async (links: string[]) => {
+  public showBacklinks = (links: string[]) => {
     const uris = links.map(l => vscode.Uri.file(l));
     const backlinks = new BacklinksTree(uris);
 

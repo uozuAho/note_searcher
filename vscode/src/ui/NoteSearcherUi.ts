@@ -12,8 +12,8 @@ export interface NoteSearcherUi {
   promptForSearch: (prefill: string) => Promise<string | undefined>;
   showSearchResults: (files: string[]) => Promise<void>;
   showNotification: (message: string) => Promise<void>;
-  showDeadLinks: (links: Link[]) => Promise<void>;
-  showBacklinks: (links: string[]) => Promise<void>;
+  showDeadLinks: (links: Link[]) => void;
+  showBacklinks: (links: string[]) => void;
   notifyIndexingStarted: (indexingTask: Promise<void>) => void;
   showError: (e: Error) => Promise<void>;
   addNoteSavedListener: (listener: FileChangeListener) => void;
