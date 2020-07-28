@@ -11,7 +11,7 @@ import { formatDateTime_YYYYMMddhhmm } from "../utils/timeFormatter";
 import { posixRelativePath } from "../utils/FileSystem";
 
 export class NoteSearcher {
-  private previousQuery = '';
+  private previousSearchInput = '';
   private diagnostics: Diagnostics;
 
   constructor(
@@ -26,22 +26,20 @@ export class NoteSearcher {
     this.diagnostics = createDiagnostics('noteSearcher');
   }
 
-  public search = async (query: string | undefined = undefined) => {
-    this.diagnostics.trace('search');
+  public promptAndSearch = async () => {
+    const input = await this.ui.promptForSearch(this.previousSearchInput);
 
-    if (!query) {
-      const input = await this.ui.promptForSearch(this.previousQuery);
-      if (!input) {
-        return;
-      }
-      query = input;
-    }
-    this.previousQuery = query;
+    if (!input) { return; }
+
+    this.previousSearchInput = input;
+
+    await this.search(input);
+  };
+
+  public search = async (query: string) => {
     try {
       const results = await this.noteIndex.search(query);
       await this.ui.showSearchResults(results);
-
-      this.diagnostics.trace('search complete');
     }
     catch (e) {
       await this.ui.showError(e);

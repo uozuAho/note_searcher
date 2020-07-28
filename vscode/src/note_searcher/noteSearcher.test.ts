@@ -137,7 +137,7 @@ describe('NoteSearcher', () => {
     it('passes input to searcher', async () => {
       ui.promptForSearchReturns('search phrase');
 
-      await noteSearcher.search();
+      await noteSearcher.promptAndSearch();
 
       searcher.verify(s => s.search('search phrase'), tmoq.Times.once());
     });
@@ -145,7 +145,7 @@ describe('NoteSearcher', () => {
     it('does nothing when input is empty', async () => {
       ui.promptForSearchReturns('');
 
-      await noteSearcher.search();
+      await noteSearcher.promptAndSearch();
 
       searcher.verify(s => s.search(tmoq.It.isAnyString()), tmoq.Times.never());
     });
@@ -154,7 +154,7 @@ describe('NoteSearcher', () => {
       ui.promptForSearchReturns('search phrase');
       searcher_returns(['a', 'b', 'c']);
 
-      await noteSearcher.search();
+      await noteSearcher.promptAndSearch();
 
       ui.showedSearchResults(['a', 'b', 'c']);
     });
@@ -164,7 +164,7 @@ describe('NoteSearcher', () => {
       const error = new Error('boom');
       searcher.setup(s => s.search(tmoq.It.isAnyString())).throws(error);
 
-      await noteSearcher.search();
+      await noteSearcher.promptAndSearch();
 
       ui.didNotShowSearchResults();
       ui.showedError(error);
