@@ -23,6 +23,8 @@ describe('copy link to note', () => {
     it('puts a markdown link to a search result in the clipboard', async () => {
       await noteSearcher.search('cheese');
       const cheeseFile = await noteSearcher.findSearchResult('cheese.md');
+      if (!cheeseFile) { expect.fail('cheese file not in search results'); }
+
       await cheeseFile.clickContextMenuItem('Copy link');
 
       expect(await clipboard.read()).to.equal('[](cheese.md)');

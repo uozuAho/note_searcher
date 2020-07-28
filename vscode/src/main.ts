@@ -19,7 +19,9 @@ export function activate(context: vscode.ExtensionContext) {
 
   context.subscriptions.push(
     vscode.commands.registerCommand(
-      'noteSearcher.search', async () => await noteSearcher.search()),
+      'noteSearcher.search', async () => await noteSearcher.promptAndSearch()),
+    vscode.commands.registerCommand(
+      'noteSearcher.searchForTag', async (tag: string) => await noteSearcher.search('#' + tag)),
     vscode.commands.registerCommand(
       'noteSearcher.index', async () => await noteSearcher.index()),
     vscode.commands.registerCommand(

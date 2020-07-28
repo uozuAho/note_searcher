@@ -50,8 +50,6 @@ Run `npm run build_vsix` in the vscode directory.
 
 
 # todo
-- show all tags in side panel
-    - search tag when clicked on
 - docs:
     - add better subtitle than 'searches notes' in marketplace text
     - reference similar software
@@ -60,7 +58,9 @@ Run `npm run build_vsix` in the vscode directory.
     - update screenshots
       - dead links
       - backlinks
+      - tags
       - removed related files
+- release
 - improve: activate extension immediately if already enabled in
   current dir (don't wait for activation events)
 - bug: Words separated by slashes aren’t indexed eg. blah/boop, search for boop,

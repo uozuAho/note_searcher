@@ -5,6 +5,7 @@ import { File } from "../utils/File";
 import { Link } from '../dead_links/DeadLinkFinder';
 import { DeadLinksTree } from './DeadLinksTree';
 import { BacklinksTree } from './BacklinksTree';
+import { TagsTree } from './TagsTree';
 
 export class VsCodeNoteSearcherUi implements NoteSearcherUi {
   private noteSavedListener: FileChangeListener | null = null;
@@ -78,7 +79,7 @@ export class VsCodeNoteSearcherUi implements NoteSearcherUi {
     await vscode.window.showInformationMessage(message);
   };
 
-  public showDeadLinks = async (links: Link[]) => {
+  public showDeadLinks = (links: Link[]) => {
     const deadLinks = new DeadLinksTree(links);
 
     vscode.window.createTreeView('noteSearcher-deadLinks', {
@@ -86,12 +87,20 @@ export class VsCodeNoteSearcherUi implements NoteSearcherUi {
     });
   };
 
-  public showBacklinks = async (links: string[]) => {
+  public showBacklinks = (links: string[]) => {
     const uris = links.map(l => vscode.Uri.file(l));
     const backlinks = new BacklinksTree(uris);
 
     vscode.window.createTreeView('noteSearcher-backlinks', {
       treeDataProvider: backlinks
+    });
+  };
+
+  public showTags = (tags: string[]) => {
+    const tagsTree = new TagsTree(tags.sort());
+
+    vscode.window.createTreeView('noteSearcher-tags', {
+      treeDataProvider: tagsTree
     });
   };
 

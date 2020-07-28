@@ -11,7 +11,7 @@ import { formatDateTime_YYYYMMddhhmm } from "../utils/timeFormatter";
 import { posixRelativePath } from "../utils/FileSystem";
 
 export class NoteSearcher {
-  private previousQuery = '';
+  private previousSearchInput = '';
   private diagnostics: Diagnostics;
 
   constructor(
@@ -22,23 +22,24 @@ export class NoteSearcher {
     private timeProvider: TimeProvider = createTimeProvider())
   {
     ui.addNoteSavedListener(this.notifyNoteSaved);
-    ui.addMovedViewToDifferentNoteListener(this.notifyMovedVideToDifferentNote);
+    ui.addMovedViewToDifferentNoteListener(this.notifyMovedViewToDifferentNote);
     this.diagnostics = createDiagnostics('noteSearcher');
   }
 
-  public search = async () => {
-    this.diagnostics.trace('search');
+  public promptAndSearch = async () => {
+    const input = await this.ui.promptForSearch(this.previousSearchInput);
 
-    const input = await this.ui.promptForSearch(this.previousQuery);
-    if (!input) {
-      return;
-    }
-    this.previousQuery = input;
+    if (!input) { return; }
+
+    this.previousSearchInput = input;
+
+    await this.search(input);
+  };
+
+  public search = async (query: string) => {
     try {
-      const results = await this.noteIndex.search(input);
+      const results = await this.noteIndex.search(query);
       await this.ui.showSearchResults(results);
-
-      this.diagnostics.trace('search complete');
     }
     catch (e) {
       await this.ui.showError(e);
@@ -99,7 +100,7 @@ export class NoteSearcher {
     this.diagnostics.trace('show dead links completed');
   };
 
-  public enable = () => {
+  public enable = async () => {
     this.diagnostics.trace('enable');
     const currentDir = this.ui.currentlyOpenDir();
 
@@ -109,7 +110,8 @@ export class NoteSearcher {
     }
 
     this.configProvider.enableInDir(currentDir);
-    this.index();
+    await this.index();
+    this.showTags();
   };
 
   public disable = () => {
@@ -124,15 +126,15 @@ export class NoteSearcher {
     this.configProvider.disableInDir(currentDir);
   };
 
-  public notifyExtensionActivated = () => {
+  public notifyExtensionActivated = async () => {
     if (!this.ui.currentlyOpenDir()) { return; }
 
     if (this.isEnabledInCurrentDir()) {
-      this.index();
-      return;
+      await this.index();
+      this.showTags();
+    } else {
+      this.promptUserToEnable();
     }
-
-    this.promptUserToEnable();
   };
 
   public promptUserToEnable = async () => {
@@ -163,6 +165,11 @@ export class NoteSearcher {
     this.ui.showBacklinks(backlinks);
   };
 
+  private showTags = () => {
+    const tags = this.noteIndex.allTags();
+    this.ui.showTags(tags);
+  };
+
   private notifyNoteSaved = async (file: File) => {
     this.diagnostics.trace('note saved');
 
@@ -173,9 +180,10 @@ export class NoteSearcher {
 
     await this.index();
     this.showDeadLinks();
+    this.showTags();
   };
 
-  private notifyMovedVideToDifferentNote = async (file: File) => {
+  private notifyMovedViewToDifferentNote = async (file: File) => {
     this.showBacklinks();
   };
 
