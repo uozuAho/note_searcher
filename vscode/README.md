@@ -1,21 +1,32 @@
 # Note Searcher
 
-Tool for managing a knowledge base of text files, such as a zettelkasten.
+Tool for managing a knowledge base of text files, such as a zettelkasten. Works
+with a flat or hierarchical file structure. Similar to:
+
+- [The Archive](https://zettelkasten.de/the-archive/)
+- [Zettlr](https://www.zettlr.com/)
+- [Foam](https://foambubble.github.io/foam/)
 
 
 ## Feature summary
 
-- Full text search:  `ctrl+alt+s`
-- Create a new note: `ctrl+alt+n`
+- Full text search
+- Quick-create notes
 - Tag autocompletion
 - Copy markdown link to note from search results
 - Copy markdown link to note from editor tab
-- Find dead links
+- Shows backlinks in sidebar
+- Shows dead links in sidebar
+- Shows all tags in sidebar
 
 
 ## How to use this extension
 
 ![extension screenshot](./img/ext_screenshot.png)
+
+![create a new note](./img/new_note.png)
+
+![tag autocompletion](./img/tag_autocomplete.png)
 
 
 ### Full text search
@@ -40,10 +51,13 @@ tag-based searching. #hyphenated-tags are supported.
 When note searcher is enabled, typing '#' will show a list of tags which have
 been found in other files.
 
+All existing tags are shown in the sidebar, as per the screenshot.
+
 
 ### Creating notes
 
-Press `ctrl+alt+n` to create a new note in the currently open directory.
+Press `ctrl+alt+n` to create a new note in the same directory as the currently
+open note.
 
 
 ### Linking notes
@@ -57,10 +71,15 @@ You can copy a markdown-style link to a search result by right-clicking on
 the search result. You can also copy this link from an editor tab.
 
 
+### Backlinks
+
+Links to the currently open note are shown in backlinks section of the sidebar.
+
+
 ### Find dead links
 
-Dead links to other notes & local files are shown in the sidebar. Dead links
-are updated whenever a file is saved.
+Markdown links to files that can't be found are shown in the dead links section
+of the sidebar.
 
 
 ## UNDER CONSTRUCTION

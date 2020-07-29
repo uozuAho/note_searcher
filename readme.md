@@ -50,16 +50,6 @@ Run `npm run build_vsix` in the vscode directory.
 
 
 # todo
-- docs:
-    - add better subtitle than 'searches notes' in marketplace text
-    - reference similar software
-        - like [markdown notes](https://github.com/kortina/vscode-markdown-notes),
-          zettlr etc.
-    - update screenshots
-      - dead links
-      - backlinks
-      - tags
-      - removed related files
 - release
 - improve: activate extension immediately if already enabled in
   current dir (don't wait for activation events)
