@@ -208,11 +208,13 @@ describe('dead link finder, real filesystem', () => {
     finder = new DeadLinkFinder(linkIndex, fs);
   });
 
-  it('finds no dead links in demo dir', async () => {
+  it('finds dead link in demo dir readme', async () => {
     await linkIndex.index(_path.resolve(__dirname, '../../demo_dir'));
 
     const deadLinks = finder.findAllDeadLinks();
 
-    expect(deadLinks).toHaveLength(0);
+    expect(deadLinks).toHaveLength(1);
+    expect(deadLinks[0].sourcePath).toContain('readme.md');
+    expect(deadLinks[0].targetPath).toContain('to/nowhere');
   });
 });
