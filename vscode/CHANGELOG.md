@@ -4,7 +4,7 @@ All notable changes to the "note-searcher" extension will be documented in this
 file. Format inspired by https://keepachangelog.com/en/1.0.0/
 
 
-## [Unreleased]
+## [0.0.17] - 2020-07-29
 ### Added
 - Show backlinks in sidebar
 - Show all tags in sidebar
