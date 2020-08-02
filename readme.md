@@ -30,10 +30,6 @@ npm run e2e:setup
 
 e2e tests use https://github.com/redhat-developer/vscode-extension-tester
 
-Note that the vscode version used for tests may be outdated. It is fixed at a
-particular version since using the latest version tends to break UI tests when
-it is released. Ideally I'd have it set to the latest version - 1.
-
 
 ## Run the extension locally
 
@@ -64,12 +60,8 @@ Run `npm run build_vsix` in the vscode directory.
     - test file is unwieldy
 - feature: suggest tags in search
     - not yet available: https://github.com/microsoft/vscode/issues/35785
-- feature: paste image in clipboard as file + markdown link
 - feature: extract text to new note
-- feature: show recent notes
-- feature: show random notes
 - improve: don't index if already indexing, eg. saving multiple files
-- show view container on search complete, even if no search results
 - support wiki-style links, with id only (for archive users)
 - docs
     - get readme working in extension preview in vscode
