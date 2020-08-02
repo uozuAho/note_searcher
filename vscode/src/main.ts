@@ -4,9 +4,9 @@ import { createNoteIndex } from './index/NoteIndex';
 import { VsCodeNoteSearcherUi } from './ui/VsCodeNoteSearcherUi';
 import { NoteSearcher } from './note_searcher/noteSearcher';
 import { DeadLinkFinder } from './dead_links/DeadLinkFinder';
-import { createFileSystem } from './utils/FileSystem';
 import { NoteSearcherConfigProvider } from './note_searcher/NoteSearcherConfigProvider';
 import { TagCompleter } from './tag_completion/TagCompleter';
+import { createFileSystem } from './utils/FileSystem';
 
 export const extensionId = 'uozuaho.note-searcher';
 
@@ -14,17 +14,18 @@ export function activate(context: vscode.ExtensionContext) {
   const ui = new VsCodeNoteSearcherUi();
   const configProvider = new NoteSearcherConfigProvider(context);
   const noteIndex = createNoteIndex(extensionDir()!, configProvider);
-  const deadLinkFinder = new DeadLinkFinder(createFileSystem());
+  const deadLinkFinder = new DeadLinkFinder(noteIndex, createFileSystem());
   const noteSearcher = new NoteSearcher(ui, noteIndex, deadLinkFinder, configProvider);
 
   context.subscriptions.push(
     vscode.commands.registerCommand(
-      'noteSearcher.search', async () => await noteSearcher.search()),
+      'noteSearcher.search', async () => await noteSearcher.promptAndSearch()),
+    vscode.commands.registerCommand(
+      'noteSearcher.searchForTag', async (tag: string) => await noteSearcher.search('#' + tag)),
     vscode.commands.registerCommand(
       'noteSearcher.index', async () => await noteSearcher.index()),
     vscode.commands.registerCommand(
-      'noteSearcher.searchResults.openFile',
-      searchResult => vscode.window.showTextDocument(searchResult)),
+      'noteSearcher.openFile', uri => vscode.window.showTextDocument(uri)),
     vscode.commands.registerCommand(
       'noteSearcher.searchResults.copyLink',
       searchResult => noteSearcher.markdownLinkToClipboard(searchResult.uri.fsPath)),
@@ -41,8 +42,8 @@ export function activate(context: vscode.ExtensionContext) {
     vscode.languages.registerCompletionItemProvider(['markdown', 'plaintext'],
       new TagCompleter(noteIndex), '#'),
 
-    ui.createOnDidChangeTextDocumentHandler(),
-    ui.createOnDidSaveDocumentHandler()
+    ui.createNoteSavedHandler(),
+    ui.createMovedViewToDifferentNoteHandler()
   );
 
   noteSearcher.notifyExtensionActivated();

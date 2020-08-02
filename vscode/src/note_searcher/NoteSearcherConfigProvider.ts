@@ -40,7 +40,4 @@ export interface NoteSearcherConfig {
   search: {
     useLucene: boolean
   },
-  deadLinks: {
-    showOnSave: boolean
-  },
 }

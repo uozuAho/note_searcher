@@ -58,71 +58,6 @@ describe('lunr note index', () => {
     lunrNoteIndex = new LunrNoteIndex(fileSystem.object);
   });
 
-  it('index and search example', async () => {
-    setupFiles([
-      new MockFile('a/b.txt', 'blah blah some stuff and things'),
-      new MockFile('a/b/c.log', 'what about shoes and biscuits'),
-    ]);
-
-    await lunrNoteIndex.index('some dir');
-
-    const results = await lunrNoteIndex.search('blah');
-
-    expect(results.length).toBe(1);
-    expect(results[0]).toBe('a/b.txt');
-  });
-
-  it('findsSingleWord', async () => {
-    await expect(searchFor("ham", "the ham is good")).toBeFound();
-  });
-
-  it('doesNotFindMissingWord', async () => {
-    await expect(searchFor("pizza", "the ham is good")).not.toBeFound();
-  });
-
-  it('findsStemmedWord', async () => {
-    await expect(searchFor("bike", "I own several bikes")).toBeFound();
-  });
-
-  describe('or operator', () => {
-    it('isDefault', async () => {
-      await expect(searchFor("ham good", "the ham is good")).toBeFound();
-      await expect(searchFor("ham or good", "the ham is good")).toBeFound();
-    });
-
-    it('findsAtLeastOnePresentWord', async () => {
-      await expect(searchFor("ham jabberwocky turtle house cannon", "the ham is good")).toBeFound();
-    });
-  });
-
-  // note: lunr doesn't have an AND operator
-  describe('plus operator', () => {
-    it('finds multiple words', async () => {
-      await expect(searchFor("+ham +good", "the ham is good")).toBeFound();
-    });
-
-    it('rejects any missing words', async () => {
-      await expect(searchFor("+ham +pizza", "the ham is good")).not.toBeFound();
-    });
-  });
-
-  describe('not operator', () => {
-    it('finds word when excluded word is missing', async () => {
-      await expect(searchFor("ham -pizza", "the ham is good")).toBeFound();
-    });
-
-    it('does not find when excluded word is present', async () => {
-      await expect(searchFor("ham -good", "the ham is good")).not.toBeFound();
-    });
-  });
-
-  // lunr doesn't support exact phrase matching: https://github.com/olivernn/lunr.js/issues/62
-  describe('phrases', () => {
-    it('does not support phrases', async () => {
-      await expect(searchFor('"ham is good"', "the ham is good")).not.toBeFound();
-    });
-  });
-
   describe('search with tags', () => {
     it('finds single tag', async () => {
       await expect(searchFor("#beef", "The tags are #beef and #chowder")).toBeFound();
@@ -148,38 +83,6 @@ describe('lunr note index', () => {
       await expect(searchFor("#meat-pie", "I want a #meat-pie")).toBeFound();
       await expect(searchFor("#meat-pie", "I want a #meat")).not.toBeFound();
       await expect(searchFor("#meat", "I want a #meat-pie")).not.toBeFound();
-    });
-  });
-
-  describe('expand query tags', () => {
-    it('replaces tag at the start of a query', () => {
-      const inputQuery = '#tag';
-      const expandedQuery = lunrNoteIndex.expandQueryTags(inputQuery);
-      expect(expandedQuery).toBe('tags:tag');
-    });
-
-    it('replaces tag in the middle of a query', () => {
-      const inputQuery = 'hello #tag boy';
-      const expandedQuery = lunrNoteIndex.expandQueryTags(inputQuery);
-      expect(expandedQuery).toBe('hello tags:tag boy');
-    });
-
-    it('replaces multiple tags', () => {
-      const inputQuery = 'hello #tag #boy';
-      const expandedQuery = lunrNoteIndex.expandQueryTags(inputQuery);
-      expect(expandedQuery).toBe('hello tags:tag tags:boy');
-    });
-
-    it('does not replace non tag', () => {
-      const inputQuery = 'this is no#t a tag';
-      const expandedQuery = lunrNoteIndex.expandQueryTags(inputQuery);
-      expect(expandedQuery).toBe(inputQuery);
-    });
-
-    it('works with operators', () => {
-      const inputQuery = 'dont include this -#tag';
-      const expandedQuery = lunrNoteIndex.expandQueryTags(inputQuery);
-      expect(expandedQuery).toBe('dont include this -tags:tag');
     });
   });
 
@@ -218,6 +121,43 @@ describe('lunr note index', () => {
       await lunrNoteIndex.index('some dir');
 
       expect(lunrNoteIndex.allTags()).toEqual([]);
+    });
+  });
+
+  describe('note index', () => {
+    it('indexes all notes', async () => {
+      const files = [
+        new MockFile('a/b.txt', ''),
+        new MockFile('a/b/c.log', ''),
+      ];
+      setupFiles(files);
+
+      await lunrNoteIndex.index('some dir');
+
+      const notes = Array.from(lunrNoteIndex.notes());
+      expect(notes).toEqual(files.map(f => f.path()));
+      expect(lunrNoteIndex.containsNote('a/b.txt')).toBe(true);
+    });
+
+    it('does not index non-text files', async () => {
+      setupFiles([new MockFile('source_file.cpp', '')]);
+
+      await lunrNoteIndex.index('some dir');
+
+      const notes = Array.from(lunrNoteIndex.notes());
+      expect(notes).toHaveLength(0);
+      expect(lunrNoteIndex.containsNote('source_file.cpp')).toBe(false);
+    });
+  });
+
+  describe('link index', () => {
+    it('indexes links', async () => {
+      setupFiles([new MockFile('/a/b.txt', '[a link](to/some/stuff)')]);
+
+      await lunrNoteIndex.index('some dir');
+
+      const links = lunrNoteIndex.linksFrom('/a/b.txt');
+      expect(links).toEqual(['to/some/stuff']);
     });
   });
 });

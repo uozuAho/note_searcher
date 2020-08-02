@@ -22,10 +22,6 @@ export class SearchResultTree implements vscode.TreeDataProvider<SearchResult> {
   public getParent = (element: SearchResult) => {
     return null;
   };
-
-  public getAllItems = (): SearchResult[] => {
-    return this.results;
-  };
 }
 
 class SearchResult extends vscode.TreeItem {
@@ -35,7 +31,7 @@ class SearchResult extends vscode.TreeItem {
 
   command = {
     title: "Open File",
-    command: 'noteSearcher.searchResults.openFile',
+    command: 'noteSearcher.openFile',
     arguments: [this.uri]
   };
 }

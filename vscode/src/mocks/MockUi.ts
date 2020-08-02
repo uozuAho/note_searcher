@@ -2,6 +2,7 @@ import * as tmoq from "typemoq";
 import { NoteSearcherUi, FileChangeListener } from "../ui/NoteSearcherUi";
 import { File } from "../utils/File";
 import { MockFile } from "./MockFile";
+import { Link } from "../dead_links/DeadLinkFinder";
 
 export class MockUi implements NoteSearcherUi {
   private _mock: tmoq.IMock<NoteSearcherUi>;
@@ -9,6 +10,12 @@ export class MockUi implements NoteSearcherUi {
   constructor() {
     this._mock = tmoq.Mock.ofType<NoteSearcherUi>();
   }
+
+  public showTags = (tags: string[]) => Promise.resolve();
+
+  public showBacklinks = (links: string[]) => Promise.resolve();
+
+  public addMovedViewToDifferentNoteListener = (listener: FileChangeListener) => {};
 
   public copyToClipboard = (text: string) => Promise.resolve();
 
@@ -62,8 +69,8 @@ export class MockUi implements NoteSearcherUi {
     this._mock.verify(m => m.showSearchResults(tmoq.It.isAny()), tmoq.Times.never());
   };
 
-  public showDeadLinks = async (message: string) => {
-    return await this._mock.object.showDeadLinks(message);
+  public showDeadLinks = async (links: Link[]) => {
+    return await this._mock.object.showDeadLinks(links);
   };
 
   public showedDeadLinks() {
@@ -106,39 +113,15 @@ export class MockUi implements NoteSearcherUi {
     this._mock.verify(m => m.showError(tmoq.It.isAny()), tmoq.Times.never());
   };
 
-  private _fileChangeListener: FileChangeListener | null = null;
-
-  public addCurrentDocumentChangeListener = (listener: FileChangeListener) => {
-    this._fileChangeListener = listener;
-  };
-
-  public currentFileChanged = (file: MockFile) => {
-    if (this._fileChangeListener) {
-      return this._fileChangeListener(file);
-    }
-  };
-
-  public showRelatedFiles = (files: string[]) => {
-    return this._mock.object.showRelatedFiles(files);
-  };
-
-  public showedRelatedFiles = (files: string[]) => {
-    this._mock.verify(m => m.showRelatedFiles(files), tmoq.Times.once());
-  };
-
-  public didNotShowRelatedFiles = () => {
-    this._mock.verify(m => m.showRelatedFiles(tmoq.It.isAny()), tmoq.Times.never());
-  };
-
   private _fileSavedListener: FileChangeListener | null = null;
 
-  public addDocumentSavedListener = (listener: FileChangeListener) => {
+  public addNoteSavedListener = (listener: FileChangeListener) => {
     this._fileSavedListener = listener;
   };
 
-  public saveFile = (file: MockFile) => {
+  public saveFile = async (file: MockFile) => {
     if (this._fileSavedListener) {
-      this._fileSavedListener(file);
+      await this._fileSavedListener(file);
     }
   };
 }

@@ -5,6 +5,10 @@ import { NoteIndex } from './NoteIndex';
 export class CliNoteIndex implements NoteIndex {
 
   public constructor(private jarPath: string) { }
+  
+  public linksTo(path: string): string[] {
+    throw new Error("Method not implemented.");
+  }
 
   public search = async (query: string) => {
     const result = await this.runCliSearch(query);
@@ -17,6 +21,18 @@ export class CliNoteIndex implements NoteIndex {
   };
 
   public allTags = () => { throw new Error('not implemented!'); };
+
+  public notes(): IterableIterator<string> {
+    throw new Error("Method not implemented.");
+  }
+
+  public containsNote(path: string): boolean {
+    throw new Error("Method not implemented.");
+  }
+
+  public linksFrom(path: string): string[] {
+    throw new Error("Method not implemented.");
+  }
 
   private runCliSearch = (query: string) => {
     return new Promise<string>((resolve, reject) => {

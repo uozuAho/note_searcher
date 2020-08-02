@@ -4,8 +4,7 @@ import { NoteSearcher } from './noteSearcher';
 import { NoteIndex } from '../index/NoteIndex';
 import { MockUi } from "../mocks/MockUi";
 import { MockFile } from "../mocks/MockFile";
-import { DelayedExecutor } from '../utils/delayedExecutor';
-import { DeadLinkFinder, DeadLink } from '../dead_links/DeadLinkFinder';
+import { DeadLinkFinder, Link } from '../dead_links/DeadLinkFinder';
 import { NoteSearcherConfigProvider, NoteSearcherConfig } from './NoteSearcherConfigProvider';
 
 describe('NoteSearcher', () => {
@@ -26,9 +25,6 @@ describe('NoteSearcher', () => {
   const defaultConfig = (): NoteSearcherConfig => ({
     search: {
       useLucene: false
-    },
-    deadLinks: {
-      showOnSave: true
     }
   });
 
@@ -141,7 +137,7 @@ describe('NoteSearcher', () => {
     it('passes input to searcher', async () => {
       ui.promptForSearchReturns('search phrase');
 
-      await noteSearcher.search();
+      await noteSearcher.promptAndSearch();
 
       searcher.verify(s => s.search('search phrase'), tmoq.Times.once());
     });
@@ -149,7 +145,7 @@ describe('NoteSearcher', () => {
     it('does nothing when input is empty', async () => {
       ui.promptForSearchReturns('');
 
-      await noteSearcher.search();
+      await noteSearcher.promptAndSearch();
 
       searcher.verify(s => s.search(tmoq.It.isAnyString()), tmoq.Times.never());
     });
@@ -158,7 +154,7 @@ describe('NoteSearcher', () => {
       ui.promptForSearchReturns('search phrase');
       searcher_returns(['a', 'b', 'c']);
 
-      await noteSearcher.search();
+      await noteSearcher.promptAndSearch();
 
       ui.showedSearchResults(['a', 'b', 'c']);
     });
@@ -168,7 +164,7 @@ describe('NoteSearcher', () => {
       const error = new Error('boom');
       searcher.setup(s => s.search(tmoq.It.isAnyString())).throws(error);
 
-      await noteSearcher.search();
+      await noteSearcher.promptAndSearch();
 
       ui.didNotShowSearchResults();
       ui.showedError(error);
@@ -259,6 +255,17 @@ describe('NoteSearcher', () => {
       expect(link).toBe('[](c/d.md)');
     });
 
+    it('windows paths are converted to posix', () => {
+      // only test on windows
+      if (process.platform !== 'win32') { return; }
+
+      ui.getCurrentFileReturns(new MockFile('c:\\a\\b.md', ''));
+
+      const link = noteSearcher.generateMarkdownLinkTo('c:\\a\\b\\c\\d.md');
+
+      expect(link).toBe('[](b/c/d.md)');
+    });
+
     it('copies filename only, when no file is open', () => {
       ui.getCurrentFileReturns(null);
       ui.currentlyOpenDirReturns('/a/b');
@@ -291,21 +298,13 @@ describe('NoteSearcher', () => {
     });
 
     it('shows dead links', () => {
-      deadLinkFinder.setup(d => d.findDeadLinks(tmoq.It.isAny())).returns(() => [
-        new DeadLink('/some/path', '/path/to/nowhere')
+      deadLinkFinder.setup(d => d.findAllDeadLinks()).returns(() => [
+        new Link('/some/path', '/path/to/nowhere')
       ]);
 
       noteSearcher.showDeadLinks();
 
       ui.showedDeadLinks();
-    });
-
-    it('does not show anything when there are no dead links', () => {
-      deadLinkFinder.setup(d => d.findDeadLinks(tmoq.It.isAny())).returns(() => []);
-
-      noteSearcher.showDeadLinks();
-
-      ui.didNotShowDeadLinks();
     });
   });
 
@@ -319,123 +318,40 @@ describe('NoteSearcher', () => {
       configProvider.setup(c => c.isEnabledInDir(tmoq.It.isAny())).returns(() => true);
 
       ui.currentlyOpenDirReturns('a directory');
-      deadLinkFinder.setup(d => d.findDeadLinks(tmoq.It.isAny())).returns(() => []);
+      deadLinkFinder.setup(d => d.findAllDeadLinks()).returns(() => []);
 
       noteSearcher = new NoteSearcher(ui,
         searcher.object, deadLinkFinder.object, configProvider.object);
     });
 
-    it('updates index', () => {
+    it('updates index', async () => {
       const file = new MockFile('path', 'content');
       const indexSpy = spyOn(noteSearcher, 'index');
 
-      ui.saveFile(file);
+      await ui.saveFile(file);
 
       expect(indexSpy).toHaveBeenCalled();
     });
 
-    it('checks for dead links', () => {
+    it('checks for dead links', async () => {
       const file = new MockFile('path', 'content');
       const showDeadLinks = spyOn(noteSearcher, 'showDeadLinks');
 
-      ui.saveFile(file);
+      await ui.saveFile(file);
 
       expect(showDeadLinks).toHaveBeenCalled();
     });
 
-    it('does not check for dead links when turned off in config', () => {
-      const config = defaultConfig();
-      config.deadLinks.showOnSave = false;
-      configProvider.reset();
-      configProvider.setup(c => c.getConfig()).returns(() => config);
-      const showDeadLinks = spyOn(noteSearcher, 'showDeadLinks');
-
-      ui.saveFile(new MockFile('path', 'content'));
-
-      expect(showDeadLinks).not.toHaveBeenCalled();
-    });
-
-    it('does nothing if updates are disabled', () => {
+    it('does nothing if updates are disabled', async () => {
       configProvider.reset();
       configProvider.setup(c => c.isEnabledInDir(tmoq.It.isAny())).returns(() => false);
       const index = spyOn(noteSearcher, 'index');
       const showDeadLinks = spyOn(noteSearcher, 'showDeadLinks');
 
-      ui.saveFile(new MockFile('path', 'content'));
+      await ui.saveFile(new MockFile('path', 'content'));
 
       expect(index).not.toHaveBeenCalled();
       expect(showDeadLinks).not.toHaveBeenCalled();
-    });
-  });
-
-  describe('when current document changes', () => {
-    let delayedExecutor: tmoq.IMock<DelayedExecutor>;
-
-    beforeEach(() => {
-      ui = new MockUi();
-      searcher = tmoq.Mock.ofType<NoteIndex>();
-      deadLinkFinder = tmoq.Mock.ofType<DeadLinkFinder>();
-      configProvider = tmoq.Mock.ofType<NoteSearcherConfigProvider>();
-      delayedExecutor = tmoq.Mock.ofType<DelayedExecutor>();
-
-      ui.currentlyOpenDirReturns('a directory');
-      configProvider.setup(c => c.isEnabledInDir(tmoq.It.isAny())).returns(() => true);
-
-      noteSearcher = new NoteSearcher(ui,
-        searcher.object,
-        deadLinkFinder.object,
-        configProvider.object,
-        delayedExecutor.object);
-    });
-
-    it('schedules show related files', async () => {
-      ui.currentFileChanged(new MockFile('path', 'content'));
-
-      delayedExecutor.verify(d => d.cancelAll(), tmoq.Times.once());
-      delayedExecutor.verify(d =>
-        d.executeInMs(tmoq.It.isAnyNumber(), tmoq.It.isAny()), tmoq.Times.once());
-    });
-
-    it('does not schedule show related files if disabled', () => {
-      configProvider.reset();
-      configProvider.setup(c => c.isEnabledInDir(tmoq.It.isAny())).returns(() => false);
-      ui.currentFileChanged(new MockFile('path', 'content'));
-
-      delayedExecutor.verify(d => d.cancelAll(), tmoq.Times.never());
-      delayedExecutor.verify(d =>
-        d.executeInMs(tmoq.It.isAnyNumber(), tmoq.It.isAny()), tmoq.Times.never());
-    });
-  });
-
-  describe('update related files', () => {
-    beforeEach(() => {
-      ui = new MockUi();
-      searcher = tmoq.Mock.ofType<NoteIndex>();
-      deadLinkFinder = tmoq.Mock.ofType<DeadLinkFinder>();
-      configProvider = tmoq.Mock.ofType<NoteSearcherConfigProvider>();
-
-      noteSearcher = new NoteSearcher(ui,
-        searcher.object, deadLinkFinder.object, configProvider.object);
-    });
-
-    it('does not include current file in related files', async () => {
-      const currentFile = new MockFile('path/file/a', 'asdf');
-      const relatedFiles = [currentFile.path(), 'path/file/b', 'path/file/c'];
-      searcher_returns(relatedFiles);
-
-      await noteSearcher.updateRelatedFiles(currentFile);
-
-      ui.showedRelatedFiles(['path/file/b', 'path/file/c']);
-    });
-
-    it('does not update files if current file is empty', async () => {
-      const currentFile = new MockFile('path/file/a', '');
-      const relatedFiles = [currentFile.path(), 'path/file/b', 'path/file/c'];
-      searcher_returns(relatedFiles);
-
-      await noteSearcher.updateRelatedFiles(currentFile);
-
-      ui.didNotShowRelatedFiles();
     });
   });
 
@@ -488,36 +404,6 @@ describe('NoteSearcher', () => {
       noteSearcher.disable();
 
       configProvider.verify(c => c.disableInDir(currentDir), tmoq.Times.once());
-    });
-  });
-
-  describe('createTagAndKeywordQuery', () => {
-    beforeEach(() => {
-      ui = new MockUi();
-      searcher = tmoq.Mock.ofType<NoteIndex>();
-      deadLinkFinder = tmoq.Mock.ofType<DeadLinkFinder>();
-      configProvider = tmoq.Mock.ofType<NoteSearcherConfigProvider>();
-
-      noteSearcher = new NoteSearcher(ui,
-        searcher.object, deadLinkFinder.object, configProvider.object);
-    });
-
-    it('creates query', () => {
-      const tags = ['a', 'b', 'c'];
-      const keywords = ['d', 'e'];
-
-      const query = noteSearcher.createTagAndKeywordQuery(tags, keywords);
-
-      expect(query).toEqual('#a #b #c d e');
-    });
-
-    it('removes overlapping keywords', () => {
-      const tags = ['a', 'b', 'c'];
-      const keywords = ['c', 'd'];
-
-      const query = noteSearcher.createTagAndKeywordQuery(tags, keywords);
-
-      expect(query).toEqual('#a #b #c d');
     });
   });
 });

@@ -4,11 +4,14 @@ import { CliNoteIndex } from './CliNoteIndex';
 import { NoteSearcherConfigProvider } from '../note_searcher/NoteSearcherConfigProvider';
 import { LunrNoteIndex } from './lunrNoteIndex';
 import { createFileSystem } from '../utils/FileSystem';
+import { FullTextSearch } from './FullTextSearch';
+import { TagsIndex } from './TagsIndex';
+import { NoteLinkIndex } from './noteLinkIndex';
 
-export interface NoteIndex {
-  search: (query: string) => Promise<string[]>;
+export type NoteIndex = FileSystemIndexer & FullTextSearch & TagsIndex & NoteLinkIndex;
+
+interface FileSystemIndexer {
   index: (dir: string) => Promise<void>;
-  allTags: () => string[];
 }
 
 /**

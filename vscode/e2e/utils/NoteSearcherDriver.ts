@@ -1,6 +1,4 @@
-import { expect } from 'chai';
-
-import { 
+import {
   InputBox,
   ActivityBar,
   CustomTreeSection, 
@@ -16,12 +14,6 @@ export class NoteSearcherDriver {
     return this.vscode.runCommand('Note searcher: enable in this directory');
   };
 
-  public openSidebar = () => {
-    const activityBar = new ActivityBar();
-    const sidebar = activityBar.getViewControl('Note Searcher');
-    return sidebar.openView();
-  };
-
   public search = async (query: string) => {
     await this.vscode.runCommand('Note searcher: search for docs');
     const input = await InputBox.create();
@@ -29,26 +21,64 @@ export class NoteSearcherDriver {
     await input.confirm();
   };
 
-  public findSearchResult = async (name: string): Promise<SearchResult> => {
-    const sidebar = await this.openSidebar();
-
-    const searchResults = await sidebar.getContent()
-      .getSection('Search results') as CustomTreeSection;
+  public findSearchResult = async (name: string): Promise<SidebarItem | null> => {
+    const searchResults = await this.openSidebarSection('Search results');
+    if (!searchResults) { return null; }
 
     const item = await searchResults.findItem(name);
+    if (!item) { return null; }
 
-    if (!item) { expect.fail(`could not find search result '${name}'`); }
-
-    return new SearchResult(item);
+    return new SidebarItem(item);
   };
 
   public initCreateNote = () => {
     return this.vscode.runCommand('Note searcher: create a new note');
   };
+
+  public isShowingInDeadLinks = async (name: string) => {
+    const deadLinksSection = await this.openSidebarSection('Dead links');
+    if (!deadLinksSection) { return null; }
+
+    const item = await deadLinksSection.findItem(name);
+    if (!item) { return null; }
+
+    return !!item;
+  };
+
+  public findBacklinkByName = async (name: string): Promise<SidebarItem | null> => {
+    const backlinks = await this.openSidebarSection('Backlinks');
+    if (!backlinks) { return null; }
+
+    const item = await backlinks.findItem(name);
+    if (!item) { return null; }
+
+    return new SidebarItem(item);
+  };
+
+  public findTagInSidebar = async (tag: string): Promise<SidebarItem | null> => {
+    const tags = await this.openSidebarSection('All Tags');
+    if (!tags) { return null; }
+
+    const item = await tags.findItem(tag);
+    if (!item) { return null; }
+
+    return new SidebarItem(item);
+  };
+
+  /** Quirk: throws uncatchable error if section is empty */
+  private openSidebarSection = async (name: string): Promise<CustomTreeSection> => {
+    const sidebar = await this.openSidebar();
+    return await sidebar.getContent().getSection(name) as CustomTreeSection;
+  };
+
+  private openSidebar = () => {
+    const activityBar = new ActivityBar();
+    const sidebar = activityBar.getViewControl('Note Searcher');
+    return sidebar.openView();
+  };
 }
 
-class SearchResult {
-  
+class SidebarItem {
   constructor(private treeItem: TreeItem) {}
 
   public click = () => {
@@ -58,7 +88,7 @@ class SearchResult {
   public clickContextMenuItem = async (itemName: string) => {
     const menu = await this.treeItem.openContextMenu();
     const menuItem = await menu.getItem(itemName);
-    if (!menuItem) { expect.fail(`could not find menu item '${itemName}'`); }
+    if (!menuItem) { throw new Error(`could not find menu item '${itemName}'`); }
     await menuItem.click();
   };
 }

@@ -1,10 +1,10 @@
 {
 	"name": "note-searcher",
 	"displayName": "note-searcher",
-	"description": "searches notes",
-	"version": "0.0.16",
+	"description": "Manage a knowledge base of markdown files",
+	"version": "0.0.17",
 	"publisher": "uozuaho",
-	"preview": true,
+	"preview": false,
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/uozuAho/note_searcher"
@@ -45,8 +45,16 @@
 					"name": "Search results"
 				},
 				{
-					"id": "noteSearcher-related",
-					"name": "Related files"
+					"id": "noteSearcher-backlinks",
+					"name": "Backlinks"
+				},
+				{
+					"id": "noteSearcher-deadLinks",
+					"name": "Dead links"
+				},
+				{
+					"id": "noteSearcher-tags",
+					"name": "All Tags"
 				}
 			]
 		},
@@ -106,11 +114,6 @@
 					"description": "Use lucene for full text search (requires Java)",
 					"type": "boolean",
 					"default": false
-				},
-				"noteSearcher.deadLinks.showOnSave": {
-					"description": "Search all files for dead links, and display any in a new editor",
-					"type": "boolean",
-					"default": false
 				}
 			}
 		}
@@ -144,15 +147,12 @@
 		"jest": "^25.5.4",
 		"lunr": "^2.3.8",
 		"mocha": "^7.2.0",
-		"retext": "^7.0.1",
-		"retext-keywords": "^6.0.0",
-		"retext-pos": "^3.0.0",
 		"ts-jest": "^25.5.1",
 		"ts-loader": "^6.2.2",
 		"typemoq": "^2.1.0",
 		"typescript": "^3.9.3",
-		"vsce": "^1.75.0",
-		"vscode-extension-tester": "^3.0.1",
+		"vsce": "^1.77.0",
+		"vscode-extension-tester": "^3.1.0",
 		"vscode-extension-tester-native": "^3.0.0",
 		"vscode-test": "^1.4.0",
 		"webpack": "^4.43.0",

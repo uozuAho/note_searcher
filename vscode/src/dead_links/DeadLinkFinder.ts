@@ -1,55 +1,35 @@
-import { FileSystem } from "../utils/FileSystem";
-import { extractLinks } from "../text_processing/linkExtractor";
 import _path = require('path');
 
-export class DeadLink {
+import { NoteLinkIndex } from "../index/noteLinkIndex";
+import { FileSystem } from '../utils/FileSystem';
+
+export class Link {
   constructor(
     public sourcePath: string,
     public targetPath: string) {}
 }
 
 export class DeadLinkFinder {
-  constructor(private fileSystem: FileSystem) {}
+  constructor(
+    private linkIndex: NoteLinkIndex,
+    private fileSystem: FileSystem) {}
 
-  public findDeadLinks = (rootPath: string) => {
+  public findAllDeadLinks = (): Link[] => {
     const deadLinks = [];
-    const allFiles = this.fileSystem.allFilesUnderPath(rootPath);
 
-    for (const sourceFile of allFiles) {
-      if (!this.shouldCheckFile(sourceFile)) { continue; }
-
-      const links = this.extractLinksFromFile(sourceFile);
-      for (const link of links) {
-        const absLink = this.toAbsolutePath(link, rootPath, sourceFile);
-        if (!this.fileSystem.fileExists(absLink)) {
-          deadLinks.push(new DeadLink(sourceFile, link));
+    for (const file of this.linkIndex.notes()) {
+      for (const link of this.linkIndex.linksFrom(file)) {
+        const absLinkPath = toAbsolutePath(file, link);
+        if (!this.fileSystem.fileExists(absLinkPath)) {
+          deadLinks.push(new Link(file, link));
         }
       }
     }
 
     return deadLinks;
   };
-
-  private shouldCheckFile = (path: string) => {
-    for (const ext of ['md', 'txt', 'log']) {
-      if (path.endsWith(ext)) {
-        return true;
-      }
-    }
-    return false;
-  };
-
-  private extractLinksFromFile = (path: string): string[] => {
-    const contents = this.fileSystem.readFile(path);
-    return extractLinks(contents).filter(link => !link.startsWith('http'));
-  };
-
-  private toAbsolutePath = (link: string, root: string, sourcePath: string) => {
-    const platformPath = link.startsWith('/')
-      ? _path.join(root, link)
-      : _path.join(_path.dirname(sourcePath), link);
-
-    // don't care about windows for now
-    return platformPath.replace(/\\/g, '/');
-  };
 }
+
+function toAbsolutePath(sourcePath: string, linkPath: string) {
+  return _path.resolve(_path.dirname(sourcePath), linkPath);
+};
