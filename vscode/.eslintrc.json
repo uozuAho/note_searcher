@@ -13,7 +13,6 @@
       "dist"
     ],
     "rules": {
-        "@typescript-eslint/class-name-casing": "warn",
         "@typescript-eslint/semi": "warn",
         "curly": "warn",
         "eqeqeq": "warn",
