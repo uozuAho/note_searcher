@@ -58,14 +58,14 @@ jobs:
           run: ./run_e2e.sh
 
       - name: build
-        if: github.ref == 'refs/heads/dev' && matrix.os == 'ubuntu-latest'
+        if: github.ref == 'refs/heads/master' && matrix.os == 'ubuntu-latest'
         working-directory: vscode
         run: |
           npm install
           npm run build_vsix
 
       - name: upload
-        if: github.ref == 'refs/heads/dev' && matrix.os == 'ubuntu-latest'
+        if: github.ref == 'refs/heads/master' && matrix.os == 'ubuntu-latest'
         uses: actions/upload-artifact@v2.0.1
         with:
           name: note-searcher.vsix
