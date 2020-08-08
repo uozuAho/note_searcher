@@ -1,6 +1,7 @@
 # Notes searcher
 
-VS code extension for managing a [zettelkasten](https://zettelkasten.de/posts/overview/).
+VS code extension for managing a collection of local text files, eg. a
+[zettelkasten](https://zettelkasten.de/posts/overview/).
 
 Features:
 - full text search
@@ -15,15 +16,11 @@ See the [extension marketplace](https://marketplace.visualstudio.com/items?itemN
 ## Requirements
 
 - nodejs
-- java 11+
 
 
 ## Run tests
 
 ```sh
-cd cli
-./gradlew test
-cd ..
 cd vscode
 npm install
 npm test
@@ -50,7 +47,6 @@ Run `npm run build_vsix` in the vscode directory.
 
 
 # todo
-- release
 - improve: activate extension immediately if already enabled in
   current dir (don't wait for activation events)
 - bug: Words separated by slashes aren’t indexed eg. blah/boop, search for boop,
@@ -74,20 +70,9 @@ Run `npm run build_vsix` in the vscode directory.
 - feature: show random notes
 - improve: don't index if already indexing, eg. saving multiple files
 - show view container on search complete, even if no search results
-- remove lucene/cli searcher
 - support wiki-style links, with id only (for archive users)
 - docs
     - get readme working in extension preview in vscode
     - make screenshot show in extension preview
     - prevent github link replacement in example file links
-- lucene search bug: '+' operator not working as expected:
-    - using lucene
-    - search for #work: no results
-    - search for book: many results
-    - search for +#work book:
-        - expected: no results
-        - actual:   many results
-- separate view for search results + related files etc.
-    - I want to see file tree at same time
-    - search box in results view. not supported in tree view
 - highlight dead links while editing

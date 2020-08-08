@@ -22,11 +22,7 @@ describe('NoteSearcher', () => {
       );
   };
 
-  const defaultConfig = (): NoteSearcherConfig => ({
-    search: {
-      useLucene: false
-    }
-  });
+  const defaultConfig = (): NoteSearcherConfig => ({});
 
   describe('on extension activated', () => {
     beforeEach(() => {

@@ -36,8 +36,4 @@ export class NoteSearcherConfigProvider {
     EnabledDirectoriesKey) ?? [];
 }
 
-export interface NoteSearcherConfig {
-  search: {
-    useLucene: boolean
-  },
-}
+export interface NoteSearcherConfig {}
