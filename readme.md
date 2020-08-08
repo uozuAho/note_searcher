@@ -47,8 +47,6 @@ Run `npm run build_vsix` in the vscode directory.
 
 
 # todo
-- remove lucene/cli searcher
-    - remove config
 - improve: activate extension immediately if already enabled in
   current dir (don't wait for activation events)
 - bug: Words separated by slashes aren’t indexed eg. blah/boop, search for boop,

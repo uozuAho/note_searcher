@@ -1,6 +1,3 @@
-import * as path from 'path';
-
-import { CliNoteIndex } from './CliNoteIndex';
 import { NoteSearcherConfigProvider } from '../note_searcher/NoteSearcherConfigProvider';
 import { LunrNoteIndex } from './lunrNoteIndex';
 import { createFileSystem } from '../utils/FileSystem';
@@ -22,10 +19,5 @@ export const createNoteIndex = (
   config: NoteSearcherConfigProvider
 ): NoteIndex =>
 {
-  if (config.getConfig().search.useLucene) {
-    const jarPath = path.join(extensionDir, 'dist/note_searcher.jar');
-    return new CliNoteIndex(jarPath);
-  } else {
-    return new LunrNoteIndex(createFileSystem());
-  }
+  return new LunrNoteIndex(createFileSystem());
 };

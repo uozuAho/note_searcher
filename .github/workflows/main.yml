@@ -22,15 +22,6 @@ jobs:
         with:
           node-version: 12.x
 
-      - name: Install java
-        uses: actions/setup-java@v1
-        with:
-          java-version: '11.0.4'
-
-      - name: Run java unit tests
-        working-directory: cli
-        run: ./gradlew test
-
       - run: npm install
         working-directory: vscode
 
@@ -43,9 +34,6 @@ jobs:
       - name: Run webpack
         working-directory: vscode
         run: npm run webpack
-
-      - name: Build cli jar
-        run: ./build.jar.sh
 
       - name: e2e test setup
         working-directory: vscode
