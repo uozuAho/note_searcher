@@ -5,10 +5,10 @@ import { FullTextSearch } from "./FullTextSearch";
 
 const NUM_RESULTS = 10;
 
-// Overrides lunr's global token separator, which includes hyphens.
-// Removing hyphens allows hyphenated tags to be lexed into single
-// tokens.
-lunr.tokenizer.separator = /\s+/;
+// lunr's default separator is hyphens and whitespace: /[\s\-]+/;
+// see the tests for this file for why that's no good for me. In short,
+// I want hyphenated tags, markdown links, words separated by slashes
+lunr.tokenizer.separator = /[\s\[\]/]+/;
 
 // I think there's a bug/oversight in lunr 2.3.8 - overriding the token
 // separator doesn't override the separator for the query parser. Thus, I

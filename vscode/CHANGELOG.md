@@ -4,6 +4,11 @@ All notable changes to the "note-searcher" extension will be documented in this
 file. Format inspired by https://keepachangelog.com/en/1.0.0/
 
 
+## Unreleased
+### Fixed
+- words within markdown links are all full-text searchable
+- words separated by slashes eg. red/green are now searchable
+
 ## [0.0.17] - 2020-08-02
 ### Added
 - Show backlinks in sidebar

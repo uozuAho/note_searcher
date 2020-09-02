@@ -78,6 +78,32 @@ describe('lunr full text search', () => {
     await expect(searchFor("bike", "I own several bikes")).toBeFound();
   });
 
+  it('finds word before slash', async () => {
+    await expect(searchFor("red", "red/green/refactor")).toBeFound();
+  });
+
+  it('finds after slash', async () => {
+    await expect(searchFor("refactor", "red/green/refactor")).toBeFound();
+  });
+
+  describe('markdown links', () => {
+    it('finds single word', async () => {
+      await expect(searchFor("bike", "I have a [bike](a/b/c)")).toBeFound();
+    });
+
+    it('finds first word', async () => {
+      await expect(searchFor("ham", "I have a [ham bike](a/b/c)")).toBeFound();
+    });
+
+    it('finds middle word', async () => {
+      await expect(searchFor("ham", "I have a [super ham bike](a/b/c)")).toBeFound();
+    });
+
+    it('finds last word', async () => {
+      await expect(searchFor("bike", "I have a [ham bike](a/b/c)")).toBeFound();
+    });
+  });
+
   describe('or operator', () => {
     it('isDefault', async () => {
       await expect(searchFor("ham good", "the ham is good")).toBeFound();
