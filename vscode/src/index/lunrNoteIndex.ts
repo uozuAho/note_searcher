@@ -3,7 +3,7 @@ import { FileSystem } from "../utils/FileSystem";
 
 import { extractTags } from '../text_processing/tagExtractor';
 import { TagsSet } from './TagsIndex';
-import { LunrFullTextSearch } from "./lunrFullTextSearch";
+import { LunrFullTextSearch } from "../search/lunrFullTextSearch";
 import { MapLinkIndex } from "./noteLinkIndex";
 
 export class LunrNoteIndex implements NoteIndex {

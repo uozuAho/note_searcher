@@ -1,7 +1,7 @@
 import { NoteSearcherConfigProvider } from '../note_searcher/NoteSearcherConfigProvider';
 import { LunrNoteIndex } from './lunrNoteIndex';
 import { createFileSystem } from '../utils/FileSystem';
-import { FullTextSearch } from './FullTextSearch';
+import { FullTextSearch } from '../search/FullTextSearch';
 import { TagsIndex } from './TagsIndex';
 import { NoteLinkIndex } from './noteLinkIndex';
 
