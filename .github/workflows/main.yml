@@ -43,7 +43,7 @@ jobs:
         uses: uozuAho/xvfb-action@718e1e1b3b7da996352f1a529fd5a8c3b32eff42
         with:
           working-directory: vscode
-          run: ./run_e2e.sh
+          run: npm run e2e
 
       - name: build
         if: github.ref == 'refs/heads/master' && matrix.os == 'ubuntu-latest'

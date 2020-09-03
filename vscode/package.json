@@ -121,6 +121,7 @@
 		"test:watch": "jest --watch",
 		"e2e:setup": "extest setup-tests",
 		"e2e:compile": "rm -rf e2e-out && tsc -p tsconfig.e2e.json",
+		"e2e": "npm run e2e:compile && extest run-tests e2e-out/default_settings/*.js",
 		"build_vsix": "vsce package",
 		"publish": "vsce publish -p $VSCE_PAT"
 	},

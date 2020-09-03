@@ -45,8 +45,6 @@ Run `npm run build_vsix` in the vscode directory.
 # todo
 - improve: activate extension immediately if already enabled in
   current dir (don't wait for activation events)
-- bug: Words separated by slashes aren’t indexed eg. blah/boop, search for boop,
-  not found
 - bug: e2e test failures don't break CI
 - feature: configurable new note directory
     - if not set, use current behaviour
