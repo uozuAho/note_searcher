@@ -43,6 +43,9 @@ Run `npm run build_vsix` in the vscode directory.
 
 
 # todo
+- feature: filename-only links
+- feature: set cursor inside [] when pasting link
+- feature: paste link onto existing text, eg onto 'this' becomes [this]()
 - improve: activate extension immediately if already enabled in
   current dir (don't wait for activation events)
 - bug: e2e test failures don't break CI
@@ -51,7 +54,6 @@ Run `npm run build_vsix` in the vscode directory.
     - set in dotfile???
 - fix dead link e2e fail on ubuntu
 - better icon
-- feature: set cursor inside [] when pasting link
 - feature: ## tags for structure notes
 - feature: copy link from file explorer
 - break up noteSearcher.ts?
