@@ -132,7 +132,6 @@
 		"@types/lunr": "^2.3.3",
 		"@types/mocha": "^8.0.3",
 		"@types/node": "^12.19.3",
-		"@types/vscode": "^1.50.0",
 		"@typescript-eslint/eslint-plugin": "^4.6.1",
 		"@typescript-eslint/parser": "^4.6.1",
 		"chai": "^4.2.0",
@@ -153,5 +152,7 @@
 		"webpack": "^5.3.2",
 		"webpack-cli": "^4.1.0"
 	},
-	"dependencies": {}
+	"dependencies": {
+		"@types/vscode": "^1.43.0"
+	}
 }
