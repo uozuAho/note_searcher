@@ -3,7 +3,9 @@ const _path = require('path');
 import { extractLinks } from "../text_processing/linkExtractor";
 import { GoodSet } from "../utils/goodSet";
 
+// all paths are absolute
 export interface NoteLinkIndex {
+  // abs path of every indexed note
   notes(): IterableIterator<string>;
   containsNote(path: string): boolean;
   linksFrom(path: string): string[];

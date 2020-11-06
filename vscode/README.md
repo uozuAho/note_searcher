@@ -7,6 +7,8 @@ with a flat or hierarchical file structure. Similar to:
 - [Zettlr](https://www.zettlr.com/)
 - [Foam](https://foambubble.github.io/foam/)
 
+todo: mention https://github.com/kortina/vscode-markdown-notes here
+
 
 ## Feature summary
 
