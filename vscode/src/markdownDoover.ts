@@ -4,7 +4,7 @@ import { NoteLinkIndex } from './index/noteLinkIndex';
 
 // A DefinitionProvider provides 'go to definition' behaviour
 // https://code.visualstudio.com/api/references/vscode-api?source=post_page-----94656da18431----------------------#DefinitionProvider
-export class MarkdownDefinitionProvider implements vscode.DefinitionProvider {
+export class WikiLinkDefinitionProvider implements vscode.DefinitionProvider {
 
   constructor(private noteIndex: NoteLinkIndex) {}
 
@@ -14,7 +14,7 @@ export class MarkdownDefinitionProvider implements vscode.DefinitionProvider {
     token: vscode.CancellationToken
   ) {
     const ref = getRefAt(document, position);
-    if (ref.type != RefType.WikiLink) {
+    if (ref.type !== RefType.WikiLink) {
       return [];
     }
 
@@ -28,37 +28,37 @@ export class MarkdownDefinitionProvider implements vscode.DefinitionProvider {
   }
 }
 
+const wikiLinkFilenameRegex = RegExp(/\[\[.+?\]\]/gi);
+
+export function findWikiLinkFilename(text: string): string | null {
+  const matches = wikiLinkFilenameRegex.exec(text);
+  return matches
+    ? matches[0]
+    : null;
+}
+
 export function getRefAt(document: vscode.TextDocument, position: vscode.Position): Ref {
   let ref: string;
   let regex: RegExp;
   let range: vscode.Range | undefined;
 
-  // const _rxWikiLink = '\\[\\[[^sep\\]]+(sep[^sep\\]]+)?\\]\\]';
-  const _rxWikiLink = '\\[\\[[^\\|\\]]+(\\|[^\\|\\]]+)?\\]\\]';
-
-  regex = new RegExp(_rxWikiLink, 'gi');
+  regex = new RegExp(/\[\[.+?\]\]/, 'gi');
   range = document.getWordRangeAtPosition(position, regex);
   if (range) {
-    // Our rxWikiLink contains [[ and ]] chars
-    // but the replacement words do NOT.
-    // So, account for the (exactly) 2 [[  chars at beginning of the match
-    // since our replacement words do not contain [[ chars
-    let s = new vscode.Position(range.start.line, range.start.character + 2);
-    // And, account for the (exactly) 2 ]]  chars at beginning of the match
-    // since our replacement words do not contain ]] chars
-    let e = new vscode.Position(range.end.line, range.end.character - 2);
-    // keep the end
-    let r = new vscode.Range(s, e);
-    ref = document.getText(r);
+    // remove [[ and ]]
+    let start = new vscode.Position(range.start.line, range.start.character + 2);
+    let end = new vscode.Position(range.end.line, range.end.character - 2);
+    let wikiLinkTextRange = new vscode.Range(start, end);
+    ref = document.getText(wikiLinkTextRange);
     if (ref) {
       // Check for piped wiki-links
-      ref = NoteWorkspace.cleanPipedWikiLink(ref);
+      // ref = NoteWorkspace.cleanPipedWikiLink(ref);
 
       return {
         type: RefType.WikiLink,
         word: ref, // .replace(/^\[+/, ''),
-        hasExtension: refHasExtension(ref),
-        range: r, // range,
+        hasExtension: false,
+        range: wikiLinkTextRange, // range,
       };
     }
   }
