@@ -1,4 +1,4 @@
-export function extractLinks(text: string): string[] {
+export function extractMarkdownLinks(text: string): string[] {
   const matches = [];
   let currentMatch;
   const regex = RegExp(/\[.*?\]\((.+?)\)/gm);

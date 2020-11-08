@@ -1,6 +1,6 @@
 const _path = require('path');
 
-import { extractLinks } from "../text_processing/linkExtractor";
+import { extractMarkdownLinks } from "../text_processing/mdLinkExtractor";
 import { GoodSet } from "../utils/goodSet";
 
 // all paths are absolute
@@ -44,7 +44,7 @@ export class MapLinkIndex implements NoteLinkIndex {
   };
 
   public addFile = (absPath: string, text: string) => {
-    const links = extractLinks(text).filter(link => !link.startsWith('http'));
+    const links = extractMarkdownLinks(text).filter(link => !link.startsWith('http'));
     this.addForwardLinks(absPath, links);
     this.addBackwardLinks(absPath, links);
   };
