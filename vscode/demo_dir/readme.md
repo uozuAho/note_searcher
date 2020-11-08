@@ -27,7 +27,9 @@ All tags used across all notes are shown in the sidebar.
 
 Add a [link](trains.md) to your files, and vscode makes them clickable
 hyperlinks. Files can be images or other non-text files, eg.
-[not a note](not_a_note.bin)
+[not a note](not_a_note.bin).
+
+You can also use wiki links, like this: [[trains]], or [[this | trains]].
 
 [Dead links](to/nowhere) are shown in the sidebar.
 

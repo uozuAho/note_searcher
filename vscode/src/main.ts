@@ -7,6 +7,7 @@ import { DeadLinkFinder } from './dead_links/DeadLinkFinder';
 import { NoteSearcherConfigProvider } from './note_searcher/NoteSearcherConfigProvider';
 import { TagCompleter } from './tag_completion/TagCompleter';
 import { createFileSystem } from './utils/FileSystem';
+import { WikiLinkDefinitionProvider } from './WikiLinkDefinitionProvider';
 
 export const extensionId = 'uozuaho.note-searcher';
 
@@ -41,6 +42,9 @@ export function activate(context: vscode.ExtensionContext) {
 
     vscode.languages.registerCompletionItemProvider(['markdown', 'plaintext'],
       new TagCompleter(noteIndex), '#'),
+
+    vscode.languages.registerDefinitionProvider(['markdown', 'plaintext'],
+      new WikiLinkDefinitionProvider(noteIndex)),
 
     ui.createNoteSavedHandler(),
     ui.createMovedViewToDifferentNoteHandler()
