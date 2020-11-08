@@ -1,0 +1,17 @@
+{
+  "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+  "name": "markdown",
+  "scopeName": "text.markdown.note_searcher",
+  "injectionSelector": "text.html.markdown",
+  "patterns": [
+    {
+      "match": "(\\[\\[)([^\\]]+)(\\]\\])",
+      "name": "text.markdown.note_searcher.wikilink",
+      "captures": {
+        "2": {
+          "name": "string.other.link.title.markdown"
+        }
+      }
+    }
+  ]
+}

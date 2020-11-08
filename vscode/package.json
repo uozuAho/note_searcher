@@ -110,7 +110,16 @@
 		"configuration": {
 			"title": "Note Searcher",
 			"properties": {}
-		}
+    },
+    "grammars": [
+      {
+        "scopeName": "text.markdown.note_searcher",
+        "path": "./syntaxes/note_searcher.tmLanguage.json",
+        "injectTo": [
+          "text.html.markdown"
+        ]
+      }
+    ]
 	},
 	"scripts": {
 		"vscode:prepublish": "webpack --mode production",
