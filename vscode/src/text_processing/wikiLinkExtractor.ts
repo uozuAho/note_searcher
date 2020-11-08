@@ -1,4 +1,4 @@
-const createWikiLinkFilenameRegex = () => /\[\[.+?\]\]/;
+export const createWikiLinkFilenameRegex = () => /\[\[.+?\]\]/;
 
 export function findWikiLinkFilename(text: string): string | null {
   const match = extract(createWikiLinkFilenameRegex(), text);

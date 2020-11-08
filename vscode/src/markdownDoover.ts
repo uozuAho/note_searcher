@@ -1,6 +1,7 @@
 import * as vscode from 'vscode';
 
 import { NoteLinkIndex } from './index/noteLinkIndex';
+import { createWikiLinkFilenameRegex as createWikiLinkRegex } from './text_processing/wikiLinkExtractor';
 
 // A DefinitionProvider provides 'go to definition' behaviour
 // https://code.visualstudio.com/api/references/vscode-api?source=post_page-----94656da18431----------------------#DefinitionProvider
@@ -28,13 +29,18 @@ export class WikiLinkDefinitionProvider implements vscode.DefinitionProvider {
   }
 }
 
-export function getRefAt(document: vscode.TextDocument, position: vscode.Position): Ref {
-  let ref: string;
-  let regex: RegExp;
-  let range: vscode.Range | undefined;
+function getWikilinkFilenameAt(
+  document: vscode.TextDocument,
+  position: vscode.Position
+): string | null {
 
-  regex = new RegExp(/\[\[.+?\]\]/, 'gi');
-  range = document.getWordRangeAtPosition(position, regex);
+}
+
+function getRefAt(document: vscode.TextDocument, position: vscode.Position): Ref {
+  let ref: string;
+
+  const regex = createWikiLinkRegex();
+  const range = document.getWordRangeAtPosition(position, regex);
   if (range) {
     // remove [[ and ]]
     let start = new vscode.Position(range.start.line, range.start.character + 2);
