@@ -28,15 +28,6 @@ export class WikiLinkDefinitionProvider implements vscode.DefinitionProvider {
   }
 }
 
-const wikiLinkFilenameRegex = RegExp(/\[\[.+?\]\]/gi);
-
-export function findWikiLinkFilename(text: string): string | null {
-  const matches = wikiLinkFilenameRegex.exec(text);
-  return matches
-    ? matches[0]
-    : null;
-}
-
 export function getRefAt(document: vscode.TextDocument, position: vscode.Position): Ref {
   let ref: string;
   let regex: RegExp;
