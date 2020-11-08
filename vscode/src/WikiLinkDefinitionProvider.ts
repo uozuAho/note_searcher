@@ -18,7 +18,9 @@ export class WikiLinkDefinitionProvider implements vscode.DefinitionProvider {
     token: vscode.CancellationToken
   ) {
     const filename = getWikilinkFilenameAt(document, position);
-    if (!filename) return [];
+    if (!filename) {
+      return [];
+    }
 
     const startOfDocument = new vscode.Position(0, 0);
 
@@ -37,7 +39,9 @@ function getWikilinkFilenameAt(
 {
   const regex = createWikiLinkFilenameRegex();
   const range = document.getWordRangeAtPosition(position, regex);
-  if (!range) return null;
+  if (!range) {
+    return null;
+  }
 
   const text = document.getText(range);
 
