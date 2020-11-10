@@ -7,7 +7,11 @@ with a flat or hierarchical file structure. Similar to:
 - [Zettlr](https://www.zettlr.com/)
 - [Foam](https://foambubble.github.io/foam/)
 
-todo: mention https://github.com/kortina/vscode-markdown-notes here
+
+Other nice extensions that do similar things:
+
+- [markdown notes](https://github.com/kortina/vscode-markdown-notes)
+  - wiki links with navigation, backlinks
 
 
 ## Feature summary
@@ -17,6 +21,7 @@ todo: mention https://github.com/kortina/vscode-markdown-notes here
 - Tag autocompletion
 - Copy markdown link to note from search results
 - Copy markdown link to note from editor tab
+- Wiki link highlighting and navigation
 - Shows backlinks in sidebar
 - Shows dead links in sidebar
 - Shows all tags in sidebar
@@ -71,6 +76,10 @@ syntax. These become hyperlinks to your local files. Examples:
 
 You can copy a markdown-style link to a search result by right-clicking on
 the search result. You can also copy this link from an editor tab.
+
+Wiki-style links are also supported. They can be filenames with or without
+paths, with an optional description before a pipe separator. Eg. [[this/note]]
+or [[a note with a description | and_filename]].
 
 
 ### Backlinks
