@@ -3,6 +3,9 @@
 All notable changes to the "note-searcher" extension will be documented in this
 file. Format inspired by https://keepachangelog.com/en/1.0.0/
 
+## [0.0.19] - 2020-11-10
+### Added
+- wikilink navigation and highlighting
 
 ## [0.0.18] - 2020-09-03
 ### Fixed

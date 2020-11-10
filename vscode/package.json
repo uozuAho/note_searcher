@@ -2,7 +2,7 @@
 	"name": "note-searcher",
 	"displayName": "note-searcher",
 	"description": "Manage a knowledge base of markdown files",
-	"version": "0.0.18",
+	"version": "0.0.19",
 	"publisher": "uozuaho",
 	"preview": false,
 	"repository": {
@@ -110,7 +110,16 @@
 		"configuration": {
 			"title": "Note Searcher",
 			"properties": {}
-		}
+		},
+		"grammars": [
+			{
+				"scopeName": "text.markdown.note_searcher",
+				"path": "./syntaxes/note_searcher.tmLanguage.json",
+				"injectTo": [
+					"text.html.markdown"
+				]
+			}
+		]
 	},
 	"scripts": {
 		"vscode:prepublish": "webpack --mode production",

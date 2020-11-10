@@ -43,7 +43,12 @@ Run `npm run build_vsix` in the vscode directory.
 
 
 # todo
-- feature: filename-only links
+- feature: wiki links
+    - ctrl+click navigation: DONE
+    - highlighting: DONE
+    - show dead links
+    - show backlinks
+    - docs
 - feature: set cursor inside [] when pasting link
 - feature: paste link onto existing text, eg onto 'this' becomes [this]()
 - improve: activate extension immediately if already enabled in
@@ -62,7 +67,6 @@ Run `npm run build_vsix` in the vscode directory.
     - not yet available: https://github.com/microsoft/vscode/issues/35785
 - feature: extract text to new note
 - improve: don't index if already indexing, eg. saving multiple files
-- support wiki-style links, with id only (for archive users)
 - docs
     - get readme working in extension preview in vscode
     - make screenshot show in extension preview
