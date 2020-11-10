@@ -8,10 +8,13 @@ with a flat or hierarchical file structure. Similar to:
 - [Foam](https://foambubble.github.io/foam/)
 
 
-Other nice extensions that do similar things:
+Other nice extensions that do similar/other good things for managing a note
+collection:
 
 - [markdown notes](https://github.com/kortina/vscode-markdown-notes)
   - wiki links with navigation, backlinks
+- [paste image](https://marketplace.visualstudio.com/items?itemName=mushan.vscode-paste-image)
+  - paste images/screenshots from the clipboard into markdown notes
 
 
 ## Feature summary
