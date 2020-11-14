@@ -3,6 +3,11 @@
 All notable changes to the "note-searcher" extension will be documented in this
 file. Format inspired by https://keepachangelog.com/en/1.0.0/
 
+## [0.0.20] - 2020-11-14
+### Changed
+- extension is now always activated on startup. No more prompts to
+  enable/disable. As a result, wiki links are now clickable on startup.
+
 ## [0.0.19] - 2020-11-10
 ### Added
 - wikilink navigation and highlighting
