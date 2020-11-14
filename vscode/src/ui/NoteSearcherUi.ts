@@ -6,7 +6,6 @@ export interface NoteSearcherUi {
   copyToClipboard: (text: string) => Promise<void>;
   startNewNote: (path: string) => Promise<void>;
   promptForNewNoteName: (noteId: string) => Promise<string | undefined>;
-  promptToEnable: () => Promise<boolean>;
   getCurrentFile: () => File | null;
   currentlyOpenDir: () => string | null;
   promptForSearch: (prefill: string) => Promise<string | undefined>;

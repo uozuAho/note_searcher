@@ -41,7 +41,7 @@ collection:
 
 ### Full text search
 
-When active, this extension indexes all .md, .txt and .log files in the
+On file save this extension indexes all .md, .txt and .log files in the
 currently open folder.
 
 You can search for files by pressing `ctrl+alt+s`. Some example queries:
@@ -58,8 +58,7 @@ apple banana #food    # file contains apple, banana, and/or the tag #food
 Any word starting with a '#' character is considered a tag, allowing for
 tag-based searching. #hyphenated-tags are supported.
 
-When note searcher is enabled, typing '#' will show a list of tags which have
-been found in other files.
+Typing '#' will suggest auto-complete options based on existing tags.
 
 All existing tags are shown in the sidebar, as per the screenshot.
 

@@ -34,10 +34,6 @@ export function activate(context: vscode.ExtensionContext) {
       'noteSearcher.editorTab.copyLink',
       uri => noteSearcher.markdownLinkToClipboard(uri.fsPath)),
     vscode.commands.registerCommand(
-      'noteSearcher.enableCurrentDir', () => noteSearcher.enable()),
-    vscode.commands.registerCommand(
-      'noteSearcher.disableCurrentDir', () => noteSearcher.disable()),
-    vscode.commands.registerCommand(
       'noteSearcher.createNote', () => noteSearcher.createNote()),
 
     vscode.languages.registerCompletionItemProvider(['markdown', 'plaintext'],

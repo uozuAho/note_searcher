@@ -100,47 +100,10 @@ export class NoteSearcher {
     this.diagnostics.trace('show dead links completed');
   };
 
-  public enable = async () => {
-    this.diagnostics.trace('enable');
-    const currentDir = this.ui.currentlyOpenDir();
-
-    if (!currentDir) {
-      this.ui.showNotification('open a directory first!');
-      return;
-    }
-
-    this.configProvider.enableInDir(currentDir);
-    await this.index();
-    this.showTags();
-  };
-
-  public disable = () => {
-    this.diagnostics.trace('disable');
-    const currentDir = this.ui.currentlyOpenDir();
-
-    if (!currentDir) {
-      this.ui.showNotification('open a directory first!');
-      return;
-    }
-
-    this.configProvider.disableInDir(currentDir);
-  };
-
   public notifyExtensionActivated = async () => {
     if (!this.ui.currentlyOpenDir()) { return; }
-
-    if (this.isEnabledInCurrentDir()) {
-      await this.index();
-      this.showTags();
-    } else {
-      this.promptUserToEnable();
-    }
-  };
-
-  public promptUserToEnable = async () => {
-    const shouldEnable = await this.ui.promptToEnable();
-
-    if (shouldEnable) { this.enable(); }
+    await this.index();
+    this.showTags();
   };
 
   public markdownLinkToClipboard = (filePath: string) => {
@@ -173,11 +136,6 @@ export class NoteSearcher {
   private notifyNoteSaved = async (file: File) => {
     this.diagnostics.trace('note saved');
 
-    if (!this.isEnabledInCurrentDir()) {
-      this.diagnostics.trace('updates disabled, doing nothing');
-      return;
-    }
-
     await this.index();
     this.showDeadLinks();
     this.showTags();
@@ -185,10 +143,5 @@ export class NoteSearcher {
 
   private notifyMovedViewToDifferentNote = async (file: File) => {
     this.showBacklinks();
-  };
-
-  private isEnabledInCurrentDir = () => {
-    const currentDir = this.ui.currentlyOpenDir();
-    return currentDir && this.configProvider.isEnabledInDir(currentDir);
   };
 }
