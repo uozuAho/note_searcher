@@ -10,10 +10,6 @@ import { VsCodeDriver } from './VsCodeDriver';
 export class NoteSearcherDriver {
   constructor(private vscode: VsCodeDriver) { }
 
-  public enable = () => {
-    return this.vscode.runCommand('Note searcher: enable in this directory');
-  };
-
   public search = async (query: string) => {
     await this.vscode.runCommand('Note searcher: search for docs');
     const input = await InputBox.create();

@@ -21,11 +21,7 @@
 		"search"
 	],
 	"activationEvents": [
-		"onCommand:noteSearcher.search",
-		"onCommand:noteSearcher.enableCurrentDir",
-		"onCommand:noteSearcher.createNote",
-		"onCommand:noteSearcher.editorTab.copyLink",
-		"onView:noteSearcher-results"
+		"*"
 	],
 	"main": "./dist/noteSearcher.js",
 	"contributes": {
@@ -62,14 +58,6 @@
 			{
 				"command": "noteSearcher.search",
 				"title": "Note searcher: search for docs"
-			},
-			{
-				"command": "noteSearcher.enableCurrentDir",
-				"title": "Note searcher: enable in this directory"
-			},
-			{
-				"command": "noteSearcher.disableCurrentDir",
-				"title": "Note searcher: disable in this directory"
 			},
 			{
 				"command": "noteSearcher.createNote",

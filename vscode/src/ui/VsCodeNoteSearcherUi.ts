@@ -25,18 +25,6 @@ export class VsCodeNoteSearcherUi implements NoteSearcherUi {
       ? vscode.workspace.workspaceFolders[0].uri.fsPath
       : null;
 
-  public promptToEnable = async (): Promise<boolean> => {
-    const msg = 'Enable Note Searcher in this directory? Note Searcher can ' +
-                'also be enabled/disabled via the command palette';
-
-    const enable = 'Enable';
-    const dontEnable = 'Do not enable';
-
-    const response = await vscode.window.showInformationMessage(msg, enable, dontEnable);
-
-    return response === enable;
-  };
-
   public promptForSearch = async (prefill: string) => {
     return await vscode.window.showInputBox({
       value: prefill,

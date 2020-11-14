@@ -1,11 +1,9 @@
 import { VsCodeDriver } from './VsCodeDriver';
-import { NoteSearcherDriver } from './NoteSearcherDriver';
 
 let isDemoDirOpen = false;
 
 export const openDemoDirAndCloseAllEditors = async () => {
   const vscode = new VsCodeDriver();
-  const noteSearcher = new NoteSearcherDriver(vscode);
 
   if (!isDemoDirOpen) {
     await vscode.openDemoDirectory();
@@ -17,7 +15,6 @@ export const openDemoDirAndCloseAllEditors = async () => {
   }
 
   await vscode.closeAllEditors();
-  await noteSearcher.enable();
 };
 
 const sleep = async (ms: number) => {
