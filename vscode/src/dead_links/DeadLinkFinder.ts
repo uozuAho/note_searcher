@@ -18,8 +18,11 @@ export class DeadLinkFinder {
     const deadLinks = [];
 
     for (const file of this.linkIndex.notes()) {
-      for (const mdLink of this.findDeadMarkdownLinks(file)) {
-        deadLinks.push(mdLink);
+      for (const link of this.findDeadMarkdownLinks(file)) {
+        deadLinks.push(link);
+      }
+      for (const link of this.findDeadWikiLinks(file)) {
+        deadLinks.push(link);
       }
     }
 
@@ -31,6 +34,16 @@ export class DeadLinkFinder {
     for (const link of this.linkIndex.markdownLinksFrom(fromPath)) {
       const absLinkPath = toAbsolutePath(fromPath, link);
       if (!this.fileSystem.fileExists(absLinkPath)) {
+        deadLinks.push(new Link(fromPath, link));
+      }
+    }
+    return deadLinks;
+  };
+
+  private findDeadWikiLinks = (fromPath: string) => {
+    const deadLinks = [];
+    for (const link of this.linkIndex.wikiLinksFrom(fromPath)) {
+      if (!this.linkIndex.containsNote(link)) {
         deadLinks.push(new Link(fromPath, link));
       }
     }

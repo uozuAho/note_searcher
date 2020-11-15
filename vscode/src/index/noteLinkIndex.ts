@@ -4,14 +4,17 @@ import { extractMarkdownLinks } from "../text_processing/mdLinkExtractor";
 import { extractWikiLinks } from "../text_processing/wikiLinkExtractor";
 import { GoodSet } from "../utils/goodSet";
 
-/** All paths are absolute unless mentioned otherwise */
 export interface NoteLinkIndex {
   notes(): IterableIterator<string>;
-  containsNote(path: string): boolean;
+
+  containsNote(absPathOrFilename: string): boolean;
+
   /** returns link text of all markdown links (not necessarily abs paths) */
-  markdownLinksFrom(path: string): string[];
+  markdownLinksFrom(absPath: string): string[];
+
   /** returns link text of all wiki links (should be filenames only) */
-  wikiLinksFrom(path: string): string[]
+  wikiLinksFrom(absPath: string): string[]
+
   linksTo(path: string): string[];
 }
 
@@ -19,23 +22,27 @@ export class MapLinkIndex implements NoteLinkIndex {
   private _markdownLinksFrom: Map<string, string[]>;
   private _wikiLinksFrom: Map<string, string[]>;
   private _linksTo: Map<string, GoodSet<string>>;
+  private _noteFilenames: Set<string>;
 
   constructor() {
     this._markdownLinksFrom = new Map();
     this._wikiLinksFrom = new Map();
     this._linksTo = new Map();
+    this._noteFilenames = new Set();
   };
 
   public clear = () => {
     this._markdownLinksFrom = new Map();
+    this._wikiLinksFrom = new Map();
   };
 
   public notes = () => {
     return this._markdownLinksFrom.keys();
   };
 
-  public containsNote = (path: string) => {
-    return this._markdownLinksFrom.has(path);
+  public containsNote = (absPathOrFilename: string) => {
+    return this._markdownLinksFrom.has(absPathOrFilename)
+        || this._noteFilenames.has(absPathOrFilename);
   };
 
   public markdownLinksFrom = (path: string): string[] => {
@@ -53,6 +60,8 @@ export class MapLinkIndex implements NoteLinkIndex {
   };
 
   public addFile = (absPath: string, text: string) => {
+    this._noteFilenames.add(_path.parse(absPath).name);
+
     const markdownLinks = extractMarkdownLinks(text).filter(link => !link.startsWith('http'));
     const wikiLinks = extractWikiLinks(text);
     this.addForwardMarkdownLinks(absPath, markdownLinks);
