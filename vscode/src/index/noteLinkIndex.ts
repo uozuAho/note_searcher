@@ -8,33 +8,33 @@ export interface NoteLinkIndex {
   // abs path of every indexed note
   notes(): IterableIterator<string>;
   containsNote(path: string): boolean;
-  linksFrom(path: string): string[];
+  markdownLinksFrom(path: string): string[];
   linksTo(path: string): string[];
 }
 
 export class MapLinkIndex implements NoteLinkIndex {
-  private _linksFrom: Map<string, string[]>;
+  private _markdownLinksFrom: Map<string, string[]>;
   private _linksTo: Map<string, GoodSet<string>>;
 
   constructor() {
-    this._linksFrom = new Map();
+    this._markdownLinksFrom = new Map();
     this._linksTo = new Map();
   };
 
   public clear = () => {
-    this._linksFrom = new Map();
+    this._markdownLinksFrom = new Map();
   };
 
   public notes = () => {
-    return this._linksFrom.keys();
+    return this._markdownLinksFrom.keys();
   };
 
   public containsNote = (path: string) => {
-    return this._linksFrom.has(path);
+    return this._markdownLinksFrom.has(path);
   };
 
-  public linksFrom = (path: string): string[] => {
-    return this._linksFrom.get(path) || [];
+  public markdownLinksFrom = (path: string): string[] => {
+    return this._markdownLinksFrom.get(path) || [];
   };
 
   public linksTo = (path: string): string[] => {
@@ -50,11 +50,11 @@ export class MapLinkIndex implements NoteLinkIndex {
   };
 
   private addForwardLinks(absPath: string, targetPaths: string[]) {
-    const existingLinks = this._linksFrom.get(absPath);
+    const existingLinks = this._markdownLinksFrom.get(absPath);
     if (existingLinks) {
       targetPaths.forEach(t => existingLinks.push(t));
     } else {
-      this._linksFrom.set(absPath, targetPaths);
+      this._markdownLinksFrom.set(absPath, targetPaths);
     }
   }
 

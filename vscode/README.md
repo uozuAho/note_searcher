@@ -79,9 +79,10 @@ syntax. These become hyperlinks to your local files. Examples:
 You can copy a markdown-style link to a search result by right-clicking on
 the search result. You can also copy this link from an editor tab.
 
-Wiki-style links are also supported. They can be filenames with or without
-paths, with an optional description before a pipe separator. Eg. [[this/note]]
-or [[a note with a description | and_filename]].
+Wiki-style links are also supported. The link must be a filename, with an
+optional description before a pipe separator. Eg. [[note]] or
+[[a note with a description | and_filename]]. If multiple notes with the same
+name exist, vscode will prompt for which note to navigate to.
 
 
 ### Backlinks

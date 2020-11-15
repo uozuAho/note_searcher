@@ -23,7 +23,7 @@ export class LunrNoteIndex implements NoteIndex {
 
   public containsNote = (path: string) => this._linkIndex.containsNote(path);
 
-  public linksFrom = (path: string) => this._linkIndex.linksFrom(path);
+  public markdownLinksFrom = (path: string) => this._linkIndex.markdownLinksFrom(path);
 
   public linksTo = (path: string) => this._linkIndex.linksTo(path);
 

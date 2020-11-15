@@ -151,12 +151,12 @@ describe('lunr note index', () => {
   });
 
   describe('link index', () => {
-    it('indexes links', async () => {
+    it('indexes markdown links', async () => {
       setupFiles([new MockFile('/a/b.txt', '[a link](to/some/stuff)')]);
 
       await lunrNoteIndex.index('some dir');
 
-      const links = lunrNoteIndex.linksFrom('/a/b.txt');
+      const links = lunrNoteIndex.markdownLinksFrom('/a/b.txt');
       expect(links).toEqual(['to/some/stuff']);
     });
   });

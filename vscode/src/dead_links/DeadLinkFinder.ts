@@ -18,7 +18,7 @@ export class DeadLinkFinder {
     const deadLinks = [];
 
     for (const file of this.linkIndex.notes()) {
-      for (const link of this.linkIndex.linksFrom(file)) {
+      for (const link of this.linkIndex.markdownLinksFrom(file)) {
         const absLinkPath = toAbsolutePath(file, link);
         if (!this.fileSystem.fileExists(absLinkPath)) {
           deadLinks.push(new Link(file, link));

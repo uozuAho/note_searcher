@@ -12,8 +12,8 @@ describe('map link index', () => {
       index.addFile(addedFile, 'a [link](to/thing)');
     });
 
-    it('indexes links from files', () => {
-      expect(index.linksFrom(addedFile)).toEqual(['to/thing']);
+    it('indexes markdown links from files', () => {
+      expect(index.markdownLinksFrom(addedFile)).toEqual(['to/thing']);
     });
 
     it('indexes links to files', () => {
@@ -40,7 +40,7 @@ describe('map link index', () => {
 
       expect(index.containsNote(addedFile)).toBe(false);
       expect(Array.from(index.notes())).toHaveLength(0);
-      expect(index.linksFrom(addedFile)).toHaveLength(0);
+      expect(index.markdownLinksFrom(addedFile)).toHaveLength(0);
     });
   });
 
@@ -49,7 +49,7 @@ describe('map link index', () => {
     const addedFile = '/a/b.txt';
     index.addFile('/a/b.txt', 'a [link](http://to/internet/stuff)');
 
-    expect(index.linksFrom(addedFile)).toEqual([]);
+    expect(index.markdownLinksFrom(addedFile)).toEqual([]);
     expect(index.containsNote(addedFile)).toBe(true);
     expect(Array.from(index.notes())).toEqual(['/a/b.txt']);
   });

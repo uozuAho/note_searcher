@@ -49,6 +49,8 @@ Run `npm run build_vsix` in the vscode directory.
     - show dead links
     - show backlinks
     - docs
+- don't index node_modules, OR make wiki link navigation work while
+  indexing is still happening
 - feature: set cursor inside [] when pasting link
 - feature: paste link onto existing text, eg onto 'this' becomes [this]()
 - bug: e2e test failures don't break CI
