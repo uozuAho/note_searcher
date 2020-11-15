@@ -4,6 +4,13 @@ All notable changes to the "note-searcher" extension will be documented in this
 file. Format inspired by https://keepachangelog.com/en/1.0.0/
 
 ## Unreleased
+### Added
+- dead wiki links now shown in the sidebar
+
+### Fixed
+- dead links not showing on vscode startup
+
+### Changed
 - ignores all directories containing "node_modules"
 
 ## [0.0.20] - 2020-11-14

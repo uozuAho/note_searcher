@@ -89,11 +89,13 @@ name exist, vscode will prompt for which note to navigate to.
 
 Links to the currently open note are shown in backlinks section of the sidebar.
 
+Only markdown links are currently supported.
+
 
 ### Find dead links
 
-Markdown links to files that can't be found are shown in the dead links section
-of the sidebar.
+Links to files that can't be found are shown in the dead links section of the
+sidebar.
 
 
 ## UNDER CONSTRUCTION
