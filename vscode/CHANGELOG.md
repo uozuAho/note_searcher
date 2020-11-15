@@ -3,6 +3,9 @@
 All notable changes to the "note-searcher" extension will be documented in this
 file. Format inspired by https://keepachangelog.com/en/1.0.0/
 
+## Unreleased
+- ignores all directories containing "node_modules"
+
 ## [0.0.20] - 2020-11-14
 ### Changed
 - extension is now always activated on startup. No more prompts to
