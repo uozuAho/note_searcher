@@ -18,14 +18,22 @@ export class DeadLinkFinder {
     const deadLinks = [];
 
     for (const file of this.linkIndex.notes()) {
-      for (const link of this.linkIndex.markdownLinksFrom(file)) {
-        const absLinkPath = toAbsolutePath(file, link);
-        if (!this.fileSystem.fileExists(absLinkPath)) {
-          deadLinks.push(new Link(file, link));
-        }
+      for (const mdLink of this.findDeadMarkdownLinks(file)) {
+        deadLinks.push(mdLink);
       }
     }
 
+    return deadLinks;
+  };
+
+  private findDeadMarkdownLinks = (fromPath: string) => {
+    const deadLinks = [];
+    for (const link of this.linkIndex.markdownLinksFrom(fromPath)) {
+      const absLinkPath = toAbsolutePath(fromPath, link);
+      if (!this.fileSystem.fileExists(absLinkPath)) {
+        deadLinks.push(new Link(fromPath, link));
+      }
+    }
     return deadLinks;
   };
 }
