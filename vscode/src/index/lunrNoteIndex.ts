@@ -25,6 +25,8 @@ export class LunrNoteIndex implements NoteIndex {
 
   public markdownLinksFrom = (path: string) => this._linkIndex.markdownLinksFrom(path);
 
+  public wikiLinksFrom = (path: string) => this._linkIndex.wikiLinksFrom(path);
+
   public linksTo = (path: string) => this._linkIndex.linksTo(path);
 
   private indexAllFiles = async (dir: string) => {
