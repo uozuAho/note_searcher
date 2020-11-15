@@ -46,7 +46,7 @@ Run `npm run build_vsix` in the vscode directory.
 - feature: wiki links
     - ctrl+click navigation: DONE
     - highlighting: DONE
-    - show dead links
+    - show dead links: DONE
     - show backlinks
     - docs
 - feature: set cursor inside [] when pasting link

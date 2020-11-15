@@ -31,6 +31,7 @@ hyperlinks. Files can be images or other non-text files, eg.
 
 You can also use wiki links, like this: [[trains]], or [[this | trains]].
 
-[Dead links](to/nowhere) are shown in the sidebar.
+[Dead links](to/nowhere) are shown in the sidebar. Works for markdown and
+[[wiki links | non_existent_note]].
 
 Links to the current note are shown in the 'backlinks' section of the sidebar.

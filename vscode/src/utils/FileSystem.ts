@@ -62,7 +62,12 @@ function walkDir(dir: string, callback: (path: string) => void) {
   fs.readdirSync(dir).forEach(f => {
     const dirPath = _path.join(dir, f);
     const isDirectory = fs.statSync(dirPath).isDirectory();
-    isDirectory ?
-      walkDir(dirPath, callback) : callback(_path.join(dir, f));
+    if (!isDirectory) {
+      callback(_path.join(dir, f));
+    } else {
+      if (!dirPath.includes('node_modules')) {
+        walkDir(dirPath, callback);
+      }
+    }
   });
 };

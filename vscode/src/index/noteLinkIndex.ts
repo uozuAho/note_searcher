@@ -1,41 +1,57 @@
 const _path = require('path');
 
 import { extractMarkdownLinks } from "../text_processing/mdLinkExtractor";
+import { extractWikiLinks } from "../text_processing/wikiLinkExtractor";
 import { GoodSet } from "../utils/goodSet";
 
-// all paths are absolute
 export interface NoteLinkIndex {
-  // abs path of every indexed note
   notes(): IterableIterator<string>;
-  containsNote(path: string): boolean;
-  linksFrom(path: string): string[];
+
+  containsNote(absPathOrFilename: string): boolean;
+
+  /** returns link text of all markdown links (not necessarily abs paths) */
+  markdownLinksFrom(absPath: string): string[];
+
+  /** returns link text of all wiki links (should be filenames only) */
+  wikiLinksFrom(absPath: string): string[]
+
   linksTo(path: string): string[];
 }
 
 export class MapLinkIndex implements NoteLinkIndex {
-  private _linksFrom: Map<string, string[]>;
+  private _markdownLinksFrom: Map<string, string[]>;
+  private _wikiLinksFrom: Map<string, string[]>;
   private _linksTo: Map<string, GoodSet<string>>;
+  private _noteFilenames: Set<string>;
 
   constructor() {
-    this._linksFrom = new Map();
+    this._markdownLinksFrom = new Map();
+    this._wikiLinksFrom = new Map();
     this._linksTo = new Map();
+    this._noteFilenames = new Set();
   };
 
   public clear = () => {
-    this._linksFrom = new Map();
+    this._markdownLinksFrom = new Map();
+    this._wikiLinksFrom = new Map();
   };
 
   public notes = () => {
-    return this._linksFrom.keys();
+    return this._markdownLinksFrom.keys();
   };
 
-  public containsNote = (path: string) => {
-    return this._linksFrom.has(path);
+  public containsNote = (absPathOrFilename: string) => {
+    return this._markdownLinksFrom.has(absPathOrFilename)
+        || this._noteFilenames.has(absPathOrFilename);
   };
 
-  public linksFrom = (path: string): string[] => {
-    return this._linksFrom.get(path) || [];
+  public markdownLinksFrom = (path: string): string[] => {
+    return this._markdownLinksFrom.get(path) || [];
   };
+
+  public wikiLinksFrom(path: string): string[] {
+    return this._wikiLinksFrom.get(path) || [];
+  }
 
   public linksTo = (path: string): string[] => {
     const links = this._linksTo.get(path);
@@ -44,17 +60,30 @@ export class MapLinkIndex implements NoteLinkIndex {
   };
 
   public addFile = (absPath: string, text: string) => {
-    const links = extractMarkdownLinks(text).filter(link => !link.startsWith('http'));
-    this.addForwardLinks(absPath, links);
-    this.addBackwardLinks(absPath, links);
+    this._noteFilenames.add(_path.parse(absPath).name);
+
+    const markdownLinks = extractMarkdownLinks(text).filter(link => !link.startsWith('http'));
+    const wikiLinks = extractWikiLinks(text);
+    this.addForwardMarkdownLinks(absPath, markdownLinks);
+    this.addForwardWikiLinks(absPath, wikiLinks);
+    this.addBackwardLinks(absPath, markdownLinks);
   };
 
-  private addForwardLinks(absPath: string, targetPaths: string[]) {
-    const existingLinks = this._linksFrom.get(absPath);
+  private addForwardMarkdownLinks(absPath: string, targetPaths: string[]) {
+    const existingLinks = this._markdownLinksFrom.get(absPath);
     if (existingLinks) {
       targetPaths.forEach(t => existingLinks.push(t));
     } else {
-      this._linksFrom.set(absPath, targetPaths);
+      this._markdownLinksFrom.set(absPath, targetPaths);
+    }
+  }
+
+  private addForwardWikiLinks(absPath: string, links: string[]) {
+    const existingLinks = this._wikiLinksFrom.get(absPath);
+    if (existingLinks) {
+      links.forEach(t => existingLinks.push(t));
+    } else {
+      this._wikiLinksFrom.set(absPath, links);
     }
   }
 

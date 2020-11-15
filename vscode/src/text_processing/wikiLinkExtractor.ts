@@ -1,13 +1,13 @@
-export const createWikiLinkFilenameRegex = () => /\[\[.+?\]\]/;
+const singleWikiLinkRegexPattern = '\\[\\[.+?\\]\\]';
 
-export function findWikiLinkFilename(text: string): string | null {
-  const match = extract(createWikiLinkFilenameRegex(), text);
+export const createSingleWikiLinkRegex = () => new RegExp(singleWikiLinkRegexPattern);
 
-  if (!match) {
-    return null;
-  }
+const createMultiWikiLinkRegex = () => new RegExp(singleWikiLinkRegexPattern, 'gm');
 
-  return extractFilenameFromWikiLink(match);
+export function extractWikiLinks(text: string): string[] {
+  const matches = extractAll(createMultiWikiLinkRegex(), text);
+
+  return matches.map(m => extractFilenameFromWikiLink(m.toString()));
 }
 
 /**
@@ -40,4 +40,13 @@ function extract(regex: RegExp, text: string): string | null {
     return null;
   }
   return matches[0];
+}
+
+function extractAll(regex: RegExp, text: string): RegExpExecArray[] {
+  const matches = [];
+  let currentMatch;
+  while ((currentMatch = regex.exec(text)) !== null) {
+    matches.push(currentMatch);
+  }
+  return matches;
 }

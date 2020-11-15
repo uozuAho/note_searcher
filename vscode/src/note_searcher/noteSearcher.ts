@@ -104,6 +104,7 @@ export class NoteSearcher {
     if (!this.ui.currentlyOpenDir()) { return; }
     await this.index();
     this.showTags();
+    this.showDeadLinks();
   };
 
   public markdownLinkToClipboard = (filePath: string) => {
