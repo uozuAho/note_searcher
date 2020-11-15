@@ -65,7 +65,9 @@ function walkDir(dir: string, callback: (path: string) => void) {
     if (!isDirectory) {
       callback(_path.join(dir, f));
     } else {
-      if (!dirPath.includes('node_modules')) walkDir(dirPath, callback);
+      if (!dirPath.includes('node_modules')) {
+        walkDir(dirPath, callback);
+      }
     }
   });
 };
