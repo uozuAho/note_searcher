@@ -3,21 +3,25 @@ const _path = require('path');
 import { extractMarkdownLinks } from "../text_processing/mdLinkExtractor";
 import { GoodSet } from "../utils/goodSet";
 
-// all paths are absolute
+/** All paths are absolute unless mentioned otherwise */
 export interface NoteLinkIndex {
-  // abs path of every indexed note
   notes(): IterableIterator<string>;
   containsNote(path: string): boolean;
+  /** returns link text of all markdown links (not necessarily abs paths) */
   markdownLinksFrom(path: string): string[];
+  /** returns link text of all wiki links (should be filenames only) */
+  wikiLinksFrom(path: string): string[]
   linksTo(path: string): string[];
 }
 
 export class MapLinkIndex implements NoteLinkIndex {
   private _markdownLinksFrom: Map<string, string[]>;
+  private _wikiLinksFrom: Map<string, string[]>;
   private _linksTo: Map<string, GoodSet<string>>;
 
   constructor() {
     this._markdownLinksFrom = new Map();
+    this._wikiLinksFrom = new Map();
     this._linksTo = new Map();
   };
 
@@ -36,6 +40,10 @@ export class MapLinkIndex implements NoteLinkIndex {
   public markdownLinksFrom = (path: string): string[] => {
     return this._markdownLinksFrom.get(path) || [];
   };
+
+  public wikiLinksFrom(path: string): string[] {
+    return this._wikiLinksFrom.get(path) || [];
+  }
 
   public linksTo = (path: string): string[] => {
     const links = this._linksTo.get(path);

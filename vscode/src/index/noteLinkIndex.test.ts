@@ -9,11 +9,15 @@ describe('map link index', () => {
 
     beforeAll(() => {
       index = new MapLinkIndex();
-      index.addFile(addedFile, 'a [link](to/thing)');
+      index.addFile(addedFile, 'a [link](to/thing) and a [[wiki link | to_filename]]');
     });
 
     it('indexes markdown links from files', () => {
       expect(index.markdownLinksFrom(addedFile)).toEqual(['to/thing']);
+    });
+
+    it('indexes wiki links from files', () => {
+      expect(index.wikiLinksFrom(addedFile)).toEqual(['to_filename']);
     });
 
     it('indexes links to files', () => {
