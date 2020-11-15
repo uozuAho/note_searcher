@@ -2,7 +2,7 @@ import * as vscode from 'vscode';
 
 import { NoteLinkIndex } from './index/noteLinkIndex';
 import {
-  createWikiLinkRegex,
+  createSingleWikiLinkRegex,
   extractFilenameFromWikiLink
 } from './text_processing/wikiLinkExtractor';
 
@@ -37,7 +37,7 @@ function getWikilinkFilenameAt(
   position: vscode.Position
 ): string | null
 {
-  const regex = createWikiLinkRegex();
+  const regex = createSingleWikiLinkRegex();
   const range = document.getWordRangeAtPosition(position, regex);
   if (!range) {
     return null;

@@ -1,7 +1,11 @@
-export const createWikiLinkRegex = () => /\[\[.+?\]\]/;
+const singleWikiLinkRegexPattern = '\\[\\[.+?\\]\\]';
+
+export const createSingleWikiLinkRegex = () => new RegExp(singleWikiLinkRegexPattern);
+
+const createMultiWikiLinkRegex = () => new RegExp(singleWikiLinkRegexPattern, 'gm');
 
 export function extractWikiLinks(text: string): string[] {
-  const matches = extractAll(/\[\[.+?\]\]/gm, text);
+  const matches = extractAll(createMultiWikiLinkRegex(), text);
 
   return matches.map(m => extractFilenameFromWikiLink(m.toString()));
 }
