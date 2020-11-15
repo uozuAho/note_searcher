@@ -33,10 +33,9 @@ export class NoteSearcherDriver {
 
   public isShowingInDeadLinks = async (name: string) => {
     const deadLinksSection = await this.openSidebarSection('Dead links');
-    if (!deadLinksSection) { return null; }
+    if (!deadLinksSection) { return false; }
 
     const item = await deadLinksSection.findItem(name);
-    if (!item) { return null; }
 
     return !!item;
   };

@@ -15,9 +15,14 @@ describe('dead links', () => {
     noteSearcher = new NoteSearcherDriver(vscode);
   });
 
-  it('shows existing dead links', async () => {
+  it('shows existing dead markdown links', async () => {
     expect(await noteSearcher.isShowingInDeadLinks('readme.md')).to.be.true;
     expect(await noteSearcher.isShowingInDeadLinks('to/nowhere')).to.be.true;
+  });
+
+  it('shows existing dead wiki links', async () => {
+    expect(await noteSearcher.isShowingInDeadLinks('readme.md')).to.be.true;
+    expect(await noteSearcher.isShowingInDeadLinks('non_existent_note')).to.be.true;
   });
 
   it('shows new dead link on save', async () => {
