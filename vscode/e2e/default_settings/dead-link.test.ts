@@ -15,7 +15,12 @@ describe('dead links', () => {
     noteSearcher = new NoteSearcherDriver(vscode);
   });
 
-  it('shows dead links on save', async () => {
+  it('shows existing dead links', async () => {
+    expect(await noteSearcher.isShowingInDeadLinks('readme.md')).to.be.true;
+    expect(await noteSearcher.isShowingInDeadLinks('to/nowhere')).to.be.true;
+  });
+
+  it('shows new dead link on save', async () => {
     await vscode.openDemoDirFile('cheese.md');
     const editor = await vscode.currentEditor();
     if (!editor) { expect.fail('expected an editor to be open'); };
