@@ -308,8 +308,7 @@ describe('dead link finder, mocked filesystem', () => {
   });
 });
 
-// todo: fix this once mocked fs tests are passing
-describe.skip('dead link finder, real filesystem', () => {
+describe('dead link finder, real filesystem', () => {
   let linkIndex: NoteIndex;
   let finder: DeadLinkFinder;
 
