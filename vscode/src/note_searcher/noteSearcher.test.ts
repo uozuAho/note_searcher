@@ -159,7 +159,7 @@ describe('NoteSearcher', () => {
     });
   });
 
-  describe('copy link', () => {
+  describe('copy markdown link', () => {
     beforeEach(() => {
       ui = new MockUi();
       searcher = tmoq.Mock.ofType<NoteIndex>();
@@ -203,6 +203,53 @@ describe('NoteSearcher', () => {
       ui.currentlyOpenDirReturns(null);
 
       noteSearcher.generateMarkdownLinkTo('/a/b/c/d.md');
+    });
+  });
+
+  describe('copy wiki link', () => {
+    beforeEach(() => {
+      ui = new MockUi();
+      searcher = tmoq.Mock.ofType<NoteIndex>();
+      deadLinkFinder = tmoq.Mock.ofType<DeadLinkFinder>();
+      configProvider = tmoq.Mock.ofType<NoteSearcherConfigProvider>();
+
+      noteSearcher = new NoteSearcher(ui,
+        searcher.object, deadLinkFinder.object, configProvider.object);
+    });
+
+    it('copies wiki link with filename without extension', () => {
+      ui.getCurrentFileReturns(new MockFile('/a/b/c.md', ''));
+
+      const link = noteSearcher.generateWikiLinkTo('/a/b/c/d.md');
+
+      expect(link).toBe('[[d]]');
+    });
+
+    it('windows paths are supported', () => {
+      // only test on windows
+      if (process.platform !== 'win32') { return; }
+
+      ui.getCurrentFileReturns(new MockFile('c:\\a\\b.md', ''));
+
+      const link = noteSearcher.generateWikiLinkTo('c:\\a\\b\\c\\d.md');
+
+      expect(link).toBe('[[d]]');
+    });
+
+    it('works when no file is open', () => {
+      ui.getCurrentFileReturns(null);
+      ui.currentlyOpenDirReturns('/a/b');
+
+      const link = noteSearcher.generateWikiLinkTo('/a/b/c/d.md');
+
+      expect(link).toBe('[[d]]');
+    });
+
+    it('does not break when no file or directory is open', () => {
+      ui.getCurrentFileReturns(null);
+      ui.currentlyOpenDirReturns(null);
+
+      noteSearcher.generateWikiLinkTo('/a/b/c/d.md');
     });
   });
 
