@@ -64,8 +64,8 @@
 				"title": "Note searcher: create a new note"
 			},
 			{
-				"command": "noteSearcher.searchResults.copyLink",
-				"title": "Copy link"
+				"command": "noteSearcher.searchResults.copyMarkdownLink",
+				"title": "Copy markdown link"
 			},
 			{
 				"command": "noteSearcher.editorTab.copyLink",
@@ -75,7 +75,7 @@
 		"menus": {
 			"view/item/context": [
 				{
-					"command": "noteSearcher.searchResults.copyLink",
+					"command": "noteSearcher.searchResults.copyMarkdownLink",
 					"when": "view == noteSearcher-results"
 				}
 			],
