@@ -46,8 +46,8 @@ describe('copy link to note', () => {
 
       const editorTab = await editor.getTab();
       const menu = await editorTab.openContextMenu();
-      const menuItem = await menu.getItem('Note searcher: Copy link');
-      if (!menuItem) { expect.fail(`could not find 'copy link' option`); }
+      const menuItem = await menu.getItem('Note searcher: Copy markdown link');
+      if (!menuItem) { expect.fail(`could not find 'copy markdown link' option`); }
       await menuItem.click();
 
       expect(await clipboard.read()).to.equal('[](cheese.md)');

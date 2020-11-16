@@ -68,8 +68,8 @@
 				"title": "Copy markdown link"
 			},
 			{
-				"command": "noteSearcher.editorTab.copyLink",
-				"title": "Note searcher: Copy link"
+				"command": "noteSearcher.editorTab.copyMarkdownLink",
+				"title": "Note searcher: Copy markdown link"
 			}
 		],
 		"menus": {
@@ -81,7 +81,7 @@
 			],
 			"editor/title/context": [
 				{
-					"command": "noteSearcher.editorTab.copyLink"
+					"command": "noteSearcher.editorTab.copyMarkdownLink"
 				}
 			]
 		},
