@@ -122,6 +122,17 @@ export class NoteSearcher {
     return `[](${relPath})`;
   };
 
+  public wikiLinkToClipboard = (filePath: string) => {
+    const link = this.generateWikiLinkTo(filePath);
+    this.ui.copyToClipboard(link);
+  };
+
+  public generateWikiLinkTo = (filePath: string) => {
+    const filename = path.parse(filePath).name;
+
+    return `[[${filename}]]`;
+  };
+
   public showBacklinks = () => {
     const currentFilePath = this.ui.getCurrentFile()?.path();
     if (!currentFilePath) { return; }

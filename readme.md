@@ -47,8 +47,10 @@ Run `npm run build_vsix` in the vscode directory.
     - ctrl+click navigation: DONE
     - highlighting: DONE
     - show dead links: DONE
+    - copy wikilink from sidepane and editor tab
     - show backlinks
     - docs
+- feature: autocomplete wiki links
 - feature: set cursor inside [] when pasting link
 - feature: paste link onto existing text, eg onto 'this' becomes [this]()
 - bug: e2e test failures don't break CI

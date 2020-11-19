@@ -28,11 +28,17 @@ export function activate(context: vscode.ExtensionContext) {
     vscode.commands.registerCommand(
       'noteSearcher.openFile', uri => vscode.window.showTextDocument(uri)),
     vscode.commands.registerCommand(
-      'noteSearcher.searchResults.copyLink',
+      'noteSearcher.searchResults.copyMarkdownLink',
       searchResult => noteSearcher.markdownLinkToClipboard(searchResult.uri.fsPath)),
     vscode.commands.registerCommand(
-      'noteSearcher.editorTab.copyLink',
+      'noteSearcher.searchResults.copyWikiLink',
+      searchResult => noteSearcher.wikiLinkToClipboard(searchResult.uri.fsPath)),
+    vscode.commands.registerCommand(
+      'noteSearcher.editorTab.copyMarkdownLink',
       uri => noteSearcher.markdownLinkToClipboard(uri.fsPath)),
+    vscode.commands.registerCommand(
+      'noteSearcher.editorTab.copyWikiLink',
+      uri => noteSearcher.wikiLinkToClipboard(uri.fsPath)),
     vscode.commands.registerCommand(
       'noteSearcher.createNote', () => noteSearcher.createNote()),
 

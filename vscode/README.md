@@ -22,8 +22,8 @@ collection:
 - Full text search
 - Quick-create notes
 - Tag autocompletion
-- Copy markdown link to note from search results
-- Copy markdown link to note from editor tab
+- Copy markdown/wiki link to note from search results
+- Copy markdown/wiki link to note from editor tab
 - Wiki link highlighting and navigation
 - Shows backlinks in sidebar
 - Shows dead links in sidebar
@@ -76,7 +76,7 @@ syntax. These become hyperlinks to your local files. Examples:
 
 - `[](path/relative/to/file)`
 
-You can copy a markdown-style link to a search result by right-clicking on
+You can copy a markdown or wiki link to a search result by right-clicking on
 the search result. You can also copy this link from an editor tab.
 
 Wiki-style links are also supported. The link must be a filename with no

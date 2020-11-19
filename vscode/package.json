@@ -2,7 +2,7 @@
 	"name": "note-searcher",
 	"displayName": "note-searcher",
 	"description": "Manage a knowledge base of markdown files",
-	"version": "0.0.21",
+	"version": "0.0.22",
 	"publisher": "uozuaho",
 	"preview": false,
 	"repository": {
@@ -64,24 +64,39 @@
 				"title": "Note searcher: create a new note"
 			},
 			{
-				"command": "noteSearcher.searchResults.copyLink",
-				"title": "Copy link"
+				"command": "noteSearcher.searchResults.copyMarkdownLink",
+				"title": "Copy markdown link"
 			},
 			{
-				"command": "noteSearcher.editorTab.copyLink",
-				"title": "Note searcher: Copy link"
+				"command": "noteSearcher.searchResults.copyWikiLink",
+				"title": "Copy wiki link"
+			},
+			{
+				"command": "noteSearcher.editorTab.copyMarkdownLink",
+				"title": "Note searcher: Copy markdown link"
+			},
+			{
+				"command": "noteSearcher.editorTab.copyWikiLink",
+				"title": "Note searcher: Copy wiki link"
 			}
 		],
 		"menus": {
 			"view/item/context": [
 				{
-					"command": "noteSearcher.searchResults.copyLink",
+					"command": "noteSearcher.searchResults.copyMarkdownLink",
+					"when": "view == noteSearcher-results"
+				},
+				{
+					"command": "noteSearcher.searchResults.copyWikiLink",
 					"when": "view == noteSearcher-results"
 				}
 			],
 			"editor/title/context": [
 				{
-					"command": "noteSearcher.editorTab.copyLink"
+					"command": "noteSearcher.editorTab.copyMarkdownLink"
+				},
+				{
+					"command": "noteSearcher.editorTab.copyWikiLink"
 				}
 			]
 		},
