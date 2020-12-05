@@ -25,11 +25,5 @@ describe('search', () => {
 
     const cheeseDoc = await vscode.findEditorByTitle(title => title === 'cheese.md');
     expect(cheeseDoc).not.to.be.null;
-
-    // prevent crash, see https://github.com/redhat-developer/vscode-extension-tester/issues/122
-    // remove when fix for above has been released (3.0.1?)
-    await new Promise((resolve) => {
-      setTimeout(() => resolve(), 1000);
-    });
   });
 });
