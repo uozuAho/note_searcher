@@ -58,6 +58,10 @@
 			{
 				"command": "noteSearcher.search",
 				"title": "Note searcher: search for docs"
+      },
+      {
+				"command": "noteSearcher.explorer.copyWikiLink",
+				"title": "Note searcher: Copy wiki link"
 			},
 			{
 				"command": "noteSearcher.createNote",
@@ -81,7 +85,12 @@
 			}
 		],
 		"menus": {
-			"view/item/context": [
+			"explorer/context": [
+        {
+					"command": "noteSearcher.explorer.copyWikiLink"
+        }
+      ],
+      "view/item/context": [
 				{
 					"command": "noteSearcher.searchResults.copyMarkdownLink",
 					"when": "view == noteSearcher-results"
