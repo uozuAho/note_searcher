@@ -7,8 +7,11 @@ import {
   VSBrowser,
   InputBox,
   EditorView,
-  TextEditor
+  TextEditor,
+  ActivityBar,
+  ViewSection
 } from 'vscode-extension-tester';
+import { SidebarItem } from './SidebarItem';
 
 import { waitForAsync } from './wait';
 
@@ -77,6 +80,15 @@ export class VsCodeDriver {
     return new EditorView().getOpenEditorTitles();
   };
 
+  public findFileExplorerItem = async (name: string): Promise<SidebarItem | null> => {
+    const sidebar = await this.openExplorerSidebar();
+    const section = await sidebar.getContent().getSection('Untitled (Workspace)');
+    await section.expand();
+    const item = await section.findItem(name);
+    if (!item) { return null; }
+    return new SidebarItem(item);
+  };
+
   public findEditorByTitle = async (matcher: (editorTitle: string) => boolean) => {
     const editorView = new EditorView();
     // Was getting 'no editor found with title X' errors here without the delay.
@@ -97,5 +109,11 @@ export class VsCodeDriver {
     });
     if (!matchedTitle) { return null; }
     return await editorView.openEditor(matchedTitle) as TextEditor;
+  };
+
+  private openExplorerSidebar = () => {
+    const activityBar = new ActivityBar();
+    const sidebar = activityBar.getViewControl('Explorer');
+    return sidebar.openView();
   };
 }
