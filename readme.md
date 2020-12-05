@@ -30,6 +30,9 @@ npm run e2e:setup
 
 e2e tests use https://github.com/redhat-developer/vscode-extension-tester
 
+Currently the e2e tests for clipboard stuff fail locally, but pass in the CI
+build :shrug:.
+
 
 ## Run the extension locally
 
@@ -47,9 +50,10 @@ Run `npm run build_vsix` in the vscode directory.
     - ctrl+click navigation: DONE
     - highlighting: DONE
     - show dead links: DONE
-    - copy wikilink from sidepane and editor tab
+    - copy wikilink from sidepane and editor tab: DONE
+    - copy wikilink from file explorer
+    - ignore links within code blocks
     - show backlinks
-    - docs
 - feature: autocomplete wiki links
 - feature: set cursor inside [] when pasting link
 - feature: paste link onto existing text, eg onto 'this' becomes [this]()
