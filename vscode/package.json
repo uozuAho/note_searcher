@@ -2,7 +2,7 @@
 	"name": "note-searcher",
 	"displayName": "note-searcher",
 	"description": "Manage a knowledge base of markdown files",
-	"version": "0.0.22",
+	"version": "0.0.23",
 	"publisher": "uozuaho",
 	"preview": false,
 	"repository": {
@@ -58,8 +58,8 @@
 			{
 				"command": "noteSearcher.search",
 				"title": "Note searcher: search for docs"
-      },
-      {
+			},
+			{
 				"command": "noteSearcher.explorer.copyWikiLink",
 				"title": "Note searcher: Copy wiki link"
 			},
@@ -86,11 +86,11 @@
 		],
 		"menus": {
 			"explorer/context": [
-        {
+				{
 					"command": "noteSearcher.explorer.copyWikiLink"
-        }
-      ],
-      "view/item/context": [
+				}
+			],
+			"view/item/context": [
 				{
 					"command": "noteSearcher.searchResults.copyMarkdownLink",
 					"when": "view == noteSearcher-results"

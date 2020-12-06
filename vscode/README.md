@@ -22,7 +22,7 @@ collection:
 - Full text search
 - Quick-create notes
 - Tag autocompletion
-- Copy markdown/wiki link to note from search results
+- Copy markdown/wiki link to note from search results, file explorer
 - Copy markdown/wiki link to note from editor tab
 - Wiki link highlighting and navigation
 - Shows backlinks in sidebar
@@ -76,8 +76,8 @@ syntax. These become hyperlinks to your local files. Examples:
 
 - `[](path/relative/to/file)`
 
-You can copy a markdown or wiki link to a search result by right-clicking on
-the search result. You can also copy this link from an editor tab.
+You can copy a markdown or wiki link to a search result by right-clicking on the
+search result. You can also copy this link from the explorer and editor tabs.
 
 Wiki-style links are also supported. The link must be a filename with no
 extension, with an optional description before a pipe separator. Eg. [[note]] or

@@ -51,20 +51,18 @@ Run `npm run build_vsix` in the vscode directory.
     - highlighting: DONE
     - show dead links: DONE
     - copy wikilink from sidepane and editor tab: DONE
-    - copy wikilink from file explorer
+    - copy wikilink from file explorer: DONE
     - ignore links within code blocks
     - show backlinks
+- test bug: copy link tests failing (feature works)
+- CI: only 1 test runs on ubuntu
 - feature: autocomplete wiki links
 - feature: set cursor inside [] when pasting link
 - feature: paste link onto existing text, eg onto 'this' becomes [this]()
 - bug: e2e test failures don't break CI
-- feature: configurable new note directory
-    - if not set, use current behaviour
-    - set in dotfile???
 - fix dead link e2e fail on ubuntu
 - better icon
 - feature: ## tags for structure notes
-- feature: copy link from file explorer
 - break up noteSearcher.ts?
     - test file is unwieldy
 - feature: suggest tags in search

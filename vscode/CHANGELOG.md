@@ -3,6 +3,10 @@
 All notable changes to the "note-searcher" extension will be documented in this
 file. Format inspired by https://keepachangelog.com/en/1.0.0/
 
+## [0.0.23] - 2020-12-06
+### Added
+- copy wiki link from file explorer
+
 ## [0.0.22] - 2020-11-19
 ### Added
 - copy wiki link from search results and editor tab
