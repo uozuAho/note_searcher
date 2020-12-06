@@ -86,7 +86,7 @@ describe('copy link to note', () => {
       noteSearcher = new NoteSearcherDriver(vscode);
     });
 
-    it.only('puts a wiki link to a search result in the clipboard', async () => {
+    it('puts a wiki link to a search result in the clipboard', async () => {
       const cheeseFile = await vscode.findFileExplorerItem('cheese.md');
       if (!cheeseFile) { expect.fail('cheese file not found in explorer'); }
 
