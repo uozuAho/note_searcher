@@ -77,4 +77,22 @@ describe('copy link to note', () => {
       expect(await clipboard.read()).to.equal('[[cheese]]');
     });
   });
+
+  describe('from file explorer', () => {
+    before(async () => {
+      await openDemoDirAndCloseAllEditors();
+
+      vscode = new VsCodeDriver();
+      noteSearcher = new NoteSearcherDriver(vscode);
+    });
+
+    it('puts a wiki link to a search result in the clipboard', async () => {
+      const cheeseFile = await vscode.findFileExplorerItem('cheese.md');
+      if (!cheeseFile) { expect.fail('cheese file not found in explorer'); }
+
+      await cheeseFile.clickContextMenuItem('Note searcher: Copy wiki link');
+
+      expect(await clipboard.read()).to.equal('[[cheese]]');
+    });
+  });
 });

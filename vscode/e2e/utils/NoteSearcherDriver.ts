@@ -1,9 +1,8 @@
 import {
   InputBox,
   ActivityBar,
-  CustomTreeSection, 
-  TreeItem
-} from 'vscode-extension-tester';
+  CustomTreeSection} from 'vscode-extension-tester';
+import { SidebarItem } from './SidebarItem';
 
 import { VsCodeDriver } from './VsCodeDriver';
 
@@ -70,20 +69,5 @@ export class NoteSearcherDriver {
     const activityBar = new ActivityBar();
     const sidebar = activityBar.getViewControl('Note Searcher');
     return sidebar.openView();
-  };
-}
-
-class SidebarItem {
-  constructor(private treeItem: TreeItem) {}
-
-  public click = () => {
-    return this.treeItem.click();
-  };
-
-  public clickContextMenuItem = async (itemName: string) => {
-    const menu = await this.treeItem.openContextMenu();
-    const menuItem = await menu.getItem(itemName);
-    if (!menuItem) { throw new Error(`could not find menu item '${itemName}'`); }
-    await menuItem.click();
   };
 }
