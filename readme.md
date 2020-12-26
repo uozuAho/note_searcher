@@ -46,15 +46,10 @@ Run `npm run build_vsix` in the vscode directory.
 
 
 # todo
-- feature: wiki links
-    - ctrl+click navigation: DONE
-    - highlighting: DONE
-    - show dead links: DONE
-    - copy wikilink from sidepane and editor tab: DONE
-    - copy wikilink from file explorer: DONE
-    - ignore links within code blocks
-    - show backlinks
+- wiki links: ignore within code blocks
+- backlinks: support wiki links
 - test bug: copy link tests failing (feature works)
+    - e2e tests worth it?
 - CI: only 1 test runs on ubuntu
 - feature: autocomplete wiki links
 - feature: set cursor inside [] when pasting link
@@ -63,6 +58,7 @@ Run `npm run build_vsix` in the vscode directory.
 - fix dead link e2e fail on ubuntu
 - better icon
 - feature: ## tags for structure notes
+    - hmm. just use regular search for ##....
 - break up noteSearcher.ts?
     - test file is unwieldy
 - feature: suggest tags in search
@@ -73,4 +69,3 @@ Run `npm run build_vsix` in the vscode directory.
     - get readme working in extension preview in vscode
     - make screenshot show in extension preview
     - prevent github link replacement in example file links
-- highlight dead links while editing
