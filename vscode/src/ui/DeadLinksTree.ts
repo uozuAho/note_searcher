@@ -54,6 +54,6 @@ class FileNode extends vscode.TreeItem {
 
 class LinkNode extends vscode.TreeItem {
   constructor(public path: string) {
-    super(path, vscode.TreeItemCollapsibleState.None);
+    super(vscode.Uri.file(path), vscode.TreeItemCollapsibleState.None);
   }
 }
