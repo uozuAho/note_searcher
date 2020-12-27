@@ -19,6 +19,7 @@ describe('dead link finder, mocked filesystem', () => {
       linkIndex.addFile(file.path(), file.text());
       fileSystem.setup(f => f.fileExists(file.path())).returns(() => true);
     }
+    linkIndex.buildBacklinkIndex();
   };
 
   describe('posix paths, markdown links', () => {

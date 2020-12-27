@@ -41,6 +41,7 @@ export class LunrNoteIndex implements NoteIndex {
     }
 
     await Promise.all(jobs);
+    this._linkIndex.buildBacklinkIndex();
     this._lunrSearch.finalise();
   };
 
