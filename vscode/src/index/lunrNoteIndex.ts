@@ -27,6 +27,8 @@ export class LunrNoteIndex implements NoteIndex {
 
   public linksTo = (path: string) => this._linkIndex.linksTo(path);
 
+  public findAllDeadLinks = () => this._linkIndex.findAllDeadLinks();
+
   private indexAllFiles = async (dir: string) => {
     this._tags.clear();
     this._linkIndex.clear();

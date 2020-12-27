@@ -149,24 +149,4 @@ describe('lunr note index', () => {
       expect(lunrNoteIndex.containsNote('source_file.cpp')).toBe(false);
     });
   });
-
-  describe('link index', () => {
-    it('indexes markdown links', async () => {
-      if (process.platform === 'win32') {
-        setupFiles([new MockFile('C:\\a\\b.txt', '[a link](to/some/stuff)')]);
-      } else {
-        setupFiles([new MockFile('/a/b.txt', '[a link](to/some/stuff)')]);
-      }
-
-      await lunrNoteIndex.index('some dir');
-
-      if (process.platform === 'win32') {
-        const links = lunrNoteIndex.linksFrom('C:\\a\\b.txt');
-        expect(links).toEqual(['C:\\a\\to\\some\\stuff']);
-      } else {
-        const links = lunrNoteIndex.linksFrom('/a/b.txt');
-        expect(links).toEqual(['/a/to/some/stuff']);
-      }
-    });
-  });
 });

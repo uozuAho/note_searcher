@@ -17,6 +17,12 @@ export interface NoteLinkIndex {
   linksTo(path: string): string[];
 }
 
+export class Link {
+  constructor(
+    public sourcePath: string,
+    public targetPath: string) {}
+}
+
 export class MapLinkIndex implements NoteLinkIndex {
   private _notesByAbsPath: Map<string, Note>;
   private _absPathsByFilename: Map<string, string>;
@@ -50,6 +56,23 @@ export class MapLinkIndex implements NoteLinkIndex {
     return Array.from(links);
   };
 
+  public findAllDeadLinks(): Link[] {
+    const deadLinks = [];
+    for (const [source, note] of this._notesByAbsPath) {
+      for (const dest of note.outgoingLinks) {
+        if (!this.containsNote(dest)) {
+          deadLinks.push(new Link(source, dest))
+        }
+      }
+      for (const filename of note.outgoingWikiLinkFilenames) {
+        if (!this._absPathsByFilename.has(filename)) {
+          deadLinks.push(new Link(source, filename))
+        }
+      }
+    }
+    return deadLinks;
+  }
+
   /** Note: remember to call finalise after all files are added. */
   public addFile = (absPath: string, text: string) => {
     const note = this._notesByAbsPath.get(absPath) || new Note();
@@ -59,6 +82,7 @@ export class MapLinkIndex implements NoteLinkIndex {
 
     extractMarkdownLinks(text)
       .filter(link => !link.startsWith('http'))
+      .filter(link => isANote(link))
       .map(link => toAbsolutePath(absPath, link))
       .forEach(link => note.outgoingLinks.add(link));
 
@@ -100,3 +124,12 @@ class Note {
 function toAbsolutePath(source: string, target: string): string {
   return _path.resolve(_path.dirname(source), target);
 }
+
+function isANote(path: string): boolean {
+  for (const ext of ['md', 'txt', 'log']) {
+    if (path.endsWith(ext)) {
+      return true;
+    }
+  }
+  return false;
+};

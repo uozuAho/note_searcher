@@ -2,17 +2,14 @@ const _path = require('path');
 
 import * as tmoq from 'typemoq';
 
-import { DeadLinkFinder } from "./DeadLinkFinder";
 import { MapLinkIndex } from "../index/noteLinkIndex";
 import { MockFile } from "../mocks/MockFile";
 import { LunrNoteIndex } from "../index/lunrNoteIndex";
 import { createFileSystem, FileSystem } from "../utils/FileSystem";
-import { NoteIndex } from "../index/NoteIndex";
 
-describe.skip('dead link finder, mocked filesystem', () => {
+describe('dead link finder, mocked filesystem', () => {
   let fileSystem: tmoq.IMock<FileSystem>;
   let linkIndex: MapLinkIndex;
-  let finder: DeadLinkFinder;
 
   const setupLinks = (fileLinks: MockFile[]) => {
     for (const file of fileLinks) {
@@ -28,7 +25,6 @@ describe.skip('dead link finder, mocked filesystem', () => {
     beforeEach(() => {
       fileSystem = tmoq.Mock.ofType<FileSystem>();
       linkIndex = new MapLinkIndex();
-      finder = new DeadLinkFinder(linkIndex, fileSystem.object);
     });
 
     it('finds dead link', () => {
@@ -36,7 +32,7 @@ describe.skip('dead link finder, mocked filesystem', () => {
         new MockFile('/a.md', '[](/b.txt)')
       ]);
 
-      const deadLinks = finder.findAllDeadLinks();
+      const deadLinks = linkIndex.findAllDeadLinks();
 
       expect(deadLinks).toHaveLength(1);
       expect(deadLinks[0].sourcePath).toBe('/a.md');
@@ -49,7 +45,7 @@ describe.skip('dead link finder, mocked filesystem', () => {
         new MockFile('/b.txt', '')
       ]);
 
-      const deadLinks = finder.findAllDeadLinks();
+      const deadLinks = linkIndex.findAllDeadLinks();
 
       expect(deadLinks).toHaveLength(0);
     });
@@ -60,7 +56,7 @@ describe.skip('dead link finder, mocked filesystem', () => {
         new MockFile('/b/c/e.txt', '')
       ]);
 
-      const deadLinks = finder.findAllDeadLinks();
+      const deadLinks = linkIndex.findAllDeadLinks();
 
       expect(deadLinks).toHaveLength(0);
     });
@@ -71,7 +67,7 @@ describe.skip('dead link finder, mocked filesystem', () => {
         new MockFile('/a.md', '')
       ]);
 
-      const deadLinks = finder.findAllDeadLinks();
+      const deadLinks = linkIndex.findAllDeadLinks();
 
       expect(deadLinks).toHaveLength(0);
     });
@@ -82,7 +78,7 @@ describe.skip('dead link finder, mocked filesystem', () => {
         new MockFile('/a.md', '')
       ]);
 
-      const deadLinks = finder.findAllDeadLinks();
+      const deadLinks = linkIndex.findAllDeadLinks();
 
       expect(deadLinks).toHaveLength(0);
     });
@@ -93,7 +89,7 @@ describe.skip('dead link finder, mocked filesystem', () => {
         new MockFile('/a/c/d.txt', '')
       ]);
 
-      const deadLinks = finder.findAllDeadLinks();
+      const deadLinks = linkIndex.findAllDeadLinks();
 
       expect(deadLinks).toHaveLength(0);
     });
@@ -104,7 +100,7 @@ describe.skip('dead link finder, mocked filesystem', () => {
         new MockFile('/a/c.png', '')
       ]);
 
-      const deadLinks = finder.findAllDeadLinks();
+      const deadLinks = linkIndex.findAllDeadLinks();
 
       expect(deadLinks).toHaveLength(0);
     });
@@ -116,7 +112,6 @@ describe.skip('dead link finder, mocked filesystem', () => {
     beforeEach(() => {
       fileSystem = tmoq.Mock.ofType<FileSystem>();
       linkIndex = new MapLinkIndex();
-      finder = new DeadLinkFinder(linkIndex, fileSystem.object);
     });
 
     it('finds dead link', () => {
@@ -124,7 +119,7 @@ describe.skip('dead link finder, mocked filesystem', () => {
         new MockFile('/a.md', '[[blah]]')
       ]);
 
-      const deadLinks = finder.findAllDeadLinks();
+      const deadLinks = linkIndex.findAllDeadLinks();
 
       expect(deadLinks).toHaveLength(1);
       expect(deadLinks[0].sourcePath).toBe('/a.md');
@@ -137,7 +132,7 @@ describe.skip('dead link finder, mocked filesystem', () => {
         new MockFile('/b.txt', '')
       ]);
 
-      const deadLinks = finder.findAllDeadLinks();
+      const deadLinks = linkIndex.findAllDeadLinks();
 
       expect(deadLinks).toHaveLength(0);
     });
@@ -148,7 +143,7 @@ describe.skip('dead link finder, mocked filesystem', () => {
         new MockFile('/b/c/e.txt', '')
       ]);
 
-      const deadLinks = finder.findAllDeadLinks();
+      const deadLinks = linkIndex.findAllDeadLinks();
 
       expect(deadLinks).toHaveLength(0);
     });
@@ -159,7 +154,7 @@ describe.skip('dead link finder, mocked filesystem', () => {
         new MockFile('/a.md', '')
       ]);
 
-      const deadLinks = finder.findAllDeadLinks();
+      const deadLinks = linkIndex.findAllDeadLinks();
 
       expect(deadLinks).toHaveLength(0);
     });
@@ -171,7 +166,6 @@ describe.skip('dead link finder, mocked filesystem', () => {
     beforeEach(() => {
       fileSystem = tmoq.Mock.ofType<FileSystem>();
       linkIndex = new MapLinkIndex();
-      finder = new DeadLinkFinder(linkIndex, fileSystem.object);
     });
 
     it('finds dead link', () => {
@@ -179,7 +173,7 @@ describe.skip('dead link finder, mocked filesystem', () => {
         new MockFile('c:\\a.md', '[](c:\\b.txt)')
       ]);
 
-      const deadLinks = finder.findAllDeadLinks();
+      const deadLinks = linkIndex.findAllDeadLinks();
 
       expect(deadLinks).toHaveLength(1);
       expect(deadLinks[0].sourcePath).toBe('c:\\a.md');
@@ -192,7 +186,7 @@ describe.skip('dead link finder, mocked filesystem', () => {
         new MockFile('c:\\b.txt', '')
       ]);
 
-      const deadLinks = finder.findAllDeadLinks();
+      const deadLinks = linkIndex.findAllDeadLinks();
 
       expect(deadLinks).toHaveLength(0);
     });
@@ -203,7 +197,7 @@ describe.skip('dead link finder, mocked filesystem', () => {
         new MockFile('c:\\b\\c\\e.txt', '')
       ]);
 
-      const deadLinks = finder.findAllDeadLinks();
+      const deadLinks = linkIndex.findAllDeadLinks();
 
       expect(deadLinks).toHaveLength(0);
     });
@@ -214,7 +208,7 @@ describe.skip('dead link finder, mocked filesystem', () => {
         new MockFile('c:\\a.md', '')
       ]);
 
-      const deadLinks = finder.findAllDeadLinks();
+      const deadLinks = linkIndex.findAllDeadLinks();
 
       expect(deadLinks).toHaveLength(0);
     });
@@ -225,7 +219,7 @@ describe.skip('dead link finder, mocked filesystem', () => {
         new MockFile('c:\\a.md', '')
       ]);
 
-      const deadLinks = finder.findAllDeadLinks();
+      const deadLinks = linkIndex.findAllDeadLinks();
 
       expect(deadLinks).toHaveLength(0);
     });
@@ -236,7 +230,7 @@ describe.skip('dead link finder, mocked filesystem', () => {
         new MockFile('c:\\a\\c\\d.txt', '')
       ]);
 
-      const deadLinks = finder.findAllDeadLinks();
+      const deadLinks = linkIndex.findAllDeadLinks();
 
       expect(deadLinks).toHaveLength(0);
     });
@@ -247,7 +241,7 @@ describe.skip('dead link finder, mocked filesystem', () => {
         new MockFile('c:\\a\\c.png', '')
       ]);
 
-      const deadLinks = finder.findAllDeadLinks();
+      const deadLinks = linkIndex.findAllDeadLinks();
 
       expect(deadLinks).toHaveLength(0);
     });
@@ -259,7 +253,6 @@ describe.skip('dead link finder, mocked filesystem', () => {
     beforeEach(() => {
       fileSystem = tmoq.Mock.ofType<FileSystem>();
       linkIndex = new MapLinkIndex();
-      finder = new DeadLinkFinder(linkIndex, fileSystem.object);
     });
 
     it('finds dead link', () => {
@@ -267,7 +260,7 @@ describe.skip('dead link finder, mocked filesystem', () => {
         new MockFile('c:\\a.md', '[[blah]]')
       ]);
 
-      const deadLinks = finder.findAllDeadLinks();
+      const deadLinks = linkIndex.findAllDeadLinks();
 
       expect(deadLinks).toHaveLength(1);
       expect(deadLinks[0].sourcePath).toBe('c:\\a.md');
@@ -280,7 +273,7 @@ describe.skip('dead link finder, mocked filesystem', () => {
         new MockFile('c:\\b.txt', '')
       ]);
 
-      const deadLinks = finder.findAllDeadLinks();
+      const deadLinks = linkIndex.findAllDeadLinks();
 
       expect(deadLinks).toHaveLength(0);
     });
@@ -291,7 +284,7 @@ describe.skip('dead link finder, mocked filesystem', () => {
         new MockFile('c:\\b\\c\\e.txt', '')
       ]);
 
-      const deadLinks = finder.findAllDeadLinks();
+      const deadLinks = linkIndex.findAllDeadLinks();
 
       expect(deadLinks).toHaveLength(0);
     });
@@ -302,50 +295,33 @@ describe.skip('dead link finder, mocked filesystem', () => {
         new MockFile('c:\\a.md', '')
       ]);
 
-      const deadLinks = finder.findAllDeadLinks();
+      const deadLinks = linkIndex.findAllDeadLinks();
 
       expect(deadLinks).toHaveLength(0);
     });
   });
 });
 
-describe.skip('dead link finder, real filesystem', () => {
-  let linkIndex: NoteIndex;
-  let finder: DeadLinkFinder;
+describe('dead link finder, real filesystem', () => {
+  let linkIndex: LunrNoteIndex;
 
   beforeEach(() => {
     const fs = createFileSystem();
     linkIndex = new LunrNoteIndex(fs);
-    finder = new DeadLinkFinder(linkIndex, fs);
   });
 
-  it('finds dead markdown link in demo dir readme', async () => {
+  it('finds all dead links in demo dir', async () => {
     await linkIndex.index(_path.resolve(__dirname, '../../demo_dir'));
 
     // act
-    const deadLinks = finder.findAllDeadLinks();
+    const deadLinks = linkIndex.findAllDeadLinks();
 
     // assert
     expect(deadLinks).toHaveLength(2);
+    expect(deadLinks.map(d => _path.parse(d.sourcePath).base))
+      .toStrictEqual(['readme.md', 'readme.md']);
 
-    const deadMarkdownLink = deadLinks
-      .filter(d => d.targetPath.includes('to/nowhere'))[0];
-
-    expect(deadMarkdownLink.sourcePath).toContain('readme.md');
-  });
-
-  it('finds dead wiki link in demo dir readme', async () => {
-    await linkIndex.index(_path.resolve(__dirname, '../../demo_dir'));
-
-    // act
-    const deadLinks = finder.findAllDeadLinks();
-
-    // assert
-    expect(deadLinks).toHaveLength(2);
-
-    const deadMarkdownLink = deadLinks
-      .filter(d => d.targetPath.includes('non_existent_note'))[0];
-
-    expect(deadMarkdownLink.sourcePath).toContain('readme.md');
+    expect(deadLinks.map(d => _path.parse(d.targetPath).base))
+      .toStrictEqual(['nowhere.md', 'non_existent_note']);
   });
 });
