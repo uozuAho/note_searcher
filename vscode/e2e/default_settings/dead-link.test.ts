@@ -17,7 +17,7 @@ describe('dead links', () => {
 
   it('shows existing dead markdown links', async () => {
     expect(await noteSearcher.isShowingInDeadLinks('readme.md')).to.be.true;
-    expect(await noteSearcher.isShowingInDeadLinks('to/nowhere')).to.be.true;
+    expect(await noteSearcher.isShowingInDeadLinks('nowhere.md')).to.be.true;
   });
 
   it('shows existing dead wiki links', async () => {
