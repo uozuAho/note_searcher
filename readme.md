@@ -46,7 +46,6 @@ Run `npm run build_vsix` in the vscode directory.
 
 
 # todo
-- wiki links: ignore within code blocks
 - backlinks: support wiki links
 - test bug: copy link tests failing (feature works)
     - e2e tests worth it?

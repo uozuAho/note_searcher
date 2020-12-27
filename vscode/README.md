@@ -84,6 +84,12 @@ extension, with an optional description before a pipe separator. Eg. [[note]] or
 [[a note with a description | and_filename]]. If multiple notes with the same
 name exist, vscode will prompt for which note to navigate to.
 
+Links within code blocks are ignored:
+
+```sh
+#like this one: [[yo]]
+```
+
 
 ### Backlinks
 
