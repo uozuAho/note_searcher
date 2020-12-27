@@ -12,6 +12,7 @@ describe('mdCodeBlocks', () => {
   });
 
   it('excludes code block from large md text', () => {
+/* eslint-disable indent */
 const input = `
 # Hi there
 
@@ -26,6 +27,7 @@ That's all!
 
 // note the extra newline before "That's all!". This isn't "correct", but
 // is enough for the current need: excluding links from code blocks
+/* eslint-disable indent */
 const expectedOutput = `
 # Hi there
 

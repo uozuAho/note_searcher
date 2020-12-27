@@ -63,12 +63,12 @@ export class MapLinkIndex implements NoteLinkIndex {
     for (const [source, note] of this._notesByAbsPath) {
       for (const dest of note.outgoingLinks) {
         if (!this.containsNote(dest)) {
-          deadLinks.push(new Link(source, dest))
+          deadLinks.push(new Link(source, dest));
         }
       }
       for (const filename of note.outgoingWikiLinkFilenames) {
         if (!this._absPathsByFilename.has(filename)) {
-          deadLinks.push(new Link(source, filename))
+          deadLinks.push(new Link(source, filename));
         }
       }
     }
@@ -95,7 +95,7 @@ export class MapLinkIndex implements NoteLinkIndex {
   public finalise = () => {
     this.populateOutgoingWikiLinks();
     this.populateBacklinks();
-  }
+  };
 
   private populateBacklinks = () => {
     for (const [sourcePath, sourceNote] of this._notesByAbsPath) {
