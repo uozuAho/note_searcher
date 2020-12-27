@@ -3,7 +3,6 @@ import * as vscode from 'vscode';
 import { createNoteIndex } from './index/NoteIndex';
 import { VsCodeNoteSearcherUi } from './ui/VsCodeNoteSearcherUi';
 import { NoteSearcher } from './note_searcher/noteSearcher';
-import { DeadLinkFinder } from './dead_links/DeadLinkFinder';
 import { NoteSearcherConfigProvider } from './note_searcher/NoteSearcherConfigProvider';
 import { TagCompleter } from './tag_completion/TagCompleter';
 import { createFileSystem } from './utils/FileSystem';
@@ -15,8 +14,7 @@ export function activate(context: vscode.ExtensionContext) {
   const ui = new VsCodeNoteSearcherUi();
   const configProvider = new NoteSearcherConfigProvider(context);
   const noteIndex = createNoteIndex(extensionDir()!, configProvider);
-  const deadLinkFinder = new DeadLinkFinder(noteIndex, createFileSystem());
-  const noteSearcher = new NoteSearcher(ui, noteIndex, deadLinkFinder, configProvider);
+  const noteSearcher = new NoteSearcher(ui, noteIndex, configProvider);
 
   context.subscriptions.push(
     vscode.commands.registerCommand(
