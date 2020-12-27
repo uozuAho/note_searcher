@@ -4,13 +4,11 @@ import { NoteSearcher } from './noteSearcher';
 import { NoteIndex } from '../index/NoteIndex';
 import { MockUi } from "../mocks/MockUi";
 import { MockFile } from "../mocks/MockFile";
-import { DeadLinkFinder, Link } from '../dead_links/DeadLinkFinder';
 import { NoteSearcherConfigProvider, NoteSearcherConfig } from './NoteSearcherConfigProvider';
 
 describe('NoteSearcher', () => {
   let ui: MockUi;
   let searcher: tmoq.IMock<NoteIndex>;
-  let deadLinkFinder: tmoq.IMock<DeadLinkFinder>;
   let configProvider: tmoq.IMock<NoteSearcherConfigProvider>;
   let noteSearcher: NoteSearcher;
 
@@ -28,11 +26,10 @@ describe('NoteSearcher', () => {
     beforeEach(() => {
       ui = new MockUi();
       searcher = tmoq.Mock.ofType<NoteIndex>();
-      deadLinkFinder = tmoq.Mock.ofType<DeadLinkFinder>();
       configProvider = tmoq.Mock.ofType<NoteSearcherConfigProvider>();
 
       noteSearcher = new NoteSearcher(ui,
-        searcher.object, deadLinkFinder.object, configProvider.object);
+        searcher.object, configProvider.object);
     });
 
     it('updates index', () => {
@@ -49,12 +46,11 @@ describe('NoteSearcher', () => {
     beforeEach(() => {
       ui = new MockUi();
       searcher = tmoq.Mock.ofType<NoteIndex>();
-      deadLinkFinder = tmoq.Mock.ofType<DeadLinkFinder>();
       configProvider = tmoq.Mock.ofType<NoteSearcherConfigProvider>();
       configProvider.setup(c => c.getConfig()).returns(() => defaultConfig());
 
       noteSearcher = new NoteSearcher(ui,
-        searcher.object, deadLinkFinder.object, configProvider.object);
+        searcher.object, configProvider.object);
     });
 
     it('passes input to searcher', async () => {
@@ -98,12 +94,11 @@ describe('NoteSearcher', () => {
     beforeEach(() => {
       ui = new MockUi();
       searcher = tmoq.Mock.ofType<NoteIndex>();
-      deadLinkFinder = tmoq.Mock.ofType<DeadLinkFinder>();
       configProvider = tmoq.Mock.ofType<NoteSearcherConfigProvider>();
       configProvider.setup(c => c.getConfig()).returns(() => defaultConfig());
 
       noteSearcher = new NoteSearcher(ui,
-        searcher.object, deadLinkFinder.object, configProvider.object);
+        searcher.object, configProvider.object);
     });
 
     it('shows indexing in progress', async () => {
@@ -163,11 +158,10 @@ describe('NoteSearcher', () => {
     beforeEach(() => {
       ui = new MockUi();
       searcher = tmoq.Mock.ofType<NoteIndex>();
-      deadLinkFinder = tmoq.Mock.ofType<DeadLinkFinder>();
       configProvider = tmoq.Mock.ofType<NoteSearcherConfigProvider>();
 
       noteSearcher = new NoteSearcher(ui,
-        searcher.object, deadLinkFinder.object, configProvider.object);
+        searcher.object, configProvider.object);
     });
 
     it('copies link relative to open file', () => {
@@ -210,11 +204,10 @@ describe('NoteSearcher', () => {
     beforeEach(() => {
       ui = new MockUi();
       searcher = tmoq.Mock.ofType<NoteIndex>();
-      deadLinkFinder = tmoq.Mock.ofType<DeadLinkFinder>();
       configProvider = tmoq.Mock.ofType<NoteSearcherConfigProvider>();
 
       noteSearcher = new NoteSearcher(ui,
-        searcher.object, deadLinkFinder.object, configProvider.object);
+        searcher.object, configProvider.object);
     });
 
     it('copies wiki link with filename without extension', () => {
@@ -257,20 +250,19 @@ describe('NoteSearcher', () => {
     beforeEach(() => {
       ui = new MockUi();
       searcher = tmoq.Mock.ofType<NoteIndex>();
-      deadLinkFinder = tmoq.Mock.ofType<DeadLinkFinder>();
       configProvider = tmoq.Mock.ofType<NoteSearcherConfigProvider>();
       configProvider.setup(c => c.getConfig()).returns(() => defaultConfig());
 
       ui.currentlyOpenDirReturns('a directory');
 
       noteSearcher = new NoteSearcher(ui,
-        searcher.object, deadLinkFinder.object, configProvider.object);
+        searcher.object, configProvider.object);
     });
 
     it('shows dead links', () => {
-      deadLinkFinder.setup(d => d.findAllDeadLinks()).returns(() => [
-        new Link('/some/path', '/path/to/nowhere')
-      ]);
+      // deadLinkFinder.setup(d => d.findAllDeadLinks()).returns(() => [
+      //   new Link('/some/path', '/path/to/nowhere')
+      // ]);
 
       noteSearcher.showDeadLinks();
 
@@ -282,15 +274,13 @@ describe('NoteSearcher', () => {
     beforeEach(() => {
       ui = new MockUi();
       searcher = tmoq.Mock.ofType<NoteIndex>();
-      deadLinkFinder = tmoq.Mock.ofType<DeadLinkFinder>();
       configProvider = tmoq.Mock.ofType<NoteSearcherConfigProvider>();
       configProvider.setup(c => c.getConfig()).returns(() => defaultConfig());
 
       ui.currentlyOpenDirReturns('a directory');
-      deadLinkFinder.setup(d => d.findAllDeadLinks()).returns(() => []);
 
       noteSearcher = new NoteSearcher(ui,
-        searcher.object, deadLinkFinder.object, configProvider.object);
+        searcher.object, configProvider.object);
     });
 
     it('updates index', async () => {

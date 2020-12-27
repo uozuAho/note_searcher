@@ -2,12 +2,12 @@ const _path = require('path');
 
 import * as tmoq from 'typemoq';
 
-import { MapLinkIndex } from "../index/noteLinkIndex";
+import { MapLinkIndex } from "./noteLinkIndex";
 import { MockFile } from "../mocks/MockFile";
-import { LunrNoteIndex } from "../index/lunrNoteIndex";
+import { LunrNoteIndex } from "./lunrNoteIndex";
 import { createFileSystem, FileSystem } from "../utils/FileSystem";
 
-describe('dead link finder, mocked filesystem', () => {
+describe('MapLinkIndex, dead links, mocked filesystem', () => {
   let fileSystem: tmoq.IMock<FileSystem>;
   let linkIndex: MapLinkIndex;
 
@@ -302,7 +302,7 @@ describe('dead link finder, mocked filesystem', () => {
   });
 });
 
-describe('dead link finder, real filesystem', () => {
+describe('MapLinkIndex, dead links, real filesystem', () => {
   let linkIndex: LunrNoteIndex;
 
   beforeEach(() => {

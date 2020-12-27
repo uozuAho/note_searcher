@@ -4,7 +4,6 @@ import { NoteSearcherUi } from "../ui/NoteSearcherUi";
 import { File } from "../utils/File";
 import { NoteIndex } from "../index/NoteIndex";
 import { createDiagnostics, Diagnostics } from "../diagnostics/diagnostics";
-import { DeadLinkFinder } from "../dead_links/DeadLinkFinder";
 import { NoteSearcherConfigProvider } from "./NoteSearcherConfigProvider";
 import { TimeProvider, createTimeProvider } from "../utils/timeProvider";
 import { formatDateTime_YYYYMMddhhmm } from "../utils/timeFormatter";
@@ -17,7 +16,6 @@ export class NoteSearcher {
   constructor(
     private ui: NoteSearcherUi,
     private noteIndex: NoteIndex,
-    private deadLinkFinder: DeadLinkFinder,
     private configProvider: NoteSearcherConfigProvider,
     private timeProvider: TimeProvider = createTimeProvider())
   {
@@ -94,7 +92,7 @@ export class NoteSearcher {
       return;
     }
 
-    const deadLinks = this.deadLinkFinder.findAllDeadLinks();
+    const deadLinks = this.noteIndex.findAllDeadLinks();
 
     this.ui.showDeadLinks(deadLinks);
     this.diagnostics.trace('show dead links completed');
