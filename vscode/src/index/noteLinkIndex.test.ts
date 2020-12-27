@@ -8,8 +8,8 @@ describe('map link index', () => {
 
     beforeAll(() => {
       index = new MapLinkIndex();
-      index.addFile(note1, 'a [link](note2.md) and a [[wiki link | note2]]');
-      index.addFile(note2, 'blah blah note2 has no links');
+      index.addFile(note1, 'has a markdown link: [link](note2.md)');
+      index.addFile(note2, 'has a wiki link: [[link | note1]]');
       index.buildBacklinkIndex();
     });
 
@@ -18,16 +18,22 @@ describe('map link index', () => {
     });
 
     it('indexes wiki links from notes', () => {
-      expect(index.wikiLinksFrom(note1)).toEqual(['note2']);
+      expect(index.wikiLinksFrom(note2)).toEqual(['note1']);
     });
 
-    it('indexes links to notes', () => {
+    it('indexes incoming markdown links', () => {
       if (process.platform === 'win32') {
         expect(index.linksTo('C:\\a\\note2.md')).toEqual([note1]);
-        // expect(index.linksTo('to_filename')).toEqual([addedFile]);
       } else {
         expect(index.linksTo('/a/note2.md')).toEqual([note1]);
-        // expect(index.linksTo('to_filename')).toEqual([addedFile]);
+      }
+    });
+
+    it('indexes incoming wiki links', () => {
+      if (process.platform === 'win32') {
+        expect(index.linksTo('C:\\a\\note1.md')).toEqual([note2]);
+      } else {
+        expect(index.linksTo('/a/note1.md')).toEqual([note2]);
       }
     });
 
