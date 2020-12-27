@@ -23,10 +23,6 @@ export class LunrNoteIndex implements NoteIndex {
 
   public containsNote = (path: string) => this._linkIndex.containsNote(path);
 
-  public markdownLinksFrom = (path: string) => this._linkIndex.markdownLinksFrom(path);
-
-  public wikiLinksFrom = (path: string) => this._linkIndex.wikiLinksFrom(path);
-
   public linksFrom = (path: string) => this._linkIndex.linksFrom(path);
 
   public linksTo = (path: string) => this._linkIndex.linksTo(path);
@@ -43,7 +39,7 @@ export class LunrNoteIndex implements NoteIndex {
     }
 
     await Promise.all(jobs);
-    this._linkIndex.buildBacklinkIndex();
+    this._linkIndex.finalise();
     this._lunrSearch.finalise();
   };
 

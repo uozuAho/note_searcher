@@ -10,15 +10,15 @@ describe('map link index', () => {
       index = new MapLinkIndex();
       index.addFile(note1, 'has a markdown link: [link](note2.md)');
       index.addFile(note2, 'has a wiki link: [[link | note1]]');
-      index.buildBacklinkIndex();
+      index.finalise();
     });
 
     it('indexes markdown links from notes', () => {
-      expect(index.markdownLinksFrom(note1)).toEqual(['note2.md']);
+      expect(index.linksFrom(note1)).toEqual([note2]);
     });
 
     it('indexes wiki links from notes', () => {
-      expect(index.wikiLinksFrom(note2)).toEqual(['note1']);
+      expect(index.linksFrom(note2)).toEqual([note1]);
     });
 
     it('indexes incoming markdown links', () => {
@@ -48,13 +48,13 @@ describe('map link index', () => {
       const index = new MapLinkIndex();
       const addedFile = '/a/b.txt';
       index.addFile(addedFile, 'a [link](to/thing)');
-      index.buildBacklinkIndex();
+      index.finalise();
 
       index.clear();
 
       expect(index.containsNote(addedFile)).toBe(false);
       expect(Array.from(index.notes())).toHaveLength(0);
-      expect(index.markdownLinksFrom(addedFile)).toHaveLength(0);
+      expect(index.linksFrom(addedFile)).toHaveLength(0);
     });
   });
 
@@ -63,7 +63,7 @@ describe('map link index', () => {
     const addedFile = '/a/b.txt';
     index.addFile('/a/b.txt', 'a [link](http://to/internet/stuff)');
 
-    expect(index.markdownLinksFrom(addedFile)).toEqual([]);
+    expect(index.linksFrom(addedFile)).toEqual([]);
     expect(index.containsNote(addedFile)).toBe(true);
     expect(Array.from(index.notes())).toEqual(['/a/b.txt']);
   });

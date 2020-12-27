@@ -10,12 +10,7 @@ export interface NoteLinkIndex {
 
   containsNote(absPathOrFilename: string): boolean;
 
-  /** returns link text of all markdown links (not necessarily abs paths) */
-  markdownLinksFrom(absPath: string): string[];
-
-  /** returns link text of all wiki links (filenames only) */
-  wikiLinksFrom(absPath: string): string[]
-
+  /** returns note paths linked from the given note */
   linksFrom(absPath: string): string[]
 
   /** returns all notes (abs paths) containing links to the given note */
@@ -45,25 +40,28 @@ export class MapLinkIndex implements NoteLinkIndex {
         || this._absPathsByFilename.has(absPathOrFilename);
   };
 
-  public markdownLinksFrom = (path: string): string[] => {
+  private markdownLinksFrom = (path: string): string[] => {
     return this._notesByAbsPath.get(path)?.outgoingMarkdownLinks || [];
   };
 
-  public wikiLinksFrom(path: string): string[] {
-    return this._notesByAbsPath.get(path)?.outgoingWikiLinks || [];
+  private wikiLinksFrom(path: string): string[] {
+    const links = this._notesByAbsPath.get(path)?.outgoingWikiLinks || [];
+    return Array.from(links);
   }
 
   public linksFrom(path: string): string[] {
-    const mdLinks = this
-      .markdownLinksFrom(path)
-      .map(relPath => toAbsolutePath(path, relPath));
+    // const mdLinks = this
+    //   .markdownLinksFrom(path)
+    //   .map(relPath => toAbsolutePath(path, relPath));
 
-    const wikiLinks = this
-      .wikiLinksFrom(path)
-      .map(filename => this._absPathsByFilename.get(filename))
-      .filter(absPath => !!absPath) as string[];
+    // const wikiLinks = this
+    //   .wikiLinksFrom(path)
+    //   .map(filename => this._absPathsByFilename.get(filename))
+    //   .filter(absPath => !!absPath) as string[];
 
-    return mdLinks.concat(wikiLinks);
+    // return mdLinks.concat(wikiLinks);
+    const links = this._notesByAbsPath.get(path)?.outgoingLinks || [];
+    return Array.from(links);
   }
 
   public linksTo = (path: string): string[] => {
@@ -71,8 +69,7 @@ export class MapLinkIndex implements NoteLinkIndex {
     return Array.from(links);
   };
 
-  /** Note: remember to call buildBacklinkIndex after all files are added, or
-   *  backlinks will not work.
+  /** Note: remember to call finalise after all files are added.
    */
   public addFile = (absPath: string, text: string) => {
     const note = this._notesByAbsPath.get(absPath) || new Note();
@@ -80,15 +77,38 @@ export class MapLinkIndex implements NoteLinkIndex {
     this._notesByAbsPath.set(absPath, note);
     this._absPathsByFilename.set(filename, absPath);
 
-    note.outgoingMarkdownLinks = extractMarkdownLinks(text).filter(link => !link.startsWith('http'));
-    note.outgoingWikiLinks = extractWikiLinks(text);
+    extractMarkdownLinks(text)
+      .filter(link => !link.startsWith('http'))
+      .map(link => toAbsolutePath(absPath, link))
+      .forEach(link => note.outgoingLinks.add(link));
+
+    // Temporarily store wikilink targets as filenames.
+    // These will be converted to absolute paths on finalise().
+    extractWikiLinks(text)
+      .forEach(link => note.outgoingWikiLinks.push(link as string));
+      // .map(filename => this._absPathsByFilename.get(filename))
+      // .filter(path => !!path)
   };
+
+  public finalise = () => {
+    for (const [_, note] of this._notesByAbsPath) {
+      note.outgoingWikiLinks
+        .map(filename => this._absPathsByFilename.get(filename))
+        .filter(absPath => !!absPath)
+        .forEach(link => note.outgoingLinks.add(link as string))
+    }
+
+    this.buildBacklinkIndex();
+  }
 
   /** Builds backlink index from existing note index. Call after all notes are
    *  added.
    */
-  public buildBacklinkIndex = () => {
+  private buildBacklinkIndex = () => {
     for (const [sourcePath, sourceNote] of this._notesByAbsPath) {
+      for (const targetPath of sourceNote.outgoingLinks) {
+        this._notesByAbsPath.get(targetPath)?.incomingLinks.add(sourcePath);
+      }
       for (const targetPath of sourceNote.outgoingMarkdownLinks) {
         const absLinkTarget = toAbsolutePath(sourcePath, targetPath);
         this._notesByAbsPath.get(absLinkTarget)?.incomingLinks.add(sourcePath);
@@ -106,7 +126,8 @@ class Note {
   constructor(
     public incomingLinks: GoodSet<string> = new GoodSet(),
     public outgoingWikiLinks: string[] = [],
-    public outgoingMarkdownLinks: string[] = []
+    public outgoingMarkdownLinks: string[] = [],
+    public outgoingLinks: GoodSet<string> = new GoodSet()
   ) {}
 }
 

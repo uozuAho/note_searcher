@@ -31,10 +31,9 @@ export class DeadLinkFinder {
 
   private findDeadMarkdownLinks = (fromPath: string) => {
     const deadLinks = [];
-    for (const link of this.linkIndex.markdownLinksFrom(fromPath)) {
-      const absLinkPath = toAbsolutePath(fromPath, link);
+    for (const absLinkPath of this.linkIndex.linksFrom(fromPath)) {
       if (!this.fileSystem.fileExists(absLinkPath)) {
-        deadLinks.push(new Link(fromPath, link));
+        deadLinks.push(new Link(fromPath, absLinkPath));
       }
     }
     return deadLinks;
@@ -42,7 +41,7 @@ export class DeadLinkFinder {
 
   private findDeadWikiLinks = (fromPath: string) => {
     const deadLinks = [];
-    for (const link of this.linkIndex.wikiLinksFrom(fromPath)) {
+    for (const link of this.linkIndex.linksFrom(fromPath)) {
       if (!this.linkIndex.containsNote(link)) {
         deadLinks.push(new Link(fromPath, link));
       }

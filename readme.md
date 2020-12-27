@@ -47,6 +47,7 @@ Run `npm run build_vsix` in the vscode directory.
 
 # todo
 - backlinks: support wiki links
+    - remove dead link finder, fix tests
 - test bug: copy link tests failing (feature works)
     - e2e tests worth it?
 - CI: only 1 test runs on ubuntu
