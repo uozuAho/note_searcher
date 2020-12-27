@@ -1,3 +1,5 @@
+import { excludeCodeBlocks } from "./mdCodeBlocks";
+
 const singleWikiLinkRegexPattern = '\\[\\[.+?\\]\\]';
 
 export const createSingleWikiLinkRegex = () => new RegExp(singleWikiLinkRegexPattern);
@@ -5,7 +7,8 @@ export const createSingleWikiLinkRegex = () => new RegExp(singleWikiLinkRegexPat
 const createMultiWikiLinkRegex = () => new RegExp(singleWikiLinkRegexPattern, 'gm');
 
 export function extractWikiLinks(text: string): string[] {
-  const matches = extractAll(createMultiWikiLinkRegex(), text);
+  const textWithoutCodeBlocks = excludeCodeBlocks(text);
+  const matches = extractAll(createMultiWikiLinkRegex(), textWithoutCodeBlocks);
 
   return matches.map(m => extractFilenameFromWikiLink(m.toString()));
 }

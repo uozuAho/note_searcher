@@ -1,6 +1,18 @@
 import { excludeCodeBlocks } from "./mdCodeBlocks";
 
-const mdWithCodeBlocks = `
+describe('mdCodeBlocks', () => {
+  it.each([
+    ['ab', 'ab'],
+    ['a```b```c', 'ac'],
+    ['a```b\nc```d', 'ad'],
+    ['```a```b', 'b'],
+    ['a```b```', 'a'],
+  ])('from "%s", extracts "%s"', (input, expectedOutput) => {
+    expect(excludeCodeBlocks(input)).toBe(expectedOutput);
+  });
+
+  it('excludes code block from large md text', () => {
+const input = `
 # Hi there
 
 This markdown text contains a code block:
@@ -12,12 +24,17 @@ echo hello
 That's all!
 `;
 
-describe('mdCodeBlocks', () => {
-  it.each([
-    ['ab', 'ab'],
-    ['a```b```c', 'ac'],
-    ['a```b\nc```d', 'ad'],
-  ])('from "%s", extracts "%s"', (input, expectedOutput) => {
+// note the extra newline before "That's all!". This isn't "correct", but
+// is enough for the current need: excluding links from code blocks
+const expectedOutput = `
+# Hi there
+
+This markdown text contains a code block:
+
+
+
+That's all!
+`;
     expect(excludeCodeBlocks(input)).toBe(expectedOutput);
   });
 });
