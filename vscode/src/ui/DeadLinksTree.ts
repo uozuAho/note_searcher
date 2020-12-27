@@ -1,6 +1,5 @@
 import * as vscode from 'vscode';
-
-import { Link } from '../dead_links/DeadLinkFinder';
+import { Link } from '../index/noteLinkIndex';
 
 export class DeadLinksTree implements vscode.TreeDataProvider<TreeNode> {
 
@@ -55,6 +54,6 @@ class FileNode extends vscode.TreeItem {
 
 class LinkNode extends vscode.TreeItem {
   constructor(public path: string) {
-    super(path, vscode.TreeItemCollapsibleState.None);
+    super(vscode.Uri.file(path), vscode.TreeItemCollapsibleState.None);
   }
 }

@@ -84,12 +84,16 @@ extension, with an optional description before a pipe separator. Eg. [[note]] or
 [[a note with a description | and_filename]]. If multiple notes with the same
 name exist, vscode will prompt for which note to navigate to.
 
+Links within code blocks are ignored:
+
+```sh
+#like this one: [[yo]]
+```
+
 
 ### Backlinks
 
 Links to the currently open note are shown in backlinks section of the sidebar.
-
-Only markdown links are currently supported.
 
 
 ### Find dead links

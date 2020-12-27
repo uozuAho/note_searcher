@@ -1,5 +1,5 @@
+import { Link } from "../index/noteLinkIndex";
 import { File } from "../utils/File";
-import { Link } from "../dead_links/DeadLinkFinder";
 
 export interface NoteSearcherUi {
   showTags: (tags: string[]) => void;

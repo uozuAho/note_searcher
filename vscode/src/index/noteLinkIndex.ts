@@ -5,101 +5,133 @@ import { extractWikiLinks } from "../text_processing/wikiLinkExtractor";
 import { GoodSet } from "../utils/goodSet";
 
 export interface NoteLinkIndex {
+  /** absolute path of each note in the index */
   notes(): IterableIterator<string>;
 
   containsNote(absPathOrFilename: string): boolean;
 
-  /** returns link text of all markdown links (not necessarily abs paths) */
-  markdownLinksFrom(absPath: string): string[];
+  /** returns note paths linked from the given note */
+  linksFrom(absPath: string): string[];
 
-  /** returns link text of all wiki links (should be filenames only) */
-  wikiLinksFrom(absPath: string): string[]
-
+  /** returns all notes (abs paths) containing links to the given note */
   linksTo(path: string): string[];
+
+  findAllDeadLinks(): Link[];
+}
+
+export class Link {
+  constructor(
+    public sourcePath: string,
+    public targetPath: string) {}
 }
 
 export class MapLinkIndex implements NoteLinkIndex {
-  private _markdownLinksFrom: Map<string, string[]>;
-  private _wikiLinksFrom: Map<string, string[]>;
-  private _linksTo: Map<string, GoodSet<string>>;
-  private _noteFilenames: Set<string>;
+  private _notesByAbsPath: Map<string, Note>;
+  private _absPathsByFilename: Map<string, string>;
 
   constructor() {
-    this._markdownLinksFrom = new Map();
-    this._wikiLinksFrom = new Map();
-    this._linksTo = new Map();
-    this._noteFilenames = new Set();
+    this._notesByAbsPath = new Map();
+    this._absPathsByFilename = new Map();
   };
 
   public clear = () => {
-    this._markdownLinksFrom = new Map();
-    this._wikiLinksFrom = new Map();
+    this._notesByAbsPath = new Map();
+    this._absPathsByFilename = new Map();
   };
 
   public notes = () => {
-    return this._markdownLinksFrom.keys();
+    return this._notesByAbsPath.keys();
   };
 
   public containsNote = (absPathOrFilename: string) => {
-    return this._markdownLinksFrom.has(absPathOrFilename)
-        || this._noteFilenames.has(absPathOrFilename);
+    return this._notesByAbsPath.has(absPathOrFilename)
+        || this._absPathsByFilename.has(absPathOrFilename);
   };
 
-  public markdownLinksFrom = (path: string): string[] => {
-    return this._markdownLinksFrom.get(path) || [];
-  };
-
-  public wikiLinksFrom(path: string): string[] {
-    return this._wikiLinksFrom.get(path) || [];
+  public linksFrom(path: string): string[] {
+    const links = this._notesByAbsPath.get(path)?.outgoingLinks || [];
+    return Array.from(links);
   }
 
   public linksTo = (path: string): string[] => {
-    const links = this._linksTo.get(path);
-    if (!links) { return []; }
+    const links =  this._notesByAbsPath.get(path)?.incomingLinks || [];
     return Array.from(links);
   };
 
-  public addFile = (absPath: string, text: string) => {
-    this._noteFilenames.add(_path.parse(absPath).name);
-
-    const markdownLinks = extractMarkdownLinks(text).filter(link => !link.startsWith('http'));
-    const wikiLinks = extractWikiLinks(text);
-    this.addForwardMarkdownLinks(absPath, markdownLinks);
-    this.addForwardWikiLinks(absPath, wikiLinks);
-    this.addBackwardLinks(absPath, markdownLinks);
-  };
-
-  private addForwardMarkdownLinks(absPath: string, targetPaths: string[]) {
-    const existingLinks = this._markdownLinksFrom.get(absPath);
-    if (existingLinks) {
-      targetPaths.forEach(t => existingLinks.push(t));
-    } else {
-      this._markdownLinksFrom.set(absPath, targetPaths);
-    }
-  }
-
-  private addForwardWikiLinks(absPath: string, links: string[]) {
-    const existingLinks = this._wikiLinksFrom.get(absPath);
-    if (existingLinks) {
-      links.forEach(t => existingLinks.push(t));
-    } else {
-      this._wikiLinksFrom.set(absPath, links);
-    }
-  }
-
-  private addBackwardLinks(absPath: string, targetPaths: string[]) {
-    const absTargetPaths = targetPaths.map(t => toAbsolutePath(absPath, t));
-    for (const absTargetPath of absTargetPaths) {
-      const existingLinks = this._linksTo.get(absTargetPath);
-      if (existingLinks) {
-        existingLinks.add(absPath);
-      } else {
-        this._linksTo.set(absTargetPath, new GoodSet([absPath]));
+  public findAllDeadLinks(): Link[] {
+    const deadLinks = [];
+    for (const [source, note] of this._notesByAbsPath) {
+      for (const dest of note.outgoingLinks) {
+        if (!this.containsNote(dest)) {
+          deadLinks.push(new Link(source, dest));
+        }
+      }
+      for (const filename of note.outgoingWikiLinkFilenames) {
+        if (!this._absPathsByFilename.has(filename)) {
+          deadLinks.push(new Link(source, filename));
+        }
       }
     }
+    return deadLinks;
+  }
+
+  /** Note: remember to call finalise after all files are added. */
+  public addFile = (absPath: string, text: string) => {
+    const note = this._notesByAbsPath.get(absPath) || new Note();
+    const filename = _path.parse(absPath).name;
+    this._notesByAbsPath.set(absPath, note);
+    this._absPathsByFilename.set(filename, absPath);
+
+    extractMarkdownLinks(text)
+      .filter(link => !link.startsWith('http'))
+      .filter(link => isANote(link))
+      .map(link => toAbsolutePath(absPath, link))
+      .forEach(link => note.outgoingLinks.add(link));
+
+    extractWikiLinks(text)
+      .forEach(link => note.outgoingWikiLinkFilenames.push(link as string));
+  };
+
+  public finalise = () => {
+    this.populateOutgoingWikiLinks();
+    this.populateBacklinks();
+  };
+
+  private populateBacklinks = () => {
+    for (const [sourcePath, sourceNote] of this._notesByAbsPath) {
+      for (const targetPath of sourceNote.outgoingLinks) {
+        this._notesByAbsPath.get(targetPath)?.incomingLinks.add(sourcePath);
+      }
+    }
+  };
+
+  private populateOutgoingWikiLinks() {
+    for (const [_, note] of this._notesByAbsPath) {
+      note.outgoingWikiLinkFilenames
+        .map(filename => this._absPathsByFilename.get(filename))
+        .filter(absPath => !!absPath)
+        .forEach(link => note.outgoingLinks.add(link as string));
+    }
   }
 }
 
-function toAbsolutePath(source: string, target: string) {
+class Note {
+  constructor(
+    public incomingLinks: GoodSet<string> = new GoodSet(),
+    public outgoingWikiLinkFilenames: string[] = [],
+    public outgoingLinks: GoodSet<string> = new GoodSet()
+  ) {}
+}
+
+function toAbsolutePath(source: string, target: string): string {
   return _path.resolve(_path.dirname(source), target);
 }
+
+function isANote(path: string): boolean {
+  for (const ext of ['md', 'txt', 'log']) {
+    if (path.endsWith(ext)) {
+      return true;
+    }
+  }
+  return false;
+};

@@ -33,4 +33,14 @@ describe('findWikiLinkFilename', () => {
     const actual = extractWikiLinks('a [[link]] and \n a [[second_link]]');
     expect(actual).toStrictEqual(['link', 'second_link']);
   });
+
+  it('ignores links in code blocks', () => {
+    const links = extractWikiLinks(
+      '[[before]]' +
+      '```\n' +
+      '[[inside code block]]\n' +
+      '```\n' +
+      '[[after]]');
+    expect(links).toStrictEqual(['before', 'after']);
+  });
 });

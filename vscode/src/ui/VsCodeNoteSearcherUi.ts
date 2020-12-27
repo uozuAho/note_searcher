@@ -2,10 +2,10 @@ import * as vscode from 'vscode';
 import { SearchResultTree } from './searchResultTree';
 import { NoteSearcherUi, FileChangeListener } from './NoteSearcherUi';
 import { File } from "../utils/File";
-import { Link } from '../dead_links/DeadLinkFinder';
 import { DeadLinksTree } from './DeadLinksTree';
 import { BacklinksTree } from './BacklinksTree';
 import { TagsTree } from './TagsTree';
+import { Link } from '../index/noteLinkIndex';
 
 export class VsCodeNoteSearcherUi implements NoteSearcherUi {
   private noteSavedListener: FileChangeListener | null = null;

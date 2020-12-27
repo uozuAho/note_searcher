@@ -1,8 +1,8 @@
 import * as tmoq from "typemoq";
+import { Link } from "../index/noteLinkIndex";
 import { NoteSearcherUi, FileChangeListener } from "../ui/NoteSearcherUi";
 import { File } from "../utils/File";
 import { MockFile } from "./MockFile";
-import { Link } from "../dead_links/DeadLinkFinder";
 
 export class MockUi implements NoteSearcherUi {
   private _mock: tmoq.IMock<NoteSearcherUi>;
