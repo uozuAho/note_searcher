@@ -46,8 +46,9 @@ Run `npm run build_vsix` in the vscode directory.
 
 
 # todo
-- test bug: copy link tests failing (feature works)
-    - e2e tests worth it?
+- e2e tests worth it?
+    - fail locally and in CI, but features work
+    - find another testing lib?
 - CI: only 1 test runs on ubuntu
 - feature: autocomplete wiki links
 - feature: set cursor inside [] when pasting link
