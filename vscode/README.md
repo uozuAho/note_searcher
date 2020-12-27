@@ -95,8 +95,6 @@ Links within code blocks are ignored:
 
 Links to the currently open note are shown in backlinks section of the sidebar.
 
-Only markdown links are currently supported.
-
 
 ### Find dead links
 

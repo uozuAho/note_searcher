@@ -4,6 +4,9 @@ All notable changes to the "note-searcher" extension will be documented in this
 file. Format inspired by https://keepachangelog.com/en/1.0.0/
 
 ## Unreleased
+### Added
+- backlinks now support wiki links
+
 ### Changed
 - wiki links within code blocks are ignored
 
