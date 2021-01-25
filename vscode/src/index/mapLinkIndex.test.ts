@@ -1,4 +1,4 @@
-import { MapLinkIndex } from "./noteLinkIndex";
+import { MapLinkIndex } from "./MapLinkIndex";
 
 describe('map link index, mocked filesystem', () => {
   describe('when a file is added', () => {

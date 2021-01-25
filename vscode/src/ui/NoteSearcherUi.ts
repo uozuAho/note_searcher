@@ -1,4 +1,4 @@
-import { Link } from "../index/noteLinkIndex";
+import { Link } from "../index/NoteLinkIndex";
 import { File } from "../utils/File";
 
 export interface NoteSearcherUi {

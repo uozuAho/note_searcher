@@ -4,7 +4,7 @@ import { FileSystem } from "../utils/FileSystem";
 import { extractTags } from '../text_processing/tagExtractor';
 import { TagsSet } from './TagsIndex';
 import { LunrFullTextSearch } from "../search/lunrFullTextSearch";
-import { MapLinkIndex } from "./noteLinkIndex";
+import { MapLinkIndex } from "./MapLinkIndex";
 
 export class LunrNoteIndex implements NoteIndex {
   private _lunrSearch = new LunrFullTextSearch();

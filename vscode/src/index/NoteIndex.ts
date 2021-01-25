@@ -3,7 +3,7 @@ import { LunrNoteIndex } from './lunrNoteIndex';
 import { createFileSystem } from '../utils/FileSystem';
 import { FullTextSearch } from '../search/FullTextSearch';
 import { TagsIndex } from './TagsIndex';
-import { NoteLinkIndex } from './noteLinkIndex';
+import { NoteLinkIndex } from "./NoteLinkIndex";
 
 export type NoteIndex = FileSystemIndexer & FullTextSearch & TagsIndex & NoteLinkIndex;
 

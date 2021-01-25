@@ -2,7 +2,7 @@ const _path = require('path');
 
 import * as tmoq from 'typemoq';
 
-import { MapLinkIndex } from "./noteLinkIndex";
+import { MapLinkIndex } from "./MapLinkIndex";
 import { MockFile } from "../mocks/MockFile";
 import { LunrNoteIndex } from "./lunrNoteIndex";
 import { createFileSystem, FileSystem } from "../utils/FileSystem";
