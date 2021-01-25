@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 
-import { NoteIndex } from "./index/LinkIndex";
+import { NoteIndex } from "./index/NoteIndex";
 import {
   createSingleWikiLinkRegex,
   extractFilenameFromWikiLink

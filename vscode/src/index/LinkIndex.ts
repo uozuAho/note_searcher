@@ -1,10 +1,3 @@
-export interface NoteIndex {
-  /** absolute path of each note in the index */
-  notes(): IterableIterator<string>;
-
-  containsNote(absPathOrFilename: string): boolean;
-}
-
 export interface LinkIndex {
   /** returns note paths linked from the given note */
   linksFrom(absPath: string): string[];
