@@ -319,12 +319,12 @@ describe('MapLinkIndex, dead links, real filesystem', () => {
     const deadLinks = linkIndex.findAllDeadLinks();
 
     // assert
-    expect(deadLinks).toHaveLength(2);
+    expect(deadLinks).toHaveLength(3);
     expect(deadLinks.map(d => _path.parse(d.sourcePath).base))
-      .toStrictEqual(['readme.md', 'readme.md']);
+      .toStrictEqual(['readme.md', 'readme.md', 'readme.md']);
 
     expect(deadLinks.map(d => _path.parse(d.targetPath).base))
-      .toStrictEqual(['nowhere.md', 'non_existent_note']);
+      .toStrictEqual(['nowhere.md', 'non_existent_note', 'ignored_file']);
   });
 
   it('ignores dead links in ignored files', async () => {

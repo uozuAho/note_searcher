@@ -76,7 +76,7 @@ function walkDir(dir: string, ignore: string[], callback: (path: string) => void
     if (!isDirectory) {
       callback(_path.join(dir, f));
     } else {
-      if (!dirPath.includes('node_modules')) {
+      if (shouldWalkDir(dirPath, ['node_modules', 'ignored_stuff'])) {
         walkDir(dirPath, ignore, callback);
       }
     }
