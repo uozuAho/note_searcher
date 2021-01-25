@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 
-import { NoteLinkIndex } from "./index/NoteLinkIndex";
+import { LinkIndex } from "./index/LinkIndex";
 import {
   createSingleWikiLinkRegex,
   extractFilenameFromWikiLink
@@ -10,7 +10,7 @@ import {
 // https://code.visualstudio.com/api/references/vscode-api?source=post_page-----94656da18431----------------------#DefinitionProvider
 export class WikiLinkDefinitionProvider implements vscode.DefinitionProvider {
 
-  constructor(private noteIndex: NoteLinkIndex) {}
+  constructor(private noteIndex: LinkIndex) {}
 
   public async provideDefinition(
     document: vscode.TextDocument,

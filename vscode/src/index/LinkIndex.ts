@@ -1,4 +1,4 @@
-export interface NoteLinkIndex {
+export interface LinkIndex {
   /** absolute path of each note in the index */
   notes(): IterableIterator<string>;
 

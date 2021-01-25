@@ -3,9 +3,9 @@ const _path = require('path');
 import { extractMarkdownLinks } from "../text_processing/mdLinkExtractor";
 import { extractWikiLinks } from "../text_processing/wikiLinkExtractor";
 import { GoodSet } from "../utils/goodSet";
-import { Link, NoteLinkIndex } from "./NoteLinkIndex";
+import { Link, LinkIndex } from "./LinkIndex";
 
-export class MapLinkIndex implements NoteLinkIndex {
+export class MapLinkIndex implements LinkIndex {
   private _notesByAbsPath: Map<string, Note>;
   private _absPathsByFilename: Map<string, string>;
 
