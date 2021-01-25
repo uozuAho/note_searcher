@@ -49,8 +49,6 @@ Run `npm run build_vsix` in the vscode directory.
 
 # todo
 - ignore
-    - add lunr note index demo dir tests
-    - add test for node modules
     - make ignore dirs configurable
 - e2e tests worth it?
     - fail locally and in CI, but features work
