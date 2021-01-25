@@ -12,8 +12,8 @@ export const extensionId = 'uozuaho.note-searcher';
 export function activate(context: vscode.ExtensionContext) {
   const ui = new VsCodeNoteSearcherUi();
   const configProvider = new NoteSearcherConfigProvider(context);
-  const noteIndex = createMultiIndex();
-  const noteSearcher = new NoteSearcher(ui, noteIndex, configProvider);
+  const multiIndex = createMultiIndex();
+  const noteSearcher = new NoteSearcher(ui, multiIndex, configProvider);
 
   context.subscriptions.push(
     vscode.commands.registerCommand(
@@ -43,10 +43,10 @@ export function activate(context: vscode.ExtensionContext) {
       'noteSearcher.createNote', () => noteSearcher.createNote()),
 
     vscode.languages.registerCompletionItemProvider(['markdown', 'plaintext'],
-      new TagCompleter(noteIndex), '#'),
+      new TagCompleter(multiIndex), '#'),
 
     vscode.languages.registerDefinitionProvider(['markdown', 'plaintext'],
-      new WikiLinkDefinitionProvider(noteIndex)),
+      new WikiLinkDefinitionProvider(multiIndex)),
 
     ui.createNoteSavedHandler(),
     ui.createMovedViewToDifferentNoteHandler()

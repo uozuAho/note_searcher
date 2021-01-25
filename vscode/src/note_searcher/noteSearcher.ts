@@ -15,7 +15,7 @@ export class NoteSearcher {
 
   constructor(
     private ui: NoteSearcherUi,
-    private noteIndex: MultiIndex,
+    private multiIndex: MultiIndex,
     private configProvider: NoteSearcherConfigProvider,
     private timeProvider: TimeProvider = createTimeProvider())
   {
@@ -36,7 +36,7 @@ export class NoteSearcher {
 
   public search = async (query: string) => {
     try {
-      const results = await this.noteIndex.search(query);
+      const results = await this.multiIndex.search(query);
       await this.ui.showSearchResults(results);
     }
     catch (e) {
@@ -54,7 +54,7 @@ export class NoteSearcher {
     }
 
     try {
-      const indexingTask = this.noteIndex.index(folder);
+      const indexingTask = this.multiIndex.index(folder);
       this.ui.notifyIndexingStarted(indexingTask);
       await indexingTask;
       this.diagnostics.trace('indexing complete');
@@ -92,7 +92,7 @@ export class NoteSearcher {
       return;
     }
 
-    const deadLinks = this.noteIndex.findAllDeadLinks();
+    const deadLinks = this.multiIndex.findAllDeadLinks();
 
     this.ui.showDeadLinks(deadLinks);
     this.diagnostics.trace('show dead links completed');
@@ -134,12 +134,12 @@ export class NoteSearcher {
   public showBacklinks = () => {
     const currentFilePath = this.ui.getCurrentFile()?.path();
     if (!currentFilePath) { return; }
-    const backlinks = this.noteIndex.linksTo(currentFilePath);
+    const backlinks = this.multiIndex.linksTo(currentFilePath);
     this.ui.showBacklinks(backlinks);
   };
 
   private showTags = () => {
-    const tags = this.noteIndex.allTags();
+    const tags = this.multiIndex.allTags();
     this.ui.showTags(tags);
   };
 
