@@ -31,7 +31,7 @@ expect.extend({
 const aTextFilePath = '/a/b/c.txt';
 
 
-describe('lunr note index', () => {
+describe('DefaultMultiIndex, mocked filesystem', () => {
   let fileSystem: tmoq.IMock<FileSystem>;
   let lunrNoteIndex: DefaultMultiIndex;
 
