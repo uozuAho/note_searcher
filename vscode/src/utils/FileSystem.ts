@@ -13,12 +13,23 @@ export interface FileSystem {
   allFilesUnderPath: (path: string) => Iterable<string>
 }
 
-export const createFileSystem = (): FileSystem => {
-  return new NodeFileSystem();
+export interface FileSystemOptions {
+  ignore: string[];
+}
+
+const defaultOptions = {
+  ignore: []
+};
+
+export const createFileSystem = (options: FileSystemOptions = defaultOptions): FileSystem => {
+  return new NodeFileSystem(options);
 };
 
 class NodeFileSystem implements FileSystem {
-  private diagnostics = createDiagnostics('FileSystem');
+  public constructor(
+    private _options: FileSystemOptions,
+    private _diagnostics = createDiagnostics('FileSystem')
+  ) {}
 
   public readFile = (path: string) => {
     return new String(fs.readFileSync(path)).toString();
@@ -32,12 +43,12 @@ class NodeFileSystem implements FileSystem {
   public fileExists = (path: string) => fs.existsSync(path);
 
   public allFilesUnderPath = (path: string): Iterable<string> => {
-    this.diagnostics.trace('allFilesUnderPath: start');
+    this._diagnostics.trace('allFilesUnderPath: start');
 
     const paths: string[] = [];
-    walkDir(path, p => paths.push(p));
+    walkDir(path, this._options.ignore, p => paths.push(p));
 
-    this.diagnostics.trace('allFilesUnderPath: end');
+    this._diagnostics.trace('allFilesUnderPath: end');
     return paths;
   };
 }
@@ -58,7 +69,7 @@ export const posixRelativePath = (path1: string, path2: string) => {
   return relPath;
 };
 
-function walkDir(dir: string, callback: (path: string) => void) {
+function walkDir(dir: string, ignore: string[], callback: (path: string) => void) {
   fs.readdirSync(dir).forEach(f => {
     const dirPath = _path.join(dir, f);
     const isDirectory = fs.statSync(dirPath).isDirectory();
@@ -66,8 +77,17 @@ function walkDir(dir: string, callback: (path: string) => void) {
       callback(_path.join(dir, f));
     } else {
       if (!dirPath.includes('node_modules')) {
-        walkDir(dirPath, callback);
+        walkDir(dirPath, ignore, callback);
       }
     }
   });
 };
+
+function shouldWalkDir(dir: string, ignores: string[]) {
+  for (const ignore of ignores) {
+    if (dir.includes(ignore)) {
+      return false;
+    }
+  }
+  return true;
+}

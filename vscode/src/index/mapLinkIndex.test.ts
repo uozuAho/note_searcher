@@ -1,6 +1,6 @@
 import { MapLinkIndex } from "./noteLinkIndex";
 
-describe('map link index', () => {
+describe('map link index, mocked filesystem', () => {
   describe('when a file is added', () => {
     let index: MapLinkIndex;
     const note1 = process.platform === 'win32' ? 'C:\\a\\note1.md' : '/a/note1.md';

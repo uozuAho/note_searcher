@@ -306,7 +306,9 @@ describe('MapLinkIndex, dead links, real filesystem', () => {
   let linkIndex: LunrNoteIndex;
 
   beforeEach(() => {
-    const fs = createFileSystem();
+    const fs = createFileSystem({
+      ignore: ['ignored_stuff']
+    });
     linkIndex = new LunrNoteIndex(fs);
   });
 
@@ -323,5 +325,25 @@ describe('MapLinkIndex, dead links, real filesystem', () => {
 
     expect(deadLinks.map(d => _path.parse(d.targetPath).base))
       .toStrictEqual(['nowhere.md', 'non_existent_note']);
+  });
+
+  it('ignores dead links in ignored files', async () => {
+    await linkIndex.index(_path.resolve(__dirname, '../../demo_dir'));
+
+    const deadLinkSourceNames = linkIndex.findAllDeadLinks()
+      .map(l => l.sourcePath)
+      .map(p => _path.parse(p).name);
+
+    expect(deadLinkSourceNames).not.toContain('ignored_file');
+  });
+
+  it('includes links to ignored files', async () => {
+    await linkIndex.index(_path.resolve(__dirname, '../../demo_dir'));
+
+    const deadLinksFromReadmeToIgnoredFile = linkIndex.findAllDeadLinks()
+      .filter(l => l.sourcePath.includes('readme'))
+      .filter(l => l.targetPath.includes('ignored_file'));
+
+    expect(deadLinksFromReadmeToIgnoredFile.length).toBeGreaterThan(0);
   });
 });
