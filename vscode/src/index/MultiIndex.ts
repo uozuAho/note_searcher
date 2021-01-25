@@ -2,10 +2,10 @@ import { NoteSearcherConfigProvider } from '../note_searcher/NoteSearcherConfigP
 import { LunrMultiIndex } from './lunrMultiIndex';
 import { createFileSystem } from '../utils/FileSystem';
 import { FullTextSearch } from '../search/FullTextSearch';
-import { TagsIndex } from './TagsIndex';
+import { TagIndex } from './TagIndex';
 import { LinkIndex } from "./LinkIndex";
 
-export type MultiIndex = FileSystemIndexer & FullTextSearch & TagsIndex & LinkIndex;
+export type MultiIndex = FileSystemIndexer & FullTextSearch & TagIndex & LinkIndex;
 
 interface FileSystemIndexer {
   index: (dir: string) => Promise<void>;
