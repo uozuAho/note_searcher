@@ -3,9 +3,14 @@ import { LunrMultiIndex } from './lunrMultiIndex';
 import { createFileSystem } from '../utils/FileSystem';
 import { FullTextSearch } from '../search/FullTextSearch';
 import { TagIndex } from './TagIndex';
-import { LinkIndex } from "./LinkIndex";
+import { LinkIndex, NoteIndex } from "./LinkIndex";
 
-export type MultiIndex = FileSystemIndexer & FullTextSearch & TagIndex & LinkIndex;
+export type MultiIndex =
+  FileSystemIndexer
+  & FullTextSearch
+  & TagIndex
+  & NoteIndex
+  & LinkIndex;
 
 interface FileSystemIndexer {
   index: (dir: string) => Promise<void>;
