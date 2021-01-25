@@ -4,12 +4,12 @@ import { FileSystem } from "../utils/FileSystem";
 import { extractTags } from '../text_processing/tagExtractor';
 import { TagSet } from './TagIndex';
 import { LunrFullTextSearch } from "../search/lunrFullTextSearch";
-import { MapLinkIndex } from "./MapLinkIndex";
+import { InMemoryLinkIndex } from "./InMemoryLinkIndex";
 
 export class LunrMultiIndex implements MultiIndex {
   private _lunrSearch = new LunrFullTextSearch();
   private _tags = new TagSet();
-  private _linkIndex = new MapLinkIndex();
+  private _linkIndex = new InMemoryLinkIndex();
 
   constructor(private fileSystem: FileSystem) {}
 

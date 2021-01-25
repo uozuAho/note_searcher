@@ -1,13 +1,13 @@
-import { MapLinkIndex } from "./MapLinkIndex";
+import { InMemoryLinkIndex } from "./InMemoryLinkIndex";
 
-describe('map link index, mocked filesystem', () => {
+describe('InMemoryLinkIndex, mocked filesystem', () => {
   describe('when a file is added', () => {
-    let index: MapLinkIndex;
+    let index: InMemoryLinkIndex;
     const note1 = process.platform === 'win32' ? 'C:\\a\\note1.md' : '/a/note1.md';
     const note2 = process.platform === 'win32' ? 'C:\\a\\note2.md' : '/a/note2.md';
 
     beforeAll(() => {
-      index = new MapLinkIndex();
+      index = new InMemoryLinkIndex();
       index.addFile(note1, 'has a markdown link: [link](note2.md)');
       index.addFile(note2, 'has a wiki link: [[link | note1]]');
       index.finalise();
@@ -45,7 +45,7 @@ describe('map link index, mocked filesystem', () => {
 
   describe('reset', () => {
     it('clears everything', () => {
-      const index = new MapLinkIndex();
+      const index = new InMemoryLinkIndex();
       const addedFile = '/a/b.txt';
       index.addFile(addedFile, 'a [link](to/thing)');
       index.finalise();
@@ -59,7 +59,7 @@ describe('map link index, mocked filesystem', () => {
   });
 
   it('does not index http links', () => {
-    const index = new MapLinkIndex();
+    const index = new InMemoryLinkIndex();
     const addedFile = '/a/b.txt';
     index.addFile('/a/b.txt', 'a [link](http://to/internet/stuff)');
 

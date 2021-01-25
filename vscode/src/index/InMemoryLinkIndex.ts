@@ -5,7 +5,7 @@ import { extractWikiLinks } from "../text_processing/wikiLinkExtractor";
 import { GoodSet } from "../utils/goodSet";
 import { Link, LinkIndex } from "./LinkIndex";
 
-export class MapLinkIndex implements LinkIndex {
+export class InMemoryLinkIndex implements LinkIndex {
   private _notesByAbsPath: Map<string, Note>;
   private _absPathsByFilename: Map<string, string>;
 

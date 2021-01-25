@@ -2,14 +2,14 @@ const _path = require('path');
 
 import * as tmoq from 'typemoq';
 
-import { MapLinkIndex } from "./MapLinkIndex";
+import { InMemoryLinkIndex } from "./InMemoryLinkIndex";
 import { MockFile } from "../mocks/MockFile";
 import { LunrMultiIndex } from "./lunrMultiIndex";
 import { createFileSystem, FileSystem } from "../utils/FileSystem";
 
-describe('MapLinkIndex, dead links, mocked filesystem', () => {
+describe('InMemoryLinkIndex, dead links, mocked filesystem', () => {
   let fileSystem: tmoq.IMock<FileSystem>;
-  let linkIndex: MapLinkIndex;
+  let linkIndex: InMemoryLinkIndex;
 
   const setupLinks = (fileLinks: MockFile[]) => {
     for (const file of fileLinks) {
@@ -24,7 +24,7 @@ describe('MapLinkIndex, dead links, mocked filesystem', () => {
 
     beforeEach(() => {
       fileSystem = tmoq.Mock.ofType<FileSystem>();
-      linkIndex = new MapLinkIndex();
+      linkIndex = new InMemoryLinkIndex();
     });
 
     it('finds dead link', () => {
@@ -111,7 +111,7 @@ describe('MapLinkIndex, dead links, mocked filesystem', () => {
 
     beforeEach(() => {
       fileSystem = tmoq.Mock.ofType<FileSystem>();
-      linkIndex = new MapLinkIndex();
+      linkIndex = new InMemoryLinkIndex();
     });
 
     it('finds dead link', () => {
@@ -165,7 +165,7 @@ describe('MapLinkIndex, dead links, mocked filesystem', () => {
 
     beforeEach(() => {
       fileSystem = tmoq.Mock.ofType<FileSystem>();
-      linkIndex = new MapLinkIndex();
+      linkIndex = new InMemoryLinkIndex();
     });
 
     it('finds dead link', () => {
@@ -252,7 +252,7 @@ describe('MapLinkIndex, dead links, mocked filesystem', () => {
 
     beforeEach(() => {
       fileSystem = tmoq.Mock.ofType<FileSystem>();
-      linkIndex = new MapLinkIndex();
+      linkIndex = new InMemoryLinkIndex();
     });
 
     it('finds dead link', () => {
@@ -302,7 +302,7 @@ describe('MapLinkIndex, dead links, mocked filesystem', () => {
   });
 });
 
-describe('MapLinkIndex, dead links, real filesystem', () => {
+describe('InMemoryLinkIndex, dead links, real filesystem', () => {
   let linkIndex: LunrMultiIndex;
 
   beforeEach(() => {
