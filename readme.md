@@ -24,6 +24,7 @@ See the [extension marketplace](https://marketplace.visualstudio.com/items?itemN
 cd vscode
 npm install
 npm test
+# optionally, run e2e tests (broken)
 npm run e2e:setup
 ./run_e2e.sh
 ```
@@ -31,7 +32,8 @@ npm run e2e:setup
 e2e tests use https://github.com/redhat-developer/vscode-extension-tester
 
 Currently the e2e tests for clipboard stuff fail locally, but pass in the CI
-build :shrug:.
+build :shrug:. I'm reconsidering their value, and may try to find a different
+strategy.
 
 
 ## Run the extension locally
