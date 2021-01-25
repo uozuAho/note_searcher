@@ -1,4 +1,4 @@
-import { NoteIndex } from "./NoteIndex";
+import { MultiIndex } from "./MultiIndex";
 import { FileSystem } from "../utils/FileSystem";
 
 import { extractTags } from '../text_processing/tagExtractor';
@@ -6,7 +6,7 @@ import { TagsSet } from './TagsIndex';
 import { LunrFullTextSearch } from "../search/lunrFullTextSearch";
 import { MapLinkIndex } from "./MapLinkIndex";
 
-export class LunrNoteIndex implements NoteIndex {
+export class LunrMultiIndex implements MultiIndex {
   private _lunrSearch = new LunrFullTextSearch();
   private _tags = new TagsSet();
   private _linkIndex = new MapLinkIndex();

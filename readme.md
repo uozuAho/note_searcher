@@ -49,7 +49,6 @@ Run `npm run build_vsix` in the vscode directory.
 
 # todo
 - ignore
-    - fix failing tests - hard code ignored dir for now
     - rename index files for clarity
     - add lunr note index demo dir tests
     - add test for node modules

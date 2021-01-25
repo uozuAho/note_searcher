@@ -2,7 +2,7 @@ const path = require('path');
 
 import { NoteSearcherUi } from "../ui/NoteSearcherUi";
 import { File } from "../utils/File";
-import { NoteIndex } from "../index/NoteIndex";
+import { MultiIndex } from "../index/MultiIndex";
 import { createDiagnostics, Diagnostics } from "../diagnostics/diagnostics";
 import { NoteSearcherConfigProvider } from "./NoteSearcherConfigProvider";
 import { TimeProvider, createTimeProvider } from "../utils/timeProvider";
@@ -15,7 +15,7 @@ export class NoteSearcher {
 
   constructor(
     private ui: NoteSearcherUi,
-    private noteIndex: NoteIndex,
+    private noteIndex: MultiIndex,
     private configProvider: NoteSearcherConfigProvider,
     private timeProvider: TimeProvider = createTimeProvider())
   {

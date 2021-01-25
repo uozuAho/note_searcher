@@ -5,7 +5,7 @@ import { File } from "../utils/File";
 import { DeadLinksTree } from './DeadLinksTree';
 import { BacklinksTree } from './BacklinksTree';
 import { TagsTree } from './TagsTree';
-import { Link } from '../index/MapLinkIndex';
+import { Link } from '../index/NoteLinkIndex';
 
 export class VsCodeNoteSearcherUi implements NoteSearcherUi {
   private noteSavedListener: FileChangeListener | null = null;

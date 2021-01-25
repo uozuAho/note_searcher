@@ -1,14 +1,14 @@
 import * as tmoq from "typemoq";
 
 import { NoteSearcher } from './noteSearcher';
-import { NoteIndex } from '../index/NoteIndex';
+import { MultiIndex } from '../index/MultiIndex';
 import { MockUi } from "../mocks/MockUi";
 import { MockFile } from "../mocks/MockFile";
 import { NoteSearcherConfigProvider, NoteSearcherConfig } from './NoteSearcherConfigProvider';
 
 describe('NoteSearcher', () => {
   let ui: MockUi;
-  let searcher: tmoq.IMock<NoteIndex>;
+  let searcher: tmoq.IMock<MultiIndex>;
   let configProvider: tmoq.IMock<NoteSearcherConfigProvider>;
   let noteSearcher: NoteSearcher;
 
@@ -25,7 +25,7 @@ describe('NoteSearcher', () => {
   describe('on extension activated', () => {
     beforeEach(() => {
       ui = new MockUi();
-      searcher = tmoq.Mock.ofType<NoteIndex>();
+      searcher = tmoq.Mock.ofType<MultiIndex>();
       configProvider = tmoq.Mock.ofType<NoteSearcherConfigProvider>();
 
       noteSearcher = new NoteSearcher(ui,
@@ -45,7 +45,7 @@ describe('NoteSearcher', () => {
   describe('search', () => {
     beforeEach(() => {
       ui = new MockUi();
-      searcher = tmoq.Mock.ofType<NoteIndex>();
+      searcher = tmoq.Mock.ofType<MultiIndex>();
       configProvider = tmoq.Mock.ofType<NoteSearcherConfigProvider>();
       configProvider.setup(c => c.getConfig()).returns(() => defaultConfig());
 
@@ -93,7 +93,7 @@ describe('NoteSearcher', () => {
   describe('index', () => {
     beforeEach(() => {
       ui = new MockUi();
-      searcher = tmoq.Mock.ofType<NoteIndex>();
+      searcher = tmoq.Mock.ofType<MultiIndex>();
       configProvider = tmoq.Mock.ofType<NoteSearcherConfigProvider>();
       configProvider.setup(c => c.getConfig()).returns(() => defaultConfig());
 
@@ -157,7 +157,7 @@ describe('NoteSearcher', () => {
   describe('copy markdown link', () => {
     beforeEach(() => {
       ui = new MockUi();
-      searcher = tmoq.Mock.ofType<NoteIndex>();
+      searcher = tmoq.Mock.ofType<MultiIndex>();
       configProvider = tmoq.Mock.ofType<NoteSearcherConfigProvider>();
 
       noteSearcher = new NoteSearcher(ui,
@@ -203,7 +203,7 @@ describe('NoteSearcher', () => {
   describe('copy wiki link', () => {
     beforeEach(() => {
       ui = new MockUi();
-      searcher = tmoq.Mock.ofType<NoteIndex>();
+      searcher = tmoq.Mock.ofType<MultiIndex>();
       configProvider = tmoq.Mock.ofType<NoteSearcherConfigProvider>();
 
       noteSearcher = new NoteSearcher(ui,
@@ -249,7 +249,7 @@ describe('NoteSearcher', () => {
   describe('show dead links', () => {
     beforeEach(() => {
       ui = new MockUi();
-      searcher = tmoq.Mock.ofType<NoteIndex>();
+      searcher = tmoq.Mock.ofType<MultiIndex>();
       configProvider = tmoq.Mock.ofType<NoteSearcherConfigProvider>();
       configProvider.setup(c => c.getConfig()).returns(() => defaultConfig());
 
@@ -273,7 +273,7 @@ describe('NoteSearcher', () => {
   describe('when file is saved', () => {
     beforeEach(() => {
       ui = new MockUi();
-      searcher = tmoq.Mock.ofType<NoteIndex>();
+      searcher = tmoq.Mock.ofType<MultiIndex>();
       configProvider = tmoq.Mock.ofType<NoteSearcherConfigProvider>();
       configProvider.setup(c => c.getConfig()).returns(() => defaultConfig());
 

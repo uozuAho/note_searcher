@@ -1,6 +1,6 @@
 import * as tmoq from 'typemoq';
 
-import { LunrNoteIndex } from "./lunrNoteIndex";
+import { LunrMultiIndex } from "./lunrMultiIndex";
 import { FileSystem } from "../utils/FileSystem";
 import { File } from '../utils/File';
 import { MockFile } from '../mocks/MockFile';
@@ -33,7 +33,7 @@ const aTextFilePath = '/a/b/c.txt';
 
 describe('lunr note index', () => {
   let fileSystem: tmoq.IMock<FileSystem>;
-  let lunrNoteIndex: LunrNoteIndex;
+  let lunrNoteIndex: LunrMultiIndex;
 
   const setupFiles = (files: File[]) => {
     fileSystem.setup(w => w.allFilesUnderPath(tmoq.It.isAny()))
@@ -55,7 +55,7 @@ describe('lunr note index', () => {
 
   beforeEach(() => {
     fileSystem = tmoq.Mock.ofType<FileSystem>();
-    lunrNoteIndex = new LunrNoteIndex(fileSystem.object);
+    lunrNoteIndex = new LunrMultiIndex(fileSystem.object);
   });
 
   describe('search with tags', () => {

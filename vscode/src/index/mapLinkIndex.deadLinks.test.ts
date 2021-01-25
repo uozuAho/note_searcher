@@ -4,7 +4,7 @@ import * as tmoq from 'typemoq';
 
 import { MapLinkIndex } from "./MapLinkIndex";
 import { MockFile } from "../mocks/MockFile";
-import { LunrNoteIndex } from "./lunrNoteIndex";
+import { LunrMultiIndex } from "./lunrMultiIndex";
 import { createFileSystem, FileSystem } from "../utils/FileSystem";
 
 describe('MapLinkIndex, dead links, mocked filesystem', () => {
@@ -303,13 +303,13 @@ describe('MapLinkIndex, dead links, mocked filesystem', () => {
 });
 
 describe('MapLinkIndex, dead links, real filesystem', () => {
-  let linkIndex: LunrNoteIndex;
+  let linkIndex: LunrMultiIndex;
 
   beforeEach(() => {
     const fs = createFileSystem({
       ignore: ['ignored_stuff']
     });
-    linkIndex = new LunrNoteIndex(fs);
+    linkIndex = new LunrMultiIndex(fs);
   });
 
   it('finds all dead links in demo dir', async () => {

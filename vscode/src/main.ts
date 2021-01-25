@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 
-import { createNoteIndex } from './index/NoteIndex';
+import { createMultiIndex } from './index/MultiIndex';
 import { VsCodeNoteSearcherUi } from './ui/VsCodeNoteSearcherUi';
 import { NoteSearcher } from './note_searcher/noteSearcher';
 import { NoteSearcherConfigProvider } from './note_searcher/NoteSearcherConfigProvider';
@@ -13,7 +13,7 @@ export const extensionId = 'uozuaho.note-searcher';
 export function activate(context: vscode.ExtensionContext) {
   const ui = new VsCodeNoteSearcherUi();
   const configProvider = new NoteSearcherConfigProvider(context);
-  const noteIndex = createNoteIndex(extensionDir()!, configProvider);
+  const noteIndex = createMultiIndex(extensionDir()!, configProvider);
   const noteSearcher = new NoteSearcher(ui, noteIndex, configProvider);
 
   context.subscriptions.push(
