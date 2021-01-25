@@ -1,4 +1,3 @@
-import { NoteSearcherConfigProvider } from '../note_searcher/NoteSearcherConfigProvider';
 import { LunrMultiIndex } from './lunrMultiIndex';
 import { createFileSystem } from '../utils/FileSystem';
 import { FullTextSearch } from '../search/FullTextSearch';
@@ -20,10 +19,7 @@ interface FileSystemIndexer {
 /**
  * @param extensionDir location of this vscode extension's directory
  */
-export const createMultiIndex = (
-  extensionDir: string,
-  config: NoteSearcherConfigProvider
-): MultiIndex =>
+export const createMultiIndex = (): MultiIndex =>
 {
   return new LunrMultiIndex(createFileSystem());
 };

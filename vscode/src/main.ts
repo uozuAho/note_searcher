@@ -5,7 +5,6 @@ import { VsCodeNoteSearcherUi } from './ui/VsCodeNoteSearcherUi';
 import { NoteSearcher } from './note_searcher/noteSearcher';
 import { NoteSearcherConfigProvider } from './note_searcher/NoteSearcherConfigProvider';
 import { TagCompleter } from './tag_completion/TagCompleter';
-import { createFileSystem } from './utils/FileSystem';
 import { WikiLinkDefinitionProvider } from './WikiLinkDefinitionProvider';
 
 export const extensionId = 'uozuaho.note-searcher';
@@ -13,7 +12,7 @@ export const extensionId = 'uozuaho.note-searcher';
 export function activate(context: vscode.ExtensionContext) {
   const ui = new VsCodeNoteSearcherUi();
   const configProvider = new NoteSearcherConfigProvider(context);
-  const noteIndex = createMultiIndex(extensionDir()!, configProvider);
+  const noteIndex = createMultiIndex();
   const noteSearcher = new NoteSearcher(ui, noteIndex, configProvider);
 
   context.subscriptions.push(
@@ -57,7 +56,3 @@ export function activate(context: vscode.ExtensionContext) {
 }
 
 export function deactivate() {}
-
-const extensionDir = () => {
-  return vscode.extensions.getExtension(extensionId)?.extensionPath;
-};
