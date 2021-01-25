@@ -4,8 +4,9 @@ import { extractMarkdownLinks } from "../text_processing/mdLinkExtractor";
 import { extractWikiLinks } from "../text_processing/wikiLinkExtractor";
 import { GoodSet } from "../utils/goodSet";
 import { Link, LinkIndex } from "./LinkIndex";
+import { NoteIndex } from "./NoteIndex";
 
-export class InMemoryLinkIndex implements LinkIndex {
+export class InMemoryLinkIndex implements LinkIndex, NoteIndex {
   private _notesByAbsPath: Map<string, Note>;
   private _absPathsByFilename: Map<string, string>;
 

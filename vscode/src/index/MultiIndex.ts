@@ -1,4 +1,4 @@
-import { LunrMultiIndex } from './lunrMultiIndex';
+import { DefaultMultiIndex } from './DefaultMultiIndex';
 import { createFileSystem } from '../utils/FileSystem';
 import { FullTextSearch } from '../search/FullTextSearch';
 import { TagIndex } from './TagIndex';
@@ -21,5 +21,5 @@ interface FileSystemIndexer {
  */
 export const createMultiIndex = (): MultiIndex =>
 {
-  return new LunrMultiIndex(createFileSystem());
+  return new DefaultMultiIndex(createFileSystem());
 };

@@ -6,7 +6,7 @@ import { TagSet } from './TagIndex';
 import { LunrFullTextSearch } from "../search/lunrFullTextSearch";
 import { InMemoryLinkIndex } from "./InMemoryLinkIndex";
 
-export class LunrMultiIndex implements MultiIndex {
+export class DefaultMultiIndex implements MultiIndex {
   private _lunrSearch = new LunrFullTextSearch();
   private _tags = new TagSet();
   private _linkIndex = new InMemoryLinkIndex();
