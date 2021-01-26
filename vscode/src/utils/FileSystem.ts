@@ -71,13 +71,13 @@ export const posixRelativePath = (path1: string, path2: string) => {
 
 function walkDir(dir: string, ignore: string[], callback: (path: string) => void) {
   fs.readdirSync(dir).forEach(f => {
-    const dirPath = _path.join(dir, f);
-    const isDirectory = fs.statSync(dirPath).isDirectory();
+    const path = _path.join(dir, f);
+    const isDirectory = fs.statSync(path).isDirectory();
     if (!isDirectory) {
-      callback(_path.join(dir, f));
+      callback(path);
     } else {
-      if (shouldWalkDir(dirPath, ['node_modules', 'ignored_stuff'])) {
-        walkDir(dirPath, ignore, callback);
+      if (shouldWalkDir(path, ['node_modules', 'ignored_stuff'])) {
+        walkDir(path, ignore, callback);
       }
     }
   });
