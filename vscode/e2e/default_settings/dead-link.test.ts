@@ -34,6 +34,6 @@ describe('dead links', () => {
     await editor.save();
 
     expect(await noteSearcher.isShowingInDeadLinks('cheese.md')).to.be.true;
-    expect(await noteSearcher.isShowingInDeadLinks('this/doesnt/exist.md')).to.be.true;
+    expect(await noteSearcher.isShowingInDeadLinks('exist.md')).to.be.true;
   });
 });
