@@ -22,6 +22,9 @@ const defaultOptions = {
 };
 
 export const createFileSystem = (options: FileSystemOptions = defaultOptions): FileSystem => {
+  if (!options.ignore.includes('node_modules')) {
+    options.ignore.push('node_modules');
+  }
   return new NodeFileSystem(options);
 };
 
@@ -46,11 +49,27 @@ class NodeFileSystem implements FileSystem {
     this._diagnostics.trace('allFilesUnderPath: start');
 
     const paths: string[] = [];
-    walkDir(path, this._options.ignore, p => paths.push(p));
+    const ignorePatterns = extractPatternsToIgnore(this._options.ignore);
+    const ignoreDirs = extractDirsToIgnore(path, this._options.ignore);
+    walkDir(path, ignorePatterns, ignoreDirs, p => paths.push(p));
 
     this._diagnostics.trace('allFilesUnderPath: end');
     return paths;
   };
+}
+
+function extractPatternsToIgnore(ignores: string[]) {
+  return ignores.filter(i => !isRelativePattern(i));
+}
+
+function extractDirsToIgnore(path: string, ignores: string[]) {
+  return ignores
+    .filter(i => isRelativePattern(i))
+    .map(i => _path.resolve(_path.join(path, i)));
+}
+
+function isRelativePattern(pattern: string) {
+  return pattern.includes('/');
 }
 
 /**
@@ -69,25 +88,34 @@ export const posixRelativePath = (path1: string, path2: string) => {
   return relPath;
 };
 
-function walkDir(dir: string, ignore: string[], callback: (path: string) => void) {
+function walkDir(
+  dir: string,
+  ignorePatterns: string[],
+  ignoreDirs: string[],
+  callback: (path: string) => void)
+{
   fs.readdirSync(dir).forEach(f => {
     const path = _path.join(dir, f);
     const isDirectory = fs.statSync(path).isDirectory();
     if (!isDirectory) {
       callback(path);
     } else {
-      if (shouldWalkDir(path, ['node_modules', 'ignored_stuff'])) {
-        walkDir(path, ignore, callback);
+      if (any(ignorePatterns, i => path.includes(i))) {
+        return;
       }
+      if (any(ignoreDirs, i => i === path)) {
+        return;
+      }
+      walkDir(path, ignorePatterns, ignoreDirs, callback);
     }
   });
 };
 
-function shouldWalkDir(dir: string, ignores: string[]) {
-  for (const ignore of ignores) {
-    if (dir.includes(ignore)) {
-      return false;
+function any(arr: any[], predicate: (a: any) => boolean) {
+  for (const item of arr) {
+    if (predicate(item)) {
+      return true;
     }
   }
-  return true;
+  return false;
 }

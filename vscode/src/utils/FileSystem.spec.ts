@@ -39,7 +39,7 @@ describe('FileSystem, demo dir, allFilesUnderPath', () => {
   let allDemoDirFiles: string[];
 
   beforeEach(() => {
-    fs = createFileSystem();
+    fs = createFileSystem({ignore: ['ignored_stuff/']});
     allDemoDirFiles = Array.from(fs.allFilesUnderPath(demoDir));
   });
 
