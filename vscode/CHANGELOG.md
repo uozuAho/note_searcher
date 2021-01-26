@@ -3,7 +3,7 @@
 All notable changes to the "note-searcher" extension will be documented in this
 file. Format inspired by https://keepachangelog.com/en/1.0.0/
 
-## Unreleased
+## [0.0.25] - 2021-01-26
 ### Added
 - ignore directories via .noteSearcher.config.json file in root directory
 
