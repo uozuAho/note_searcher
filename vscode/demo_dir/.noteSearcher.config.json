@@ -1,0 +1,6 @@
+{
+  "ignore": [
+    // ignore top-level ignored_stuff
+    "/ignored_stuff"
+  ]
+}

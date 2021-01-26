@@ -1,4 +1,6 @@
-import { posixRelativePath } from "./FileSystem";
+const _path = require('path');
+
+import { posixRelativePath, createFileSystem, FileSystem } from "./FileSystem";
 
 describe('FileSystem', () => {
   describe('posixRelativePath', () => {
@@ -21,5 +23,40 @@ describe('FileSystem', () => {
         });
       });
     }
+  });
+});
+
+const demoDir = _path.resolve(__dirname, '../../demo_dir');
+const readmePath = _path.resolve(demoDir, 'readme.md');
+const notIgnoredFilePath = _path.resolve(demoDir, 'not_ignored_stuff/not_ignored_file.md');
+const ignoredFilePath = _path.resolve(demoDir, 'ignored_stuff/ignored_file.md');
+const topNodeModulesFilePath = _path.resolve(demoDir, 'node_modules/about_node_modules.md');
+const nestedNodeModulesFilePath = _path.resolve(demoDir, 'subdir/node_modules/nested_node_modules.md');
+
+describe('FileSystem, demo dir, allFilesUnderPath', () => {
+
+  let fs: FileSystem;
+  let allDemoDirFiles: string[];
+
+  beforeEach(() => {
+    fs = createFileSystem();
+    allDemoDirFiles = Array.from(fs.allFilesUnderPath(demoDir));
+  });
+
+  it('contains readme', () => {
+    expect(allDemoDirFiles).toContain(readmePath);
+  });
+
+  it('contains not_ignored_file', () => {
+    expect(allDemoDirFiles).toContain(notIgnoredFilePath);
+  });
+
+  it('does not contain ignored_file' , () => {
+    expect(allDemoDirFiles).not.toContain(ignoredFilePath);
+  });
+
+  it('does not contain any node_modules' , () => {
+    expect(allDemoDirFiles).not.toContain(topNodeModulesFilePath);
+    expect(allDemoDirFiles).not.toContain(nestedNodeModulesFilePath);
   });
 });
