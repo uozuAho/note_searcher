@@ -30,6 +30,7 @@ const demoDir = _path.resolve(__dirname, '../../demo_dir');
 const readmePath = _path.resolve(demoDir, 'readme.md');
 const notIgnoredFilePath = _path.resolve(demoDir, 'not_ignored_stuff/not_ignored_file.md');
 const ignoredFilePath = _path.resolve(demoDir, 'ignored_stuff/ignored_file.md');
+const nestedNotIgnoredFilePath = _path.resolve(demoDir, 'subdir/ignored_stuff/not_ignored.md');
 const topNodeModulesFilePath = _path.resolve(demoDir, 'node_modules/about_node_modules.md');
 const nestedNodeModulesFilePath = _path.resolve(demoDir, 'subdir/node_modules/nested_node_modules.md');
 
@@ -49,6 +50,10 @@ describe('FileSystem, demo dir, allFilesUnderPath', () => {
 
   it('contains not_ignored_file', () => {
     expect(allDemoDirFiles).toContain(notIgnoredFilePath);
+  });
+
+  it('contains nested not_ignored_file', () => {
+    expect(allDemoDirFiles).toContain(nestedNotIgnoredFilePath);
   });
 
   it('does not contain ignored_file' , () => {
