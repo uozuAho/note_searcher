@@ -1,5 +1,6 @@
 import fs = require('fs');
 import _path = require('path');
+import { FoldingRangeKind } from 'vscode';
 import { createDiagnostics } from '../diagnostics/diagnostics';
 
 export interface FileSystem {
@@ -39,34 +40,24 @@ class NodeFileSystem implements FileSystem {
 
   public allFilesUnderPath = (path: string): Iterable<string> => {
     this._diagnostics.trace('allFilesUnderPath: start');
-    let options = {ignore: ['node_modules']};
 
     const optionsFilePath = _path.join(path, '.noteSearcher.config.json');
-    if (this.fileExists(optionsFilePath)) {
-      const optionsFromFile = this.readOptionsFromFile(optionsFilePath);
-      options = this.mergeOptions(options, optionsFromFile);
-    }
+    const ignores = this.readIgnoresFromFile(optionsFilePath);
+    ignores.push('node_modules');
+
     const paths: string[] = [];
-    const ignorePatterns = extractPatternsToIgnore(options.ignore);
-    const ignoreDirs = extractDirsToIgnore(path, options.ignore);
+    const ignorePatterns = extractPatternsToIgnore(ignores);
+    const ignoreDirs = extractDirsToIgnore(path, ignores);
     walkDir(path, ignorePatterns, ignoreDirs, p => paths.push(p));
 
     this._diagnostics.trace('allFilesUnderPath: end');
     return paths;
   };
 
-  private readOptionsFromFile = (path: string): FileSystemOptions => {
-    return JSON.parse(this.readFile(path));
-  }
-
-  private mergeOptions(
-    options1: FileSystemOptions,
-    options2: FileSystemOptions): FileSystemOptions
-  {
-    return {
-      ignore: Array.from(new Set(options1.ignore.concat(options2.ignore)))
-    }
-  }
+  private readIgnoresFromFile = (path: string): string[] => {
+    const config = JSON.parse(this.readFile(path)) as FileSystemOptions;
+    return config.ignore;
+  };
 }
 
 function extractPatternsToIgnore(ignores: string[]) {
