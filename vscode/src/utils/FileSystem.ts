@@ -13,24 +13,16 @@ export interface FileSystem {
   allFilesUnderPath: (path: string) => Iterable<string>
 }
 
-export interface FileSystemOptions {
+interface FileSystemOptions {
   ignore: string[];
 }
 
-const defaultOptions = {
-  ignore: []
-};
-
-export const createFileSystem = (options: FileSystemOptions = defaultOptions): FileSystem => {
-  if (!options.ignore.includes('node_modules')) {
-    options.ignore.push('node_modules');
-  }
-  return new NodeFileSystem(options);
+export const createFileSystem = (): FileSystem => {
+  return new NodeFileSystem();
 };
 
 class NodeFileSystem implements FileSystem {
   public constructor(
-    private _options: FileSystemOptions,
     private _diagnostics = createDiagnostics('FileSystem')
   ) {}
 
@@ -47,15 +39,16 @@ class NodeFileSystem implements FileSystem {
 
   public allFilesUnderPath = (path: string): Iterable<string> => {
     this._diagnostics.trace('allFilesUnderPath: start');
+    let options = {ignore: ['node_modules']};
 
     const optionsFilePath = _path.join(path, '.noteSearcher.config.json');
     if (this.fileExists(optionsFilePath)) {
       const optionsFromFile = this.readOptionsFromFile(optionsFilePath);
-      this._options = this.mergeOptions(this._options, optionsFromFile);
+      options = this.mergeOptions(options, optionsFromFile);
     }
     const paths: string[] = [];
-    const ignorePatterns = extractPatternsToIgnore(this._options.ignore);
-    const ignoreDirs = extractDirsToIgnore(path, this._options.ignore);
+    const ignorePatterns = extractPatternsToIgnore(options.ignore);
+    const ignoreDirs = extractDirsToIgnore(path, options.ignore);
     walkDir(path, ignorePatterns, ignoreDirs, p => paths.push(p));
 
     this._diagnostics.trace('allFilesUnderPath: end');
