@@ -1,10 +1,10 @@
 import { GoodSet } from "../utils/goodSet";
 
-export interface TagsIndex {
+export interface TagIndex {
   allTags: () => string[];
 }
 
-export class TagsSet implements TagsIndex {
+export class TagSet implements TagIndex {
   private _tagsIndex: GoodSet<string> = new GoodSet();
 
   public addTags = (tags: string[]) => {

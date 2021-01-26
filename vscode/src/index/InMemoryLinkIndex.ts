@@ -3,29 +3,10 @@ const _path = require('path');
 import { extractMarkdownLinks } from "../text_processing/mdLinkExtractor";
 import { extractWikiLinks } from "../text_processing/wikiLinkExtractor";
 import { GoodSet } from "../utils/goodSet";
+import { Link, LinkIndex } from "./LinkIndex";
+import { NoteIndex } from "./NoteIndex";
 
-export interface NoteLinkIndex {
-  /** absolute path of each note in the index */
-  notes(): IterableIterator<string>;
-
-  containsNote(absPathOrFilename: string): boolean;
-
-  /** returns note paths linked from the given note */
-  linksFrom(absPath: string): string[];
-
-  /** returns all notes (abs paths) containing links to the given note */
-  linksTo(path: string): string[];
-
-  findAllDeadLinks(): Link[];
-}
-
-export class Link {
-  constructor(
-    public sourcePath: string,
-    public targetPath: string) {}
-}
-
-export class MapLinkIndex implements NoteLinkIndex {
+export class InMemoryLinkIndex implements LinkIndex, NoteIndex {
   private _notesByAbsPath: Map<string, Note>;
   private _absPathsByFilename: Map<string, string>;
 

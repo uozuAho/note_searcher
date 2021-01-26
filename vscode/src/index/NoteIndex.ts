@@ -1,23 +1,6 @@
-import { NoteSearcherConfigProvider } from '../note_searcher/NoteSearcherConfigProvider';
-import { LunrNoteIndex } from './lunrNoteIndex';
-import { createFileSystem } from '../utils/FileSystem';
-import { FullTextSearch } from '../search/FullTextSearch';
-import { TagsIndex } from './TagsIndex';
-import { NoteLinkIndex } from './noteLinkIndex';
+export interface NoteIndex {
+  /** absolute path of each note in the index */
+  notes(): IterableIterator<string>;
 
-export type NoteIndex = FileSystemIndexer & FullTextSearch & TagsIndex & NoteLinkIndex;
-
-interface FileSystemIndexer {
-  index: (dir: string) => Promise<void>;
+  containsNote(absPathOrFilename: string): boolean;
 }
-
-/**
- * @param extensionDir location of this vscode extension's directory
- */
-export const createNoteIndex = (
-  extensionDir: string,
-  config: NoteSearcherConfigProvider
-): NoteIndex =>
-{
-  return new LunrNoteIndex(createFileSystem());
-};

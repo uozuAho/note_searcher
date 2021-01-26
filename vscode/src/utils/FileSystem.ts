@@ -1,6 +1,7 @@
 import fs = require('fs');
 import _path = require('path');
 import { createDiagnostics } from '../diagnostics/diagnostics';
+import { NoteSearcherConfig } from './NoteSearcherConfig';
 
 export interface FileSystem {
   fileExists: (path: string) => boolean;
@@ -18,7 +19,9 @@ export const createFileSystem = (): FileSystem => {
 };
 
 class NodeFileSystem implements FileSystem {
-  private diagnostics = createDiagnostics('FileSystem');
+  public constructor(
+    private _diagnostics = createDiagnostics('FileSystem')
+  ) {}
 
   public readFile = (path: string) => {
     return new String(fs.readFileSync(path)).toString();
@@ -32,14 +35,44 @@ class NodeFileSystem implements FileSystem {
   public fileExists = (path: string) => fs.existsSync(path);
 
   public allFilesUnderPath = (path: string): Iterable<string> => {
-    this.diagnostics.trace('allFilesUnderPath: start');
+    this._diagnostics.trace('allFilesUnderPath: start');
+
+    const ignores = this.loadIgnores(path);
 
     const paths: string[] = [];
-    walkDir(path, p => paths.push(p));
+    const ignorePatterns = extractPatternsToIgnore(ignores);
+    const ignoreDirs = extractDirsToIgnore(path, ignores);
+    walkDir(path, ignorePatterns, ignoreDirs, p => paths.push(p));
 
-    this.diagnostics.trace('allFilesUnderPath: end');
+    this._diagnostics.trace('allFilesUnderPath: end');
     return paths;
   };
+
+  private loadIgnores = (path: string): string[] => {
+    const optionsFilePath = _path.join(path, '.noteSearcher.config.json');
+    let ignores = ['node_modules'];
+
+    if (this.fileExists(optionsFilePath)) {
+      const config = JSON.parse(this.readFile(optionsFilePath)) as NoteSearcherConfig;
+      ignores = ignores.concat(config.ignore);
+    }
+
+    return ignores;
+  };
+}
+
+function extractPatternsToIgnore(ignores: string[]) {
+  return ignores.filter(i => !isRelativePattern(i));
+}
+
+function extractDirsToIgnore(path: string, ignores: string[]) {
+  return ignores
+    .filter(i => isRelativePattern(i))
+    .map(i => _path.resolve(_path.join(path, i)));
+}
+
+function isRelativePattern(pattern: string) {
+  return pattern.includes('/');
 }
 
 /**
@@ -58,16 +91,34 @@ export const posixRelativePath = (path1: string, path2: string) => {
   return relPath;
 };
 
-function walkDir(dir: string, callback: (path: string) => void) {
+function walkDir(
+  dir: string,
+  ignorePatterns: string[],
+  ignoreDirs: string[],
+  callback: (path: string) => void)
+{
   fs.readdirSync(dir).forEach(f => {
-    const dirPath = _path.join(dir, f);
-    const isDirectory = fs.statSync(dirPath).isDirectory();
+    const path = _path.join(dir, f);
+    const isDirectory = fs.statSync(path).isDirectory();
     if (!isDirectory) {
-      callback(_path.join(dir, f));
+      callback(path);
     } else {
-      if (!dirPath.includes('node_modules')) {
-        walkDir(dirPath, callback);
+      if (any(ignorePatterns, i => path.includes(i))) {
+        return;
       }
+      if (any(ignoreDirs, i => i === path)) {
+        return;
+      }
+      walkDir(path, ignorePatterns, ignoreDirs, callback);
     }
   });
 };
+
+function any(arr: any[], predicate: (a: any) => boolean) {
+  for (const item of arr) {
+    if (predicate(item)) {
+      return true;
+    }
+  }
+  return false;
+}

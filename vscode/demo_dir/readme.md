@@ -35,3 +35,10 @@ You can also use wiki links, like this: [[cheese]], or [[this | cheese]].
 [[wiki links | non_existent_note]].
 
 Links to the current note are shown in the 'backlinks' section of the sidebar.
+
+
+## ignored directories
+
+Files in ignored directories are not indexed. Links to ignored files are dead
+links, eg. [[this | ignored_file]]. Note that node_modules directories are
+ignored by default, so [[this | about_node_modules]] is also a dead link.

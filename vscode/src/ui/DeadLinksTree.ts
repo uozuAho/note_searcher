@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import { Link } from '../index/noteLinkIndex';
+import { Link } from '../index/LinkIndex';
 
 export class DeadLinksTree implements vscode.TreeDataProvider<TreeNode> {
 

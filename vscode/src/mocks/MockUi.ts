@@ -1,5 +1,5 @@
 import * as tmoq from "typemoq";
-import { Link } from "../index/noteLinkIndex";
+import { Link } from "../index/LinkIndex";
 import { NoteSearcherUi, FileChangeListener } from "../ui/NoteSearcherUi";
 import { File } from "../utils/File";
 import { MockFile } from "./MockFile";

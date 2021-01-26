@@ -1,9 +1,9 @@
 import * as vscode from 'vscode';
 
-import { TagsIndex } from '../index/TagsIndex';
+import { TagIndex } from '../index/TagIndex';
 
 export class TagCompleter implements vscode.CompletionItemProvider {
-  constructor(private tagsProvider: TagsIndex) {}
+  constructor(private tagsProvider: TagIndex) {}
 
   provideCompletionItems(
     document: vscode.TextDocument,

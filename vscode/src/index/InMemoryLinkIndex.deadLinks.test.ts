@@ -2,14 +2,14 @@ const _path = require('path');
 
 import * as tmoq from 'typemoq';
 
-import { MapLinkIndex } from "./noteLinkIndex";
+import { InMemoryLinkIndex } from "./InMemoryLinkIndex";
 import { MockFile } from "../mocks/MockFile";
-import { LunrNoteIndex } from "./lunrNoteIndex";
+import { DefaultMultiIndex } from "./DefaultMultiIndex";
 import { createFileSystem, FileSystem } from "../utils/FileSystem";
 
-describe('MapLinkIndex, dead links, mocked filesystem', () => {
+describe('InMemoryLinkIndex, dead links, mocked filesystem', () => {
   let fileSystem: tmoq.IMock<FileSystem>;
-  let linkIndex: MapLinkIndex;
+  let linkIndex: InMemoryLinkIndex;
 
   const setupLinks = (fileLinks: MockFile[]) => {
     for (const file of fileLinks) {
@@ -24,7 +24,7 @@ describe('MapLinkIndex, dead links, mocked filesystem', () => {
 
     beforeEach(() => {
       fileSystem = tmoq.Mock.ofType<FileSystem>();
-      linkIndex = new MapLinkIndex();
+      linkIndex = new InMemoryLinkIndex();
     });
 
     it('finds dead link', () => {
@@ -111,7 +111,7 @@ describe('MapLinkIndex, dead links, mocked filesystem', () => {
 
     beforeEach(() => {
       fileSystem = tmoq.Mock.ofType<FileSystem>();
-      linkIndex = new MapLinkIndex();
+      linkIndex = new InMemoryLinkIndex();
     });
 
     it('finds dead link', () => {
@@ -165,7 +165,7 @@ describe('MapLinkIndex, dead links, mocked filesystem', () => {
 
     beforeEach(() => {
       fileSystem = tmoq.Mock.ofType<FileSystem>();
-      linkIndex = new MapLinkIndex();
+      linkIndex = new InMemoryLinkIndex();
     });
 
     it('finds dead link', () => {
@@ -252,7 +252,7 @@ describe('MapLinkIndex, dead links, mocked filesystem', () => {
 
     beforeEach(() => {
       fileSystem = tmoq.Mock.ofType<FileSystem>();
-      linkIndex = new MapLinkIndex();
+      linkIndex = new InMemoryLinkIndex();
     });
 
     it('finds dead link', () => {
@@ -299,29 +299,5 @@ describe('MapLinkIndex, dead links, mocked filesystem', () => {
 
       expect(deadLinks).toHaveLength(0);
     });
-  });
-});
-
-describe('MapLinkIndex, dead links, real filesystem', () => {
-  let linkIndex: LunrNoteIndex;
-
-  beforeEach(() => {
-    const fs = createFileSystem();
-    linkIndex = new LunrNoteIndex(fs);
-  });
-
-  it('finds all dead links in demo dir', async () => {
-    await linkIndex.index(_path.resolve(__dirname, '../../demo_dir'));
-
-    // act
-    const deadLinks = linkIndex.findAllDeadLinks();
-
-    // assert
-    expect(deadLinks).toHaveLength(2);
-    expect(deadLinks.map(d => _path.parse(d.sourcePath).base))
-      .toStrictEqual(['readme.md', 'readme.md']);
-
-    expect(deadLinks.map(d => _path.parse(d.targetPath).base))
-      .toStrictEqual(['nowhere.md', 'non_existent_note']);
   });
 });
