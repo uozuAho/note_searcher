@@ -49,7 +49,8 @@ Run `npm run build_vsix` in the vscode directory.
 
 # todo
 - ignore
-    - make ignore dirs configurable
+    - docs
+    - release 
 - e2e tests worth it?
     - fail locally and in CI, but features work
     - find another testing lib?

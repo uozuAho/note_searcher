@@ -64,3 +64,24 @@ describe('FileSystem, demo dir, allFilesUnderPath', () => {
     expect(allDemoDirFiles).not.toContain(nestedNodeModulesFilePath);
   });
 });
+
+const demoSubDir = _path.resolve(__dirname, '../../demo_dir/subdir');
+const subFile = _path.resolve(__dirname, '../../demo_dir/subdir/my_sub_file.md');
+
+describe('FileSystem, demo subdir, allFilesUnderPath', () => {
+
+  let allDemoDirFiles: string[];
+
+  beforeEach(() => {
+    const fs = createFileSystem();
+    allDemoDirFiles = Array.from(fs.allFilesUnderPath(demoSubDir));
+  });
+
+  it('contains subfile', () => {
+    expect(allDemoDirFiles).toContain(subFile);
+  });
+
+  it('does not contain nested_node_modules', () => {
+    expect(allDemoDirFiles).not.toContain(nestedNodeModulesFilePath);
+  });
+});

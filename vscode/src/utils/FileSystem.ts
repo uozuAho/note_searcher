@@ -54,11 +54,13 @@ class NodeFileSystem implements FileSystem {
 
   private loadIgnores = (path: string): string[] => {
     const optionsFilePath = _path.join(path, '.noteSearcher.config.json');
+    let ignores = ['node_modules'];
 
-    if (!this.fileExists(optionsFilePath)) { return []; }
+    if (this.fileExists(optionsFilePath)) {
+      const config = JSON.parse(this.readFile(optionsFilePath)) as FileSystemOptions;
+      ignores = ignores.concat(config.ignore);
+    }
 
-    const config = JSON.parse(this.readFile(optionsFilePath)) as FileSystemOptions;
-    const ignores = config.ignore.concat(['node_modules']);
     return ignores;
   };
 }
