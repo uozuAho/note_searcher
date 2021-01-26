@@ -1,7 +1,7 @@
 import fs = require('fs');
 import _path = require('path');
-import { FoldingRangeKind } from 'vscode';
 import { createDiagnostics } from '../diagnostics/diagnostics';
+import { NoteSearcherConfig } from './NoteSearcherConfig';
 
 export interface FileSystem {
   fileExists: (path: string) => boolean;
@@ -12,10 +12,6 @@ export interface FileSystem {
    * path format
    */
   allFilesUnderPath: (path: string) => Iterable<string>
-}
-
-interface FileSystemOptions {
-  ignore: string[];
 }
 
 export const createFileSystem = (): FileSystem => {
@@ -57,7 +53,7 @@ class NodeFileSystem implements FileSystem {
     let ignores = ['node_modules'];
 
     if (this.fileExists(optionsFilePath)) {
-      const config = JSON.parse(this.readFile(optionsFilePath)) as FileSystemOptions;
+      const config = JSON.parse(this.readFile(optionsFilePath)) as NoteSearcherConfig;
       ignores = ignores.concat(config.ignore);
     }
 
