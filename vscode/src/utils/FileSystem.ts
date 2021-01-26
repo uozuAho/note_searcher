@@ -48,6 +48,11 @@ class NodeFileSystem implements FileSystem {
   public allFilesUnderPath = (path: string): Iterable<string> => {
     this._diagnostics.trace('allFilesUnderPath: start');
 
+    const optionsFilePath = _path.join(path, '.noteSearcher.config.json');
+    if (this.fileExists(optionsFilePath)) {
+      const optionsFromFile = this.readOptionsFromFile(optionsFilePath);
+      this._options = this.mergeOptions(this._options, optionsFromFile);
+    }
     const paths: string[] = [];
     const ignorePatterns = extractPatternsToIgnore(this._options.ignore);
     const ignoreDirs = extractDirsToIgnore(path, this._options.ignore);
@@ -56,6 +61,19 @@ class NodeFileSystem implements FileSystem {
     this._diagnostics.trace('allFilesUnderPath: end');
     return paths;
   };
+
+  private readOptionsFromFile = (path: string): FileSystemOptions => {
+    return JSON.parse(this.readFile(path));
+  }
+
+  private mergeOptions(
+    options1: FileSystemOptions,
+    options2: FileSystemOptions): FileSystemOptions
+  {
+    return {
+      ignore: Array.from(new Set(options1.ignore.concat(options2.ignore)))
+    }
+  }
 }
 
 function extractPatternsToIgnore(ignores: string[]) {

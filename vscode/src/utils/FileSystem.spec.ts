@@ -1,6 +1,6 @@
 const _path = require('path');
 
-import { posixRelativePath, createFileSystem, FileSystem } from "./FileSystem";
+import { posixRelativePath, createFileSystem } from "./FileSystem";
 
 describe('FileSystem', () => {
   describe('posixRelativePath', () => {
@@ -36,11 +36,10 @@ const nestedNodeModulesFilePath = _path.resolve(demoDir, 'subdir/node_modules/ne
 
 describe('FileSystem, demo dir, allFilesUnderPath', () => {
 
-  let fs: FileSystem;
   let allDemoDirFiles: string[];
 
   beforeEach(() => {
-    fs = createFileSystem({ignore: ['ignored_stuff/']});
+    const fs = createFileSystem();
     allDemoDirFiles = Array.from(fs.allFilesUnderPath(demoDir));
   });
 

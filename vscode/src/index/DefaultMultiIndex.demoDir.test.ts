@@ -14,9 +14,7 @@ describe('DefaultMultiIndex, demo dir, dead links', () => {
   let linkIndex: DefaultMultiIndex;
 
   beforeEach(() => {
-    const fs = createFileSystem({
-      ignore: ['ignored_stuff']
-    });
+    const fs = createFileSystem();
     linkIndex = new DefaultMultiIndex(fs);
   });
 
@@ -60,9 +58,7 @@ describe('DefaultMultiIndex, demo dir, tags', () => {
   let linkIndex: DefaultMultiIndex;
 
   beforeEach(() => {
-    const fs = createFileSystem({
-      ignore: ['ignored_stuff']
-    });
+    const fs = createFileSystem();
     linkIndex = new DefaultMultiIndex(fs);
   });
 
@@ -89,9 +85,7 @@ describe('DefaultMultiIndex, demo dir, containsNote', () => {
   let linkIndex: DefaultMultiIndex;
 
   beforeEach(() => {
-    const fs = createFileSystem({
-      ignore: ['ignored_stuff']
-    });
+    const fs = createFileSystem();
     linkIndex = new DefaultMultiIndex(fs);
   });
 
@@ -118,9 +112,7 @@ describe('DefaultMultiIndex, demo dir, linksFrom', () => {
   let linkIndex: DefaultMultiIndex;
 
   beforeEach(() => {
-    const fs = createFileSystem({
-      ignore: ['ignored_stuff']
-    });
+    const fs = createFileSystem();
     linkIndex = new DefaultMultiIndex(fs);
   });
 
@@ -147,9 +139,7 @@ describe('DefaultMultiIndex, demo dir, linksTo', () => {
   let linkIndex: DefaultMultiIndex;
 
   beforeEach(() => {
-    const fs = createFileSystem({
-      ignore: ['ignored_stuff']
-    });
+    const fs = createFileSystem();
     linkIndex = new DefaultMultiIndex(fs);
   });
 
@@ -176,9 +166,7 @@ describe('DefaultMultiIndex, demo dir, search', () => {
   let linkIndex: DefaultMultiIndex;
 
   beforeEach(() => {
-    const fs = createFileSystem({
-      ignore: ['ignored_stuff']
-    });
+    const fs = createFileSystem();
     linkIndex = new DefaultMultiIndex(fs);
   });
 
