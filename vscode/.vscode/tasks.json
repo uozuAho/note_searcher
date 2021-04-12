@@ -22,5 +22,11 @@
 			"script": "e2e:compile",
 			"isBackground": false,
     },
+    {
+      "label": "e2e2Compile",
+			"type": "npm",
+			"script": "e2e2:compile",
+			"isBackground": false,
+    },
 	]
 }
