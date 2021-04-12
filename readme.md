@@ -48,9 +48,8 @@ Run `npm run build_vsix` in the vscode directory.
 
 
 # todo
-- ignore
-    - docs
-    - release 
+- increase number of search results
+- 'structure tags': two hashes. show in bold at top of 'all tags'?
 - e2e tests worth it?
     - fail locally and in CI, but features work
     - find another testing lib?
