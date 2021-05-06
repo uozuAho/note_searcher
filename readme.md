@@ -49,19 +49,19 @@ Run `npm run build_vsix` in the vscode directory.
 
 # todo
 - increase number of search results
-- 'structure tags': two hashes. show in bold at top of 'all tags'?
+- show outgoing links
+- feature(s): pasting links
+    - if no selected text: set cursor inside []
+    - if text selected: use selected text as description. eg. 'this' becomes [this]()
+- feature: structure tags? popular tags? similar tags? root tags?
+    - what I want (I think): links to similar notes based on tags
 - e2e tests worth it?
     - fail locally and in CI, but features work
     - find another testing lib?
 - CI: only 1 test runs on ubuntu
-- feature: autocomplete wiki links
-- feature: set cursor inside [] when pasting link
-- feature: paste link onto existing text, eg onto 'this' becomes [this]()
 - bug: e2e test failures don't break CI
 - fix dead link e2e fail on ubuntu
 - better icon
-- feature: ## tags for structure notes
-    - hmm. just use regular search for ##....
 - break up noteSearcher.ts?
     - test file is unwieldy
 - feature: suggest tags in search
