@@ -24,6 +24,15 @@ describe('backlinks', () => {
     expect(await currentEditor!.getTitle()).to.equal('readme.md');
   });
 
+  it('clicking on a forward link opens the link', async () => {
+    await vscode.openDemoDirFile('readme.md');
+    const link = await noteSearcher.findForwardLinkByName('trains.md');
+    expect(link).not.to.be.null;
+    await link!.click();
+    const currentEditor = await vscode.currentEditor();
+    expect(await currentEditor!.getTitle()).to.equal('trains.md');
+  });
+
   it('backlinks support markdown links', async () => {
     await vscode.openDemoDirFile('cheese.md');
     const backlink = await noteSearcher.findBacklinkByName('readme.md');

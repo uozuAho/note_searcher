@@ -40,10 +40,20 @@ export class NoteSearcherDriver {
   };
 
   public findBacklinkByName = async (name: string): Promise<SidebarItem | null> => {
-    const backlinks = await this.openSidebarSection('Backlinks');
+    const backlinks = await this.openSidebarSection('Links to this note');
     if (!backlinks) { return null; }
 
     const item = await backlinks.findItem(name);
+    if (!item) { return null; }
+
+    return new SidebarItem(item);
+  };
+
+  public findForwardLinkByName = async (name: string): Promise<SidebarItem | null> => {
+    const links = await this.openSidebarSection('Links from this note');
+    if (!links) { return null; }
+
+    const item = await links.findItem(name);
     if (!item) { return null; }
 
     return new SidebarItem(item);
