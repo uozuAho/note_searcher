@@ -4,7 +4,7 @@ import { VsCodeDriver } from '../utils/VsCodeDriver';
 import { NoteSearcherDriver } from '../utils/NoteSearcherDriver';
 import { openDemoDirAndCloseAllEditors } from '../utils/pretest';
 
-describe('backlinks', () => {
+describe('sidebar links', () => {
   let vscode: VsCodeDriver;
   let noteSearcher: NoteSearcherDriver;
 
@@ -22,6 +22,15 @@ describe('backlinks', () => {
     await backlink!.click();
     const currentEditor = await vscode.currentEditor();
     expect(await currentEditor!.getTitle()).to.equal('readme.md');
+  });
+
+  it('clicking on a forward link opens the link', async () => {
+    await vscode.openDemoDirFile('readme.md');
+    const link = await noteSearcher.findForwardLinkByName('trains.md');
+    expect(link).not.to.be.null;
+    await link!.click();
+    const currentEditor = await vscode.currentEditor();
+    expect(await currentEditor!.getTitle()).to.equal('trains.md');
   });
 
   it('backlinks support markdown links', async () => {

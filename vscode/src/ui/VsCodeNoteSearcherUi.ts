@@ -3,7 +3,7 @@ import { SearchResultTree } from './searchResultTree';
 import { NoteSearcherUi, FileChangeListener } from './NoteSearcherUi';
 import { File } from "../utils/File";
 import { DeadLinksTree } from './DeadLinksTree';
-import { BacklinksTree } from './BacklinksTree';
+import { LinksTree } from './LinksTree';
 import { TagsTree } from './TagsTree';
 import { Link } from '../index/LinkIndex';
 
@@ -77,9 +77,18 @@ export class VsCodeNoteSearcherUi implements NoteSearcherUi {
 
   public showBacklinks = (links: string[]) => {
     const uris = links.map(l => vscode.Uri.file(l));
-    const backlinks = new BacklinksTree(uris);
+    const backlinks = new LinksTree(uris);
 
     vscode.window.createTreeView('noteSearcher-backlinks', {
+      treeDataProvider: backlinks
+    });
+  };
+
+  public showForwardLinks = (links: string[]) => {
+    const uris = links.map(l => vscode.Uri.file(l));
+    const backlinks = new LinksTree(uris);
+
+    vscode.window.createTreeView('noteSearcher-forwardLinks', {
       treeDataProvider: backlinks
     });
   };

@@ -15,6 +15,8 @@ export class MockUi implements NoteSearcherUi {
 
   public showBacklinks = (links: string[]) => Promise.resolve();
 
+  public showForwardLinks = (links: string[]) => Promise.resolve();
+
   public addMovedViewToDifferentNoteListener = (listener: FileChangeListener) => {};
 
   public copyToClipboard = (text: string) => Promise.resolve();

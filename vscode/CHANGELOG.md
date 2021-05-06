@@ -7,8 +7,12 @@ file. Format inspired by https://keepachangelog.com/en/1.0.0/
 Calling this release 1.0.0, since I've been using this thing for ages pretty
 happily without needing any changes.
 
+### Added
+- add 'forward links' to sidebar ('Links from this note')
+
 ### Changed
 - increased maximum number of search results to 20
+- renamed 'backlinks' in sidebar to 'Links to this note'
 
 ## [0.0.25] - 2021-01-26
 ### Added
