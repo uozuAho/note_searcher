@@ -9,7 +9,6 @@ import {
   EditorView,
   TextEditor,
   ActivityBar,
-  ViewSection
 } from 'vscode-extension-tester';
 import { SidebarItem } from './SidebarItem';
 
@@ -111,9 +110,10 @@ export class VsCodeDriver {
     return await editorView.openEditor(matchedTitle) as TextEditor;
   };
 
-  private openExplorerSidebar = () => {
+  private openExplorerSidebar = async () => {
     const activityBar = new ActivityBar();
-    const sidebar = activityBar.getViewControl('Explorer');
+    const sidebar = await activityBar.getViewControl('Explorer');
+    if (!sidebar) { throw new Error("Couldn't find Explorer in sidebar"); }
     return sidebar.openView();
   };
 }
