@@ -48,6 +48,7 @@ Run `npm run build_vsix` in the vscode directory.
 
 # todo
 - feature(s): pasting links
+    - try this: https://stackoverflow.com/questions/44598894/in-a-vs-code-extension-how-can-i-be-notified-when-the-user-cuts-copies-or-paste
     - if no selected text: set cursor inside []
     - if text selected: use selected text as description. eg. 'this' becomes [this]()
 - feature: structure tags? popular tags? similar tags? root tags?

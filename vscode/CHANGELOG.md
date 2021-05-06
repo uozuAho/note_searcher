@@ -3,7 +3,7 @@
 All notable changes to the "note-searcher" extension will be documented in this
 file. Format inspired by https://keepachangelog.com/en/1.0.0/
 
-## [1.0.0] - unreleased
+## [1.0.0] - 2021-05-06
 Calling this release 1.0.0, since I've been using this thing for ages pretty
 happily without needing any changes.
 

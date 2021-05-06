@@ -25,7 +25,7 @@ collection:
 - Copy markdown/wiki link to note from search results, file explorer
 - Copy markdown/wiki link to note from editor tab
 - Wiki link highlighting and navigation
-- Shows backlinks in sidebar
+- Shows links to and from current note in sidebar
 - Shows dead links in sidebar
 - Shows all tags in sidebar
 
@@ -91,9 +91,9 @@ Links within code blocks are ignored:
 ```
 
 
-### Backlinks
+### Links to and from current note
 
-Links to the currently open note are shown in backlinks section of the sidebar.
+Links to and from  the currently open note are shown in the sidebar.
 
 
 ### Find dead links
@@ -120,8 +120,7 @@ Supported patterns are:
   root directory will be ignored.
 
 
-## UNDER CONSTRUCTION
+## Reporting bugs/issues/feature requests
 
-This extension is still under development, and has a bunch of rough edges.
-If you find any problems or have any questions, please create an issue at
-https://github.com/uozuAho/note_searcher/issues
+If you find any problems, have any questions, or have any requests for features,
+please create an issue at https://github.com/uozuAho/note_searcher/issues
