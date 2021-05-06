@@ -32,8 +32,7 @@ npm run e2e:setup
 e2e tests use https://github.com/redhat-developer/vscode-extension-tester
 
 Currently the e2e tests for clipboard stuff fail locally, but pass in the CI
-build :shrug:. I'm reconsidering their value, and may try to find a different
-strategy.
+build :shrug:.
 
 
 ## Run the extension locally
@@ -48,20 +47,13 @@ Run `npm run build_vsix` in the vscode directory.
 
 
 # todo
-- show outgoing links
-    - rename BacklinksTree
-    - e2e test
 - feature(s): pasting links
     - if no selected text: set cursor inside []
     - if text selected: use selected text as description. eg. 'this' becomes [this]()
 - feature: structure tags? popular tags? similar tags? root tags?
     - what I want (I think): links to similar notes based on tags
-- e2e tests worth it?
-    - fail locally and in CI, but features work
-    - find another testing lib?
 - CI: only 1 test runs on ubuntu
 - bug: e2e test failures don't break CI
-- fix dead link e2e fail on ubuntu
 - better icon
 - break up noteSearcher.ts?
     - test file is unwieldy
