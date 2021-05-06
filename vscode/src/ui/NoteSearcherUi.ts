@@ -13,6 +13,7 @@ export interface NoteSearcherUi {
   showNotification: (message: string) => Promise<void>;
   showDeadLinks: (links: Link[]) => void;
   showBacklinks: (links: string[]) => void;
+  showForwardLinks: (links: string[]) => void;
   notifyIndexingStarted: (indexingTask: Promise<void>) => void;
   showError: (e: Error) => Promise<void>;
   addNoteSavedListener: (listener: FileChangeListener) => void;

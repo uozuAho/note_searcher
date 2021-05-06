@@ -84,6 +84,15 @@ export class VsCodeNoteSearcherUi implements NoteSearcherUi {
     });
   };
 
+  public showForwardLinks = (links: string[]) => {
+    const uris = links.map(l => vscode.Uri.file(l));
+    const backlinks = new BacklinksTree(uris);
+
+    vscode.window.createTreeView('noteSearcher-forwardLinks', {
+      treeDataProvider: backlinks
+    });
+  };
+
   public showTags = (tags: string[]) => {
     const tagsTree = new TagsTree(tags.sort());
 

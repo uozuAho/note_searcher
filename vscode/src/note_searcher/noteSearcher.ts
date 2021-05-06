@@ -138,6 +138,13 @@ export class NoteSearcher {
     this.ui.showBacklinks(backlinks);
   };
 
+  public showForwardLinks = () => {
+    const currentFilePath = this.ui.getCurrentFile()?.path();
+    if (!currentFilePath) { return; }
+    const links = this.multiIndex.linksFrom(currentFilePath);
+    this.ui.showForwardLinks(links);
+  };
+
   private showTags = () => {
     const tags = this.multiIndex.allTags();
     this.ui.showTags(tags);
@@ -153,5 +160,6 @@ export class NoteSearcher {
 
   private notifyMovedViewToDifferentNote = async (file: File) => {
     this.showBacklinks();
+    this.showForwardLinks();
   };
 }

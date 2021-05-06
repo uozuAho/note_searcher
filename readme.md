@@ -49,6 +49,8 @@ Run `npm run build_vsix` in the vscode directory.
 
 # todo
 - show outgoing links
+    - rename BacklinksTree
+    - e2e test
 - feature(s): pasting links
     - if no selected text: set cursor inside []
     - if text selected: use selected text as description. eg. 'this' becomes [this]()

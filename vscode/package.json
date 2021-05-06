@@ -42,7 +42,11 @@
 				},
 				{
 					"id": "noteSearcher-backlinks",
-					"name": "Backlinks"
+					"name": "Links to this note"
+				},
+        {
+					"id": "noteSearcher-forwardLinks",
+					"name": "Links from this note"
 				},
 				{
 					"id": "noteSearcher-deadLinks",
