@@ -65,9 +65,10 @@ export class NoteSearcherDriver {
     return await sidebar.getContent().getSection(name) as CustomTreeSection;
   };
 
-  private openSidebar = () => {
+  private openSidebar = async () => {
     const activityBar = new ActivityBar();
-    const sidebar = activityBar.getViewControl('Note Searcher');
+    const sidebar = await activityBar.getViewControl('Note Searcher');
+    if (!sidebar) { throw new Error("Couldn't find Note Searcher in sidebar"); }
     return sidebar.openView();
   };
 }
