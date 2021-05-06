@@ -48,7 +48,6 @@ Run `npm run build_vsix` in the vscode directory.
 
 
 # todo
-- increase number of search results
 - show outgoing links
 - feature(s): pasting links
     - if no selected text: set cursor inside []

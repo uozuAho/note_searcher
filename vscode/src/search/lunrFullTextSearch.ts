@@ -3,7 +3,7 @@ import * as lunr from 'lunr';
 import { createDiagnostics } from '../diagnostics/diagnostics';
 import { FullTextSearch } from "./FullTextSearch";
 
-const NUM_RESULTS = 10;
+const NUM_RESULTS = 20;
 
 // lunr's default separator is hyphens and whitespace: /[\s\-]+/;
 // see the tests for this file for why that's no good for me. In short,

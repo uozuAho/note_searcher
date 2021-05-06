@@ -3,6 +3,13 @@
 All notable changes to the "note-searcher" extension will be documented in this
 file. Format inspired by https://keepachangelog.com/en/1.0.0/
 
+## [1.0.0] - unreleased
+Calling this release 1.0.0, since I've been using this thing for ages pretty
+happily without needing any changes.
+
+### Changed
+- increased maximum number of search results to 20
+
 ## [0.0.25] - 2021-01-26
 ### Added
 - ignore directories via .noteSearcher.config.json file in root directory
