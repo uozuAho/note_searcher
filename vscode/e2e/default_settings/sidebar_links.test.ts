@@ -4,7 +4,7 @@ import { VsCodeDriver } from '../utils/VsCodeDriver';
 import { NoteSearcherDriver } from '../utils/NoteSearcherDriver';
 import { openDemoDirAndCloseAllEditors } from '../utils/pretest';
 
-describe('backlinks', () => {
+describe('sidebar links', () => {
   let vscode: VsCodeDriver;
   let noteSearcher: NoteSearcherDriver;
 
