@@ -66,3 +66,36 @@ Run `npm run build_vsix` in the vscode directory.
     - get readme working in extension preview in vscode
     - make screenshot show in extension preview
     - prevent github link replacement in example file links
+
+![](./docs/img/dummy_diagram.svg)
+
+<details>
+  <summary>Mermaid markup</summary>
+
+```mermaid
+classDiagram
+    Animal <|-- Duck
+    Animal <|-- Fish
+    Animal <|-- Zebra
+    Animal : +int age
+    Animal : +String gender
+    Animal: +isMammal()
+    Animal: +mate()
+    %% [mermaid comment, clickable link in vs code](./vscode/CHANGELOG.md)
+    %% link Animal "./vscode/CHANGELOG.md" "Go to declaration"
+    class Duck{
+      +String beakColor
+      +swim()
+      +quack()
+    }
+    class Fish{
+      -int sizeInFeet
+      -canEat()
+    }
+    class Zebra{
+      +bool is_wild
+      +run()
+    }
+```
+
+</details>
