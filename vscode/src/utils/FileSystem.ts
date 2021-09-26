@@ -1,4 +1,4 @@
-import fs = require('fs');
+import fs = require('graceful-fs');
 import _path = require('path');
 import { createDiagnostics } from '../diagnostics/diagnostics';
 import { NoteSearcherConfig } from './NoteSearcherConfig';
