@@ -40,7 +40,12 @@ export class NoteSearcher {
       await this.ui.showSearchResults(results);
     }
     catch (e) {
-      await this.ui.showError(e);
+      if (e instanceof Error) {
+        await this.ui.showError(e);
+      } else {
+        const ee = Error("unknown error: " + JSON.stringify(e));
+        await this.ui.showError(ee);
+      }
     }
   };
 
@@ -60,7 +65,12 @@ export class NoteSearcher {
       this.diagnostics.trace('indexing complete');
     }
     catch (e) {
-      await this.ui.showError(e);
+      if (e instanceof Error) {
+        await this.ui.showError(e);
+      } else {
+        const ee = Error("unknown error: " + JSON.stringify(e));
+        await this.ui.showError(ee);
+      }
     }
   };
 
