@@ -47,6 +47,8 @@ Run `npm run build_vsix` in the vscode directory.
 
 
 # todo
+- bug: save new note causes write conflict
+- bug: 10000 files: https://github.com/uozuAho/note_searcher/issues/6
 - feature(s): pasting links
     - try this: https://stackoverflow.com/questions/44598894/in-a-vs-code-extension-how-can-i-be-notified-when-the-user-cuts-copies-or-paste
     - if no selected text: set cursor inside []
