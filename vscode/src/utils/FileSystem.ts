@@ -1,4 +1,4 @@
-import fs = require('fs');
+import fs = require('graceful-fs');
 import _path = require('path');
 import { createDiagnostics } from '../diagnostics/diagnostics';
 import { NoteSearcherConfig } from './NoteSearcherConfig';
@@ -27,9 +27,16 @@ class NodeFileSystem implements FileSystem {
     return new String(fs.readFileSync(path)).toString();
   };
 
-  public readFileAsync = (path: string) => {
-    return fs.promises.readFile(path)
-      .then(contents => new String(contents).toString());
+  public readFileAsync = (path: string): Promise<string> => {
+    // DIY promise, since graceful-fs doesn't override fs.promises
+    return new Promise((resolve, reject) => {
+      fs.readFile(path, null, (err, data) => {
+        if (err) {
+          return reject(err);
+        }
+        resolve(new String(data).toString());
+      });
+    });
   };
 
   public fileExists = (path: string) => fs.existsSync(path);

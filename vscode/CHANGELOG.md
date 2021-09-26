@@ -3,6 +3,11 @@
 All notable changes to the "note-searcher" extension will be documented in this
 file. Format inspired by https://keepachangelog.com/en/1.0.0/
 
+## [1.0.1] - 2021-09-26
+### Fixed
+- Error: EMFILE: too many open files for folders with lots of files
+  - [github issue 6](https://github.com/uozuAho/note_searcher/issues/6)
+
 ## [1.0.0] - 2021-05-06
 Calling this release 1.0.0, since I've been using this thing for ages pretty
 happily without needing any changes.
