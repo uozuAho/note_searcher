@@ -34,7 +34,7 @@ describe('NoteSearcher', () => {
 
     it('updates index', () => {
       ui.currentlyOpenDirReturns('some dir');
-      const index = spyOn(noteSearcher, 'index');
+      const index = jest.spyOn(noteSearcher, 'index');
 
       noteSearcher.notifyExtensionActivated();
 
@@ -285,7 +285,7 @@ describe('NoteSearcher', () => {
 
     it('updates index', async () => {
       const file = new MockFile('path', 'content');
-      const indexSpy = spyOn(noteSearcher, 'index');
+      const indexSpy = jest.spyOn(noteSearcher, 'index');
 
       await ui.saveFile(file);
 
@@ -294,7 +294,7 @@ describe('NoteSearcher', () => {
 
     it('checks for dead links', async () => {
       const file = new MockFile('path', 'content');
-      const showDeadLinks = spyOn(noteSearcher, 'showDeadLinks');
+      const showDeadLinks = jest.spyOn(noteSearcher, 'showDeadLinks');
 
       await ui.saveFile(file);
 
