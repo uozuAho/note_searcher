@@ -24,7 +24,7 @@ See the [extension marketplace](https://marketplace.visualstudio.com/items?itemN
 cd vscode
 npm install
 npm test
-# optionally, run e2e tests (broken)
+# optionally, run e2e tests (often broken)
 npm run e2e:setup
 ./run_e2e.sh
 ```
