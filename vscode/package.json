@@ -2,7 +2,7 @@
 	"name": "note-searcher",
 	"displayName": "note-searcher",
 	"description": "Manage a knowledge base of markdown files",
-	"version": "1.0.1",
+	"version": "1.0.2",
 	"publisher": "uozuaho",
 	"preview": false,
 	"repository": {
