@@ -47,15 +47,17 @@ Run `npm run build_vsix` in the vscode directory.
 
 
 # todo
-- bug: save new note causes write conflict
 - feature(s): pasting links
     - try this: https://stackoverflow.com/questions/44598894/in-a-vs-code-extension-how-can-i-be-notified-when-the-user-cuts-copies-or-paste
     - if no selected text: set cursor inside []
     - if text selected: use selected text as description. eg. 'this' becomes [this]()
 - feature: structure tags? popular tags? similar tags? root tags?
     - what I want (I think): links to similar notes based on tags
-- CI: only 1 test runs on ubuntu
-- bug: e2e test failures don't break CI
+- e2e test issues
+    - failing locally: doesn't open demo directory?
+    - only 1 test runs on ubuntu
+    - e2e test failures don't break CI
+    - get rid of e2e tests???
 - better icon
 - break up noteSearcher.ts?
     - test file is unwieldy
