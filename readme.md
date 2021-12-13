@@ -51,20 +51,21 @@ Run `npm run build_vsix` in the vscode directory.
     - try this: https://stackoverflow.com/questions/44598894/in-a-vs-code-extension-how-can-i-be-notified-when-the-user-cuts-copies-or-paste
     - if no selected text: set cursor inside []
     - if text selected: use selected text as description. eg. 'this' becomes [this]()
-- feature: structure tags? popular tags? similar tags? root tags?
-    - what I want (I think): links to similar notes based on tags
 - e2e test issues
     - failing locally: doesn't open demo directory?
     - only 1 test runs on ubuntu
     - e2e test failures don't break CI
     - get rid of e2e tests???
+- improve indexing
+    - faster: only index files changed during the current session
+        - index all, once on startup
+    - don't index if already indexing, eg. saving multiple files
 - better icon
 - break up noteSearcher.ts?
     - test file is unwieldy
 - feature: suggest tags in search
     - not yet available: https://github.com/microsoft/vscode/issues/35785
 - feature: extract text to new note
-- improve: don't index if already indexing, eg. saving multiple files
 - docs
     - get readme working in extension preview in vscode
     - make screenshot show in extension preview
