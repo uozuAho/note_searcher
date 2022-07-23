@@ -24,15 +24,7 @@ See the [extension marketplace](https://marketplace.visualstudio.com/items?itemN
 cd vscode
 npm install
 npm test
-# optionally, run e2e tests (often broken)
-npm run e2e:setup
-./run_e2e.sh
 ```
-
-e2e tests use https://github.com/redhat-developer/vscode-extension-tester
-
-Currently the e2e tests for clipboard stuff fail locally, but pass in the CI
-build :shrug:.
 
 
 ## Run the extension locally
@@ -51,11 +43,6 @@ Run `npm run build_vsix` in the vscode directory.
     - try this: https://stackoverflow.com/questions/44598894/in-a-vs-code-extension-how-can-i-be-notified-when-the-user-cuts-copies-or-paste
     - if no selected text: set cursor inside []
     - if text selected: use selected text as description. eg. 'this' becomes [this]()
-- e2e test issues
-    - failing locally: doesn't open demo directory?
-    - only 1 test runs on ubuntu
-    - e2e test failures don't break CI
-    - get rid of e2e tests???
 - improve indexing
     - faster: only index files changed during the current session
         - index all, once on startup
