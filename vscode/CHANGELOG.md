@@ -3,6 +3,10 @@
 All notable changes to the "note-searcher" extension will be documented in this
 file. Format inspired by https://keepachangelog.com/en/1.0.0/
 
+## [1.0.5] - 2023-03-03
+### Security
+- Updating library dependencies
+
 ## [1.0.4] - 2022-11-26
 ### Security
 - Updating library dependencies
