@@ -39,10 +39,16 @@ Run `npm run build_vsix` in the vscode directory.
 
 
 # todo
+- docs
+    - get readme working in extension preview in vscode
+    - make screenshot show in extension preview
+    - prevent github link replacement in example file links
 - feature(s): pasting links
     - try this: https://stackoverflow.com/questions/44598894/in-a-vs-code-extension-how-can-i-be-notified-when-the-user-cuts-copies-or-paste
     - if no selected text: set cursor inside []
     - if text selected: use selected text as description. eg. 'this' becomes [this]()
+- feature: interactive full text search: results with context start appearing as
+  you type
 - improve indexing
     - faster: only index files changed during the current session
         - index all, once on startup
@@ -53,7 +59,3 @@ Run `npm run build_vsix` in the vscode directory.
 - feature: suggest tags in search
     - not yet available: https://github.com/microsoft/vscode/issues/35785
 - feature: extract text to new note
-- docs
-    - get readme working in extension preview in vscode
-    - make screenshot show in extension preview
-    - prevent github link replacement in example file links
