@@ -39,6 +39,8 @@ Run `npm run build_vsix` in the vscode directory.
 
 
 # todo
+- bug: finds multiple definitions of a link when there's one:
+    - goto demo_dir/readme.md, search for bug
 - docs
     - get readme working in extension preview in vscode
     - make screenshot show in extension preview

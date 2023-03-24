@@ -42,3 +42,13 @@ Links to the current note are shown in the 'backlinks' section of the sidebar.
 Files in ignored directories are not indexed. Links to ignored files are dead
 links, eg. [[this | ignored_file]]. Note that node_modules directories are
 ignored by default, so [[this | about_node_modules]] is also a dead link.
+
+
+Bug:
+This goto reference works fine: [[trains]]
+
+This does not (finds 2 defs):
+
+-
+[[trains]]
+-
