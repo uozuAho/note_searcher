@@ -160,7 +160,7 @@
 		"chai": "^4.3.4",
 		"clipboardy": "^3.0.0",
 		"eslint": "^8.20.0",
-		"glob": "^9.2.1",
+		"glob": "^10.3.1",
 		"graceful-fs": "^4.2.8",
 		"jest": "^29.3.1",
 		"lunr": "^2.3.9",
@@ -168,7 +168,7 @@
 		"ts-jest": "^29.0.3",
 		"ts-loader": "^9.2.6",
 		"typemoq": "^2.1.0",
-		"typescript": "^4.4.4",
+		"typescript": "^5.1.6",
 		"webpack": "^5.61.0",
 		"webpack-cli": "^5.0.0"
 	},
