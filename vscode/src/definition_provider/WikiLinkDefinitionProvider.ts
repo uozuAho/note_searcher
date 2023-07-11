@@ -1,10 +1,10 @@
 import * as vscode from 'vscode';
 
-import { NoteIndex } from "./index/NoteIndex";
+import { NoteIndex } from "../index/NoteIndex";
 import {
   createSingleWikiLinkRegex,
   extractFilenameFromWikiLink
-} from './text_processing/wikiLinkExtractor';
+} from '../text_processing/wikiLinkExtractor';
 
 // A DefinitionProvider provides 'go to definition' behaviour
 // https://code.visualstudio.com/api/references/vscode-api?source=post_page-----94656da18431----------------------#DefinitionProvider
@@ -28,8 +28,6 @@ export class WikiLinkDefinitionProvider implements vscode.DefinitionProvider {
     if (this.noteIndex.containsNote(filename)) {
       let path = this.noteIndex.filenameToAbsPath(filename);
 
-      console.log(`Found exact match for ${filename} at ${path}`);
-
       if (!path) { return []; }
 
       return [new vscode.Location(vscode.Uri.file(path), startOfDocument)];
@@ -41,8 +39,6 @@ export class WikiLinkDefinitionProvider implements vscode.DefinitionProvider {
       .filter(path => path.includes(filename))
       .map(path => vscode.Uri.file(path))
       .map(uri => new vscode.Location(uri, startOfDocument));
-
-    console.log(`Found substring matches for ${filename} at ${asdf}`);
 
     return asdf;
   }
