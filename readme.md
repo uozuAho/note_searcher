@@ -1,5 +1,9 @@
 # Notes searcher
 
+# Substring branch todos
+- handle duplicate filenames
+- ensure all files with the same name are listed in links panels
+
 VS code extension for managing a collection of local text files, eg. a
 [zettelkasten](https://zettelkasten.de/posts/overview/).
 

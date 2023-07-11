@@ -3,6 +3,10 @@
 All notable changes to the "note-searcher" extension will be documented in this
 file. Format inspired by https://keepachangelog.com/en/1.0.0/
 
+## Unreleased
+### Changed
+- Wiki links no longer match on substrings - exact filenames are expected.
+
 ## [1.0.6] - 2023-07-07
 ### Security
 - Updating library dependencies
