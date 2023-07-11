@@ -3,7 +3,7 @@ import { NoteIndex } from "../index/NoteIndex";
 export class NoteLocator {
   constructor(private noteIndex: NoteIndex) { }
 
-  public async locateNote(noteName: string) {
+  public locateNote(noteName: string) {
     if (this.noteIndex.containsNote(noteName)) {
       let path = this.noteIndex.filenameToAbsPath(noteName);
       return path ? [path] : [];
