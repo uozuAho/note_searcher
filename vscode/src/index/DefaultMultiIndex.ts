@@ -13,6 +13,8 @@ export class DefaultMultiIndex implements MultiIndex {
 
   constructor(private fileSystem: FileSystem) {}
 
+  public filenameToAbsPath = (filename: string) => this._linkIndex.filenameToAbsPath(filename);
+
   public search = (query: string) => this._lunrSearch.search(query);
 
   public index = (dir: string) => this.indexAllFiles(dir);

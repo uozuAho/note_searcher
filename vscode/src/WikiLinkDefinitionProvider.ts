@@ -24,11 +24,27 @@ export class WikiLinkDefinitionProvider implements vscode.DefinitionProvider {
 
     const startOfDocument = new vscode.Position(0, 0);
 
-    return Array
+    // exact match
+    if (this.noteIndex.containsNote(filename)) {
+      let path = this.noteIndex.filenameToAbsPath(filename);
+
+      console.log(`Found exact match for ${filename} at ${path}`);
+
+      if (!path) { return []; }
+
+      return [new vscode.Location(vscode.Uri.file(path), startOfDocument)];
+    }
+
+    // else: substring match
+    let asdf = Array
       .from(this.noteIndex.notes())
       .filter(path => path.includes(filename))
       .map(path => vscode.Uri.file(path))
       .map(uri => new vscode.Location(uri, startOfDocument));
+
+    console.log(`Found substring matches for ${filename} at ${asdf}`);
+
+    return asdf;
   }
 }
 

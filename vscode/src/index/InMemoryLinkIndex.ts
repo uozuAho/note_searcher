@@ -13,7 +13,11 @@ export class InMemoryLinkIndex implements LinkIndex, NoteIndex {
   constructor() {
     this._notesByAbsPath = new Map();
     this._absPathsByFilename = new Map();
-  };
+  }
+
+  public filenameToAbsPath(filename: string): string | undefined {
+    return this._absPathsByFilename.get(filename);
+  }
 
   public clear = () => {
     this._notesByAbsPath = new Map();
