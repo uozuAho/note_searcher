@@ -25,13 +25,8 @@ describe('NoteLocator', () => {
     expect(result).toEqual([]);
   });
 
-  it('returns a single note path if the given name is a substring of a single note', () => {
+  it('returns no results for substring matches', () => {
     const result = noteLocator.locateNote('note');
-    expect(result).toEqual([note1, note2]);
-  });
-
-  it('returns multiple results if the given name is a substring of multiple notes', () => {
-    const result = noteLocator.locateNote('note');
-    expect(result).toEqual([note1, note2]);
+    expect(result).toEqual([]);
   });
 });
