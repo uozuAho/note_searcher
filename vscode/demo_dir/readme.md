@@ -13,7 +13,7 @@ queries:
 
 
 ## tags
-You can also put tags anywhere in your files, #weapons or #public-speaking.
+You can also put tags anywhere in your files, eg. #weapons or #public-speaking.
 These are also searchable:
 
 `cheese +#transport`
@@ -35,8 +35,12 @@ Links to the current note are shown in the 'backlinks' section of the sidebar.
 
 
 ## ignored directories
+Directories can be excluded from indexing by adding configuration to a
+`.noteSearcher.config.json` file at the root of your notes directory. See
+[the configuration of this demo directory](.noteSearcher.config.json).
+
 Files in ignored directories are not indexed. Links to ignored files are dead
-links, eg. [[this | ignored_file]]. TODO: fix this. click on ignored file. Note that node_modules directories are
+links, eg. [[this | ignored_file]]. Note that node_modules directories are
 ignored by default, so [[this | about_node_modules]] is also a dead link.
 
 
