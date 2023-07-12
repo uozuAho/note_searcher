@@ -43,8 +43,8 @@ describe('InMemoryLinkIndex, mocked filesystem', () => {
     });
 
     it('converts note filenames to absolute paths', () => {
-      expect(index.filenameToAbsPath('note1')).toEqual(note1);
-      expect(index.filenameToAbsPath('note2')).toEqual(note2);
+      expect(index.filenameToAbsPath('note1')).toEqual([note1]);
+      expect(index.filenameToAbsPath('note2')).toEqual([note2]);
     });
   });
 
