@@ -8,12 +8,16 @@ import { NoteIndex } from "./NoteIndex";
 
 export class InMemoryLinkIndex implements LinkIndex, NoteIndex {
   private _notesByAbsPath: Map<string, Note>;
-  private _absPathsByFilename: Map<string, string>;
+  private _absPathsByFilename: Map<string, string[]>;
 
   constructor() {
     this._notesByAbsPath = new Map();
     this._absPathsByFilename = new Map();
-  };
+  }
+
+  public filenameToAbsPath(filename: string): string[] {
+    return this._absPathsByFilename.get(filename) || [];
+  }
 
   public clear = () => {
     this._notesByAbsPath = new Map();
@@ -61,7 +65,12 @@ export class InMemoryLinkIndex implements LinkIndex, NoteIndex {
     const note = this._notesByAbsPath.get(absPath) || new Note();
     const filename = _path.parse(absPath).name;
     this._notesByAbsPath.set(absPath, note);
-    this._absPathsByFilename.set(filename, absPath);
+
+    if (!this._absPathsByFilename.has(filename)) {
+      this._absPathsByFilename.set(filename, [absPath]);
+    } else {
+      this._absPathsByFilename.get(filename)?.push(absPath);
+    }
 
     extractMarkdownLinks(text)
       .filter(link => !link.startsWith('http'))
@@ -91,7 +100,13 @@ export class InMemoryLinkIndex implements LinkIndex, NoteIndex {
       note.outgoingWikiLinkFilenames
         .map(filename => this._absPathsByFilename.get(filename))
         .filter(absPath => !!absPath)
-        .forEach(link => note.outgoingLinks.add(link as string));
+        .forEach(links => {
+          if (links) {
+            for (const link of links) {
+              note.outgoingLinks.add(link as string)
+            }
+          }
+        });
     }
   }
 }

@@ -41,6 +41,11 @@ describe('InMemoryLinkIndex, mocked filesystem', () => {
       expect(index.containsNote(note1)).toBe(true);
       expect(Array.from(index.notes())).toEqual([note1, note2]);
     });
+
+    it('converts note filenames to absolute paths', () => {
+      expect(index.filenameToAbsPath('note1')).toEqual([note1]);
+      expect(index.filenameToAbsPath('note2')).toEqual([note2]);
+    });
   });
 
   describe('reset', () => {

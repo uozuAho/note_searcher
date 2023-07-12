@@ -1,16 +1,16 @@
 import * as vscode from 'vscode';
 
-import { NoteIndex } from "./index/NoteIndex";
 import {
   createSingleWikiLinkRegex,
   extractFilenameFromWikiLink
-} from './text_processing/wikiLinkExtractor';
+} from '../text_processing/wikiLinkExtractor';
+import { NoteLocator } from './NoteLocator';
 
 // A DefinitionProvider provides 'go to definition' behaviour
 // https://code.visualstudio.com/api/references/vscode-api?source=post_page-----94656da18431----------------------#DefinitionProvider
 export class WikiLinkDefinitionProvider implements vscode.DefinitionProvider {
 
-  constructor(private noteIndex: NoteIndex) {}
+  constructor(private noteLocator: NoteLocator) {}
 
   public async provideDefinition(
     document: vscode.TextDocument,
@@ -24,11 +24,9 @@ export class WikiLinkDefinitionProvider implements vscode.DefinitionProvider {
 
     const startOfDocument = new vscode.Position(0, 0);
 
-    return Array
-      .from(this.noteIndex.notes())
-      .filter(path => path.includes(filename))
-      .map(path => vscode.Uri.file(path))
-      .map(uri => new vscode.Location(uri, startOfDocument));
+    return this.noteLocator
+      .locateNote(filename)
+      .map(path => new vscode.Location(vscode.Uri.file(path), startOfDocument));
   }
 }
 
