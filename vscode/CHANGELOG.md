@@ -3,9 +3,11 @@
 All notable changes to the "note-searcher" extension will be documented in this
 file. Format inspired by https://keepachangelog.com/en/1.0.0/
 
-## Unreleased
+## [2.0.0] - 2023-07-12
 ### Changed
-- Wiki links no longer match on substrings - exact filenames are expected.
+Wiki links no longer match on substrings - exact filenames are expected. For
+example, [[cheese]] will no longer match with [[cheese_hat]]. If filenames are
+duplicated across directories, multiple matches are returned.
 
 ## [1.0.6] - 2023-07-07
 ### Security
