@@ -103,7 +103,7 @@ export class InMemoryLinkIndex implements LinkIndex, NoteIndex {
         .forEach(links => {
           if (links) {
             for (const link of links) {
-              note.outgoingLinks.add(link as string)
+              note.outgoingLinks.add(link as string);
             }
           }
         });

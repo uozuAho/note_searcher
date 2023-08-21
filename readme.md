@@ -39,22 +39,21 @@ Run `npm run build_vsix` in the vscode directory.
 
 
 # todo
-- bug: finds multiple definitions of a link when there's one:
-    - goto demo_dir/readme.md, search for bug
-- docs
-    - get readme working in extension preview in vscode
-    - make screenshot show in extension preview
-    - prevent github link replacement in example file links
+- improve indexing
+    - incremental: only re-index changed documents
+    - don't index if already indexing, eg. saving multiple files
+    - many options available, see https://github.com/nextapps-de/flexsearch#performance-benchmark-ranking
+        - eg flexsearch, elasticlunr, minisearch
 - feature(s): pasting links
     - try this: https://stackoverflow.com/questions/44598894/in-a-vs-code-extension-how-can-i-be-notified-when-the-user-cuts-copies-or-paste
     - if no selected text: set cursor inside []
     - if text selected: use selected text as description. eg. 'this' becomes [this]()
+- docs
+    - get readme working in extension preview in vscode
+    - make screenshot show in extension preview
+    - prevent github link replacement in example file links
 - feature: interactive full text search: results with context start appearing as
   you type
-- improve indexing
-    - faster: only index files changed during the current session
-        - index all, once on startup
-    - don't index if already indexing, eg. saving multiple files
 - better icon
 - break up noteSearcher.ts?
     - test file is unwieldy
