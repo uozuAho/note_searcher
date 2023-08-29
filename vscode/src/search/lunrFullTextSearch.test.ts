@@ -50,6 +50,10 @@ describe('lunr full text search', () => {
     return lunrSearch.search(query);
   };
 
+  const modifyFile = (file: FileAndTags) => {
+    lunrSearch.onFileModified(file.path, file.text, file.tags);
+  };
+
   beforeEach(() => {
     lunrSearch = new LunrFullTextSearch();
   });
@@ -64,6 +68,23 @@ describe('lunr full text search', () => {
 
     expect(results.length).toBe(1);
     expect(results[0]).toBe('a/b.txt');
+  });
+
+  // todo: unskip once dual index is implemented
+  it.skip('updates index after file is modified', async () => {
+    await index([
+      new FileAndTags('a/b.txt', 'blah blah some stuff and things'),
+      new FileAndTags('a/b/c.log', 'what about shoes and biscuits'),
+    ]);
+
+    let results = await lunrSearch.search('blah');
+    expect(results.length).toBe(1);
+
+    const modified = new FileAndTags('a/b.txt', 'some stuff and things and more things');
+    modifyFile(modified);
+
+    results = await lunrSearch.search('blah');
+    expect(results.length).toBe(0);
   });
 
   it('findsSingleWord', async () => {

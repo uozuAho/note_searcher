@@ -38,12 +38,39 @@ configuration.
 Run `npm run build_vsix` in the vscode directory.
 
 
+# WIP todo
+- only re-index changed documents
+## on save
+- noteSearcher.notifyNoteSaved
+    noteSearcher.index();
+        noteSearcher.multiIndex.index(folder);
+            DefaultMultiIndex.indexAllFiles
+                _tags.clear();
+                _linkIndex.clear();
+                _lunrSearch.reset();
+                for all files
+                    DefaultMultiIndex.indexFile
+                        index links
+                        index tags
+                        lunr.index
+    noteSearcher.showDeadLinks();
+    noteSearcher.showTags();
+- noteSearcher.notifyExtensionActivated
+    noteSearcher.index();
+    noteSearcher.showTags();
+    noteSearcher.showDeadLinks();
+## plan
+- full text search
+    - add/find test: save a file with a term, search, delete term, search
+    - rename noteSearcher.index to noteSearcher.indexAll
+    - add noteSearcher.onFileModified
+        - rename/add multiIndex.index -> onFileModified
+    - abstract lunr behind full text search interface
+    - create fulltext search impl that handles modified files without reindexing all
+- link index: handle file modified
+- tag index: handle file modified
+- handle file moved/deleted
 # todo
-- improve indexing
-    - incremental: only re-index changed documents
-    - don't index if already indexing, eg. saving multiple files
-    - many options available, see https://github.com/nextapps-de/flexsearch#performance-benchmark-ranking
-        - eg flexsearch, elasticlunr, minisearch
 - feature(s): pasting links
     - try this: https://stackoverflow.com/questions/44598894/in-a-vs-code-extension-how-can-i-be-notified-when-the-user-cuts-copies-or-paste
     - if no selected text: set cursor inside []

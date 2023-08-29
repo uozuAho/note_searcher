@@ -52,6 +52,10 @@ export class LunrFullTextSearch implements FullTextSearch {
     this._indexBuilder.add({ path, text, tags });
   };
 
+  public onFileModified = (path: string, text: string, tags: string[]) => {
+    return Promise.resolve();
+  };
+
   private createIndexBuilder() {
     const builder = new lunr.Builder();
 
