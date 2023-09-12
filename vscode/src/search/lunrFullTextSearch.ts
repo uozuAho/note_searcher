@@ -34,7 +34,15 @@ export class LunrFullTextSearch implements FullTextSearch {
   public search = (query: string) => {
     this.trace('search');
 
-    if (!this._index) { return Promise.resolve([]); }
+    if (!this._index) {
+      if (!this._indexBuilder) {
+        return Promise.resolve([]);
+      } else {
+        // This is a hack for tests, so that tests don't have to call finalise.
+        // Note that you _should_ call finalise once indexing is complete.
+        this._index = this._indexBuilder.build();
+      }
+    }
 
     query = this.expandQueryTags(query);
 

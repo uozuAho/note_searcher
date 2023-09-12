@@ -13,6 +13,8 @@ export class DefaultMultiIndex implements MultiIndex {
 
   constructor(private fileSystem: FileSystem) {}
 
+  public onFileModified = (path: string, text: string, tags: string[]) => Promise.resolve();
+
   public filenameToAbsPath = (filename: string) => this._linkIndex.filenameToAbsPath(filename);
 
   public search = (query: string) => this._lunrSearch.search(query);
@@ -31,6 +33,15 @@ export class DefaultMultiIndex implements MultiIndex {
 
   public findAllDeadLinks = () => this._linkIndex.findAllDeadLinks();
 
+  // todo: make this private
+  public indexFile = async (path: string) => {
+    const text = await this.fileSystem.readFileAsync(path);
+    this._linkIndex.addFile(path, text);
+    const tags = extractTags(text);
+    this._tags.addTags(tags);
+    this._lunrSearch.indexFile(path, text, tags);
+  };
+
   private indexAllFiles = async (dir: string) => {
     this._tags.clear();
     this._linkIndex.clear();
@@ -45,14 +56,6 @@ export class DefaultMultiIndex implements MultiIndex {
     await Promise.all(jobs);
     this._linkIndex.finalise();
     this._lunrSearch.finalise();
-  };
-
-  private indexFile = async (path: string) => {
-    const text = await this.fileSystem.readFileAsync(path);
-    this._linkIndex.addFile(path, text);
-    const tags = extractTags(text);
-    this._tags.addTags(tags);
-    this._lunrSearch.indexFile(path, text, tags);
   };
 
   private shouldIndex = (path: string) => {

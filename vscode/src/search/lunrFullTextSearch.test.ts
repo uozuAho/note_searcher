@@ -1,3 +1,5 @@
+import { FullTextSearch } from './FullTextSearch';
+import { LunrDualFts } from './lunrDualFts';
 import { LunrFullTextSearch } from './lunrFullTextSearch';
 
 declare global {
@@ -33,15 +35,17 @@ class FileAndTags {
   ) {}
 }
 
-describe('lunr full text search', () => {
-  let lunrSearch: LunrFullTextSearch;
+describe.each([
+  ['lunr', () => new LunrFullTextSearch()],
+  ['lunr dual', () => new LunrDualFts()]
+])('%s', (name, builder) => {
+  let lunrSearch: FullTextSearch;
 
   const index = async (files: FileAndTags[]) => {
-    lunrSearch.reset();
+    lunrSearch = builder();
     for (const file of files) {
       await lunrSearch.indexFile(file.path, file.text, file.tags);
     }
-    lunrSearch.finalise();
   };
 
   const searchFor = async (query: string, text: string, tags: string[] = []) => {
@@ -71,7 +75,7 @@ describe('lunr full text search', () => {
   });
 
   // todo: unskip once dual index is implemented
-  it.skip('updates index after file is modified', async () => {
+  it('updates index after file is modified', async () => {
     await index([
       new FileAndTags('a/b.txt', 'blah blah some stuff and things'),
       new FileAndTags('a/b/c.log', 'what about shoes and biscuits'),
@@ -192,35 +196,40 @@ describe('lunr full text search', () => {
     });
   });
 
-  describe('expand query tags', () => {
-    it('replaces tag at the start of a query', () => {
-      const inputQuery = '#tag';
-      const expandedQuery = lunrSearch.expandQueryTags(inputQuery);
-      expect(expandedQuery).toBe('tags:tag');
-    });
 
-    it('replaces tag in the middle of a query', () => {
-      const inputQuery = 'hello #tag boy';
-      const expandedQuery = lunrSearch.expandQueryTags(inputQuery);
-      expect(expandedQuery).toBe('hello tags:tag boy');
-    });
+});
 
-    it('replaces multiple tags', () => {
-      const inputQuery = 'hello #tag #boy';
-      const expandedQuery = lunrSearch.expandQueryTags(inputQuery);
-      expect(expandedQuery).toBe('hello tags:tag tags:boy');
-    });
+// todo: this should probably be somewhere else
+describe('lunr search: expand query tags', () => {
+  const lunrSearch = new LunrFullTextSearch();
 
-    it('does not replace non tag', () => {
-      const inputQuery = 'this is no#t a tag';
-      const expandedQuery = lunrSearch.expandQueryTags(inputQuery);
-      expect(expandedQuery).toBe(inputQuery);
-    });
+  it('replaces tag at the start of a query', () => {
+    const inputQuery = '#tag';
+    const expandedQuery = lunrSearch.expandQueryTags(inputQuery);
+    expect(expandedQuery).toBe('tags:tag');
+  });
 
-    it('works with operators', () => {
-      const inputQuery = 'dont include this -#tag';
-      const expandedQuery = lunrSearch.expandQueryTags(inputQuery);
-      expect(expandedQuery).toBe('dont include this -tags:tag');
-    });
+  it('replaces tag in the middle of a query', () => {
+    const inputQuery = 'hello #tag boy';
+    const expandedQuery = lunrSearch.expandQueryTags(inputQuery);
+    expect(expandedQuery).toBe('hello tags:tag boy');
+  });
+
+  it('replaces multiple tags', () => {
+    const inputQuery = 'hello #tag #boy';
+    const expandedQuery = lunrSearch.expandQueryTags(inputQuery);
+    expect(expandedQuery).toBe('hello tags:tag tags:boy');
+  });
+
+  it('does not replace non tag', () => {
+    const inputQuery = 'this is no#t a tag';
+    const expandedQuery = lunrSearch.expandQueryTags(inputQuery);
+    expect(expandedQuery).toBe(inputQuery);
+  });
+
+  it('works with operators', () => {
+    const inputQuery = 'dont include this -#tag';
+    const expandedQuery = lunrSearch.expandQueryTags(inputQuery);
+    expect(expandedQuery).toBe('dont include this -tags:tag');
   });
 });

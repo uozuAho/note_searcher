@@ -39,7 +39,9 @@ Run `npm run build_vsix` in the vscode directory.
 
 
 # WIP todo
-- only re-index changed documents
+- WIP: only re-index changed documents
+    - remove FullTextSearch.index
+    - inline todos
 ## on save
 - noteSearcher.notifyNoteSaved
     noteSearcher.index();
@@ -71,6 +73,7 @@ Run `npm run build_vsix` in the vscode directory.
 - tag index: handle file modified
 - handle file moved/deleted
 # todo
+- feature: make paths queryable. Eg. i want to exclude ABC from path, but not contents
 - feature(s): pasting links
     - try this: https://stackoverflow.com/questions/44598894/in-a-vs-code-extension-how-can-i-be-notified-when-the-user-cuts-copies-or-paste
     - if no selected text: set cursor inside []
@@ -79,8 +82,6 @@ Run `npm run build_vsix` in the vscode directory.
     - get readme working in extension preview in vscode
     - make screenshot show in extension preview
     - prevent github link replacement in example file links
-- feature: interactive full text search: results with context start appearing as
-  you type
 - better icon
 - break up noteSearcher.ts?
     - test file is unwieldy
