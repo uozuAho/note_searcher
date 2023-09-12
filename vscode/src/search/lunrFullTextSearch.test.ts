@@ -1,3 +1,4 @@
+import { FileSystem } from '../utils/FileSystem';
 import { FullTextSearch } from './FullTextSearch';
 import { LunrDualFts } from './lunrDualFts';
 import { LunrFullTextSearch } from './lunrFullTextSearch';
@@ -35,16 +36,50 @@ class FileAndTags {
   ) {}
 }
 
+class FakeFs implements FileSystem {
+  private _files: Map<string, string> = new Map();
+
+  public addFile = (path: string, text: string) => {
+    this._files.set(path, text);
+  };
+
+  public fileExists = (path: string) => this._files.has(path);
+
+  public readFile = (path: string) => {
+    const text = this._files.get(path);
+    if (!text) {
+      throw new Error(`file not found: ${path}`);
+    }
+    return text;
+  };
+
+  public readFileAsync = (path: string) => Promise.resolve(this.readFile(path));
+
+  public allFilesUnderPath = (path: string) => {
+    const files = [];
+    for (const path of this._files.keys()) {
+      if (path.startsWith(path)) {
+        files.push(path);
+      }
+    }
+    return files;
+  };
+}
+
+let fakeFs: FakeFs;
+
 describe.each([
   ['lunr', () => new LunrFullTextSearch()],
-  ['lunr dual', () => new LunrDualFts()]
+  ['lunr dual', () => new LunrDualFts(fakeFs)]
 ])('%s', (name, builder) => {
+  // todo: rename this to FTS
   let lunrSearch: FullTextSearch;
 
   const index = async (files: FileAndTags[]) => {
     lunrSearch = builder();
     for (const file of files) {
       await lunrSearch.indexFile(file.path, file.text, file.tags);
+      fakeFs.addFile(file.path, file.text);
     }
   };
 
@@ -55,11 +90,13 @@ describe.each([
   };
 
   const modifyFile = (file: FileAndTags) => {
+    fakeFs.addFile(file.path, file.text);
     lunrSearch.onFileModified(file.path, file.text, file.tags);
   };
 
   beforeEach(() => {
     lunrSearch = new LunrFullTextSearch();
+    fakeFs = new FakeFs();
   });
 
   it('index and search example', async () => {
@@ -74,8 +111,9 @@ describe.each([
     expect(results[0]).toBe('a/b.txt');
   });
 
-  // todo: unskip once dual index is implemented
   it('updates index after file is modified', async () => {
+    if (name === 'lunr') { return; }  // lunr doesn't support file updates
+
     await index([
       new FileAndTags('a/b.txt', 'blah blah some stuff and things'),
       new FileAndTags('a/b/c.log', 'what about shoes and biscuits'),

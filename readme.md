@@ -40,9 +40,22 @@ Run `npm run build_vsix` in the vscode directory.
 
 # WIP todo
 - WIP: only re-index changed documents
+    - pass tests
+    - think of more automated tests. so far, we have:
+        - add/find test: save a file with a term, search, delete term, search
+        - add test to ensure no conflicts between static/dynamic index
+    - manual test
     - remove FullTextSearch.index
     - inline todos
-## on save
+## plan
+- full text search
+    - rename noteSearcher.index to noteSearcher.indexAll
+    - rename/add multiIndex.index -> onFileModified
+    - do i need an onNewFileSaved method?
+- link index: handle file modified
+- tag index: handle file modified
+- handle file moved/deleted
+## code notes before start: on save
 - noteSearcher.notifyNoteSaved
     noteSearcher.index();
         noteSearcher.multiIndex.index(folder);
@@ -61,17 +74,6 @@ Run `npm run build_vsix` in the vscode directory.
     noteSearcher.index();
     noteSearcher.showTags();
     noteSearcher.showDeadLinks();
-## plan
-- full text search
-    - add/find test: save a file with a term, search, delete term, search
-    - rename noteSearcher.index to noteSearcher.indexAll
-    - add noteSearcher.onFileModified
-        - rename/add multiIndex.index -> onFileModified
-    - abstract lunr behind full text search interface
-    - create fulltext search impl that handles modified files without reindexing all
-- link index: handle file modified
-- tag index: handle file modified
-- handle file moved/deleted
 # todo
 - feature: make paths queryable. Eg. i want to exclude ABC from path, but not contents
 - feature(s): pasting links
