@@ -52,6 +52,31 @@ export class LunrFullTextSearch implements FullTextSearch {
       .map(r => r.ref));
   };
 
+  // todo: duplicates logic with search
+  public searchWithScores = (query: string) => {
+    this.trace('search');
+
+    if (!this._index) {
+      if (!this._indexBuilder) {
+        return Promise.resolve([]);
+      } else {
+        // This is a hack for tests, so that tests don't have to call finalise.
+        // Note that you _should_ call finalise once indexing is complete.
+        this._index = this._indexBuilder.build();
+      }
+    }
+
+    query = this.expandQueryTags(query);
+
+    return Promise.resolve(this._index
+      .search(query)
+      .slice(0, NUM_RESULTS)
+      .map(r => ({
+        path: r.ref,
+        score: r.score
+      })));
+  };
+
   public expandQueryTags = (query: string) => {
     return query.replace(/(\s|^|\+|-)#(.+?)\b/g, "$1tags:$2");
   };

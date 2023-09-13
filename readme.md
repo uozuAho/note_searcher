@@ -39,16 +39,13 @@ Run `npm run build_vsix` in the vscode directory.
 
 
 # WIP todo
-- WIP: only re-index changed documents
-    - pass tests
-    - think of more automated tests. so far, we have:
-        - add/find test: save a file with a term, search, delete term, search
-        - add test to ensure no conflicts between static/dynamic index
-    - manual test
-    - remove FullTextSearch.index
-    - inline todos
 ## plan
 - full text search
+    - use dual fts instead of lunr
+    - manual test
+    - inline todos
+    - get rid of searchWithScores
+    - remove FullTextSearch.index
     - rename noteSearcher.index to noteSearcher.indexAll
     - rename/add multiIndex.index -> onFileModified
     - rename lunrFullTextSearch.test
@@ -56,6 +53,9 @@ Run `npm run build_vsix` in the vscode directory.
 - link index: handle file modified
 - tag index: handle file modified
 - handle file moved/deleted
+    - full text search
+    - link index
+    - tag index
 ## code notes before start: on save
 - noteSearcher.notifyNoteSaved
     noteSearcher.index();

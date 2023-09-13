@@ -29,21 +29,23 @@ export class LunrDualFts implements FullTextSearch {
     this._staticIndex.indexFile(path, text, tags);
 
   public search = async (query: string) => {
-    const results = new Set<string>();
+    const results: {path: string, score: number}[] = [];
 
-    const stat = await this._staticIndex.search(query);
-    for (const path of stat) {
+    const stat = await this._staticIndex.searchWithScores(query);
+    for (const {path, score} of stat) {
       // disregard modified files in static results
       if (this._modifiedFiles.has(path)) { continue; }
-      results.add(path);
+      results.push({path, score});
     }
 
-    const dyn = await this._dynamicIndex.search(query);
-    for (const path of dyn) {
-      results.add(path);
+    const dyn = await this._dynamicIndex.searchWithScores(query);
+    for (const {path, score} of dyn) {
+      results.push({path, score});
     }
 
-    return Array.from(results);
+    return results
+      .sort((a, b) => b.score - a.score)
+      .map(r => r.path);
   };
 
   public onFileModified = async (path: string, text: string, tags: string[]) => {

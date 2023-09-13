@@ -152,6 +152,8 @@ describe.each([
   });
 
   it('orders search results by relevance, after modification', async () => {
+    if (name === 'lunr') { return; }  // lunr doesn't support file updates
+
     await index([
       new FileAndTags('lots.of.blah.txt', 'blah blah blah'),
       new FileAndTags('medium.blah.log', 'blah blah'),
