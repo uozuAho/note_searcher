@@ -51,6 +51,7 @@ Run `npm run build_vsix` in the vscode directory.
 - full text search
     - rename noteSearcher.index to noteSearcher.indexAll
     - rename/add multiIndex.index -> onFileModified
+    - rename lunrFullTextSearch.test
     - do i need an onNewFileSaved method?
 - link index: handle file modified
 - tag index: handle file modified

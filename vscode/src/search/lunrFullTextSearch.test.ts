@@ -122,11 +122,52 @@ describe.each([
     let results = await lunrSearch.search('blah');
     expect(results.length).toBe(1);
 
-    const modified = new FileAndTags('a/b.txt', 'some stuff and things and more things');
+    let modified = new FileAndTags('a/b.txt', 'some stuff and things and more things');
     modifyFile(modified);
 
     results = await lunrSearch.search('blah');
     expect(results.length).toBe(0);
+
+    modified = new FileAndTags('a/b.txt', 'ok blah is back');
+    modifyFile(modified);
+
+    results = await lunrSearch.search('blah');
+    expect(results.length).toBe(1);
+  });
+
+  it('orders search results by relevance', async () => {
+    await index([
+      new FileAndTags('lots.of.blah.txt', 'blah blah blah'),
+      new FileAndTags('one.blah.md', 'blah'),
+      new FileAndTags('medium.blah.log', 'blah blah'),
+    ]);
+
+    let results = await lunrSearch.search('blah');
+
+    expect(results).toStrictEqual([
+      'lots.of.blah.txt',
+      'medium.blah.log',
+      'one.blah.md'
+    ]);
+  });
+
+  it('orders search results by relevance, after modification', async () => {
+    await index([
+      new FileAndTags('lots.of.blah.txt', 'blah blah blah'),
+      new FileAndTags('medium.blah.log', 'blah blah'),
+      new FileAndTags('one.blah.md', 'blah'),
+    ]);
+
+    let modified = new FileAndTags('one.blah.md', 'most blah! blah blah blah blah');
+    modifyFile(modified);
+
+    const results = await lunrSearch.search('blah');
+
+    expect(results).toStrictEqual([
+      'one.blah.md',
+      'lots.of.blah.txt',
+      'medium.blah.log',
+    ]);
   });
 
   it('findsSingleWord', async () => {
