@@ -3,21 +3,26 @@ import { FileSystem } from "../utils/FileSystem";
 
 import { extractTags } from '../text_processing/tagExtractor';
 import { TagSet } from './TagIndex';
-import { LunrFullTextSearch } from "../search/lunrFullTextSearch";
 import { InMemoryLinkIndex } from "./InMemoryLinkIndex";
+import { LunrDualFts } from "../search/lunrDualFts";
 
 export class DefaultMultiIndex implements MultiIndex {
-  private _lunrSearch = new LunrFullTextSearch();
+  private _fullText: LunrDualFts;
   private _tags = new TagSet();
   private _linkIndex = new InMemoryLinkIndex();
 
-  constructor(private fileSystem: FileSystem) {}
+  constructor(private fileSystem: FileSystem) {
+    this._fullText = new LunrDualFts(fileSystem);
+  }
 
-  public onFileModified = (path: string, text: string, tags: string[]) => Promise.resolve();
+  public onFileModified = (path: string, text: string, tags: string[]) => {
+    return this._fullText.onFileModified(path, text, tags);
+    // todo: tags, links
+  };
 
   public filenameToAbsPath = (filename: string) => this._linkIndex.filenameToAbsPath(filename);
 
-  public search = (query: string) => this._lunrSearch.search(query);
+  public search = (query: string) => this._fullText.search(query);
 
   public index = (dir: string) => this.indexAllFiles(dir);
 
@@ -39,13 +44,13 @@ export class DefaultMultiIndex implements MultiIndex {
     this._linkIndex.addFile(path, text);
     const tags = extractTags(text);
     this._tags.addTags(tags);
-    this._lunrSearch.indexFile(path, text, tags);
+    this._fullText.indexFile(path, text, tags);
   };
 
   private indexAllFiles = async (dir: string) => {
     this._tags.clear();
     this._linkIndex.clear();
-    this._lunrSearch.reset();
+    this._fullText.reset();
     const jobs: Promise<void>[] = [];
 
     for (const path of this.fileSystem.allFilesUnderPath(dir)) {
@@ -55,7 +60,7 @@ export class DefaultMultiIndex implements MultiIndex {
 
     await Promise.all(jobs);
     this._linkIndex.finalise();
-    this._lunrSearch.finalise();
+    this._fullText.finalise();
   };
 
   private shouldIndex = (path: string) => {

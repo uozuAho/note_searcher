@@ -41,8 +41,6 @@ Run `npm run build_vsix` in the vscode directory.
 # WIP todo
 ## plan
 - full text search
-    - use dual fts instead of lunr
-    - manual test
     - inline todos
     - get rid of searchWithScores
     - remove FullTextSearch.index
