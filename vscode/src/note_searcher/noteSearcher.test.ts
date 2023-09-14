@@ -34,7 +34,7 @@ describe('NoteSearcher', () => {
 
     it('updates index', async () => {
       ui.currentlyOpenDirReturns('some dir');
-      const index = jest.spyOn(noteSearcher, 'index');
+      const index = jest.spyOn(noteSearcher, 'indexWorkspace');
 
       await noteSearcher.notifyExtensionActivated();
 
@@ -104,7 +104,7 @@ describe('NoteSearcher', () => {
     it('shows indexing in progress', async () => {
       ui.currentlyOpenDirReturns('a directory');
 
-      await noteSearcher.index();
+      await noteSearcher.indexWorkspace();
 
       ui.notifiedIndexingStarted();
       searcher.verify(s => s.index(tmoq.It.isAnyString()), tmoq.Times.once());
@@ -113,7 +113,7 @@ describe('NoteSearcher', () => {
     it('displays message when no open folder', async () => {
       ui.currentlyOpenDirReturns(null);
 
-      await noteSearcher.index();
+      await noteSearcher.indexWorkspace();
 
       ui.showedAnyNotification();
       searcher.verify(s => s.index(tmoq.It.isAnyString()), tmoq.Times.never());
@@ -124,7 +124,7 @@ describe('NoteSearcher', () => {
       ui.currentlyOpenDirReturns('a directory');
       searcher.setup(s => s.index('a directory')).throws(error);
 
-      await noteSearcher.index();
+      await noteSearcher.indexWorkspace();
 
       ui.showedError(error);
     });
@@ -285,7 +285,7 @@ describe('NoteSearcher', () => {
 
     it('updates index', async () => {
       const file = new MockFile('path', 'content');
-      const indexSpy = jest.spyOn(noteSearcher, 'index');
+      const indexSpy = jest.spyOn(noteSearcher, 'indexWorkspace');
 
       await ui.saveFile(file);
 

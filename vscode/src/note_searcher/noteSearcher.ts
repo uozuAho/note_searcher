@@ -49,7 +49,7 @@ export class NoteSearcher {
     }
   };
 
-  public index = async () => {
+  public indexWorkspace = async () => {
     this.diagnostics.trace('index');
     const folder = this.ui.currentlyOpenDir();
     if (!folder) {
@@ -110,7 +110,7 @@ export class NoteSearcher {
 
   public notifyExtensionActivated = async () => {
     if (!this.ui.currentlyOpenDir()) { return; }
-    await this.index();
+    await this.indexWorkspace();
     this.showTags();
     this.showDeadLinks();
   };
@@ -163,7 +163,7 @@ export class NoteSearcher {
   private notifyNoteSaved = async (file: File) => {
     this.diagnostics.trace('note saved');
 
-    await this.index();
+    await this.indexWorkspace();
     this.showDeadLinks();
     this.showTags();
   };
