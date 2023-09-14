@@ -7,8 +7,8 @@ import { extractTags } from '../text_processing/tagExtractor';
  * FTS that supports file modification.
  *
  * It's called dual because it uses two lunr indexes to achieve this: one that
- * indexes all files once on startup, and a second that indexes files as they
- * are modified.
+ * indexes all files once on startup, and a second that is destroyed and rebuilt
+ * on every file modification.
  */
 export class LunrDualFts implements FullTextSearch {
   private _staticIndex: LunrFullTextSearch;
@@ -23,6 +23,7 @@ export class LunrDualFts implements FullTextSearch {
   }
 
   public finalise = () => this._staticIndex.finalise();
+
   public addFile = (path: string, text: string, tags: string[]) =>
     this._staticIndex.indexFile(path, text, tags);
 
