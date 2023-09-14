@@ -15,7 +15,7 @@ export class VsCodeNoteSearcherUi implements NoteSearcherUi {
     return await vscode.env.clipboard.writeText(text);
   };
 
-  public getCurrentFile = () => 
+  public getCurrentFile = () =>
     vscode.window.activeTextEditor
       ? new VsCodeFile(vscode.window.activeTextEditor.document)
       : null;
@@ -102,7 +102,7 @@ export class VsCodeNoteSearcherUi implements NoteSearcherUi {
   };
 
   public notifyIndexingStarted = (indexingTask: Promise<void>) => {
-    vscode.window.withProgress({
+    return vscode.window.withProgress({
       location: vscode.ProgressLocation.Window,
       title: 'Note Searcher: indexing...',
     }, () => indexingTask);
@@ -127,7 +127,7 @@ export class VsCodeNoteSearcherUi implements NoteSearcherUi {
     return vscode.workspace.onDidSaveTextDocument(doc => {
       if (this.noteSavedListener) {
         const file = new VsCodeFile(doc);
-        this.noteSavedListener(file);
+        return this.noteSavedListener(file);
       }
     });
   };
@@ -137,7 +137,7 @@ export class VsCodeNoteSearcherUi implements NoteSearcherUi {
       if (!e) { return; }
       if (this.movedViewToDifferentNoteListener) {
         const file = new VsCodeFile(e.document);
-        this.movedViewToDifferentNoteListener(file);
+        return this.movedViewToDifferentNoteListener(file);
       }
     });
   };

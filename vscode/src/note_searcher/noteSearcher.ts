@@ -79,7 +79,7 @@ export class NoteSearcher {
     const noteName = await this.ui.promptForNewNoteName(noteId);
     if (!noteName) { return; }
     const notePath = this.createNotePath(noteName);
-    this.ui.startNewNote(notePath);
+    return this.ui.startNewNote(notePath);
   };
 
   public createNoteId = (): string => {
@@ -117,7 +117,7 @@ export class NoteSearcher {
 
   public markdownLinkToClipboard = (filePath: string) => {
     const link = this.generateMarkdownLinkTo(filePath);
-    this.ui.copyToClipboard(link);
+    return this.ui.copyToClipboard(link);
   };
 
   public generateMarkdownLinkTo = (filePath: string) => {
@@ -132,7 +132,7 @@ export class NoteSearcher {
 
   public wikiLinkToClipboard = (filePath: string) => {
     const link = this.generateWikiLinkTo(filePath);
-    this.ui.copyToClipboard(link);
+    return this.ui.copyToClipboard(link);
   };
 
   public generateWikiLinkTo = (filePath: string) => {

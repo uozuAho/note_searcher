@@ -40,7 +40,6 @@ Run `npm run build_vsix` in the vscode directory.
 
 # WIP todo
 ## plan
-- fix eslint warnings
 - full text search
     - get rid of searchWithScores
     - remove FullTextSearch.index

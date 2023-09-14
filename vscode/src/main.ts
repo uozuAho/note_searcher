@@ -10,7 +10,7 @@ import { NoteLocator } from './definition_provider/NoteLocator';
 
 export const extensionId = 'uozuaho.note-searcher';
 
-export function activate(context: vscode.ExtensionContext) {
+export async function activate(context: vscode.ExtensionContext) {
   const ui = new VsCodeNoteSearcherUi();
   const configProvider = new NoteSearcherConfigProvider(context);
   const multiIndex = createMultiIndex();
@@ -54,7 +54,7 @@ export function activate(context: vscode.ExtensionContext) {
     ui.createMovedViewToDifferentNoteHandler()
   );
 
-  noteSearcher.notifyExtensionActivated();
+  await noteSearcher.notifyExtensionActivated();
 }
 
 export function deactivate() {}

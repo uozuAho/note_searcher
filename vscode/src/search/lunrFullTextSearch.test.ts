@@ -167,7 +167,7 @@ describe.each([
     ]);
 
     let modified = new FileAndTags('one.blah.md', 'most blah! blah blah blah blah');
-    modifyFile(modified);
+    await modifyFile(modified);
 
     const results = await lunrSearch.search('blah');
 

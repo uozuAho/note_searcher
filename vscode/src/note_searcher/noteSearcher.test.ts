@@ -32,11 +32,11 @@ describe('NoteSearcher', () => {
         searcher.object, configProvider.object);
     });
 
-    it('updates index', () => {
+    it('updates index', async () => {
       ui.currentlyOpenDirReturns('some dir');
       const index = jest.spyOn(noteSearcher, 'index');
 
-      noteSearcher.notifyExtensionActivated();
+      await noteSearcher.notifyExtensionActivated();
 
       expect(index).toHaveBeenCalled();
     });
