@@ -68,17 +68,13 @@ class FakeFs implements FileSystem {
 
 let fakeFs: FakeFs;
 
-describe.each([
-  ['lunr', () => new LunrFullTextSearch()],
-  ['lunr dual', () => new LunrDualFts(fakeFs)]
-])('%s', (name, builder) => {
-  // todo: rename this to FTS
-  let lunrSearch: FullTextSearch;
+describe('full text search', () => {
+  let fts: FullTextSearch;
 
   const index = async (files: FileAndTags[]) => {
-    lunrSearch = builder();
+    fts = new LunrDualFts(fakeFs);
     for (const file of files) {
-      await lunrSearch.indexFile(file.path, file.text, file.tags);
+      await fts.indexFile(file.path, file.text, file.tags);
       fakeFs.addFile(file.path, file.text);
     }
   };
@@ -86,16 +82,16 @@ describe.each([
   const searchFor = async (query: string, text: string, tags: string[] = []) => {
     await index([new FileAndTags(aTextFilePath, text, tags)]);
 
-    return lunrSearch.search(query);
+    return fts.search(query);
   };
 
   const modifyFile = async (file: FileAndTags) => {
     fakeFs.addFile(file.path, file.text);
-    await lunrSearch.onFileModified(file.path, file.text, file.tags);
+    await fts.onFileModified(file.path, file.text, file.tags);
   };
 
   beforeEach(() => {
-    lunrSearch = new LunrFullTextSearch();
+    fts = new LunrFullTextSearch();
     fakeFs = new FakeFs();
   });
 
@@ -105,39 +101,37 @@ describe.each([
       new FileAndTags('a/b/c.log', 'what about shoes and biscuits'),
     ]);
 
-    const results = await lunrSearch.search('blah');
+    const results = await fts.search('blah');
 
     expect(results.length).toBe(1);
     expect(results[0]).toBe('a/b.txt');
   });
 
   it('updates index after file is modified', async () => {
-    if (name === 'lunr') { return; }  // lunr doesn't support file updates
-
     await index([
       new FileAndTags('a/b.txt', 'blah blah some stuff and things'),
       new FileAndTags('a/b/c.log', 'what about shoes and biscuits'),
     ]);
 
-    let results = await lunrSearch.search('blah');
+    let results = await fts.search('blah');
     expect(results.length).toBe(1);
 
     let modified = new FileAndTags('a/b.txt', 'some stuff and things and more things');
     await modifyFile(modified);
 
-    results = await lunrSearch.search('blah');
+    results = await fts.search('blah');
     expect(results.length).toBe(0);
 
     modified = new FileAndTags('a/b.txt', 'ok blah is back');
     await modifyFile(modified);
 
-    results = await lunrSearch.search('blah');
+    results = await fts.search('blah');
     expect(results.length).toBe(1);
 
     modified = new FileAndTags('a/b/c.log', 'blah now both notes contain blah');
     await modifyFile(modified);
 
-    results = await lunrSearch.search('blah');
+    results = await fts.search('blah');
     expect(results.length).toBe(2);
   });
 
@@ -148,7 +142,7 @@ describe.each([
       new FileAndTags('medium.blah.log', 'blah blah'),
     ]);
 
-    let results = await lunrSearch.search('blah');
+    let results = await fts.search('blah');
 
     expect(results).toStrictEqual([
       'lots.of.blah.txt',
@@ -158,8 +152,6 @@ describe.each([
   });
 
   it('orders search results by relevance, after modification', async () => {
-    if (name === 'lunr') { return; }  // lunr doesn't support file updates
-
     await index([
       new FileAndTags('lots.of.blah.txt', 'blah blah blah'),
       new FileAndTags('medium.blah.log', 'blah blah'),
@@ -169,7 +161,7 @@ describe.each([
     let modified = new FileAndTags('one.blah.md', 'most blah! blah blah blah blah');
     await modifyFile(modified);
 
-    const results = await lunrSearch.search('blah');
+    const results = await fts.search('blah');
 
     expect(results).toStrictEqual([
       'one.blah.md',
@@ -281,42 +273,5 @@ describe.each([
       await expect(searchFor("#meat-pie", "I want a", ['meat'])).not.toBeFound();
       await expect(searchFor("#meat", "I want a", ['meat-pie'])).not.toBeFound();
     });
-  });
-
-
-});
-
-// todo: this should probably be somewhere else
-describe('lunr search: expand query tags', () => {
-  const lunrSearch = new LunrFullTextSearch();
-
-  it('replaces tag at the start of a query', () => {
-    const inputQuery = '#tag';
-    const expandedQuery = lunrSearch.expandQueryTags(inputQuery);
-    expect(expandedQuery).toBe('tags:tag');
-  });
-
-  it('replaces tag in the middle of a query', () => {
-    const inputQuery = 'hello #tag boy';
-    const expandedQuery = lunrSearch.expandQueryTags(inputQuery);
-    expect(expandedQuery).toBe('hello tags:tag boy');
-  });
-
-  it('replaces multiple tags', () => {
-    const inputQuery = 'hello #tag #boy';
-    const expandedQuery = lunrSearch.expandQueryTags(inputQuery);
-    expect(expandedQuery).toBe('hello tags:tag tags:boy');
-  });
-
-  it('does not replace non tag', () => {
-    const inputQuery = 'this is no#t a tag';
-    const expandedQuery = lunrSearch.expandQueryTags(inputQuery);
-    expect(expandedQuery).toBe(inputQuery);
-  });
-
-  it('works with operators', () => {
-    const inputQuery = 'dont include this -#tag';
-    const expandedQuery = lunrSearch.expandQueryTags(inputQuery);
-    expect(expandedQuery).toBe('dont include this -tags:tag');
   });
 });
