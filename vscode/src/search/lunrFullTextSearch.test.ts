@@ -89,9 +89,9 @@ describe.each([
     return lunrSearch.search(query);
   };
 
-  const modifyFile = (file: FileAndTags) => {
+  const modifyFile = async (file: FileAndTags) => {
     fakeFs.addFile(file.path, file.text);
-    lunrSearch.onFileModified(file.path, file.text, file.tags);
+    await lunrSearch.onFileModified(file.path, file.text, file.tags);
   };
 
   beforeEach(() => {
@@ -123,16 +123,22 @@ describe.each([
     expect(results.length).toBe(1);
 
     let modified = new FileAndTags('a/b.txt', 'some stuff and things and more things');
-    modifyFile(modified);
+    await modifyFile(modified);
 
     results = await lunrSearch.search('blah');
     expect(results.length).toBe(0);
 
     modified = new FileAndTags('a/b.txt', 'ok blah is back');
-    modifyFile(modified);
+    await modifyFile(modified);
 
     results = await lunrSearch.search('blah');
     expect(results.length).toBe(1);
+
+    modified = new FileAndTags('a/b/c.log', 'blah now both notes contain blah');
+    await modifyFile(modified);
+
+    results = await lunrSearch.search('blah');
+    expect(results.length).toBe(2);
   });
 
   it('orders search results by relevance', async () => {

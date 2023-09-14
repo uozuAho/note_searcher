@@ -40,13 +40,14 @@ Run `npm run build_vsix` in the vscode directory.
 
 # WIP todo
 ## plan
+- fix eslint warnings
 - full text search
-    - inline todos
     - get rid of searchWithScores
     - remove FullTextSearch.index
     - rename noteSearcher.index to noteSearcher.indexAll
     - rename/add multiIndex.index -> onFileModified
     - rename lunrFullTextSearch.test
+    - inline todos
     - do i need an onNewFileSaved method?
 - link index: handle file modified
 - tag index: handle file modified
