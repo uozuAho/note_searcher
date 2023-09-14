@@ -41,7 +41,6 @@ Run `npm run build_vsix` in the vscode directory.
 # WIP todo
 ## plan
 - full text search
-    - remove FullTextSearch.index
     - rename noteSearcher.index to noteSearcher.indexAll
     - rename/add multiIndex.index -> onFileModified
     - rename lunrFullTextSearch.test

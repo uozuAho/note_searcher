@@ -38,13 +38,12 @@ export class DefaultMultiIndex implements MultiIndex {
 
   public findAllDeadLinks = () => this._linkIndex.findAllDeadLinks();
 
-  // todo: make this private
-  public indexFile = async (path: string) => {
+  public addFile = async (path: string) => {
     const text = await this.fileSystem.readFileAsync(path);
     this._linkIndex.addFile(path, text);
     const tags = extractTags(text);
     this._tags.addTags(tags);
-    this._fullText.indexFile(path, text, tags);
+    this._fullText.addFile(path, text, tags);
   };
 
   private indexAllFiles = async (dir: string) => {
@@ -55,7 +54,7 @@ export class DefaultMultiIndex implements MultiIndex {
 
     for (const path of this.fileSystem.allFilesUnderPath(dir)) {
       if (!this.shouldIndex(path)) { continue; }
-      jobs.push(this.indexFile(path));
+      jobs.push(this.addFile(path));
     }
 
     await Promise.all(jobs);

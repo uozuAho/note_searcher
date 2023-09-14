@@ -74,7 +74,7 @@ describe('full text search', () => {
   const index = async (files: FileAndTags[]) => {
     fts = new LunrDualFts(fakeFs);
     for (const file of files) {
-      await fts.indexFile(file.path, file.text, file.tags);
+      await fts.addFile(file.path, file.text, file.tags);
       fakeFs.addFile(file.path, file.text);
     }
   };
