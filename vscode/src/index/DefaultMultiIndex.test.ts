@@ -48,7 +48,7 @@ describe('DefaultMultiIndex, mocked filesystem', () => {
   const searchFor = async (query: string, text: string) => {
     setupFiles([new MockFile(aTextFilePath, text)]);
 
-    await lunrNoteIndex.index('some dir');
+    await lunrNoteIndex.indexAllFiles('some dir');
 
     return lunrNoteIndex.search(query);
   };
@@ -93,7 +93,7 @@ describe('DefaultMultiIndex, mocked filesystem', () => {
         new MockFile('a/b/c.log', 'this has a #different tag'),
       ]);
 
-      await lunrNoteIndex.index('some dir');
+      await lunrNoteIndex.indexAllFiles('some dir');
 
       expect(lunrNoteIndex.allTags()).toEqual(['tag', 'different']);
     });
@@ -104,7 +104,7 @@ describe('DefaultMultiIndex, mocked filesystem', () => {
         new MockFile('a/b/c.log', 'this has the same #tag'),
       ]);
 
-      await lunrNoteIndex.index('some dir');
+      await lunrNoteIndex.indexAllFiles('some dir');
 
       expect(lunrNoteIndex.allTags()).toEqual(['tag']);
     });
@@ -112,13 +112,13 @@ describe('DefaultMultiIndex, mocked filesystem', () => {
     it('rebuilds on save', async () => {
       setupFiles([new MockFile('a/b.txt', 'this has a #tag')]);
 
-      await lunrNoteIndex.index('some dir');
+      await lunrNoteIndex.indexAllFiles('some dir');
 
       expect(lunrNoteIndex.allTags()).toEqual(['tag']);
 
       setupFiles([new MockFile('a/b.txt', 'now there are no tags')]);
 
-      await lunrNoteIndex.index('some dir');
+      await lunrNoteIndex.indexAllFiles('some dir');
 
       expect(lunrNoteIndex.allTags()).toEqual([]);
     });
@@ -132,7 +132,7 @@ describe('DefaultMultiIndex, mocked filesystem', () => {
       ];
       setupFiles(files);
 
-      await lunrNoteIndex.index('some dir');
+      await lunrNoteIndex.indexAllFiles('some dir');
 
       const notes = Array.from(lunrNoteIndex.notes());
       expect(notes).toEqual(files.map(f => f.path()));
@@ -142,7 +142,7 @@ describe('DefaultMultiIndex, mocked filesystem', () => {
     it('does not index non-text files', async () => {
       setupFiles([new MockFile('source_file.cpp', '')]);
 
-      await lunrNoteIndex.index('some dir');
+      await lunrNoteIndex.indexAllFiles('some dir');
 
       const notes = Array.from(lunrNoteIndex.notes());
       expect(notes).toHaveLength(0);

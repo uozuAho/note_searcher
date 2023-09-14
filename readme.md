@@ -41,7 +41,6 @@ Run `npm run build_vsix` in the vscode directory.
 # WIP todo
 ## plan
 - full text search
-    - rename/add multiIndex.index -> onFileModified
     - rename lunrFullTextSearch.test
     - inline todos
     - do i need an onNewFileSaved method?

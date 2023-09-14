@@ -107,7 +107,7 @@ describe('NoteSearcher', () => {
       await noteSearcher.indexWorkspace();
 
       ui.notifiedIndexingStarted();
-      searcher.verify(s => s.index(tmoq.It.isAnyString()), tmoq.Times.once());
+      searcher.verify(s => s.indexAllFiles(tmoq.It.isAnyString()), tmoq.Times.once());
     });
 
     it('displays message when no open folder', async () => {
@@ -116,13 +116,13 @@ describe('NoteSearcher', () => {
       await noteSearcher.indexWorkspace();
 
       ui.showedAnyNotification();
-      searcher.verify(s => s.index(tmoq.It.isAnyString()), tmoq.Times.never());
+      searcher.verify(s => s.indexAllFiles(tmoq.It.isAnyString()), tmoq.Times.never());
     });
 
     it('displays error when indexing throws', async () => {
       const error = new Error('oh no!');
       ui.currentlyOpenDirReturns('a directory');
-      searcher.setup(s => s.index('a directory')).throws(error);
+      searcher.setup(s => s.indexAllFiles('a directory')).throws(error);
 
       await noteSearcher.indexWorkspace();
 

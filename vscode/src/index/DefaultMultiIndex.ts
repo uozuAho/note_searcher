@@ -24,8 +24,6 @@ export class DefaultMultiIndex implements MultiIndex {
 
   public search = (query: string) => this._fullText.search(query);
 
-  public index = (dir: string) => this.indexAllFiles(dir);
-
   public allTags = () => this._tags.allTags();
 
   public notes = () => this._linkIndex.notes();
@@ -46,7 +44,7 @@ export class DefaultMultiIndex implements MultiIndex {
     this._fullText.addFile(path, text, tags);
   };
 
-  private indexAllFiles = async (dir: string) => {
+  public indexAllFiles = async (dir: string) => {
     this._tags.clear();
     this._linkIndex.clear();
     this._fullText.reset();

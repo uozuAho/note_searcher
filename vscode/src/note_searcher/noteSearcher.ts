@@ -59,7 +59,7 @@ export class NoteSearcher {
     }
 
     try {
-      const indexingTask = this.multiIndex.index(folder);
+      const indexingTask = this.multiIndex.indexAllFiles(folder);
       this.ui.notifyIndexingStarted(indexingTask);
       await indexingTask;
       this.diagnostics.trace('indexing complete');

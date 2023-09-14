@@ -13,7 +13,7 @@ export type MultiIndex =
   & LinkIndex;
 
 interface FileSystemIndexer {
-  index: (dir: string) => Promise<void>;
+  indexAllFiles: (dir: string) => Promise<void>;
 }
 
 /**

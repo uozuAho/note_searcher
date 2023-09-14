@@ -19,7 +19,7 @@ describe('DefaultMultiIndex, demo dir, dead links', () => {
   });
 
   it('finds all dead links in demo dir', async () => {
-    await linkIndex.index(demoDir);
+    await linkIndex.indexAllFiles(demoDir);
 
     // act
     const deadLinks = linkIndex.findAllDeadLinks();
@@ -34,7 +34,7 @@ describe('DefaultMultiIndex, demo dir, dead links', () => {
   });
 
   it('ignores dead links in ignored files', async () => {
-    await linkIndex.index(demoDir);
+    await linkIndex.indexAllFiles(demoDir);
 
     const deadLinkSourceNames = linkIndex.findAllDeadLinks()
       .map(l => l.sourcePath)
@@ -44,7 +44,7 @@ describe('DefaultMultiIndex, demo dir, dead links', () => {
   });
 
   it('includes links to ignored files', async () => {
-    await linkIndex.index(demoDir);
+    await linkIndex.indexAllFiles(demoDir);
 
     const deadLinksFromReadmeToIgnoredFile = linkIndex.findAllDeadLinks()
       .filter(l => l.sourcePath.includes('readme'))
@@ -63,19 +63,19 @@ describe('DefaultMultiIndex, demo dir, tags', () => {
   });
 
   it('contains transport', async () => {
-    await linkIndex.index(demoDir);
+    await linkIndex.indexAllFiles(demoDir);
 
     expect(linkIndex.allTags()).toContain('transport');
   });
 
   it('ignores node_modules', async () => {
-    await linkIndex.index(demoDir);
+    await linkIndex.indexAllFiles(demoDir);
 
     expect(linkIndex.allTags()).not.toContain('node_modules_ignored_tag');
   });
 
   it('ignores ignored directories', async () => {
-    await linkIndex.index(demoDir);
+    await linkIndex.indexAllFiles(demoDir);
 
     expect(linkIndex.allTags()).not.toContain('ignored_tag');
   });
@@ -90,19 +90,19 @@ describe('DefaultMultiIndex, demo dir, containsNote', () => {
   });
 
   it('contains trains', async () => {
-    await linkIndex.index(demoDir);
+    await linkIndex.indexAllFiles(demoDir);
 
     expect(linkIndex.containsNote('trains')).toBe(true);
   });
 
   it('ignores node_modules', async () => {
-    await linkIndex.index(demoDir);
+    await linkIndex.indexAllFiles(demoDir);
 
     expect(linkIndex.containsNote('about_node_modules')).toBe(false);
   });
 
   it('ignores ignored directories', async () => {
-    await linkIndex.index(demoDir);
+    await linkIndex.indexAllFiles(demoDir);
 
     expect(linkIndex.containsNote('ignored_file')).toBe(false);
   });
@@ -117,19 +117,19 @@ describe('DefaultMultiIndex, demo dir, linksFrom', () => {
   });
 
   it('train links to readme', async () => {
-    await linkIndex.index(demoDir);
+    await linkIndex.indexAllFiles(demoDir);
 
     expect(linkIndex.linksFrom(trainsPath)).toStrictEqual([readmePath]);
   });
 
   it('ignores node_modules', async () => {
-    await linkIndex.index(demoDir);
+    await linkIndex.indexAllFiles(demoDir);
 
     expect(linkIndex.linksFrom(aboutNodeModulesPath).length).toBe(0);
   });
 
   it('ignores ignored dirs', async () => {
-    await linkIndex.index(demoDir);
+    await linkIndex.indexAllFiles(demoDir);
 
     expect(linkIndex.linksFrom(ignoredFilePath).length).toBe(0);
   });
@@ -144,19 +144,19 @@ describe('DefaultMultiIndex, demo dir, linksTo', () => {
   });
 
   it('train links to readme', async () => {
-    await linkIndex.index(demoDir);
+    await linkIndex.indexAllFiles(demoDir);
 
     expect(linkIndex.linksTo(readmePath)).toStrictEqual([trainsPath]);
   });
 
   it('ignores node_modules', async () => {
-    await linkIndex.index(demoDir);
+    await linkIndex.indexAllFiles(demoDir);
 
     expect(linkIndex.linksTo(aboutNodeModulesPath).length).toBe(0);
   });
 
   it('ignores ignored dirs', async () => {
-    await linkIndex.index(demoDir);
+    await linkIndex.indexAllFiles(demoDir);
 
     expect(linkIndex.linksTo(ignoredFilePath).length).toBe(0);
   });
@@ -171,7 +171,7 @@ describe('DefaultMultiIndex, demo dir, search', () => {
   });
 
   it('search for cheese finds cheese', async () => {
-    await linkIndex.index(demoDir);
+    await linkIndex.indexAllFiles(demoDir);
 
     const results = await linkIndex.search('cheese');
 
@@ -179,7 +179,7 @@ describe('DefaultMultiIndex, demo dir, search', () => {
   });
 
   it('ignores node_modules', async () => {
-    await linkIndex.index(demoDir);
+    await linkIndex.indexAllFiles(demoDir);
 
     const results = await linkIndex.search('9ad8gggg86eef9869d8a6deddd');
 
@@ -187,7 +187,7 @@ describe('DefaultMultiIndex, demo dir, search', () => {
   });
 
   it('ignores ignored dirs', async () => {
-    await linkIndex.index(demoDir);
+    await linkIndex.indexAllFiles(demoDir);
 
     const results = await linkIndex.search('9ad8e6c986eef9869d8a6deddd');
 
