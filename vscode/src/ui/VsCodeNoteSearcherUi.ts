@@ -41,7 +41,6 @@ export class VsCodeNoteSearcherUi implements NoteSearcherUi {
 
     // Hack: Show the view container if it's not currently visible.
     //       Doesn't work if there's no search results :(
-    //       todo: find a way to show the container regardless of search results
     if (uris.length > 0) {
       const children = await searchResults.getChildren();
       return view.reveal(children[0]);
