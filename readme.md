@@ -39,11 +39,8 @@ Run `npm run build_vsix` in the vscode directory.
 
 
 # WIP todo
-## plan
 - full text search
-    - rename lunrFullTextSearch.test
     - inline todos
-    - do i need an onNewFileSaved method?
 - link index: handle file modified
 - tag index: handle file modified
 - handle file moved/deleted

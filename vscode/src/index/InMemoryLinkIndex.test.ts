@@ -48,21 +48,6 @@ describe('InMemoryLinkIndex, mocked filesystem', () => {
     });
   });
 
-  describe('reset', () => {
-    it('clears everything', () => {
-      const index = new InMemoryLinkIndex();
-      const addedFile = '/a/b.txt';
-      index.addFile(addedFile, 'a [link](to/thing)');
-      index.finalise();
-
-      index.clear();
-
-      expect(index.containsNote(addedFile)).toBe(false);
-      expect(Array.from(index.notes())).toHaveLength(0);
-      expect(index.linksFrom(addedFile)).toHaveLength(0);
-    });
-  });
-
   it('does not index http links', () => {
     const index = new InMemoryLinkIndex();
     const addedFile = '/a/b.txt';

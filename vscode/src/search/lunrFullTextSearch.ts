@@ -21,11 +21,6 @@ export class LunrFullTextSearch {
   private _diagnostics = createDiagnostics('LunrSearch');
   private _indexBuilder = this.createIndexBuilder();
 
-  public reset = () => {
-    this._index = null;
-    this._indexBuilder = this.createIndexBuilder();
-  };
-
   public finalise = () => {
     this._index = this._indexBuilder.build();
   };

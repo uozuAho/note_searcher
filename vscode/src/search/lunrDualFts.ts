@@ -22,8 +22,6 @@ export class LunrDualFts implements FullTextSearch {
     this._dynamicIndex = new LunrFullTextSearch();
   }
 
-  // todo: remove reset?
-  public reset = () => this._staticIndex.reset();
   public finalise = () => this._staticIndex.finalise();
   public addFile = (path: string, text: string, tags: string[]) =>
     this._staticIndex.indexFile(path, text, tags);

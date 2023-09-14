@@ -11,13 +11,12 @@ export class DefaultMultiIndex implements MultiIndex {
   private _tags = new TagSet();
   private _linkIndex = new InMemoryLinkIndex();
 
-  constructor(private fileSystem: FileSystem) {
-    this._fullText = new LunrDualFts(fileSystem);
+  constructor(private _fileSystem: FileSystem) {
+    this._fullText = new LunrDualFts(_fileSystem);
   }
 
   public onFileModified = (path: string, text: string, tags: string[]) => {
     return this._fullText.onFileModified(path, text, tags);
-    // todo: tags, links
   };
 
   public filenameToAbsPath = (filename: string) => this._linkIndex.filenameToAbsPath(filename);
@@ -37,7 +36,7 @@ export class DefaultMultiIndex implements MultiIndex {
   public findAllDeadLinks = () => this._linkIndex.findAllDeadLinks();
 
   public addFile = async (path: string) => {
-    const text = await this.fileSystem.readFileAsync(path);
+    const text = await this._fileSystem.readFileAsync(path);
     this._linkIndex.addFile(path, text);
     const tags = extractTags(text);
     this._tags.addTags(tags);
@@ -47,10 +46,10 @@ export class DefaultMultiIndex implements MultiIndex {
   public indexAllFiles = async (dir: string) => {
     this._tags.clear();
     this._linkIndex.clear();
-    this._fullText.reset();
+    this._fullText = new LunrDualFts(this._fileSystem);
     const jobs: Promise<void>[] = [];
 
-    for (const path of this.fileSystem.allFilesUnderPath(dir)) {
+    for (const path of this._fileSystem.allFilesUnderPath(dir)) {
       if (!this.shouldIndex(path)) { continue; }
       jobs.push(this.addFile(path));
     }
