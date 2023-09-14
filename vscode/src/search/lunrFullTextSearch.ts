@@ -1,7 +1,6 @@
 import * as lunr from 'lunr';
 
 import { createDiagnostics } from '../diagnostics/diagnostics';
-import { FullTextSearch } from "./FullTextSearch";
 
 const NUM_RESULTS = 20;
 
@@ -17,7 +16,7 @@ lunr.tokenizer.separator = /[\s\[\]/]+/;
 // An alternative is to implement my own query parser.
 (lunr as any).QueryLexer.termSeparator = lunr.tokenizer.separator;
 
-export class LunrFullTextSearch implements FullTextSearch {
+export class LunrFullTextSearch {
   private _index: lunr.Index | null = null;
   private _diagnostics = createDiagnostics('LunrSearch');
   private _indexBuilder = this.createIndexBuilder();
@@ -32,28 +31,6 @@ export class LunrFullTextSearch implements FullTextSearch {
   };
 
   public search = (query: string) => {
-    this.trace('search');
-
-    if (!this._index) {
-      if (!this._indexBuilder) {
-        return Promise.resolve([]);
-      } else {
-        // This is a hack for tests, so that tests don't have to call finalise.
-        // Note that you _should_ call finalise once indexing is complete.
-        this._index = this._indexBuilder.build();
-      }
-    }
-
-    query = this.expandQueryTags(query);
-
-    return Promise.resolve(this._index
-      .search(query)
-      .slice(0, NUM_RESULTS)
-      .map(r => r.ref));
-  };
-
-  // todo: duplicates logic with search
-  public searchWithScores = (query: string) => {
     this.trace('search');
 
     if (!this._index) {

@@ -31,14 +31,14 @@ export class LunrDualFts implements FullTextSearch {
   public search = async (query: string) => {
     const results: {path: string, score: number}[] = [];
 
-    const stat = await this._staticIndex.searchWithScores(query);
+    const stat = await this._staticIndex.search(query);
     for (const {path, score} of stat) {
       // disregard modified files in static results
       if (this._modifiedFiles.has(path)) { continue; }
       results.push({path, score});
     }
 
-    const dyn = await this._dynamicIndex.searchWithScores(query);
+    const dyn = await this._dynamicIndex.search(query);
     for (const {path, score} of dyn) {
       results.push({path, score});
     }

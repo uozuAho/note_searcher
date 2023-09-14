@@ -91,8 +91,8 @@ describe('full text search', () => {
   };
 
   beforeEach(() => {
-    fts = new LunrFullTextSearch();
     fakeFs = new FakeFs();
+    fts = new LunrDualFts(fakeFs);
   });
 
   it('index and search example', async () => {
