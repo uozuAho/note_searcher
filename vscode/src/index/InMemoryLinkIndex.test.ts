@@ -48,10 +48,30 @@ describe('InMemoryLinkIndex, mocked filesystem', () => {
     });
   });
 
+  describe('when a file is modified', () => {
+    let index: InMemoryLinkIndex;
+    const note1 = process.platform === 'win32' ? 'C:\\a\\note1.md' : '/a/note1.md';
+    const note2 = process.platform === 'win32' ? 'C:\\a\\note2.md' : '/a/note2.md';
+
+    beforeAll(() => {
+      index = new InMemoryLinkIndex();
+      index.addFile(note1, 'has a markdown link: [link](note2.md)');
+      index.addFile(note2, 'has a wiki link: [[link | note1]]');
+      index.finalise();
+    });
+
+    it('removes links', () => {
+      index.onFileModified(note1, 'I removed the link to note2');
+      expect(index.linksFrom(note1)).toEqual([]);
+      expect(index.linksTo(note2)).toEqual([]);
+    });
+  });
+
   it('does not index http links', () => {
     const index = new InMemoryLinkIndex();
     const addedFile = '/a/b.txt';
     index.addFile('/a/b.txt', 'a [link](http://to/internet/stuff)');
+    index.finalise();
 
     expect(index.linksFrom(addedFile)).toEqual([]);
     expect(index.containsNote(addedFile)).toBe(true);

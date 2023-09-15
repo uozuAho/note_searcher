@@ -40,6 +40,12 @@ Run `npm run build_vsix` in the vscode directory.
 
 # WIP todo
 - link index: handle file modified
+    - DONE: remove a link, test links from/to
+    - add a link, test links from/to
+    - remove dead link, test dead links
+    - add dead link, test dead links
+    - add onFileModified to MultiIndex
+    - manual test
 - tag index: handle file modified
 - handle file moved/deleted
     - full text search
