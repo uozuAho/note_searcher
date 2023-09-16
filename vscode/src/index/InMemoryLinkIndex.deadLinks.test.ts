@@ -17,19 +17,31 @@ describe('InMemoryLinkIndex, dead links, mocked filesystem', () => {
   };
 
   describe('on file modified', () => {
-    // posix only, I'm lazy
-    if (process.platform === 'win32') { return; }
-
     beforeEach(() => {
       fileSystem = tmoq.Mock.ofType<FileSystem>();
       linkIndex = new InMemoryLinkIndex();
     });
 
-    // todo: come back to this one the interface is worked out
-    it.skip('finds dead link', () => {
+    it('finds dead link', () => {
       setupFiles([
         new MockFile('/a.md', 'nothing here yet')
       ]);
+      linkIndex.onFileModified('/a.md', 'this linked note doesnt exist: [[b]]');
+
+      const deadLinks = linkIndex.findAllDeadLinks();
+
+      expect(deadLinks).toHaveLength(1);
+      expect(deadLinks[0].sourcePath).toBe('/a.md');
+      expect(deadLinks[0].targetPath).toBe('b');
+    });
+
+    it('removes dead link', () => {
+      setupFiles([
+        new MockFile('/a.md', 'dead link to b: [[b]]')
+      ]);
+      linkIndex.onFileModified('/a.md', 'dead link removed');
+
+      expect(linkIndex.findAllDeadLinks()).toHaveLength(0);
     });
   });
 

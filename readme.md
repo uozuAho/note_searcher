@@ -42,8 +42,8 @@ Run `npm run build_vsix` in the vscode directory.
 - link index: handle file modified
     - DONE: remove a link, test links from/to
     - DONE: add a link, test links from/to
-    - remove dead link, test dead links
-    - add dead link, test dead links
+    - DONE: remove dead link, test dead links
+    - DONE: add dead link, test dead links
     - manual test
 - tag index: handle file modified
 - handle file moved/deleted
