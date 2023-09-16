@@ -65,6 +65,13 @@ describe('InMemoryLinkIndex, mocked filesystem', () => {
       expect(index.linksFrom(note1)).toEqual([]);
       expect(index.linksTo(note2)).toEqual([]);
     });
+
+    it('adds links', () => {
+      index.onFileModified(note1, 'I removed the link to note2');
+      index.onFileModified(note1, 'then put it back: [[note2]]');
+      expect(index.linksFrom(note1)).toEqual([note2]);
+      expect(index.linksTo(note2)).toEqual([note1]);
+    });
   });
 
   it('does not index http links', () => {

@@ -1,23 +1,37 @@
-const _path = require('path');
-
 import * as tmoq from 'typemoq';
 
 import { InMemoryLinkIndex } from "./InMemoryLinkIndex";
 import { MockFile } from "../mocks/MockFile";
-import { DefaultMultiIndex } from "./DefaultMultiIndex";
-import { createFileSystem, FileSystem } from "../utils/FileSystem";
+import { FileSystem } from "../utils/FileSystem";
 
 describe('InMemoryLinkIndex, dead links, mocked filesystem', () => {
   let fileSystem: tmoq.IMock<FileSystem>;
   let linkIndex: InMemoryLinkIndex;
 
-  const setupLinks = (fileLinks: MockFile[]) => {
+  const setupFiles = (fileLinks: MockFile[]) => {
     for (const file of fileLinks) {
       linkIndex.addFile(file.path(), file.text());
       fileSystem.setup(f => f.fileExists(file.path())).returns(() => true);
     }
     linkIndex.finalise();
   };
+
+  describe('on file modified', () => {
+    // posix only, I'm lazy
+    if (process.platform === 'win32') { return; }
+
+    beforeEach(() => {
+      fileSystem = tmoq.Mock.ofType<FileSystem>();
+      linkIndex = new InMemoryLinkIndex();
+    });
+
+    // todo: come back to this one the interface is worked out
+    it.skip('finds dead link', () => {
+      setupFiles([
+        new MockFile('/a.md', 'nothing here yet')
+      ]);
+    });
+  });
 
   describe('posix paths, markdown links', () => {
     if (process.platform === 'win32') { return; }
@@ -28,7 +42,7 @@ describe('InMemoryLinkIndex, dead links, mocked filesystem', () => {
     });
 
     it('finds dead link', () => {
-      setupLinks([
+      setupFiles([
         new MockFile('/a.md', '[](/b.txt)')
       ]);
 
@@ -40,7 +54,7 @@ describe('InMemoryLinkIndex, dead links, mocked filesystem', () => {
     });
 
     it('finds no dead links', () => {
-      setupLinks([
+      setupFiles([
         new MockFile('/a.md', '[](/b.txt)'),
         new MockFile('/b.txt', '')
       ]);
@@ -51,7 +65,7 @@ describe('InMemoryLinkIndex, dead links, mocked filesystem', () => {
     });
 
     it('links to subdirs work', () => {
-      setupLinks([
+      setupFiles([
         new MockFile('/a.md', '[](/b/c/e.txt)'),
         new MockFile('/b/c/e.txt', '')
       ]);
@@ -62,7 +76,7 @@ describe('InMemoryLinkIndex, dead links, mocked filesystem', () => {
     });
 
     it('links to parent dirs work', () => {
-      setupLinks([
+      setupFiles([
         new MockFile('/b/c/e.txt', '[](/a.md)'),
         new MockFile('/a.md', '')
       ]);
@@ -73,7 +87,7 @@ describe('InMemoryLinkIndex, dead links, mocked filesystem', () => {
     });
 
     it('supports relative links to parent dirs', () => {
-      setupLinks([
+      setupFiles([
         new MockFile('/b/c/e.txt', '[](../../a.md)'),
         new MockFile('/a.md', '')
       ]);
@@ -84,7 +98,7 @@ describe('InMemoryLinkIndex, dead links, mocked filesystem', () => {
     });
 
     it('supports relative links to subdirs', () => {
-      setupLinks([
+      setupFiles([
         new MockFile('/a/b.md', '[](c/d.txt)'),
         new MockFile('/a/c/d.txt', '')
       ]);
@@ -95,7 +109,7 @@ describe('InMemoryLinkIndex, dead links, mocked filesystem', () => {
     });
 
     it('supports non-note files', () => {
-      setupLinks([
+      setupFiles([
         new MockFile('/a/b.md', '[](c.png)'),
         new MockFile('/a/c.png', '')
       ]);
@@ -115,7 +129,7 @@ describe('InMemoryLinkIndex, dead links, mocked filesystem', () => {
     });
 
     it('finds dead link', () => {
-      setupLinks([
+      setupFiles([
         new MockFile('/a.md', '[[blah]]')
       ]);
 
@@ -127,7 +141,7 @@ describe('InMemoryLinkIndex, dead links, mocked filesystem', () => {
     });
 
     it('finds no dead links', () => {
-      setupLinks([
+      setupFiles([
         new MockFile('/a.md', '[[b]]'),
         new MockFile('/b.txt', '')
       ]);
@@ -138,7 +152,7 @@ describe('InMemoryLinkIndex, dead links, mocked filesystem', () => {
     });
 
     it('links to subdirs work', () => {
-      setupLinks([
+      setupFiles([
         new MockFile('/a.md', '[[e]]'),
         new MockFile('/b/c/e.txt', '')
       ]);
@@ -149,7 +163,7 @@ describe('InMemoryLinkIndex, dead links, mocked filesystem', () => {
     });
 
     it('links to parent dirs work', () => {
-      setupLinks([
+      setupFiles([
         new MockFile('/b/c/e.txt', '[[a]]'),
         new MockFile('/a.md', '')
       ]);
@@ -169,7 +183,7 @@ describe('InMemoryLinkIndex, dead links, mocked filesystem', () => {
     });
 
     it('finds dead link', () => {
-      setupLinks([
+      setupFiles([
         new MockFile('c:\\a.md', '[](c:\\b.txt)')
       ]);
 
@@ -181,7 +195,7 @@ describe('InMemoryLinkIndex, dead links, mocked filesystem', () => {
     });
 
     it('finds no dead links', () => {
-      setupLinks([
+      setupFiles([
         new MockFile('c:\\a.md', '[](c:\\b.txt)'),
         new MockFile('c:\\b.txt', '')
       ]);
@@ -192,7 +206,7 @@ describe('InMemoryLinkIndex, dead links, mocked filesystem', () => {
     });
 
     it('links to subdirs work', () => {
-      setupLinks([
+      setupFiles([
         new MockFile('c:\\a.md', '[](c:\\b\\c\\e.txt)'),
         new MockFile('c:\\b\\c\\e.txt', '')
       ]);
@@ -203,7 +217,7 @@ describe('InMemoryLinkIndex, dead links, mocked filesystem', () => {
     });
 
     it('links to parent dirs work', () => {
-      setupLinks([
+      setupFiles([
         new MockFile('c:\\b\\c\\e.txt', '[](c:\\a.md)'),
         new MockFile('c:\\a.md', '')
       ]);
@@ -214,7 +228,7 @@ describe('InMemoryLinkIndex, dead links, mocked filesystem', () => {
     });
 
     it('supports relative links to parent dirs', () => {
-      setupLinks([
+      setupFiles([
         new MockFile('c:\\b\\c\\e.txt', '[](..\\..\\a.md)'),
         new MockFile('c:\\a.md', '')
       ]);
@@ -225,7 +239,7 @@ describe('InMemoryLinkIndex, dead links, mocked filesystem', () => {
     });
 
     it('supports relative links to subdirs', () => {
-      setupLinks([
+      setupFiles([
         new MockFile('c:\\a\\b.md', '[](c\\d.txt)'),
         new MockFile('c:\\a\\c\\d.txt', '')
       ]);
@@ -236,7 +250,7 @@ describe('InMemoryLinkIndex, dead links, mocked filesystem', () => {
     });
 
     it('supports non-note files', () => {
-      setupLinks([
+      setupFiles([
         new MockFile('c:\\a\\b.md', '[](c.png)'),
         new MockFile('c:\\a\\c.png', '')
       ]);
@@ -256,7 +270,7 @@ describe('InMemoryLinkIndex, dead links, mocked filesystem', () => {
     });
 
     it('finds dead link', () => {
-      setupLinks([
+      setupFiles([
         new MockFile('c:\\a.md', '[[blah]]')
       ]);
 
@@ -268,7 +282,7 @@ describe('InMemoryLinkIndex, dead links, mocked filesystem', () => {
     });
 
     it('finds no dead links', () => {
-      setupLinks([
+      setupFiles([
         new MockFile('c:\\a.md', '[[b]]'),
         new MockFile('c:\\b.txt', '')
       ]);
@@ -279,7 +293,7 @@ describe('InMemoryLinkIndex, dead links, mocked filesystem', () => {
     });
 
     it('links to subdirs work', () => {
-      setupLinks([
+      setupFiles([
         new MockFile('c:\\a.md', '[[e]]'),
         new MockFile('c:\\b\\c\\e.txt', '')
       ]);
@@ -290,7 +304,7 @@ describe('InMemoryLinkIndex, dead links, mocked filesystem', () => {
     });
 
     it('links to parent dirs work', () => {
-      setupLinks([
+      setupFiles([
         new MockFile('c:\\b\\c\\e.txt', '[[a]]'),
         new MockFile('c:\\a.md', '')
       ]);
