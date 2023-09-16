@@ -44,8 +44,12 @@ Run `npm run build_vsix` in the vscode directory.
     - DONE: add a link, test links from/to
     - DONE: remove dead link, test dead links
     - DONE: add dead link, test dead links
-    - manual test
     - remove indexAll from onsave, auto and manual test again
+        - what is existing behaviour on:
+            - open a file (not a dir)
+            - save a file, with no dir opened
+        - how does ignore config work again?
+            - how is note searcher enabled/disabled again?
 - tag index: handle file modified
 - handle file moved/deleted
     - full text search
