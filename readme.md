@@ -44,7 +44,9 @@ Run `npm run build_vsix` in the vscode directory.
     - DONE: add a link, test links from/to
     - DONE: remove dead link, test dead links
     - DONE: add dead link, test dead links
+    - bug: 'links from this note' not updated on save
     - manual test
+    - remove indexAll from onsave, auto and manual test again
 - tag index: handle file modified
 - handle file moved/deleted
     - full text search
