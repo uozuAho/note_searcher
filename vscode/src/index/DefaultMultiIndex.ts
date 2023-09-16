@@ -15,8 +15,13 @@ export class DefaultMultiIndex implements MultiIndex {
     this._fullText = new LunrDualFts(_fileSystem);
   }
 
-  public onFileModified = (path: string, text: string, tags: string[]) => {
-    return this._fullText.onFileModified(path, text, tags);
+  public onFileModified = async (path: string, text: string, tags: string[]) => {
+    const tasks = [
+      this._fullText.onFileModified(path, text, tags),
+      this._linkIndex.onFileModified(path, text)
+    ];
+
+    await Promise.all(tasks);
   };
 
   public filenameToAbsPath = (filename: string) => this._linkIndex.filenameToAbsPath(filename);
