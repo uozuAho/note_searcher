@@ -163,7 +163,7 @@ export class NoteSearcher {
   private notifyNoteSaved = async (file: File) => {
     this.diagnostics.trace('note saved');
 
-    await this.multiIndex.onFileModified(file.path(), file.text(), []);
+    await this.multiIndex.onFileModified(file.path(), file.text());
     this.showDeadLinks();
     this.showTags();
   };

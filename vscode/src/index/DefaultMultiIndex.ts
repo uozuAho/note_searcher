@@ -15,7 +15,9 @@ export class DefaultMultiIndex implements MultiIndex {
     this._fullText = new LunrDualFts(_fileSystem);
   }
 
-  public onFileModified = async (path: string, text: string, tags: string[]) => {
+  public onFileModified = async (path: string, text: string) => {
+    const tags = extractTags(text);
+
     const tasks = [
       this._fullText.onFileModified(path, text, tags),
       this._linkIndex.onFileModified(path, text)
