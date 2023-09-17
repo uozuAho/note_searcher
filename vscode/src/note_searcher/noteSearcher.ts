@@ -53,7 +53,7 @@ export class NoteSearcher {
     this.diagnostics.trace('index');
     const folder = this.ui.currentlyOpenDir();
     if (!folder) {
-      await this.ui.showNotification('open a folder first');
+      await this.ui.showNotification('Note searcher: I only work once you have opened a folder/workspace');
       this.diagnostics.trace('index: no directory open');
       return;
     }
@@ -163,7 +163,7 @@ export class NoteSearcher {
   private notifyNoteSaved = async (file: File) => {
     this.diagnostics.trace('note saved');
 
-    await this.indexWorkspace();
+    await this.multiIndex.onFileModified(file.path(), file.text(), []);
     this.showDeadLinks();
     this.showTags();
   };

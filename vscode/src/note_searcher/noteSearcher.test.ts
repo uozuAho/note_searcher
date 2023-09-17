@@ -283,15 +283,6 @@ describe('NoteSearcher', () => {
         searcher.object, configProvider.object);
     });
 
-    it('updates index', async () => {
-      const file = new MockFile('path', 'content');
-      const indexSpy = jest.spyOn(noteSearcher, 'indexWorkspace');
-
-      await ui.saveFile(file);
-
-      expect(indexSpy).toHaveBeenCalled();
-    });
-
     it('checks for dead links', async () => {
       const file = new MockFile('path', 'content');
       const showDeadLinks = jest.spyOn(noteSearcher, 'showDeadLinks');

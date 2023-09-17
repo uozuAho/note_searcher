@@ -44,22 +44,33 @@ Run `npm run build_vsix` in the vscode directory.
     - DONE: add a link, test links from/to
     - DONE: remove dead link, test dead links
     - DONE: add dead link, test dead links
-    - remove indexAll from onsave, auto and manual test again
-        - what is existing behaviour on:
-            - open a file (not a dir)
+    - remove indexAll from onsave
+        - DONE: open/close folders: handled for free as extensions are restarted
+            - if folder not opened, then opened, ensure folder is indexed on open
+            - if another folder is opened, the static index is rebuilt
+            - if a folder is closed, clear the index
+        - NOTE: what is existing behaviour on:
+            - open a file (not a dir): no action from note searcher
             - save a file, with no dir opened
-        - how does ignore config work again?
-            - how is note searcher enabled/disabled again?
+                - each index attempts results in a message saying open a folder
+        - change multiindex onFileModified signature to (path, text)
+    - ignored paths:
+        - on saving an ignored file, ensure it is not indexed
 - tag index: handle file modified
+- manual test
 - handle file moved/deleted
     - full text search
     - link index
     - tag index
+- manual test: test before/after. expect:
+    - (much) faster indexing
+    - otherwise same behaviour
 - fix later: 'links from this note' not updated on save
     - discovered during dev, existing behaviour
-## code notes before start: on save
+## code notes: from before my indexing changes
+### on save
 - noteSearcher.notifyNoteSaved
-    noteSearcher.index();
+    noteSearcher.index();  # index whole dir
         noteSearcher.multiIndex.index(folder);
             DefaultMultiIndex.indexAllFiles
                 _tags.clear();
@@ -72,10 +83,16 @@ Run `npm run build_vsix` in the vscode directory.
                         lunr.index
     noteSearcher.showDeadLinks();
     noteSearcher.showTags();
+### on activate
 - noteSearcher.notifyExtensionActivated
     noteSearcher.index();
-    noteSearcher.showTags();
     noteSearcher.showDeadLinks();
+    noteSearcher.showTags();
+### if not in a workspace (no dir open)
+- show error in ui
+### ignored files
+- on indexing, FileSystem.allFilesUnderPath loads config file and ignores
+  patterns
 # todo
 - feature: make paths queryable. Eg. i want to exclude ABC from path, but not contents
 - feature(s): pasting links
