@@ -15,7 +15,7 @@ describe('DefaultMultiIndex, demo dir, dead links', () => {
 
   beforeEach(() => {
     const fs = createFileSystem();
-    linkIndex = new DefaultMultiIndex(fs);
+    linkIndex = new DefaultMultiIndex(fs, demoDir);
   });
 
   it('finds all dead links in demo dir', async () => {
@@ -59,7 +59,7 @@ describe('DefaultMultiIndex, demo dir, tags', () => {
 
   beforeEach(() => {
     const fs = createFileSystem();
-    linkIndex = new DefaultMultiIndex(fs);
+    linkIndex = new DefaultMultiIndex(fs, demoDir);
   });
 
   it('contains transport', async () => {
@@ -86,7 +86,7 @@ describe('DefaultMultiIndex, demo dir, containsNote', () => {
 
   beforeEach(() => {
     const fs = createFileSystem();
-    linkIndex = new DefaultMultiIndex(fs);
+    linkIndex = new DefaultMultiIndex(fs, demoDir);
   });
 
   it('contains trains', async () => {
@@ -113,7 +113,7 @@ describe('DefaultMultiIndex, demo dir, linksFrom', () => {
 
   beforeEach(() => {
     const fs = createFileSystem();
-    linkIndex = new DefaultMultiIndex(fs);
+    linkIndex = new DefaultMultiIndex(fs, demoDir);
   });
 
   it('train links to readme', async () => {
@@ -140,7 +140,7 @@ describe('DefaultMultiIndex, demo dir, linksTo', () => {
 
   beforeEach(() => {
     const fs = createFileSystem();
-    linkIndex = new DefaultMultiIndex(fs);
+    linkIndex = new DefaultMultiIndex(fs, demoDir);
   });
 
   it('train links to readme', async () => {
@@ -167,7 +167,7 @@ describe('DefaultMultiIndex, demo dir, search', () => {
 
   beforeEach(() => {
     const fs = createFileSystem();
-    linkIndex = new DefaultMultiIndex(fs);
+    linkIndex = new DefaultMultiIndex(fs, demoDir);
   });
 
   it('search for cheese finds cheese', async () => {
@@ -200,7 +200,7 @@ describe('DefaultMultiIndex, demo dir, on modify ignored file', () => {
 
   beforeEach(async () => {
     const fs = createFileSystem();
-    linkIndex = new DefaultMultiIndex(fs);
+    linkIndex = new DefaultMultiIndex(fs, demoDir);
     await linkIndex.indexAllFiles(demoDir);
 
     const ignoredText = await fs.readFileAsync(ignoredFilePath);

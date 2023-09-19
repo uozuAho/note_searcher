@@ -39,11 +39,10 @@ class FileAndTags {
 class FakeFs implements FileSystem {
   private _files: Map<string, string> = new Map();
 
-  public addFile = (path: string, text: string) => {
-    this._files.set(path, text);
-  };
-
+  public addFile = (path: string, text: string) => this._files.set(path, text);
+  public isIgnored = (path: string) => false;
   public fileExists = (path: string) => this._files.has(path);
+  public readFileAsync = (path: string) => Promise.resolve(this.readFile(path));
 
   public readFile = (path: string) => {
     const text = this._files.get(path);
@@ -52,8 +51,6 @@ class FakeFs implements FileSystem {
     }
     return text;
   };
-
-  public readFileAsync = (path: string) => Promise.resolve(this.readFile(path));
 
   public allFilesUnderPath = (path: string) => {
     const files = [];

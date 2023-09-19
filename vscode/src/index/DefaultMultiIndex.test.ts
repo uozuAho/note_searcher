@@ -55,7 +55,8 @@ describe('DefaultMultiIndex, mocked filesystem', () => {
 
   beforeEach(() => {
     fileSystem = tmoq.Mock.ofType<FileSystem>();
-    lunrNoteIndex = new DefaultMultiIndex(fileSystem.object);
+    const ignoredWorkspaceDir = '';
+    lunrNoteIndex = new DefaultMultiIndex(fileSystem.object, ignoredWorkspaceDir);
   });
 
   describe('search with tags', () => {

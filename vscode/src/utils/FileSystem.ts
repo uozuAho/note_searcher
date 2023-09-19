@@ -12,6 +12,9 @@ export interface FileSystem {
    * path format
    */
   allFilesUnderPath: (path: string) => Iterable<string>
+  // is ignored by config
+  // todo: move this to a config class
+  isIgnored(workspaceDir: string, path: string): boolean;
 }
 
 export const createFileSystem = (): FileSystem => {
@@ -22,6 +25,21 @@ class NodeFileSystem implements FileSystem {
   public constructor(
     private _diagnostics = createDiagnostics('FileSystem')
   ) {}
+
+  public isIgnored = (workspaceDir: string, path: string) => {
+    const ignores = this.loadIgnores(workspaceDir);
+    const ignorePatterns = extractPatternsToIgnore(ignores);
+    const ignoreDirs = extractDirsToIgnore(workspaceDir, ignores);
+
+    if (any(ignorePatterns, i => path.includes(i))) {
+      return true;
+    }
+    if (any(ignoreDirs, i => path.includes(i))) {
+      return true;
+    }
+
+    return false;
+  };
 
   public readFile = (path: string) => {
     return new String(fs.readFileSync(path)).toString();
@@ -108,6 +126,9 @@ function walkDir(
     const path = _path.join(dir, f);
     const isDirectory = fs.statSync(path).isDirectory();
     if (!isDirectory) {
+      // todo: can ignored files end up being included here?
+      //       logic below only applies to directories.
+      //       Check my docs.
       callback(path);
     } else {
       if (any(ignorePatterns, i => path.includes(i))) {

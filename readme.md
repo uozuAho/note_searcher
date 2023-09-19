@@ -39,9 +39,11 @@ Run `npm run build_vsix` in the vscode directory.
 
 
 # WIP todo
-- ignored paths:
+- WIP: ignored paths:
     - on saving an ignored file, ensure it is not indexed
+- manual test
 - inline todos
+    - extract config from filesystem
 - maybe: DefaultMultiIndex: merge addFile and onFileModified?
 - tag index: handle file modified
 - manual test

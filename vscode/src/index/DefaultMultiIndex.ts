@@ -11,11 +11,17 @@ export class DefaultMultiIndex implements MultiIndex {
   private _tags = new TagSet();
   private _linkIndex = new InMemoryLinkIndex();
 
-  constructor(private _fileSystem: FileSystem) {
+  constructor(
+    private _fileSystem: FileSystem,
+    private _workspaceDir: string)
+  {
     this._fullText = new LunrDualFts(_fileSystem);
   }
 
   public onFileModified = async (path: string, text: string) => {
+    if (!this.shouldIndex(path)) { return; }
+    if (this._fileSystem.isIgnored(this._workspaceDir, path)) { return; }
+
     const tags = extractTags(text);
 
     const tasks = [
