@@ -41,8 +41,8 @@ Run `npm run build_vsix` in the vscode directory.
 # WIP todo
 - inline todos
     - extract config from filesystem
-- tag index: handle file modified
 - manual test
+- tag index: handle file modified
 - handle file moved/deleted
     - full text search
     - link index

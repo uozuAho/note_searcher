@@ -1,5 +1,5 @@
 {
   "ignore": [
-    "/ignored_stuff"
+    "demo_dir/ignored_stuff"
   ]
 }

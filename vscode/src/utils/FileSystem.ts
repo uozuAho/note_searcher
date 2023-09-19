@@ -28,13 +28,9 @@ class NodeFileSystem implements FileSystem {
 
   public isIgnored = (workspaceDir: string, path: string) => {
     const ignores = this.loadIgnores(workspaceDir);
-    const ignorePatterns = extractPatternsToIgnore(ignores);
-    const ignoreDirs = extractDirsToIgnore(workspaceDir, ignores);
+    const ignorePatterns = ignores;
 
-    if (any(ignorePatterns, i => path.includes(i))) {
-      return true;
-    }
-    if (any(ignoreDirs, i => path.includes(i))) {
+    if (any(ignorePatterns, i => path.replace(/\\/g, '/').includes(i))) {
       return true;
     }
 
@@ -63,11 +59,8 @@ class NodeFileSystem implements FileSystem {
     this._diagnostics.trace('allFilesUnderPath: start');
 
     const ignores = this.loadIgnores(path);
-
     const paths: string[] = [];
-    const ignorePatterns = extractPatternsToIgnore(ignores);
-    const ignoreDirs = extractDirsToIgnore(path, ignores);
-    walkDir(path, ignorePatterns, ignoreDirs, p => paths.push(p));
+    walkDir(path, ignores, [], p => paths.push(p));
 
     this._diagnostics.trace('allFilesUnderPath: end');
     return paths;
@@ -84,20 +77,6 @@ class NodeFileSystem implements FileSystem {
 
     return ignores;
   };
-}
-
-function extractPatternsToIgnore(ignores: string[]) {
-  return ignores.filter(i => !isRelativePattern(i));
-}
-
-function extractDirsToIgnore(path: string, ignores: string[]) {
-  return ignores
-    .filter(i => isRelativePattern(i))
-    .map(i => _path.resolve(_path.join(path, i)));
-}
-
-function isRelativePattern(pattern: string) {
-  return pattern.includes('/');
 }
 
 /**
@@ -131,10 +110,7 @@ function walkDir(
       //       Check my docs.
       callback(path);
     } else {
-      if (any(ignorePatterns, i => path.includes(i))) {
-        return;
-      }
-      if (any(ignoreDirs, i => i === path)) {
+      if (any(ignorePatterns, i => path.replace(/\\/g, '/').includes(i))) {
         return;
       }
       walkDir(path, ignorePatterns, ignoreDirs, callback);
