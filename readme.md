@@ -41,7 +41,6 @@ Run `npm run build_vsix` in the vscode directory.
 # WIP todo
 - inline todos
     - extract config from filesystem
-- maybe: DefaultMultiIndex: merge addFile and onFileModified?
 - tag index: handle file modified
 - manual test
 - handle file moved/deleted
@@ -51,6 +50,7 @@ Run `npm run build_vsix` in the vscode directory.
 - manual test: test before/after. expect:
     - (much) faster indexing
     - otherwise same behaviour
+- maybe: DefaultMultiIndex: merge addFile and onFileModified?
 - fix later: 'links from this note' not updated on save
     - discovered during dev, existing behaviour
 - fix later: extension not activated when no directory is open: provide a help

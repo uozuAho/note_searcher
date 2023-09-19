@@ -4,7 +4,6 @@ import { NoteSearcherUi } from "../ui/NoteSearcherUi";
 import { File } from "../utils/File";
 import { MultiIndex } from "../index/MultiIndex";
 import { createDiagnostics, Diagnostics } from "../diagnostics/diagnostics";
-import { NoteSearcherConfigProvider } from "./NoteSearcherConfigProvider";
 import { TimeProvider, createTimeProvider } from "../utils/timeProvider";
 import { formatDateTime_YYYYMMddhhmm } from "../utils/timeFormatter";
 import { posixRelativePath } from "../utils/FileSystem";
@@ -16,7 +15,6 @@ export class NoteSearcher {
   constructor(
     private ui: NoteSearcherUi,
     private multiIndex: MultiIndex,
-    private configProvider: NoteSearcherConfigProvider,
     private timeProvider: TimeProvider = createTimeProvider())
   {
     ui.addNoteSavedListener(this.notifyNoteSaved);

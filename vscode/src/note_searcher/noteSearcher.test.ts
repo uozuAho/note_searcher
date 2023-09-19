@@ -4,12 +4,10 @@ import { NoteSearcher } from './noteSearcher';
 import { MultiIndex } from '../index/MultiIndex';
 import { MockUi } from "../mocks/MockUi";
 import { MockFile } from "../mocks/MockFile";
-import { NoteSearcherConfigProvider, NoteSearcherConfig } from './NoteSearcherConfigProvider';
 
 describe('NoteSearcher', () => {
   let ui: MockUi;
   let searcher: tmoq.IMock<MultiIndex>;
-  let configProvider: tmoq.IMock<NoteSearcherConfigProvider>;
   let noteSearcher: NoteSearcher;
 
   const searcher_returns = (results: string[]) => {
@@ -20,16 +18,12 @@ describe('NoteSearcher', () => {
       );
   };
 
-  const defaultConfig = (): NoteSearcherConfig => ({});
-
   describe('on extension activated', () => {
     beforeEach(() => {
       ui = new MockUi();
       searcher = tmoq.Mock.ofType<MultiIndex>();
-      configProvider = tmoq.Mock.ofType<NoteSearcherConfigProvider>();
 
-      noteSearcher = new NoteSearcher(ui,
-        searcher.object, configProvider.object);
+      noteSearcher = new NoteSearcher(ui, searcher.object);
     });
 
     it('updates index', async () => {
@@ -46,11 +40,8 @@ describe('NoteSearcher', () => {
     beforeEach(() => {
       ui = new MockUi();
       searcher = tmoq.Mock.ofType<MultiIndex>();
-      configProvider = tmoq.Mock.ofType<NoteSearcherConfigProvider>();
-      configProvider.setup(c => c.getConfig()).returns(() => defaultConfig());
 
-      noteSearcher = new NoteSearcher(ui,
-        searcher.object, configProvider.object);
+      noteSearcher = new NoteSearcher(ui, searcher.object);
     });
 
     it('passes input to searcher', async () => {
@@ -94,11 +85,8 @@ describe('NoteSearcher', () => {
     beforeEach(() => {
       ui = new MockUi();
       searcher = tmoq.Mock.ofType<MultiIndex>();
-      configProvider = tmoq.Mock.ofType<NoteSearcherConfigProvider>();
-      configProvider.setup(c => c.getConfig()).returns(() => defaultConfig());
 
-      noteSearcher = new NoteSearcher(ui,
-        searcher.object, configProvider.object);
+      noteSearcher = new NoteSearcher(ui, searcher.object);
     });
 
     it('shows indexing in progress', async () => {
@@ -158,10 +146,8 @@ describe('NoteSearcher', () => {
     beforeEach(() => {
       ui = new MockUi();
       searcher = tmoq.Mock.ofType<MultiIndex>();
-      configProvider = tmoq.Mock.ofType<NoteSearcherConfigProvider>();
 
-      noteSearcher = new NoteSearcher(ui,
-        searcher.object, configProvider.object);
+      noteSearcher = new NoteSearcher(ui, searcher.object);
     });
 
     it('copies link relative to open file', () => {
@@ -204,10 +190,8 @@ describe('NoteSearcher', () => {
     beforeEach(() => {
       ui = new MockUi();
       searcher = tmoq.Mock.ofType<MultiIndex>();
-      configProvider = tmoq.Mock.ofType<NoteSearcherConfigProvider>();
 
-      noteSearcher = new NoteSearcher(ui,
-        searcher.object, configProvider.object);
+      noteSearcher = new NoteSearcher(ui, searcher.object);
     });
 
     it('copies wiki link with filename without extension', () => {
@@ -250,13 +234,10 @@ describe('NoteSearcher', () => {
     beforeEach(() => {
       ui = new MockUi();
       searcher = tmoq.Mock.ofType<MultiIndex>();
-      configProvider = tmoq.Mock.ofType<NoteSearcherConfigProvider>();
-      configProvider.setup(c => c.getConfig()).returns(() => defaultConfig());
 
       ui.currentlyOpenDirReturns('a directory');
 
-      noteSearcher = new NoteSearcher(ui,
-        searcher.object, configProvider.object);
+      noteSearcher = new NoteSearcher(ui, searcher.object);
     });
 
     it('shows dead links', () => {
@@ -274,13 +255,10 @@ describe('NoteSearcher', () => {
     beforeEach(() => {
       ui = new MockUi();
       searcher = tmoq.Mock.ofType<MultiIndex>();
-      configProvider = tmoq.Mock.ofType<NoteSearcherConfigProvider>();
-      configProvider.setup(c => c.getConfig()).returns(() => defaultConfig());
 
       ui.currentlyOpenDirReturns('a directory');
 
-      noteSearcher = new NoteSearcher(ui,
-        searcher.object, configProvider.object);
+      noteSearcher = new NoteSearcher(ui, searcher.object);
     });
 
     it('checks for dead links', async () => {
