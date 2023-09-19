@@ -209,14 +209,26 @@ describe('DefaultMultiIndex, demo dir, on modify ignored file', () => {
 
   it('does not index ignored text', async () => {
     const results = await linkIndex.search('9ad8e6c986eef9869d8a6deddd');
-
     expect(results).toHaveLength(0);
   });
-});
 
-// on modify ignored file, does not update:
-// - search: should not return ignored file
-// - linksFrom
-// - linksTo
-// - dead links
-// - tags?
+  it('does not index ignored links from', async () => {
+    const results = await linkIndex.linksFrom(ignoredFilePath);
+    expect(results).toHaveLength(0);
+  });
+
+  it('does not index ignored links to', async () => {
+    const results = await linkIndex.linksTo(ignoredFilePath);
+    expect(results).toHaveLength(0);
+  });
+
+  it('does not index dead links', async () => {
+    const results = await linkIndex.findAllDeadLinks();
+    expect(results.filter(r => r.sourcePath === ignoredFilePath)).toHaveLength(0);
+  });
+
+  it('does not index tags', async () => {
+    const tags = await linkIndex.allTags();
+    expect(tags.includes('ignored_tag')).toBe(false);
+  });
+});
