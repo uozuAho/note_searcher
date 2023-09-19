@@ -194,3 +194,29 @@ describe('DefaultMultiIndex, demo dir, search', () => {
     expect(results).not.toContain(ignoredFilePath);
   });
 });
+
+describe('DefaultMultiIndex, demo dir, on modify ignored file', () => {
+  let linkIndex: DefaultMultiIndex;
+
+  beforeEach(async () => {
+    const fs = createFileSystem();
+    linkIndex = new DefaultMultiIndex(fs);
+    await linkIndex.indexAllFiles(demoDir);
+
+    const ignoredText = await fs.readFileAsync(ignoredFilePath);
+    await linkIndex.onFileModified(ignoredFilePath, ignoredText);
+  });
+
+  it('does not index ignored text', async () => {
+    const results = await linkIndex.search('9ad8e6c986eef9869d8a6deddd');
+
+    expect(results).toHaveLength(0);
+  });
+});
+
+// on modify ignored file, does not update:
+// - search: should not return ignored file
+// - linksFrom
+// - linksTo
+// - dead links
+// - tags?

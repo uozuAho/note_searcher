@@ -39,23 +39,8 @@ Run `npm run build_vsix` in the vscode directory.
 
 
 # WIP todo
-- link index: handle file modified
-    - DONE: remove a link, test links from/to
-    - DONE: add a link, test links from/to
-    - DONE: remove dead link, test dead links
-    - DONE: add dead link, test dead links
-    - DONE: remove indexAll from onsave
-        - DONE: open/close folders: handled for free as extensions are restarted
-            - if folder not opened, then opened, ensure folder is indexed on open
-            - if another folder is opened, the static index is rebuilt
-            - if a folder is closed, clear the index
-        - NOTE: what is existing behaviour on:
-            - open a file (not a dir): no action from note searcher
-            - save a file, with no dir opened
-                - each index attempts results in a message saying open a folder
-        - DONE: change multiindex onFileModified signature to (path, text)
-    - ignored paths:
-        - on saving an ignored file, ensure it is not indexed
+- ignored paths:
+    - on saving an ignored file, ensure it is not indexed
 - inline todos
 - maybe: DefaultMultiIndex: merge addFile and onFileModified?
 - tag index: handle file modified
