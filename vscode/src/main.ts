@@ -12,8 +12,12 @@ export const extensionId = 'uozuaho.note-searcher';
 
 export async function activate(context: vscode.ExtensionContext) {
   const ui = new VsCodeNoteSearcherUi();
+  const workspaceDir = ui.currentlyOpenDir();
+  if (!workspaceDir) {
+    return;
+  }
   const configProvider = new NoteSearcherConfigProvider(context);
-  const multiIndex = createMultiIndex();
+  const multiIndex = createMultiIndex(workspaceDir);
   const noteSearcher = new NoteSearcher(ui, multiIndex, configProvider);
   const noteLocator = new NoteLocator(multiIndex);
 

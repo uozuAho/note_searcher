@@ -39,9 +39,6 @@ Run `npm run build_vsix` in the vscode directory.
 
 
 # WIP todo
-- WIP: ignored paths:
-    - DONE: on saving an ignored file, ensure it is not indexed
-    - manual test
 - inline todos
     - extract config from filesystem
 - maybe: DefaultMultiIndex: merge addFile and onFileModified?
@@ -56,6 +53,8 @@ Run `npm run build_vsix` in the vscode directory.
     - otherwise same behaviour
 - fix later: 'links from this note' not updated on save
     - discovered during dev, existing behaviour
+- fix later: extension not activated when no directory is open: provide a help
+  message
 ## code notes: from before my indexing changes
 ### on save
 - noteSearcher.notifyNoteSaved

@@ -18,7 +18,7 @@ export interface MultiIndex {
   findAllDeadLinks(): Link[];
 }
 
-export const createMultiIndex = () =>
+export const createMultiIndex = (workspaceDir: string) =>
 {
-  return new DefaultMultiIndex(createFileSystem());
+  return new DefaultMultiIndex(createFileSystem(), workspaceDir);
 };
