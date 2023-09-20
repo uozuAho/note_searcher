@@ -23,9 +23,7 @@ export class DefaultMultiIndex implements MultiIndex {
   }
 
   public onFileModified = async (path: string, text: string) => {
-    // todo: merge these two
     if (!this.shouldIndex(path)) { return; }
-    if (this._config.isIgnored(path)) { return; }
 
     const tags = extractTags(text);
 
@@ -78,6 +76,9 @@ export class DefaultMultiIndex implements MultiIndex {
   };
 
   private shouldIndex = (path: string) => {
+    if (this._config.isIgnored(path)) {
+      return false;
+    }
     for (const ext of ['md', 'txt', 'log']) {
       if (path.endsWith(ext)) {
         return true;
