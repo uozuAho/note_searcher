@@ -2,20 +2,21 @@ import { DefaultMultiIndex } from './DefaultMultiIndex';
 import { createFileSystem } from '../utils/FileSystem';
 import { Link } from "./LinkIndex";
 
-// todo: are all these methods needed?
 export interface MultiIndex {
-  indexAllFiles: (dir: string) => Promise<void>;
-  // todo: rename to full text search
-  search: (query: string) => Promise<string[]>;
-  addFile: (path: string, text: string, tags: string[]) => unknown;
-  onFileModified: (path: string, text: string) => Promise<void>;
+  // queries
+  fullTextSearch: (query: string) => Promise<string[]>;
   allTags: () => string[];
+  filenameToAbsPath(filename: string): string[];
   notes(): IterableIterator<string>;
   containsNote(absPathOrFilename: string): boolean;
-  filenameToAbsPath(filename: string): string[];
   linksFrom(absPath: string): string[];
   linksTo(path: string): string[];
   findAllDeadLinks(): Link[];
+
+  // commands
+  indexAllFiles: (dir: string) => Promise<void>;
+  addFile: (path: string, text: string, tags: string[]) => unknown;
+  onFileModified: (path: string, text: string) => Promise<void>;
 }
 
 export const createMultiIndex = (workspaceDir: string) =>

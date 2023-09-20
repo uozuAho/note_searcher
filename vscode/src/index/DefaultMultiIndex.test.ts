@@ -33,7 +33,7 @@ const aTextFilePath = '/a/b/c.txt';
 
 describe('DefaultMultiIndex, mocked filesystem', () => {
   let fileSystem: tmoq.IMock<FileSystem>;
-  let lunrNoteIndex: DefaultMultiIndex;
+  let index: DefaultMultiIndex;
 
   const setupFiles = (files: File[]) => {
     fileSystem.setup(w => w.allFilesUnderPath(tmoq.It.isAny(), tmoq.It.isAny()))
@@ -48,15 +48,15 @@ describe('DefaultMultiIndex, mocked filesystem', () => {
   const searchFor = async (query: string, text: string) => {
     setupFiles([new MockFile(aTextFilePath, text)]);
 
-    await lunrNoteIndex.indexAllFiles('some dir');
+    await index.indexAllFiles('some dir');
 
-    return lunrNoteIndex.search(query);
+    return index.fullTextSearch(query);
   };
 
   beforeEach(() => {
     fileSystem = tmoq.Mock.ofType<FileSystem>();
     const ignoredWorkspaceDir = '';
-    lunrNoteIndex = new DefaultMultiIndex(fileSystem.object, ignoredWorkspaceDir);
+    index = new DefaultMultiIndex(fileSystem.object, ignoredWorkspaceDir);
   });
 
   describe('search with tags', () => {
@@ -94,9 +94,9 @@ describe('DefaultMultiIndex, mocked filesystem', () => {
         new MockFile('a/b/c.log', 'this has a #different tag'),
       ]);
 
-      await lunrNoteIndex.indexAllFiles('some dir');
+      await index.indexAllFiles('some dir');
 
-      expect(lunrNoteIndex.allTags()).toEqual(['tag', 'different']);
+      expect(index.allTags()).toEqual(['tag', 'different']);
     });
 
     it('returns unique tags', async () => {
@@ -105,23 +105,23 @@ describe('DefaultMultiIndex, mocked filesystem', () => {
         new MockFile('a/b/c.log', 'this has the same #tag'),
       ]);
 
-      await lunrNoteIndex.indexAllFiles('some dir');
+      await index.indexAllFiles('some dir');
 
-      expect(lunrNoteIndex.allTags()).toEqual(['tag']);
+      expect(index.allTags()).toEqual(['tag']);
     });
 
     it('rebuilds on save', async () => {
       setupFiles([new MockFile('a/b.txt', 'this has a #tag')]);
 
-      await lunrNoteIndex.indexAllFiles('some dir');
+      await index.indexAllFiles('some dir');
 
-      expect(lunrNoteIndex.allTags()).toEqual(['tag']);
+      expect(index.allTags()).toEqual(['tag']);
 
       setupFiles([new MockFile('a/b.txt', 'now there are no tags')]);
 
-      await lunrNoteIndex.indexAllFiles('some dir');
+      await index.indexAllFiles('some dir');
 
-      expect(lunrNoteIndex.allTags()).toEqual([]);
+      expect(index.allTags()).toEqual([]);
     });
   });
 
@@ -133,21 +133,21 @@ describe('DefaultMultiIndex, mocked filesystem', () => {
       ];
       setupFiles(files);
 
-      await lunrNoteIndex.indexAllFiles('some dir');
+      await index.indexAllFiles('some dir');
 
-      const notes = Array.from(lunrNoteIndex.notes());
+      const notes = Array.from(index.notes());
       expect(notes).toEqual(files.map(f => f.path()));
-      expect(lunrNoteIndex.containsNote('a/b.txt')).toBe(true);
+      expect(index.containsNote('a/b.txt')).toBe(true);
     });
 
     it('does not index non-text files', async () => {
       setupFiles([new MockFile('source_file.cpp', '')]);
 
-      await lunrNoteIndex.indexAllFiles('some dir');
+      await index.indexAllFiles('some dir');
 
-      const notes = Array.from(lunrNoteIndex.notes());
+      const notes = Array.from(index.notes());
       expect(notes).toHaveLength(0);
-      expect(lunrNoteIndex.containsNote('source_file.cpp')).toBe(false);
+      expect(index.containsNote('source_file.cpp')).toBe(false);
     });
   });
 });

@@ -37,7 +37,7 @@ export class DefaultMultiIndex implements MultiIndex {
 
   public filenameToAbsPath = (filename: string) => this._linkIndex.filenameToAbsPath(filename);
 
-  public search = (query: string) => this._fullText.search(query);
+  public fullTextSearch = (query: string) => this._fullText.search(query);
 
   public allTags = () => this._tags.allTags();
 

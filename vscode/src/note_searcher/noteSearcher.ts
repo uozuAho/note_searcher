@@ -14,7 +14,7 @@ export class NoteSearcher {
 
   constructor(
     private ui: NoteSearcherUi,
-    private multiIndex: MultiIndex,
+    private index: MultiIndex,
     private timeProvider: TimeProvider = createTimeProvider())
   {
     ui.addNoteSavedListener(this.notifyNoteSaved);
@@ -34,7 +34,7 @@ export class NoteSearcher {
 
   public search = async (query: string) => {
     try {
-      const results = await this.multiIndex.search(query);
+      const results = await this.index.fullTextSearch(query);
       await this.ui.showSearchResults(results);
     }
     catch (e) {
@@ -57,7 +57,7 @@ export class NoteSearcher {
     }
 
     try {
-      const indexingTask = this.multiIndex.indexAllFiles(folder);
+      const indexingTask = this.index.indexAllFiles(folder);
       this.ui.notifyIndexingStarted(indexingTask);
       await indexingTask;
       this.diagnostics.trace('indexing complete');
@@ -100,7 +100,7 @@ export class NoteSearcher {
       return;
     }
 
-    const deadLinks = this.multiIndex.findAllDeadLinks();
+    const deadLinks = this.index.findAllDeadLinks();
 
     this.ui.showDeadLinks(deadLinks);
     this.diagnostics.trace('show dead links completed');
@@ -142,26 +142,26 @@ export class NoteSearcher {
   public showBacklinks = () => {
     const currentFilePath = this.ui.getCurrentFile()?.path();
     if (!currentFilePath) { return; }
-    const backlinks = this.multiIndex.linksTo(currentFilePath);
+    const backlinks = this.index.linksTo(currentFilePath);
     this.ui.showBacklinks(backlinks);
   };
 
   public showForwardLinks = () => {
     const currentFilePath = this.ui.getCurrentFile()?.path();
     if (!currentFilePath) { return; }
-    const links = this.multiIndex.linksFrom(currentFilePath);
+    const links = this.index.linksFrom(currentFilePath);
     this.ui.showForwardLinks(links);
   };
 
   private showTags = () => {
-    const tags = this.multiIndex.allTags();
+    const tags = this.index.allTags();
     this.ui.showTags(tags);
   };
 
   private notifyNoteSaved = async (file: File) => {
     this.diagnostics.trace('note saved');
 
-    await this.multiIndex.onFileModified(file.path(), file.text());
+    await this.index.onFileModified(file.path(), file.text());
     this.showDeadLinks();
     this.showTags();
   };
