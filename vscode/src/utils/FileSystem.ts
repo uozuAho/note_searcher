@@ -8,13 +8,10 @@ export interface FileSystem {
   readFile: (path: string) => string;
   readFileAsync: (path: string) => Promise<string>;
   /**
-   * Return all files under the given path, in the current OS's
-   * path format
+   * Return all files under the given path (recursively),
+   * in the current OS's path format
    */
-  allFilesUnderPath: (path: string) => Iterable<string>
-  // is ignored by config
-  // todo: move this to a config class
-  isIgnored(workspaceDir: string, path: string): boolean;
+  allFilesUnderPath: (path: string, ignore: (path: string) => boolean) => Iterable<string>
 }
 
 export const createFileSystem = (): FileSystem => {
@@ -25,17 +22,6 @@ class NodeFileSystem implements FileSystem {
   public constructor(
     private _diagnostics = createDiagnostics('FileSystem')
   ) {}
-
-  public isIgnored = (workspaceDir: string, path: string) => {
-    const ignores = this.loadIgnores(workspaceDir);
-    const ignorePatterns = ignores;
-
-    if (any(ignorePatterns, i => path.replace(/\\/g, '/').includes(i))) {
-      return true;
-    }
-
-    return false;
-  };
 
   public readFile = (path: string) => {
     return new String(fs.readFileSync(path)).toString();
@@ -55,27 +41,14 @@ class NodeFileSystem implements FileSystem {
 
   public fileExists = (path: string) => fs.existsSync(path);
 
-  public allFilesUnderPath = (path: string): Iterable<string> => {
+  public allFilesUnderPath = (path: string, ignore: (path: string) => boolean): Iterable<string> => {
     this._diagnostics.trace('allFilesUnderPath: start');
 
-    const ignores = this.loadIgnores(path);
     const paths: string[] = [];
-    walkDir(path, ignores, [], p => paths.push(p));
+    walkDir(path, ignore, p => paths.push(p));
 
     this._diagnostics.trace('allFilesUnderPath: end');
     return paths;
-  };
-
-  private loadIgnores = (path: string): string[] => {
-    const optionsFilePath = _path.join(path, '.noteSearcher.config.json');
-    let ignores = ['node_modules'];
-
-    if (this.fileExists(optionsFilePath)) {
-      const config = JSON.parse(this.readFile(optionsFilePath)) as NoteSearcherConfig;
-      ignores = ignores.concat(config.ignore);
-    }
-
-    return ignores;
   };
 }
 
@@ -97,8 +70,7 @@ export const posixRelativePath = (path1: string, path2: string) => {
 
 function walkDir(
   dir: string,
-  ignorePatterns: string[],
-  ignoreDirs: string[],
+  ignore: (path: string) => boolean,
   callback: (path: string) => void)
 {
   fs.readdirSync(dir).forEach(f => {
@@ -110,19 +82,8 @@ function walkDir(
       //       Check my docs.
       callback(path);
     } else {
-      if (any(ignorePatterns, i => path.replace(/\\/g, '/').includes(i))) {
-        return;
-      }
-      walkDir(path, ignorePatterns, ignoreDirs, callback);
+      if (ignore(path)) { return; }
+      walkDir(path, ignore, callback);
     }
   });
 };
-
-function any(arr: any[], predicate: (a: any) => boolean) {
-  for (const item of arr) {
-    if (predicate(item)) {
-      return true;
-    }
-  }
-  return false;
-}

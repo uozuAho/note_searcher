@@ -36,7 +36,7 @@ describe('DefaultMultiIndex, mocked filesystem', () => {
   let lunrNoteIndex: DefaultMultiIndex;
 
   const setupFiles = (files: File[]) => {
-    fileSystem.setup(w => w.allFilesUnderPath(tmoq.It.isAny()))
+    fileSystem.setup(w => w.allFilesUnderPath(tmoq.It.isAny(), tmoq.It.isAny()))
       .returns(() => files.map(f => f.path()));
     for (const file of files) {
       fileSystem.setup(f =>

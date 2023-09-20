@@ -1,6 +1,7 @@
 const _path = require('path');
 
 import { posixRelativePath, createFileSystem } from "./FileSystem";
+import { NoteSearcherConfigImpl } from "./NoteSearcherConfig";
 
 describe('FileSystem', () => {
   describe('posixRelativePath', () => {
@@ -34,13 +35,13 @@ const nestedNotIgnoredFilePath = _path.resolve(demoDir, 'subdir/ignored_stuff/no
 const topNodeModulesFilePath = _path.resolve(demoDir, 'node_modules/about_node_modules.md');
 const nestedNodeModulesFilePath = _path.resolve(demoDir, 'subdir/node_modules/nested_node_modules.md');
 
-describe('FileSystem, demo dir, allFilesUnderPath', () => {
-
+describe('FileSystem + config, demo dir, allFilesUnderPath', () => {
   let allDemoDirFiles: string[];
 
   beforeEach(() => {
     const fs = createFileSystem();
-    allDemoDirFiles = Array.from(fs.allFilesUnderPath(demoDir));
+    const config = NoteSearcherConfigImpl.fromWorkspace(demoDir, fs);
+    allDemoDirFiles = Array.from(fs.allFilesUnderPath(demoDir, config.isIgnored));
   });
 
   it('contains readme', () => {
@@ -68,13 +69,13 @@ describe('FileSystem, demo dir, allFilesUnderPath', () => {
 const demoSubDir = _path.resolve(__dirname, '../../demo_dir/subdir');
 const subFile = _path.resolve(__dirname, '../../demo_dir/subdir/my_sub_file.md');
 
-describe('FileSystem, demo subdir, allFilesUnderPath', () => {
-
+describe('FileSystem + config, demo subdir, allFilesUnderPath', () => {
   let allDemoDirFiles: string[];
 
   beforeEach(() => {
     const fs = createFileSystem();
-    allDemoDirFiles = Array.from(fs.allFilesUnderPath(demoSubDir));
+    const config = NoteSearcherConfigImpl.fromWorkspace(demoDir, fs);
+    allDemoDirFiles = Array.from(fs.allFilesUnderPath(demoSubDir, config.isIgnored));
   });
 
   it('contains subfile', () => {

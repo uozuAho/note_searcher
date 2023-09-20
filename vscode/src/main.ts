@@ -3,7 +3,6 @@ import * as vscode from 'vscode';
 import { createMultiIndex } from './index/MultiIndex';
 import { VsCodeNoteSearcherUi } from './ui/VsCodeNoteSearcherUi';
 import { NoteSearcher } from './note_searcher/noteSearcher';
-import { NoteSearcherConfigProvider } from './note_searcher/NoteSearcherConfigProvider';
 import { TagCompleter } from './tag_completion/TagCompleter';
 import { WikiLinkDefinitionProvider } from './definition_provider/WikiLinkDefinitionProvider';
 import { NoteLocator } from './definition_provider/NoteLocator';
@@ -16,9 +15,8 @@ export async function activate(context: vscode.ExtensionContext) {
   if (!workspaceDir) {
     return;
   }
-  const configProvider = new NoteSearcherConfigProvider(context);
   const multiIndex = createMultiIndex(workspaceDir);
-  const noteSearcher = new NoteSearcher(ui, multiIndex, configProvider);
+  const noteSearcher = new NoteSearcher(ui, multiIndex);
   const noteLocator = new NoteLocator(multiIndex);
 
   context.subscriptions.push(

@@ -5,22 +5,27 @@ import { extractTags } from '../text_processing/tagExtractor';
 import { TagSet } from './TagIndex';
 import { InMemoryLinkIndex } from "./InMemoryLinkIndex";
 import { LunrDualFts } from "../search/lunrDualFts";
+import { NoteSearcherConfig, NoteSearcherConfigImpl } from "../utils/NoteSearcherConfig";
 
 export class DefaultMultiIndex implements MultiIndex {
   private _fullText: LunrDualFts;
   private _tags = new TagSet();
   private _linkIndex = new InMemoryLinkIndex();
+  private _config: NoteSearcherConfig;
 
   constructor(
     private _fileSystem: FileSystem,
-    private _workspaceDir: string)
+    _workspaceDir: string)
   {
     this._fullText = new LunrDualFts(_fileSystem);
+    this._config = NoteSearcherConfigImpl
+      .fromWorkspace(_workspaceDir, _fileSystem);
   }
 
   public onFileModified = async (path: string, text: string) => {
+    // todo: merge these two
     if (!this.shouldIndex(path)) { return; }
-    if (this._fileSystem.isIgnored(this._workspaceDir, path)) { return; }
+    if (this._config.isIgnored(path)) { return; }
 
     const tags = extractTags(text);
 
@@ -62,7 +67,7 @@ export class DefaultMultiIndex implements MultiIndex {
     this._fullText = new LunrDualFts(this._fileSystem);
     const jobs: Promise<void>[] = [];
 
-    for (const path of this._fileSystem.allFilesUnderPath(dir)) {
+    for (const path of this._fileSystem.allFilesUnderPath(dir, this._config.isIgnored)) {
       if (!this.shouldIndex(path)) { continue; }
       jobs.push(this.addFile(path));
     }
