@@ -39,7 +39,6 @@ Run `npm run build_vsix` in the vscode directory.
 
 
 # WIP todo
-- inline todos
 - manual test
 - tag index: handle file modified
 - handle file moved/deleted

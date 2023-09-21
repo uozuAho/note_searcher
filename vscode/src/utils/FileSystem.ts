@@ -1,7 +1,6 @@
 import fs = require('graceful-fs');
 import _path = require('path');
 import { createDiagnostics } from '../diagnostics/diagnostics';
-import { NoteSearcherConfig } from './NoteSearcherConfig';
 
 export interface FileSystem {
   fileExists: (path: string) => boolean;
@@ -75,15 +74,14 @@ function walkDir(
 {
   fs.readdirSync(dir).forEach(f => {
     const path = _path.join(dir, f);
+    if (ignore(path)) {
+      return;
+    }
     const isDirectory = fs.statSync(path).isDirectory();
-    if (!isDirectory) {
-      // todo: can ignored files end up being included here?
-      //       logic below only applies to directories.
-      //       Check my docs.
-      callback(path);
-    } else {
-      if (ignore(path)) { return; }
+    if (isDirectory) {
       walkDir(path, ignore, callback);
+    } else {
+      callback(path);
     }
   });
 };

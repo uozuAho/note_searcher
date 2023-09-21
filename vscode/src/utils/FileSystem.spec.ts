@@ -35,6 +35,22 @@ const nestedNotIgnoredFilePath = _path.resolve(demoDir, 'subdir/ignored_stuff/no
 const topNodeModulesFilePath = _path.resolve(demoDir, 'node_modules/about_node_modules.md');
 const nestedNodeModulesFilePath = _path.resolve(demoDir, 'subdir/node_modules/nested_node_modules.md');
 
+describe('FileSystem, demo dir', () => {
+  const fs = createFileSystem();
+
+  it('ignores specific file', () => {
+    const ignore = (path: string) => path === ignoredFilePath;
+    const allDemoDirFiles = Array.from(fs.allFilesUnderPath(demoDir, ignore));
+    expect(allDemoDirFiles).not.toContain(ignoredFilePath);
+  });
+
+  it('ignores everything', () => {
+    const ignore = (path: string) => path.includes('demo_dir');
+    const allDemoDirFiles = Array.from(fs.allFilesUnderPath(demoDir, ignore));
+    expect(allDemoDirFiles).toHaveLength(0);
+  });
+});
+
 describe('FileSystem + config, demo dir, allFilesUnderPath', () => {
   let allDemoDirFiles: string[];
 
