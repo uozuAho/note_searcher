@@ -110,18 +110,30 @@ describe('DefaultMultiIndex, mocked filesystem', () => {
       expect(index.allTags()).toEqual(['tag']);
     });
 
-    it('rebuilds on save', async () => {
+    it('does not clear tags on save', async () => {
       setupFiles([new MockFile('a/b.txt', 'this has a #tag')]);
 
       await index.indexAllFiles('some dir');
 
       expect(index.allTags()).toEqual(['tag']);
 
-      setupFiles([new MockFile('a/b.txt', 'now there are no tags')]);
+      await index.onFileModified('a/b.txt', 'now there are no tags');
+
+      // This is expected behaviour. I don't want to re-index the whole
+      // workspace, so potentially old tags may remain.
+      expect(index.allTags()).toEqual(['tag']);
+    });
+
+    it('adds new tags on save', async () => {
+      setupFiles([new MockFile('a/b.txt', 'this has a #tag')]);
 
       await index.indexAllFiles('some dir');
 
-      expect(index.allTags()).toEqual([]);
+      expect(index.allTags()).toEqual(['tag']);
+
+      await index.onFileModified('a/b.txt', '#another tag');
+
+      expect(index.allTags()).toEqual(['tag', 'another']);
     });
   });
 

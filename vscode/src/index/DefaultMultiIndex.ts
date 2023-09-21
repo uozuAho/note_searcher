@@ -29,7 +29,11 @@ export class DefaultMultiIndex implements MultiIndex {
 
     const tasks = [
       this._fullText.onFileModified(path, text, tags),
-      this._linkIndex.onFileModified(path, text)
+      this._linkIndex.onFileModified(path, text),
+      // note: I can't see an easy way to make tag index consistent here without
+      //       a full re-index, so we just add the new tags. I don't really use
+      //       tags so I figure it's not a big deal.
+      this._tags.addTags(tags),
     ];
 
     await Promise.all(tasks);
