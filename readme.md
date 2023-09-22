@@ -43,8 +43,9 @@ Run `npm run build_vsix` in the vscode directory.
   code, except for ui. Provide a fake UI that allows inspection for testing
   purposes.
     - DONE: remove dependency on vscode import
-    - manual test all features mentioned in main.ts
-    - pass first test
+    - DONE: manual test all features mentioned in main.ts
+    - DONE: pass first test
+    - add test for file deleted case below
 - handle file deleted
     - links to/from
     - dead links

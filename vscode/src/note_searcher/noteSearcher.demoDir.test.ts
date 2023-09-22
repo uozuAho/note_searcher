@@ -14,46 +14,101 @@ const _path = require('path');
 const demoDir = _path.resolve(__dirname, '../../demo_dir');
 
 class FakeUi implements NoteSearcherUi {
-  openFile = (path: any) => {};
-  showTags = (tags: string[]) => {};
-  copyToClipboard = (text: string) => Promise.resolve();
-  startNewNote = (path: string) => Promise.resolve();
-  promptForNewNoteName = (noteId: string) => Promise.resolve(noteId);
-  getCurrentFile = () => null;
-  currentlyOpenDir = () => null;
-  promptForSearch = (prefill: string) => Promise.resolve(prefill);
-  showSearchResults = (files: string[]) => Promise.resolve();
-  showNotification = (message: string) => Promise.resolve();
-  showDeadLinks = (links: Link[]) => {};
-  showBacklinks = (links: string[]) => {};
-  showForwardLinks = (links: string[]) => {};
-  notifyIndexingStarted = (indexingTask: Promise<void>) => {};
-  showError = (e: Error) => Promise.resolve();
-  addNoteSavedListener = (listener: FileChangeListener) => {};
-  addNoteDeletedListener = (listener: FileDeletedListener) => {};
-  addMovedViewToDifferentNoteListener = (listener: FileChangeListener) => {};
-  createNoteSavedHandler = () => { return { dispose: () => {} }; };
-  createNoteDeletedHandler = () => { return { dispose: () => {} }; };
-  createMovedViewToDifferentNoteHandler = () => { return { dispose: () => {} }; };
+  // UI interface
+  public openFile = (path: any) => {};
+  public showTags = (tags: string[]) => {};
+  public copyToClipboard = (text: string) => Promise.resolve();
+  public startNewNote = (path: string) => Promise.resolve();
+  public promptForNewNoteName = (noteId: string) => Promise.resolve(noteId);
+  public getCurrentFile = () => null;
+  public currentlyOpenDir = () => this._currentlyOpenDir;
+  public promptForSearch = (prefill: string) => Promise.resolve(this._searchInput);
+  public showSearchResults = (files: string[]) => {
+    this._searchResults = files;
+    return Promise.resolve();
+  };
+  public showNotification = (message: string) => Promise.resolve();
+  public showDeadLinks = (links: Link[]) => {};
+  public showBacklinks = (links: string[]) => {};
+  public showForwardLinks = (links: string[]) => {};
+  public notifyIndexingStarted = (indexingTask: Promise<void>) => {};
+  public showError = (e: Error) => Promise.resolve();
+  public addNoteSavedListener = (listener: FileChangeListener) => {};
+  public addNoteDeletedListener = (listener: FileDeletedListener) => {};
+  public addMovedViewToDifferentNoteListener = (listener: FileChangeListener) => {};
+  public createNoteSavedHandler = () => { return { dispose: () => {} }; };
+  public createNoteDeletedHandler = () => { return { dispose: () => {} }; };
+  public createMovedViewToDifferentNoteHandler = () => { return { dispose: () => {} }; };
+  // end UI interface
+
+  private _currentlyOpenDir: string | null = null;
+  private _searchInput: string | undefined;
+  private _searchResults: string[] = [];
+
+  public openFolder = (path: string) => this._currentlyOpenDir = path;
+  public setSearchInput = (query: string) => this._searchInput = query;
+  public searchResults = () => this._searchResults;
 }
+
+// encompases vscode and note searcher's UI
+class FakeVsCodeNoteSearcher {
+  private _registeredCommands: Map<string, any> = new Map();
+
+  constructor(private _ui: FakeUi) {}
+
+  public registerCommand = (command: string, callback: any) => {
+    this._registeredCommands.set(command, callback);
+    return { dispose: () => {} };
+  };
+
+  public searchResults = () => {
+    return this._ui.searchResults();
+  };
+
+  public search = async (query: string) => {
+    const callback = this._registeredCommands.get('noteSearcher.search');
+    this._ui.setSearchInput(query);
+    if (!callback) {
+      throw new Error('no callback for noteSearcher.search');
+    }
+    await callback();
+  };
+
+  public openFolder = (path: string) => {
+    this._ui.openFolder(path);
+  };
+}
+
+const ui = new FakeUi();
+const vscode = new FakeVsCodeNoteSearcher(ui);
 
 class FakeVsCodeExtensionContext implements VsCodeExtensionContext {
   subscriptions: { dispose(): any; }[] = [];
 }
 
-// fake out top level vscode apis required by main.activate
 jest.mock('../ui/uiCreator', () => {
   return {
-    // todo: prolly need access to this ui in the tests
-    createNoteSearcherUi: () => new FakeUi()
+    createNoteSearcherUi: () => ui
   };
 });
 
 jest.mock('../vs_code_apis/registryCreator', () => {
   return {
-    createVsCodeRegistry: () => {
+    createVsCodeRegistry: (): VsCodeRegistry => {
       return {
-        registerCommand: () => {}
+        registerCommand: (command: string, callback: any) => {
+          return vscode.registerCommand(command, callback);
+        },
+        registerCompletionItemProvider: (
+          selector: string[],
+          provider: any,
+          triggerChars: string[]) =>
+        {
+          return { dispose: () => {} };
+        },
+        registerDefinitionProvider: (selector: string[], provider: any) => {
+          return { dispose: () => {} };
+        }
       };
     }
   };
@@ -79,34 +134,20 @@ jest.mock('../definition_provider/defProviderCreator', () => {
   };
 });
 
-// encompases vscode and note searcher's UI
-class FakeVsCodeNoteSearcher {
-  public searchResults = () => {
-    return [];
-  };
-  public search = async (arg0: string) => {
-  };
-  public openFolder = async (arg0: any) => {
-  };
-}
-
 describe('note searcher, demo dir', () => {
-  let ui: FakeVsCodeNoteSearcher;
-
   beforeAll(async () => {
+    vscode.openFolder(demoDir);
     await activate(new FakeVsCodeExtensionContext());
-    ui = new FakeVsCodeNoteSearcher();
   });
 
   it('indexes workspace on startup', async () => {
-    await ui.openFolder('src/note_searcher/demo_dir');
-    await ui.search('cheese');
-    expect(ui.searchResults()).toEqual([
-      'cheese.md',
-      'cheese.md',
-      'cheese_hat.md',
-      'trains.md',
-      'readme.md',
+    await vscode.search('cheese');
+    expect(vscode.searchResults()).toEqual([
+      _path.join(demoDir, 'cheese.md'),
+      _path.join(demoDir, 'subdir/cheese.md'),
+      _path.join(demoDir, 'cheese_hat.md'),
+      _path.join(demoDir, 'trains.md'),
+      _path.join(demoDir, 'readme.md'),
     ]);
   });
 
