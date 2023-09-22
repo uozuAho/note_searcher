@@ -19,6 +19,9 @@ export interface NoteSearcherUi {
   addNoteSavedListener: (listener: FileChangeListener) => void;
   addNoteDeletedListener: (listener: FileDeletedListener) => void;
   addMovedViewToDifferentNoteListener: (listener: FileChangeListener) => void;
+  createMovedViewToDifferentNoteHandler(): { dispose(): any; };
+  createNoteDeletedHandler(): { dispose(): any; };
+  createNoteSavedHandler(): { dispose(): any; };
 }
 
 export type FileChangeListener = (file: File) => Promise<void>;

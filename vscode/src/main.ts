@@ -1,16 +1,26 @@
 import * as vscode from 'vscode';
 
 import { createMultiIndex } from './index/MultiIndex';
-import { VsCodeNoteSearcherUi } from './ui/VsCodeNoteSearcherUi';
 import { NoteSearcher } from './note_searcher/noteSearcher';
 import { TagCompleter } from './tag_completion/TagCompleter';
 import { WikiLinkDefinitionProvider } from './definition_provider/WikiLinkDefinitionProvider';
 import { NoteLocator } from './definition_provider/NoteLocator';
+import { createNoteSearcherUi } from './ui/uiCreator';
 
 export const extensionId = 'uozuaho.note-searcher';
 
-export async function activate(context: vscode.ExtensionContext) {
-  const ui = new VsCodeNoteSearcherUi();
+export interface VsCodeExtensionContext {
+  subscriptions: { dispose(): any }[];
+}
+
+class RealVsCodeExtensionContext implements VsCodeExtensionContext {
+  constructor(private readonly context: vscode.ExtensionContext) {
+  }
+  subscriptions = this.context.subscriptions;
+}
+
+export async function activate(context: VsCodeExtensionContext) {
+  const ui = createNoteSearcherUi();
   const workspaceDir = ui.currentlyOpenDir();
   if (!workspaceDir) {
     return;

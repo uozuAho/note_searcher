@@ -39,8 +39,10 @@ Run `npm run build_vsix` in the vscode directory.
 
 
 # WIP todo
+- WIP: having a go: e2e test alternative: hook up everything in activate with real
+  code, except for ui. Provide a fake UI that allows inspection for testing
+  purposes.
 - handle file deleted
-    - inline todos
     - links to/from
     - dead links
     - tags
