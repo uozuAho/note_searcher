@@ -22,6 +22,38 @@ export class DefaultMultiIndex implements MultiIndex {
       .fromWorkspace(_workspaceDir, _fileSystem);
   }
 
+  public filenameToAbsPath = (filename: string) => this._linkIndex.filenameToAbsPath(filename);
+
+  public fullTextSearch = (query: string) => this._fullText.search(query);
+
+  public allTags = () => this._tags.allTags();
+
+  public notes = () => this._linkIndex.notes();
+
+  public containsNote = (path: string) => this._linkIndex.containsNote(path);
+
+  public linksFrom = (path: string) => this._linkIndex.linksFrom(path);
+
+  public linksTo = (path: string) => this._linkIndex.linksTo(path);
+
+  public findAllDeadLinks = () => this._linkIndex.findAllDeadLinks();
+
+  public indexAllFiles = async (dir: string) => {
+    this._tags.clear();
+    this._linkIndex.clear();
+    this._fullText = new LunrDualFts(this._fileSystem);
+    const jobs: Promise<void>[] = [];
+
+    for (const path of this._fileSystem.allFilesUnderPath(dir, this._config.isIgnored)) {
+      if (!this.shouldIndex(path)) { continue; }
+      jobs.push(this.addFile(path));
+    }
+
+    await Promise.all(jobs);
+    this._linkIndex.finalise();
+    this._fullText.finalise();
+  };
+
   public onFileModified = async (path: string, text: string) => {
     if (!this.shouldIndex(path)) { return; }
 
@@ -39,44 +71,12 @@ export class DefaultMultiIndex implements MultiIndex {
     await Promise.all(tasks);
   };
 
-  public filenameToAbsPath = (filename: string) => this._linkIndex.filenameToAbsPath(filename);
-
-  public fullTextSearch = (query: string) => this._fullText.search(query);
-
-  public allTags = () => this._tags.allTags();
-
-  public notes = () => this._linkIndex.notes();
-
-  public containsNote = (path: string) => this._linkIndex.containsNote(path);
-
-  public linksFrom = (path: string) => this._linkIndex.linksFrom(path);
-
-  public linksTo = (path: string) => this._linkIndex.linksTo(path);
-
-  public findAllDeadLinks = () => this._linkIndex.findAllDeadLinks();
-
-  public addFile = async (path: string) => {
+  private addFile = async (path: string) => {
     const text = await this._fileSystem.readFileAsync(path);
     this._linkIndex.addFile(path, text);
     const tags = extractTags(text);
     this._tags.addTags(tags);
     this._fullText.addFile(path, text, tags);
-  };
-
-  public indexAllFiles = async (dir: string) => {
-    this._tags.clear();
-    this._linkIndex.clear();
-    this._fullText = new LunrDualFts(this._fileSystem);
-    const jobs: Promise<void>[] = [];
-
-    for (const path of this._fileSystem.allFilesUnderPath(dir, this._config.isIgnored)) {
-      if (!this.shouldIndex(path)) { continue; }
-      jobs.push(this.addFile(path));
-    }
-
-    await Promise.all(jobs);
-    this._linkIndex.finalise();
-    this._fullText.finalise();
   };
 
   private shouldIndex = (path: string) => {

@@ -15,7 +15,6 @@ export interface MultiIndex {
 
   // commands
   indexAllFiles: (dir: string) => Promise<void>;
-  addFile: (path: string, text: string, tags: string[]) => unknown;
   onFileModified: (path: string, text: string) => Promise<void>;
 }
 
