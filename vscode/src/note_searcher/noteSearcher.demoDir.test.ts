@@ -6,14 +6,15 @@
  */
 
 import { Link } from "../index/LinkIndex";
-import { activate, VsCodeExtensionContext } from "../main";
+import { activate } from "../main";
 import { FileChangeListener, FileDeletedListener, NoteSearcherUi } from "../ui/NoteSearcherUi";
-import { createNoteSearcherUi } from "../ui/uiCreator";
+import { VsCodeExtensionContext } from "../vs_code_apis/extensionContext";
 
 const _path = require('path');
 const demoDir = _path.resolve(__dirname, '../../demo_dir');
 
 class FakeUi implements NoteSearcherUi {
+  openFile = (path: any) => {};
   showTags = (tags: string[]) => {};
   copyToClipboard = (text: string) => Promise.resolve();
   startNewNote = (path: string) => Promise.resolve();
@@ -40,9 +41,41 @@ class FakeVsCodeExtensionContext implements VsCodeExtensionContext {
   subscriptions: { dispose(): any; }[] = [];
 }
 
+// fake out top level vscode apis required by main.activate
 jest.mock('../ui/uiCreator', () => {
   return {
+    // todo: prolly need access to this ui in the tests
     createNoteSearcherUi: () => new FakeUi()
+  };
+});
+
+jest.mock('../vs_code_apis/registryCreator', () => {
+  return {
+    createVsCodeRegistry: () => {
+      return {
+        registerCommand: () => {}
+      };
+    }
+  };
+});
+
+jest.mock('../tag_completion/tagCompleterCreator', () => {
+  return {
+    createTagCompleter: () => {
+      return {
+        provideCompletionItems: () => {}
+      };
+    }
+  };
+});
+
+jest.mock('../definition_provider/defProviderCreator', () => {
+  return {
+    createWikiLinkDefinitionProvider: () => {
+      return {
+        provideDefinition: () => {}
+      };
+    }
   };
 });
 
@@ -57,9 +90,13 @@ class FakeVsCodeNoteSearcher {
   };
 }
 
-describe('note searcher, demo dir', async () => {
-  await activate(new FakeVsCodeExtensionContext());
-  const ui = new FakeVsCodeNoteSearcher();
+describe('note searcher, demo dir', () => {
+  let ui: FakeVsCodeNoteSearcher;
+
+  beforeAll(async () => {
+    await activate(new FakeVsCodeExtensionContext());
+    ui = new FakeVsCodeNoteSearcher();
+  });
 
   it('indexes workspace on startup', async () => {
     await ui.openFolder('src/note_searcher/demo_dir');

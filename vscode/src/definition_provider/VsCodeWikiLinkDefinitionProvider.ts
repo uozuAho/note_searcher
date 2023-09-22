@@ -8,7 +8,7 @@ import { NoteLocator } from './NoteLocator';
 
 // A DefinitionProvider provides 'go to definition' behaviour
 // https://code.visualstudio.com/api/references/vscode-api?source=post_page-----94656da18431----------------------#DefinitionProvider
-export class WikiLinkDefinitionProvider implements vscode.DefinitionProvider {
+export class VsCodeWikiLinkDefinitionProvider implements vscode.DefinitionProvider {
 
   constructor(private noteLocator: NoteLocator) {}
 

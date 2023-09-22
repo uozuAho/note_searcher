@@ -2,6 +2,7 @@ import { Link } from "../index/LinkIndex";
 import { File } from "../utils/File";
 
 export interface NoteSearcherUi {
+  openFile(path: any): any;
   showTags: (tags: string[]) => void;
   copyToClipboard: (text: string) => Promise<void>;
   startNewNote: (path: string) => Promise<void>;
