@@ -18,6 +18,7 @@ export class NoteSearcher {
     private timeProvider: TimeProvider = createTimeProvider())
   {
     ui.addNoteSavedListener(this.notifyNoteSaved);
+    ui.addNoteDeletedListener(this.notifyNoteDeleted);
     ui.addMovedViewToDifferentNoteListener(this.notifyMovedViewToDifferentNote);
     this.diagnostics = createDiagnostics('noteSearcher');
   }
@@ -162,6 +163,15 @@ export class NoteSearcher {
     this.diagnostics.trace('note saved');
 
     await this.index.onFileModified(file.path(), file.text());
+    this.showDeadLinks();
+    this.showTags();
+  };
+
+  private notifyNoteDeleted = async (path: string) => {
+    this.diagnostics.trace('note deleted');
+
+    await this.index.onFileDeleted(path);
+    // todo: links from/to?
     this.showDeadLinks();
     this.showTags();
   };

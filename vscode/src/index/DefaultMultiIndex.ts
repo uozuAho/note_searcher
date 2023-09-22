@@ -71,7 +71,15 @@ export class DefaultMultiIndex implements MultiIndex {
     await Promise.all(tasks);
   };
 
-  public onFileDeleted = (path: string) => {};
+  public onFileDeleted = async (path: string) => {
+    if (!this.shouldIndex(path)) { return; }
+
+    const tasks = [
+      this._fullText.onFileDeleted(path),
+    ];
+
+    await Promise.all(tasks);
+  };
 
   private addFile = async (path: string) => {
     const text = await this._fileSystem.readFileAsync(path);

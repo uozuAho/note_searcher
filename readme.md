@@ -40,14 +40,10 @@ Run `npm run build_vsix` in the vscode directory.
 
 # WIP todo
 - handle file deleted
-    - full text search
-        - test:
-            - DONE: delete then recreate
-            - DONE: modify then delete
-        - add to multi index etc.
-        - manual test
-    - link index
-    - tag index
+    - inline todos
+    - links to/from
+    - dead links
+    - tags
 - handle file moved/renamed
     - note: no move event: renamed is fired with old + new uris
 - manual test: test before/after. expect:

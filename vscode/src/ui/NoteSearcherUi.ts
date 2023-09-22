@@ -17,7 +17,9 @@ export interface NoteSearcherUi {
   notifyIndexingStarted: (indexingTask: Promise<void>) => void;
   showError: (e: Error) => Promise<void>;
   addNoteSavedListener: (listener: FileChangeListener) => void;
+  addNoteDeletedListener: (listener: FileDeletedListener) => void;
   addMovedViewToDifferentNoteListener: (listener: FileChangeListener) => void;
 }
 
 export type FileChangeListener = (file: File) => Promise<void>;
+export type FileDeletedListener = (path: string) => Promise<void>;

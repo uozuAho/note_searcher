@@ -53,6 +53,7 @@ export async function activate(context: vscode.ExtensionContext) {
       new WikiLinkDefinitionProvider(noteLocator)),
 
     ui.createNoteSavedHandler(),
+    ui.createNoteDeletedHandler(),
     ui.createMovedViewToDifferentNoteHandler()
   );
 

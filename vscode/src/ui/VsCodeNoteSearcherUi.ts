@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 import { SearchResultTree } from './searchResultTree';
-import { NoteSearcherUi, FileChangeListener } from './NoteSearcherUi';
+import { NoteSearcherUi, FileChangeListener, FileDeletedListener } from './NoteSearcherUi';
 import { File } from "../utils/File";
 import { DeadLinksTree } from './DeadLinksTree';
 import { LinksTree } from './LinksTree';
@@ -9,6 +9,7 @@ import { Link } from '../index/LinkIndex';
 
 export class VsCodeNoteSearcherUi implements NoteSearcherUi {
   private noteSavedListener: FileChangeListener | null = null;
+  private noteDeletedListener: FileDeletedListener | null = null;
   private movedViewToDifferentNoteListener: FileChangeListener | null = null;
 
   public copyToClipboard = async (text: string) => {
@@ -118,6 +119,10 @@ export class VsCodeNoteSearcherUi implements NoteSearcherUi {
     this.noteSavedListener = listener;
   };
 
+  public addNoteDeletedListener = (listener: FileDeletedListener) => {
+    this.noteDeletedListener = listener;
+  };
+
   public addMovedViewToDifferentNoteListener = (listener: FileChangeListener) => {
     this.movedViewToDifferentNoteListener = listener;
   };
@@ -130,6 +135,16 @@ export class VsCodeNoteSearcherUi implements NoteSearcherUi {
       }
     });
   };
+
+  public createNoteDeletedHandler(): { dispose(): any; } {
+    return vscode.workspace.onDidDeleteFiles(e => {
+      if (this.noteDeletedListener) {
+        for (const file of e.files) {
+          return this.noteDeletedListener(file.fsPath);
+        }
+      }
+    });
+  }
 
   public createMovedViewToDifferentNoteHandler = () => {
     return vscode.window.onDidChangeActiveTextEditor(e => {
