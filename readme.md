@@ -39,10 +39,15 @@ Run `npm run build_vsix` in the vscode directory.
 
 
 # WIP todo
-- handle file moved/deleted
+- handle file deleted
     - full text search
+        - test:
+            - DONE: delete then recreate
+            - modify then delete
     - link index
     - tag index
+- handle file moved/renamed
+    - note: no move event: renamed is fired with old + new uris
 - manual test: test before/after. expect:
     - (much) faster indexing
     - otherwise same behaviour

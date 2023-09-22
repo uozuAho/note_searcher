@@ -43,6 +43,7 @@ class FakeFs implements FileSystem {
   public isIgnored = (path: string) => false;
   public fileExists = (path: string) => this._files.has(path);
   public readFileAsync = (path: string) => Promise.resolve(this.readFile(path));
+  public deleteFile = (path: string) => this._files.delete(path);
 
   public readFile = (path: string) => {
     const text = this._files.get(path);
@@ -85,6 +86,11 @@ describe('full text search', () => {
   const modifyFile = async (file: FileAndTags) => {
     fakeFs.addFile(file.path, file.text);
     await fts.onFileModified(file.path, file.text, file.tags);
+  };
+
+  const deleteFile = async (path: string) => {
+    fakeFs.deleteFile(path);
+    fts.onFileDeleted(path);
   };
 
   beforeEach(() => {
@@ -185,6 +191,27 @@ describe('full text search', () => {
       'lots.of.blah.txt',
       'medium.blah.log',
     ]);
+  });
+
+  it('finds file after it was deleted and recreated', async () => {
+    await index([
+      new FileAndTags('a/b.txt', 'blah blah some stuff and things'),
+      new FileAndTags('a/b/c.log', 'what about shoes and biscuits'),
+    ]);
+
+    let results = await fts.search('blah');
+    expect(results.length).toBe(1);
+
+    await deleteFile('a/b.txt');
+
+    results = await fts.search('blah');
+    expect(results).toHaveLength(0);
+
+    const modified = new FileAndTags('a/b.txt', 'ok blah is back');
+    await modifyFile(modified);
+
+    results = await fts.search('blah');
+    expect(results.length).toBe(1);
   });
 
   describe('markdown links', () => {

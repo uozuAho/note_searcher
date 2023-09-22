@@ -14,6 +14,7 @@ export class LunrDualFts implements FullTextSearch {
   private _staticIndex: LunrFullTextSearch;
   private _dynamicIndex: LunrFullTextSearch;
   private _modifiedFiles: Set<string> = new Set();
+  private _deletedFiles: Set<string> = new Set();
   private _fileSystem: FileSystem;
 
   constructor(fileSystem: FileSystem) {
@@ -32,8 +33,10 @@ export class LunrDualFts implements FullTextSearch {
 
     const stat = await this._staticIndex.search(query);
     for (const {path, score} of stat) {
-      // disregard modified files in static results
-      if (this._modifiedFiles.has(path)) { continue; }
+      if (this._modifiedFiles.has(path)
+          || this._deletedFiles.has(path)) {
+        continue;
+      }
       results.push({path, score});
     }
 
@@ -60,7 +63,16 @@ export class LunrDualFts implements FullTextSearch {
     this._dynamicIndex.finalise();
   };
 
-  public onFileDeleted = (path: string) => {
+  public onFileDeleted = async (path: string) => {
+    this._deletedFiles.add(path);
+    this._dynamicIndex = new LunrFullTextSearch();
 
+    for (const file of this._modifiedFiles) {
+      const text = await this._fileSystem.readFileAsync(file);
+      const tags = extractTags(text);
+      this._dynamicIndex.indexFile(file, text, tags);
+    }
+
+    this._dynamicIndex.finalise();
   };
 }
