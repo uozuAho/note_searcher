@@ -65,6 +65,7 @@ export class LunrDualFts implements FullTextSearch {
 
   public onFileDeleted = async (path: string) => {
     this._deletedFiles.add(path);
+    this._modifiedFiles.delete(path);
     this._dynamicIndex = new LunrFullTextSearch();
 
     for (const file of this._modifiedFiles) {

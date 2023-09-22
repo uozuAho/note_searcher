@@ -1,7 +1,6 @@
 import { FileSystem } from '../utils/FileSystem';
 import { FullTextSearch } from './FullTextSearch';
 import { LunrDualFts } from './lunrDualFts';
-import { LunrFullTextSearch } from './lunrFullTextSearch';
 
 declare global {
   namespace jest {
@@ -90,7 +89,7 @@ describe('full text search', () => {
 
   const deleteFile = async (path: string) => {
     fakeFs.deleteFile(path);
-    fts.onFileDeleted(path);
+    return fts.onFileDeleted(path);
   };
 
   beforeEach(() => {
@@ -199,12 +198,9 @@ describe('full text search', () => {
       new FileAndTags('a/b/c.log', 'what about shoes and biscuits'),
     ]);
 
-    let results = await fts.search('blah');
-    expect(results.length).toBe(1);
-
     await deleteFile('a/b.txt');
 
-    results = await fts.search('blah');
+    let results = await fts.search('blah');
     expect(results).toHaveLength(0);
 
     const modified = new FileAndTags('a/b.txt', 'ok blah is back');
@@ -212,6 +208,20 @@ describe('full text search', () => {
 
     results = await fts.search('blah');
     expect(results.length).toBe(1);
+  });
+
+  it('does not find file after it was modified then deleted', async () => {
+    await index([
+      new FileAndTags('a/b.txt', 'blah blah some stuff and things'),
+      new FileAndTags('a/b/c.log', 'what about shoes and biscuits'),
+    ]);
+
+    const modified = new FileAndTags('a/b.txt', 'modified blah blah');
+    await modifyFile(modified);
+    await deleteFile('a/b.txt');
+
+    let results = await fts.search('blah');
+    expect(results).toHaveLength(0);
   });
 
   describe('markdown links', () => {
