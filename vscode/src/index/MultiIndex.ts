@@ -16,6 +16,7 @@ export interface MultiIndex {
   // commands
   indexAllFiles: (dir: string) => Promise<void>;
   onFileModified: (path: string, text: string) => Promise<void>;
+  onFileDeleted: (path: string) => void;
 }
 
 export const createMultiIndex = (workspaceDir: string) =>

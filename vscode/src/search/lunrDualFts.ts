@@ -59,4 +59,8 @@ export class LunrDualFts implements FullTextSearch {
 
     this._dynamicIndex.finalise();
   };
+
+  public onFileDeleted = (path: string) => {
+
+  };
 }
