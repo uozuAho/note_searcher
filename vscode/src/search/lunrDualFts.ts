@@ -52,20 +52,16 @@ export class LunrDualFts implements FullTextSearch {
 
   public onFileModified = async (path: string, text: string, tags: string[]) => {
     this._modifiedFiles.add(path);
-    this._dynamicIndex = new LunrFullTextSearch();
-
-    for (const file of this._modifiedFiles) {
-      const text = await this._fileSystem.readFileAsync(file);
-      const tags = extractTags(text);
-      this._dynamicIndex.indexFile(file, text, tags);
-    }
-
-    this._dynamicIndex.finalise();
+    await this.rebuildDynamicIndex();
   };
 
   public onFileDeleted = async (path: string) => {
     this._deletedFiles.add(path);
     this._modifiedFiles.delete(path);
+    await this.rebuildDynamicIndex();
+  };
+
+  private rebuildDynamicIndex = async () => {
     this._dynamicIndex = new LunrFullTextSearch();
 
     for (const file of this._modifiedFiles) {

@@ -44,7 +44,8 @@ Run `npm run build_vsix` in the vscode directory.
         - test:
             - DONE: delete then recreate
             - DONE: modify then delete
-        - remove duplication in lunrdual
+        - add to multi index etc.
+        - manual test
     - link index
     - tag index
 - handle file moved/renamed
