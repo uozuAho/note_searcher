@@ -39,17 +39,12 @@ Run `npm run build_vsix` in the vscode directory.
 
 
 # WIP todo
-- WIP: having a go: e2e test alternative: hook up everything in activate with real
-  code, except for ui. Provide a fake UI that allows inspection for testing
-  purposes.
-    - DONE: remove dependency on vscode import
-    - DONE: manual test all features mentioned in main.ts
-    - DONE: pass first test
-    - add test for file deleted case below
 - handle file deleted
-    - links to/from
+    - links to
+    - links from
     - dead links
     - tags
+- manual test
 - handle file moved/renamed
     - note: no move event: renamed is fired with old + new uris
 - manual test: test before/after. expect:
@@ -60,6 +55,7 @@ Run `npm run build_vsix` in the vscode directory.
     - discovered during dev, existing behaviour
 - fix later: extension not activated when no directory is open: provide a help
   message
+- later: replace mocked/other high level tests with acceptance tests
 ## code notes: from before my indexing changes
 ### on save
 - noteSearcher.notifyNoteSaved

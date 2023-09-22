@@ -1,5 +1,12 @@
 import { Link } from "../index/LinkIndex";
 import { FileChangeListener, FileDeletedListener, NoteSearcherUi } from "../ui/NoteSearcherUi";
+import { File } from "../utils/File";
+
+class FakeFile implements File {
+  constructor(private _path: string, private _text: string) { }
+  text = () => this._text;
+  path = () => this._path;
+}
 
 export class FakeUi implements NoteSearcherUi {
   // UI interface
@@ -8,7 +15,7 @@ export class FakeUi implements NoteSearcherUi {
   public copyToClipboard = (text: string) => Promise.resolve();
   public startNewNote = (path: string) => Promise.resolve();
   public promptForNewNoteName = (noteId: string) => Promise.resolve(noteId);
-  public getCurrentFile = () => null;
+  public getCurrentFile = () => this._currentlyOpenFile ? new FakeFile(this._currentlyOpenFile, '') : null;
   public currentlyOpenDir = () => this._currentlyOpenDir;
   public promptForSearch = (prefill: string) => Promise.resolve(this._searchInput);
   public showSearchResults = (files: string[]) => {
@@ -17,22 +24,41 @@ export class FakeUi implements NoteSearcherUi {
   };
   public showNotification = (message: string) => Promise.resolve();
   public showDeadLinks = (links: Link[]) => { };
-  public showBacklinks = (links: string[]) => { };
+  public showBacklinks = (links: string[]) => { this._backlinks = links; };
   public showForwardLinks = (links: string[]) => { };
   public notifyIndexingStarted = (indexingTask: Promise<void>) => { };
   public showError = (e: Error) => Promise.resolve();
   public addNoteSavedListener = (listener: FileChangeListener) => { };
-  public addNoteDeletedListener = (listener: FileDeletedListener) => { };
-  public addMovedViewToDifferentNoteListener = (listener: FileChangeListener) => { };
+  public addNoteDeletedListener = (listener: FileDeletedListener) => { this._noteDeletedListener = listener; };
+  public addMovedViewToDifferentNoteListener = (listener: FileChangeListener) => {
+    this._movedViewToDifferentNoteListener = listener;
+  };
   public createNoteSavedHandler = () => { return { dispose: () => { } }; };
   public createNoteDeletedHandler = () => { return { dispose: () => { } }; };
   public createMovedViewToDifferentNoteHandler = () => { return { dispose: () => { } }; };
   // end UI interface
+
   private _currentlyOpenDir: string | null = null;
+  private _currentlyOpenFile: string | null = null;
   private _searchInput: string | undefined;
   private _searchResults: string[] = [];
+  private _backlinks: string[] = [];
+  private _movedViewToDifferentNoteListener: FileChangeListener | null = null;
+  private _noteDeletedListener: FileDeletedListener | null = null;
 
   public openFolder = (path: string) => this._currentlyOpenDir = path;
   public setSearchInput = (query: string) => this._searchInput = query;
   public searchResults = () => this._searchResults;
+  public linksToThisNote = () => this._backlinks;
+  public moveViewToNote = (file: string) => {
+    if (this._movedViewToDifferentNoteListener) {
+      this._currentlyOpenFile = file;
+      return this._movedViewToDifferentNoteListener(new FakeFile(file, ''));
+    }
+  };
+  public notifyNoteDeleted = (path: string) => {
+    if (this._noteDeletedListener) {
+      return this._noteDeletedListener(path);
+    }
+  };
 }
