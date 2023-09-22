@@ -104,6 +104,26 @@ describe('full text search', () => {
     expect(results[0]).toBe('a/b.txt');
   });
 
+  it('findsSingleWord', async () => {
+    await expect(searchFor("ham", "the ham is good")).toBeFound();
+  });
+
+  it('doesNotFindMissingWord', async () => {
+    await expect(searchFor("pizza", "the ham is good")).not.toBeFound();
+  });
+
+  it('findsStemmedWord', async () => {
+    await expect(searchFor("bike", "I own several bikes")).toBeFound();
+  });
+
+  it('finds word before slash', async () => {
+    await expect(searchFor("red", "red/green/refactor")).toBeFound();
+  });
+
+  it('finds after slash', async () => {
+    await expect(searchFor("refactor", "red/green/refactor")).toBeFound();
+  });
+
   it('updates index after file is modified', async () => {
     await index([
       new FileAndTags('a/b.txt', 'blah blah some stuff and things'),
@@ -165,26 +185,6 @@ describe('full text search', () => {
       'lots.of.blah.txt',
       'medium.blah.log',
     ]);
-  });
-
-  it('findsSingleWord', async () => {
-    await expect(searchFor("ham", "the ham is good")).toBeFound();
-  });
-
-  it('doesNotFindMissingWord', async () => {
-    await expect(searchFor("pizza", "the ham is good")).not.toBeFound();
-  });
-
-  it('findsStemmedWord', async () => {
-    await expect(searchFor("bike", "I own several bikes")).toBeFound();
-  });
-
-  it('finds word before slash', async () => {
-    await expect(searchFor("red", "red/green/refactor")).toBeFound();
-  });
-
-  it('finds after slash', async () => {
-    await expect(searchFor("refactor", "red/green/refactor")).toBeFound();
   });
 
   describe('markdown links', () => {
