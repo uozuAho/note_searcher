@@ -23,7 +23,7 @@ export class FakeUi implements NoteSearcherUi {
     return Promise.resolve();
   };
   public showNotification = (message: string) => Promise.resolve();
-  public showDeadLinks = (links: Link[]) => { };
+  public showDeadLinks = (links: Link[]) => this._deadLinks = links;
   public showBacklinks = (links: string[]) => this._backlinks = links;
   public showForwardLinks = (links: string[]) => this._forwardLinks = links;
   public notifyIndexingStarted = (indexingTask: Promise<void>) => { };
@@ -44,6 +44,7 @@ export class FakeUi implements NoteSearcherUi {
   private _searchResults: string[] = [];
   private _backlinks: string[] = [];
   private _forwardLinks: string[] = [];
+  private _deadLinks: Link[] = [];
   private _movedViewToDifferentNoteListener: FileChangeListener | null = null;
   private _noteDeletedListener: FileDeletedListener | null = null;
 
@@ -51,6 +52,7 @@ export class FakeUi implements NoteSearcherUi {
   public searchResults = () => this._searchResults;
   public linksToThisNote = () => this._backlinks;
   public linksFromThisNote = () => this._forwardLinks;
+  public deadLinks = () => this._deadLinks;
   // commands
   public openFolder = (path: string) => this._currentlyOpenDir = path;
   public setSearchInput = (query: string) => this._searchInput = query;

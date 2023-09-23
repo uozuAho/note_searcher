@@ -12,6 +12,7 @@ export class FakeVsCodeNoteSearcher {
   public searchResults = () => this._ui.searchResults();
   public linksToThisNote = () => this._ui.linksToThisNote();
   public linksFromThisNote = () => this._ui.linksFromThisNote();
+  public deadLinks = () => this._ui.deadLinks();
 
   // commands
   public notifyNoteDeleted = (path: string) => this._ui.notifyNoteDeleted(path);

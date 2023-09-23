@@ -42,7 +42,7 @@ Run `npm run build_vsix` in the vscode directory.
 - handle file deleted
     - DONE: links to
     - DONE: links from
-    - dead links
+    - DONE: dead links
     - tags
     - ignored files
 - manual test: copy acceptance tests
@@ -64,6 +64,9 @@ Run `npm run build_vsix` in the vscode directory.
 - fix later: extension not activated when no directory is open: provide a help
   message
 - later: replace mocked/other high level tests with acceptance tests
+- fix later: 'links from this note'
+    - doesn't show all links, eg. demo_dir/readme links to 'not_a_note.bin'
+    - shows dead links, eg delete trains, still shows link to trains
 ## code notes: from before my indexing changes
 ### on save
 - noteSearcher.notifyNoteSaved
