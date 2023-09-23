@@ -24,8 +24,8 @@ export class FakeUi implements NoteSearcherUi {
   };
   public showNotification = (message: string) => Promise.resolve();
   public showDeadLinks = (links: Link[]) => { };
-  public showBacklinks = (links: string[]) => { this._backlinks = links; };
-  public showForwardLinks = (links: string[]) => { };
+  public showBacklinks = (links: string[]) => this._backlinks = links;
+  public showForwardLinks = (links: string[]) => this._forwardLinks = links;
   public notifyIndexingStarted = (indexingTask: Promise<void>) => { };
   public showError = (e: Error) => Promise.resolve();
   public addNoteSavedListener = (listener: FileChangeListener) => { };
@@ -43,13 +43,17 @@ export class FakeUi implements NoteSearcherUi {
   private _searchInput: string | undefined;
   private _searchResults: string[] = [];
   private _backlinks: string[] = [];
+  private _forwardLinks: string[] = [];
   private _movedViewToDifferentNoteListener: FileChangeListener | null = null;
   private _noteDeletedListener: FileDeletedListener | null = null;
 
-  public openFolder = (path: string) => this._currentlyOpenDir = path;
-  public setSearchInput = (query: string) => this._searchInput = query;
+  // queries
   public searchResults = () => this._searchResults;
   public linksToThisNote = () => this._backlinks;
+  public linksFromThisNote = () => this._forwardLinks;
+  // commands
+  public openFolder = (path: string) => this._currentlyOpenDir = path;
+  public setSearchInput = (query: string) => this._searchInput = query;
   public moveViewToNote = (file: string) => {
     if (this._movedViewToDifferentNoteListener) {
       this._currentlyOpenFile = file;

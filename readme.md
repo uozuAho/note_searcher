@@ -40,15 +40,17 @@ Run `npm run build_vsix` in the vscode directory.
 
 # WIP todo
 - handle file deleted
-    - links to
-    - links from
+    - DONE: links to
+    - DONE: links from
     - dead links
     - tags
-- manual test
+    - ignored files
+- manual test: copy acceptance tests
 - fix e2e test filesystem conflicts
+    - happeneing quite regularly
     - options
-        - ok: copy demo dir. PITA, but easy.
-        - ok: in-memory fs. copy demo dir contents. prolly lots of code.
+        - ok: in-memory fs. copy demo dir contents. maybe lots of code?
+        - ok: copy demo dir. PITA, but easy. node file modifications seem flakey
         - bad: fake fs. need to keep in sync with demo dir, lots of code.
         - bad: don't modify files. Limits testing.
 - handle file moved/renamed

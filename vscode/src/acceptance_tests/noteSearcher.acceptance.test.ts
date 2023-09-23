@@ -96,9 +96,9 @@ describe('note searcher, demo dir', () => {
       expect(ui.linksToThisNote()).not.toContain(trains);
     });
 
-    // it('removes links to the deleted file', async () => {
-    //   expect(ui.linksFromThisNote()).not.toContain(trains);
-    // });
+    it('removes links to the deleted file', async () => {
+      expect(ui.linksFromThisNote()).not.toContain(trains);
+    });
 
     // dead links should contain links to deleted files
     // tags? meh

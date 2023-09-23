@@ -232,3 +232,29 @@ describe('DefaultMultiIndex, demo dir, on modify ignored file', () => {
     expect(tags.includes('ignored_tag')).toBe(false);
   });
 });
+
+describe('DefaultMultiIndex, demo dir, on delete file', () => {
+  let index: DefaultMultiIndex;
+
+  beforeEach(async () => {
+    const fs = createFileSystem();
+    index = new DefaultMultiIndex(fs, demoDir);
+    await index.indexAllFiles(demoDir);
+
+    // we don't actually delete the file here
+    await index.onFileDeleted(trainsPath);
+  });
+
+  it('is not in search results', async () => {
+    const results = await index.fullTextSearch('trains');
+    expect(results).not.toContain(trainsPath);
+  });
+
+  it('no links from the deleted file', async () => {
+    expect(index.linksTo(readmePath)).not.toContain(trainsPath);
+  });
+
+  it('no links to the deleted file', async () => {
+    expect(index.linksFrom(readmePath)).not.toContain(trainsPath);
+  });
+});
