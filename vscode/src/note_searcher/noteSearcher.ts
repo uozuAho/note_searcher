@@ -171,6 +171,8 @@ export class NoteSearcher {
     this.diagnostics.trace('note deleted');
 
     await this.index.onFileDeleted(path);
+    this.showBacklinks();
+    this.showForwardLinks();
     this.showDeadLinks();
     this.showTags();
   };

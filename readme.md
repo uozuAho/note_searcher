@@ -45,6 +45,12 @@ Run `npm run build_vsix` in the vscode directory.
     - dead links
     - tags
 - manual test
+- fix e2e test filesystem conflicts
+    - options
+        - ok: copy demo dir. PITA, but easy.
+        - ok: in-memory fs. copy demo dir contents. prolly lots of code.
+        - bad: fake fs. need to keep in sync with demo dir, lots of code.
+        - bad: don't modify files. Limits testing.
 - handle file moved/renamed
     - note: no move event: renamed is fired with old + new uris
 - manual test: test before/after. expect:

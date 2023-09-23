@@ -97,6 +97,13 @@ export class InMemoryLinkIndex implements LinkIndex, NoteIndex {
     this.finalise();
   };
 
+  public onFileDeleted(absPath: string) {
+    this._notesByAbsPath.delete(absPath);
+    for (const note of this._notesByAbsPath.values()) {
+      note.incomingLinks.delete(absPath);
+    }
+  }
+
   private populateBacklinks = () => {
     for (const [sourcePath, sourceNote] of this._notesByAbsPath) {
       for (const targetPath of sourceNote.outgoingLinks) {

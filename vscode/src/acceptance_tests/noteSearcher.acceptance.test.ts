@@ -92,8 +92,15 @@ describe('note searcher, demo dir', () => {
       fs.writeFileSync(trains, trainsText);
     });
 
-    it('removes links to the deleted file', async () => {
+    it('removes incoming links from the deleted file', async () => {
       expect(ui.linksToThisNote()).not.toContain(trains);
     });
+
+    // it('removes links to the deleted file', async () => {
+    //   expect(ui.linksFromThisNote()).not.toContain(trains);
+    // });
+
+    // dead links should contain links to deleted files
+    // tags? meh
   });
 });

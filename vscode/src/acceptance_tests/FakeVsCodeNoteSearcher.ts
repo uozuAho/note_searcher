@@ -11,9 +11,9 @@ export class FakeVsCodeNoteSearcher {
   // queries
   public searchResults = () => this._ui.searchResults();
   public linksToThisNote = () => this._ui.linksToThisNote();
-  public notifyNoteDeleted = (path: string) => this._ui.notifyNoteDeleted(path);
 
   // commands
+  public notifyNoteDeleted = (path: string) => this._ui.notifyNoteDeleted(path);
   public openFolder = (path: string) => this._ui.openFolder(path);
 
   public openFile = async (path: any) => {

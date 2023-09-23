@@ -76,6 +76,7 @@ export class DefaultMultiIndex implements MultiIndex {
 
     const tasks = [
       this._fullText.onFileDeleted(path),
+      this._linkIndex.onFileDeleted(path),
     ];
 
     await Promise.all(tasks);
