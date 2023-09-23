@@ -12,6 +12,10 @@ export class VsCodeNoteSearcherUi implements NoteSearcherUi {
   private noteDeletedListener: FileDeletedListener | null = null;
   private movedViewToDifferentNoteListener: FileChangeListener | null = null;
 
+  public openFile(path: any) {
+    return vscode.window.showTextDocument(vscode.Uri.file(path));
+  }
+
   public copyToClipboard = async (text: string) => {
     return await vscode.env.clipboard.writeText(text);
   };

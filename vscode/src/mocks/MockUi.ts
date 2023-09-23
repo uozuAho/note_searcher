@@ -11,6 +11,10 @@ export class MockUi implements NoteSearcherUi {
     this._mock = tmoq.Mock.ofType<NoteSearcherUi>();
   }
 
+  public openFile(path: any) {
+    throw new Error("Method not implemented.");
+  }
+
   public showTags = (tags: string[]) => Promise.resolve();
 
   public showBacklinks = (links: string[]) => Promise.resolve();
@@ -120,4 +124,8 @@ export class MockUi implements NoteSearcherUi {
       await this._fileSavedListener(file);
     }
   };
+
+  public createMovedViewToDifferentNoteHandler = () => { return { dispose: () => {} };};
+  public createNoteDeletedHandler = () => { return { dispose: () => {} };};
+  public createNoteSavedHandler = () => { return { dispose: () => {} };};
 }

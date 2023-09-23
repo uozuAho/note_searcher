@@ -40,10 +40,11 @@ Run `npm run build_vsix` in the vscode directory.
 
 # WIP todo
 - handle file deleted
-    - inline todos
-    - links to/from
+    - links to
+    - links from
     - dead links
     - tags
+- manual test
 - handle file moved/renamed
     - note: no move event: renamed is fired with old + new uris
 - manual test: test before/after. expect:
@@ -54,6 +55,7 @@ Run `npm run build_vsix` in the vscode directory.
     - discovered during dev, existing behaviour
 - fix later: extension not activated when no directory is open: provide a help
   message
+- later: replace mocked/other high level tests with acceptance tests
 ## code notes: from before my indexing changes
 ### on save
 - noteSearcher.notifyNoteSaved
