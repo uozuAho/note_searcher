@@ -24,8 +24,7 @@ const demoDir = _path.resolve(__dirname, '../../demo_dir');
 const realFs = createFileSystem();
 
 let _fakeUi = new FakeUi();
-// todo: ui/fakeui distinction is not clear
-let ui = new FakeVsCodeNoteSearcher(_fakeUi);
+let ns = new FakeVsCodeNoteSearcher(_fakeUi);
 
 class FakeVsCodeExtensionContext implements VsCodeExtensionContext {
   subscriptions: { dispose(): any; }[] = [];
@@ -35,7 +34,9 @@ jest.mock('../ui/uiCreator', () => {
   return {
     createNoteSearcherUi: () => {
       _fakeUi = new FakeUi();
-      ui = new FakeVsCodeNoteSearcher(_fakeUi);
+      ns = new FakeVsCodeNoteSearcher(_fakeUi);
+      // folder needs to be open before activating
+      ns.openFolder(demoDir);
       return _fakeUi;
     }
   };
@@ -44,7 +45,7 @@ jest.mock('../ui/uiCreator', () => {
 jest.mock('../vs_code_apis/registryCreator', () => {
   return {
     // todo: does this hold onto old ui references?
-    createVsCodeRegistry: () => new FakeVsCodeRegistry(ui)
+    createVsCodeRegistry: () => new FakeVsCodeRegistry(ns)
   };
 });
 
@@ -70,13 +71,13 @@ jest.mock('../definition_provider/defProviderCreator', () => {
 
 describe('on starting in the demo dir', () => {
   beforeAll(async () => {
-    ui.openFolder(demoDir);
     await activate(new FakeVsCodeExtensionContext());
+    ns.openFolder(demoDir);
   });
 
   it('indexes workspace on startup', async () => {
-    await ui.search('cheese');
-    expect(ui.searchResults()).toEqual([
+    await ns.search('cheese');
+    expect(ns.searchResults()).toEqual([
       _path.join(demoDir, 'cheese.md'),
       _path.join(demoDir, 'subdir/cheese.md'),
       _path.join(demoDir, 'cheese_hat.md'),
@@ -84,8 +85,8 @@ describe('on starting in the demo dir', () => {
       _path.join(demoDir, 'readme.md'),
     ]);
 
-    await ui.search('trains');
-    expect(ui.searchResults()).toEqual([
+    await ns.search('trains');
+    expect(ns.searchResults()).toEqual([
       _path.join(demoDir, 'trains.md'),
       _path.join(demoDir, 'readme.md'),
     ]);
@@ -99,31 +100,31 @@ describe('on file deleted', () => {
 
   beforeAll(async () => {
     fs = InMemFileSystem.fromFs(demoDir, realFs);
-    ui.openFolder(demoDir);
     await activate(new FakeVsCodeExtensionContext());
-    await ui.openFile(readme);
+    ns.openFolder(demoDir);
+    await ns.openFile(readme);
 
     fs.deleteFile(trains);
-    await ui.notifyNoteDeleted(trains);
+    await ns.notifyNoteDeleted(trains);
   });
 
   it('is not in search results', async () => {
-    await ui.search('trains');
-    expect(ui.linksToThisNote()).not.toContain(trains);
+    await ns.search('trains');
+    expect(ns.linksToThisNote()).not.toContain(trains);
   });
 
   it('removes incoming links from the deleted file', async () => {
-    expect(ui.linksToThisNote()).not.toContain(trains);
+    expect(ns.linksToThisNote()).not.toContain(trains);
   });
 
   // todo: fix this when fixing all 'links to' behaviour
   it.skip('removes links to the deleted file', async () => {
-    expect(ui.linksFromThisNote()).not.toContain(trains);
+    expect(ns.linksFromThisNote()).not.toContain(trains);
   });
 
   it('adds deleted file to dead links', async () => {
     const deadLink = new Link(readme, trains);
-    expect(ui.deadLinks()).toContainEqual(deadLink);
+    expect(ns.deadLinks()).toContainEqual(deadLink);
   });
 });
 
@@ -135,16 +136,16 @@ describe('on file moved', () => {
 
   beforeAll(async () => {
     fs = InMemFileSystem.fromFs(demoDir, realFs);
-    ui.openFolder(demoDir);
     await activate(new FakeVsCodeExtensionContext());
+    ns.openFolder(demoDir);
 
-    await ui.openFile(readme);
+    await ns.openFile(readme);
     fs.moveFile(oldTrainsPath, newTrainsPath);
-    await ui.notifyNoteMoved(oldTrainsPath, newTrainsPath);
+    await ns.notifyNoteMoved(oldTrainsPath, newTrainsPath);
   });
 
   it('search result points to new location', async () => {
-    await ui.search('trains');
-    expect(ui.searchResults()).toContain(oldTrainsPath);
+    await ns.search('trains');
+    expect(ns.searchResults()).toContain(newTrainsPath);
   });
 });
