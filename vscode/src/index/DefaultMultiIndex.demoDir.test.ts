@@ -1,6 +1,7 @@
 const _path = require('path');
 
 import { createFileSystem } from "../utils/FileSystem";
+import { InMemFileSystem } from "../utils/InMemFileSystem";
 import { DefaultMultiIndex } from "./DefaultMultiIndex";
 
 const demoDir = _path.resolve(__dirname, '../../demo_dir');
@@ -10,11 +11,16 @@ const cheesePath = _path.resolve(demoDir, 'cheese.md');
 const aboutNodeModulesPath = _path.resolve(demoDir, 'node_modules/about_node_modules.md');
 const ignoredFilePath = _path.resolve(demoDir, 'ignored_stuff/ignored_file.md');
 
+function inMemDemoDirFs() {
+  const fs = createFileSystem();
+  return InMemFileSystem.fromFs(demoDir, fs);
+}
+
 describe('DefaultMultiIndex, demo dir, dead links', () => {
   let index: DefaultMultiIndex;
 
   beforeEach(() => {
-    const fs = createFileSystem();
+    const fs = inMemDemoDirFs();
     index = new DefaultMultiIndex(fs, demoDir);
   });
 
@@ -58,7 +64,7 @@ describe('DefaultMultiIndex, demo dir, tags', () => {
   let index: DefaultMultiIndex;
 
   beforeEach(() => {
-    const fs = createFileSystem();
+    const fs = inMemDemoDirFs();
     index = new DefaultMultiIndex(fs, demoDir);
   });
 
@@ -85,7 +91,7 @@ describe('DefaultMultiIndex, demo dir, containsNote', () => {
   let index: DefaultMultiIndex;
 
   beforeEach(() => {
-    const fs = createFileSystem();
+    const fs = inMemDemoDirFs();
     index = new DefaultMultiIndex(fs, demoDir);
   });
 
@@ -112,7 +118,7 @@ describe('DefaultMultiIndex, demo dir, linksFrom', () => {
   let index: DefaultMultiIndex;
 
   beforeEach(() => {
-    const fs = createFileSystem();
+    const fs = inMemDemoDirFs();
     index = new DefaultMultiIndex(fs, demoDir);
   });
 
@@ -139,7 +145,7 @@ describe('DefaultMultiIndex, demo dir, linksTo', () => {
   let index: DefaultMultiIndex;
 
   beforeEach(() => {
-    const fs = createFileSystem();
+    const fs = inMemDemoDirFs();
     index = new DefaultMultiIndex(fs, demoDir);
   });
 
@@ -166,7 +172,7 @@ describe('DefaultMultiIndex, demo dir, search', () => {
   let index: DefaultMultiIndex;
 
   beforeEach(() => {
-    const fs = createFileSystem();
+    const fs = inMemDemoDirFs();
     index = new DefaultMultiIndex(fs, demoDir);
   });
 
@@ -199,7 +205,7 @@ describe('DefaultMultiIndex, demo dir, on modify ignored file', () => {
   let index: DefaultMultiIndex;
 
   beforeEach(async () => {
-    const fs = createFileSystem();
+    const fs = inMemDemoDirFs();
     index = new DefaultMultiIndex(fs, demoDir);
     await index.indexAllFiles(demoDir);
 

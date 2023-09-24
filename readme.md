@@ -39,13 +39,6 @@ Run `npm run build_vsix` in the vscode directory.
 
 
 # WIP todo
-- fix e2e test filesystem conflicts
-    - happeneing quite regularly
-    - options
-        - ok: in-memory fs. copy demo dir contents. maybe lots of code?
-        - ok: copy demo dir. PITA, but easy. node file modifications seem flakey
-        - bad: fake fs. need to keep in sync with demo dir, lots of code.
-        - bad: don't modify files. Limits testing.
 - handle file moved/renamed
     - note: no move event: renamed is fired with old + new uris
 - manual test: test before/after. expect:
