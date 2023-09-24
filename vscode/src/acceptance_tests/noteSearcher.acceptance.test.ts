@@ -1,6 +1,6 @@
 /**
  * The highest level tests for this extension. Tests the whole note searcher app
- * on a real filesystem (the demo dir), minus the UI.
+ * (minus the UI) on the demo directory.
  *
  * You should be able to follow along with these tests using the real extension,
  * if you want to manually confirm functionality.
@@ -17,11 +17,11 @@ import { FakeVsCodeRegistry } from "./FakeVsCodeRegistry";
 import { Link } from "../index/LinkIndex";
 import { createFileSystem } from "../utils/FileSystem";
 import { InMemFileSystem } from "../utils/InMemFileSystem";
+import { FileSystem } from "../utils/FileSystem";
 
 const _path = require('path');
 const demoDir = _path.resolve(__dirname, '../../demo_dir');
 const realFs = createFileSystem();
-const fs = InMemFileSystem.fromFs(demoDir, realFs);
 
 const _fakeUi = new FakeUi();
 const ui = new FakeVsCodeNoteSearcher(_fakeUi);
@@ -82,18 +82,15 @@ describe('note searcher, demo dir', () => {
   describe('on file deleted', () => {
     const readme = _path.join(demoDir, 'readme.md');
     const trains = _path.join(demoDir, 'trains.md');
-    const trainsText = fs.readFile(trains);
+    let fs: FileSystem;
 
     beforeAll(async () => {
+      fs = InMemFileSystem.fromFs(demoDir, realFs);
       await ui.openFile(readme);
       expect(ui.linksToThisNote()).toContain(trains);
 
       fs.deleteFile(trains);
       await ui.notifyNoteDeleted(trains);
-    });
-
-    afterAll(async () => {
-      fs.writeFile(trains, trainsText);
     });
 
     it('is not in search results', async () => {
