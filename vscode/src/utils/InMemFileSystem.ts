@@ -27,6 +27,12 @@ export class InMemFileSystem implements FileSystem {
     return text;
   };
 
+  public moveFile = (oldPath: string, newPath: string) => {
+    const text = this.readFile(oldPath);
+    this.deleteFile(oldPath);
+    this.writeFile(newPath, text);
+  };
+
   public allFilesUnderPath = (path: string) => {
     const files = [];
     for (const path of this._files.keys()) {

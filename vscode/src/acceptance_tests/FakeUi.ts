@@ -1,5 +1,5 @@
 import { Link } from "../index/LinkIndex";
-import { FileChangeListener, FileDeletedListener, NoteSearcherUi } from "../ui/NoteSearcherUi";
+import { FileChangeListener, FileDeletedListener, FileMovedListener, NoteSearcherUi } from "../ui/NoteSearcherUi";
 import { File } from "../utils/File";
 
 class FakeFile implements File {
@@ -47,6 +47,7 @@ export class FakeUi implements NoteSearcherUi {
   private _deadLinks: Link[] = [];
   private _movedViewToDifferentNoteListener: FileChangeListener | null = null;
   private _noteDeletedListener: FileDeletedListener | null = null;
+  private _noteMovedListener: FileMovedListener | null = null;
 
   // queries
   public searchResults = () => this._searchResults;
@@ -67,4 +68,10 @@ export class FakeUi implements NoteSearcherUi {
       return this._noteDeletedListener(path);
     }
   };
+
+  public notifyNoteMoved(oldPath: string, newPath: string) {
+    if (this._noteMovedListener) {
+      return this._noteMovedListener(oldPath, newPath);
+    }
+  }
 }

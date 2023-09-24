@@ -23,8 +23,9 @@ const _path = require('path');
 const demoDir = _path.resolve(__dirname, '../../demo_dir');
 const realFs = createFileSystem();
 
-const _fakeUi = new FakeUi();
-const ui = new FakeVsCodeNoteSearcher(_fakeUi);
+let _fakeUi = new FakeUi();
+// todo: ui/fakeui distinction is not clear
+let ui = new FakeVsCodeNoteSearcher(_fakeUi);
 
 class FakeVsCodeExtensionContext implements VsCodeExtensionContext {
   subscriptions: { dispose(): any; }[] = [];
@@ -32,12 +33,17 @@ class FakeVsCodeExtensionContext implements VsCodeExtensionContext {
 
 jest.mock('../ui/uiCreator', () => {
   return {
-    createNoteSearcherUi: () => _fakeUi
+    createNoteSearcherUi: () => {
+      _fakeUi = new FakeUi();
+      ui = new FakeVsCodeNoteSearcher(_fakeUi);
+      return _fakeUi;
+    }
   };
 });
 
 jest.mock('../vs_code_apis/registryCreator', () => {
   return {
+    // todo: does this hold onto old ui references?
     createVsCodeRegistry: () => new FakeVsCodeRegistry(ui)
   };
 });
@@ -62,7 +68,7 @@ jest.mock('../definition_provider/defProviderCreator', () => {
   };
 });
 
-describe('note searcher, demo dir', () => {
+describe('on starting in the demo dir', () => {
   beforeAll(async () => {
     ui.openFolder(demoDir);
     await activate(new FakeVsCodeExtensionContext());
@@ -77,39 +83,68 @@ describe('note searcher, demo dir', () => {
       _path.join(demoDir, 'trains.md'),
       _path.join(demoDir, 'readme.md'),
     ]);
+
+    await ui.search('trains');
+    expect(ui.searchResults()).toEqual([
+      _path.join(demoDir, 'trains.md'),
+      _path.join(demoDir, 'readme.md'),
+    ]);
+  });
+});
+
+describe('on file deleted', () => {
+  const readme = _path.join(demoDir, 'readme.md');
+  const trains = _path.join(demoDir, 'trains.md');
+  let fs: FileSystem;
+
+  beforeAll(async () => {
+    fs = InMemFileSystem.fromFs(demoDir, realFs);
+    ui.openFolder(demoDir);
+    await activate(new FakeVsCodeExtensionContext());
+    await ui.openFile(readme);
+
+    fs.deleteFile(trains);
+    await ui.notifyNoteDeleted(trains);
   });
 
-  describe('on file deleted', () => {
-    const readme = _path.join(demoDir, 'readme.md');
-    const trains = _path.join(demoDir, 'trains.md');
-    let fs: FileSystem;
+  it('is not in search results', async () => {
+    await ui.search('trains');
+    expect(ui.linksToThisNote()).not.toContain(trains);
+  });
 
-    beforeAll(async () => {
-      fs = InMemFileSystem.fromFs(demoDir, realFs);
-      await ui.openFile(readme);
-      expect(ui.linksToThisNote()).toContain(trains);
+  it('removes incoming links from the deleted file', async () => {
+    expect(ui.linksToThisNote()).not.toContain(trains);
+  });
 
-      fs.deleteFile(trains);
-      await ui.notifyNoteDeleted(trains);
-    });
+  // todo: fix this when fixing all 'links to' behaviour
+  it.skip('removes links to the deleted file', async () => {
+    expect(ui.linksFromThisNote()).not.toContain(trains);
+  });
 
-    it('is not in search results', async () => {
-      await ui.search('trains');
-      expect(ui.linksToThisNote()).not.toContain(trains);
-    });
+  it('adds deleted file to dead links', async () => {
+    const deadLink = new Link(readme, trains);
+    expect(ui.deadLinks()).toContainEqual(deadLink);
+  });
+});
 
-    it('removes incoming links from the deleted file', async () => {
-      expect(ui.linksToThisNote()).not.toContain(trains);
-    });
+describe('on file moved', () => {
+  const readme = _path.join(demoDir, 'readme.md');
+  const oldTrainsPath = _path.join(demoDir, 'trains.md');
+  const newTrainsPath = _path.join(demoDir, 'subdir/trains.md');
+  let fs: FileSystem;
 
-    // todo: fix this when fixing all 'links to' behaviour
-    it.skip('removes links to the deleted file', async () => {
-      expect(ui.linksFromThisNote()).not.toContain(trains);
-    });
+  beforeAll(async () => {
+    fs = InMemFileSystem.fromFs(demoDir, realFs);
+    ui.openFolder(demoDir);
+    await activate(new FakeVsCodeExtensionContext());
 
-    it('adds deleted file to dead links', async () => {
-      const deadLink = new Link(readme, trains);
-      expect(ui.deadLinks()).toContainEqual(deadLink);
-    });
+    await ui.openFile(readme);
+    fs.moveFile(oldTrainsPath, newTrainsPath);
+    await ui.notifyNoteMoved(oldTrainsPath, newTrainsPath);
+  });
+
+  it('search result points to new location', async () => {
+    await ui.search('trains');
+    expect(ui.searchResults()).toContain(oldTrainsPath);
   });
 });

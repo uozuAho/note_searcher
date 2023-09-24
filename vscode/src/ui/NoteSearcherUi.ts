@@ -27,3 +27,4 @@ export interface NoteSearcherUi {
 
 export type FileChangeListener = (file: File) => Promise<void>;
 export type FileDeletedListener = (path: string) => Promise<void>;
+export type FileMovedListener = (oldPath: string, newPath: string) => Promise<void>;

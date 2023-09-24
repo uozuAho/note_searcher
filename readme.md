@@ -41,6 +41,7 @@ Run `npm run build_vsix` in the vscode directory.
 # WIP todo
 - handle file moved
     - note: no move event: renamed is fired with old + new uris
+    - prolly need to fake out fs
     - tests, after move trains to subdir:
         - search results should navigate to new location
         - wiki link should navigate to new location
@@ -48,6 +49,7 @@ Run `npm run build_vsix` in the vscode directory.
         - dead links
             - md link to trains should be dead
             - md link from trains to readme should be dead
+    - manual test above
 - handle file renamed
 - manual test: test before/after. expect:
     - (much) faster indexing

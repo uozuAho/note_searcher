@@ -6,8 +6,9 @@ export interface FileSystem {
   fileExists: (path: string) => boolean;
   readFile: (path: string) => string;
   readFileAsync: (path: string) => Promise<string>;
-  writeFile(path: any, text: any): void;
-  deleteFile(path: any): void;
+  writeFile(path: string, text: string): void;
+  deleteFile(path: string): void;
+  moveFile(oldPath: string, newPath: string): void;
   /**
    * Return all files under the given path (recursively),
    * in the current OS's path format
@@ -28,6 +29,7 @@ class NodeFileSystem implements FileSystem {
   public readFile = (path: string) => new String(fs.readFileSync(path)).toString();
   public deleteFile = (path: any) => fs.unlinkSync(path);
   public writeFile = (path: any, text: any) => fs.writeFileSync(path, text);
+  public moveFile = (oldPath: string, newPath: string) => fs.renameSync(oldPath, newPath);
 
   public readFileAsync = (path: string): Promise<string> => {
     // DIY promise, since graceful-fs doesn't override fs.promises
