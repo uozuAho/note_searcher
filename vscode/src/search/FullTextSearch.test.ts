@@ -1,4 +1,4 @@
-import { FakeFs } from './FakeFs';
+import { InMemFileSystem } from '../utils/InMemFileSystem';
 import { FullTextSearch } from './FullTextSearch';
 import { LunrDualFts } from './lunrDualFts';
 
@@ -35,7 +35,7 @@ class FileAndTags {
   ) {}
 }
 
-let fakeFs: FakeFs;
+let fakeFs: InMemFileSystem;
 
 describe('full text search', () => {
   let fts: FullTextSearch;
@@ -65,7 +65,7 @@ describe('full text search', () => {
   };
 
   beforeEach(() => {
-    fakeFs = new FakeFs();
+    fakeFs = new InMemFileSystem();
     fts = new LunrDualFts(fakeFs);
   });
 
