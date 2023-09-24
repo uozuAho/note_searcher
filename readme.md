@@ -40,10 +40,9 @@ Run `npm run build_vsix` in the vscode directory.
 
 # WIP todo
 - handle file moved
-    - note: no move event: renamed is fired with old + new uris
-    - prolly need to fake out fs
+    - WIP: fix fs in acceptance tests: read files manually instead of importing createFileSystem
     - tests, after move trains to subdir:
-        - search results should navigate to new location
+        - WIP: search results should navigate to new location
         - wiki link should navigate to new location
         - links to/from should navigate to new location
         - dead links

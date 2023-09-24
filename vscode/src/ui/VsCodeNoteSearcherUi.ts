@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 import { SearchResultTree } from './searchResultTree';
-import { NoteSearcherUi, FileChangeListener, FileDeletedListener } from './NoteSearcherUi';
+import { NoteSearcherUi, FileChangeListener, FileDeletedListener, FileMovedListener } from './NoteSearcherUi';
 import { File } from "../utils/File";
 import { DeadLinksTree } from './DeadLinksTree';
 import { LinksTree } from './LinksTree';
@@ -11,6 +11,7 @@ export class VsCodeNoteSearcherUi implements NoteSearcherUi {
   private noteSavedListener: FileChangeListener | null = null;
   private noteDeletedListener: FileDeletedListener | null = null;
   private movedViewToDifferentNoteListener: FileChangeListener | null = null;
+  private noteMovedListener: FileMovedListener | null = null;
 
   public openFile(path: any) {
     return vscode.window.showTextDocument(vscode.Uri.file(path));
@@ -127,6 +128,10 @@ export class VsCodeNoteSearcherUi implements NoteSearcherUi {
     this.noteDeletedListener = listener;
   };
 
+  public addNoteMovedListener = (listener: FileMovedListener) => {
+    this.noteMovedListener = listener;
+  };
+
   public addMovedViewToDifferentNoteListener = (listener: FileChangeListener) => {
     this.movedViewToDifferentNoteListener = listener;
   };
@@ -145,6 +150,16 @@ export class VsCodeNoteSearcherUi implements NoteSearcherUi {
       if (this.noteDeletedListener) {
         for (const file of e.files) {
           return this.noteDeletedListener(file.fsPath);
+        }
+      }
+    });
+  }
+
+  public createNoteMovedHandler(): { dispose(): any; } {
+    return vscode.workspace.onDidRenameFiles(e => {
+      if (this.noteMovedListener) {
+        for (const file of e.files) {
+          return this.noteMovedListener(file.oldUri.fsPath, file.newUri.fsPath);
         }
       }
     });

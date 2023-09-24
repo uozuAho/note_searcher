@@ -21,10 +21,12 @@ import { FileSystem } from "../utils/FileSystem";
 
 const _path = require('path');
 const demoDir = _path.resolve(__dirname, '../../demo_dir');
+// todo: read files manually from fs instead, insert into memfs
 const realFs = createFileSystem();
 
 let _fakeUi = new FakeUi();
 let ns = new FakeVsCodeNoteSearcher(_fakeUi);
+let fs: FileSystem = InMemFileSystem.fromFs(demoDir, realFs);
 
 class FakeVsCodeExtensionContext implements VsCodeExtensionContext {
   subscriptions: { dispose(): any; }[] = [];
@@ -69,6 +71,12 @@ jest.mock('../definition_provider/defProviderCreator', () => {
   };
 });
 
+jest.mock('../utils/FileSystem', () => {
+  return {
+    createFileSystem: () => fs
+  };
+});
+
 describe('on starting in the demo dir', () => {
   beforeAll(async () => {
     await activate(new FakeVsCodeExtensionContext());
@@ -96,7 +104,6 @@ describe('on starting in the demo dir', () => {
 describe('on file deleted', () => {
   const readme = _path.join(demoDir, 'readme.md');
   const trains = _path.join(demoDir, 'trains.md');
-  let fs: FileSystem;
 
   beforeAll(async () => {
     fs = InMemFileSystem.fromFs(demoDir, realFs);
@@ -132,7 +139,6 @@ describe('on file moved', () => {
   const readme = _path.join(demoDir, 'readme.md');
   const oldTrainsPath = _path.join(demoDir, 'trains.md');
   const newTrainsPath = _path.join(demoDir, 'subdir/trains.md');
-  let fs: FileSystem;
 
   beforeAll(async () => {
     fs = InMemFileSystem.fromFs(demoDir, realFs);

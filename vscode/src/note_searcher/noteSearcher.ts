@@ -6,7 +6,7 @@ import { MultiIndex } from "../index/MultiIndex";
 import { createDiagnostics, Diagnostics } from "../diagnostics/diagnostics";
 import { TimeProvider, createTimeProvider } from "../utils/timeProvider";
 import { formatDateTime_YYYYMMddhhmm } from "../utils/timeFormatter";
-import { posixRelativePath } from "../utils/FileSystem";
+import { FileSystem, posixRelativePath } from "../utils/FileSystem";
 
 export class NoteSearcher {
   private previousSearchInput = '';
@@ -15,10 +15,12 @@ export class NoteSearcher {
   constructor(
     private ui: NoteSearcherUi,
     private index: MultiIndex,
+    private fs: FileSystem,
     private timeProvider: TimeProvider = createTimeProvider())
   {
     ui.addNoteSavedListener(this.notifyNoteSaved);
     ui.addNoteDeletedListener(this.notifyNoteDeleted);
+    ui.addNoteMovedListener(this.notifyNoteMoved);
     ui.addMovedViewToDifferentNoteListener(this.notifyMovedViewToDifferentNote);
     this.diagnostics = createDiagnostics('noteSearcher');
   }
@@ -171,6 +173,18 @@ export class NoteSearcher {
     this.diagnostics.trace('note deleted');
 
     await this.index.onFileDeleted(path);
+    this.showBacklinks();
+    this.showForwardLinks();
+    this.showDeadLinks();
+    this.showTags();
+  };
+
+  private notifyNoteMoved = async (oldPath: string, newPath: string) => {
+    this.diagnostics.trace('note moved');
+
+    const text = this.fs.readFile(newPath);
+    await this.index.onFileDeleted(oldPath);
+    await this.index.onFileModified(newPath, text);
     this.showBacklinks();
     this.showForwardLinks();
     this.showDeadLinks();

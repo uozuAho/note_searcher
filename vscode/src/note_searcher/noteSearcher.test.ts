@@ -4,11 +4,13 @@ import { NoteSearcher } from './noteSearcher';
 import { MultiIndex } from '../index/MultiIndex';
 import { MockUi } from "../mocks/MockUi";
 import { MockFile } from "../mocks/MockFile";
+import { FileSystem } from "../utils/FileSystem";
 
 describe('NoteSearcher', () => {
   let ui: MockUi;
   let searcher: tmoq.IMock<MultiIndex>;
   let noteSearcher: NoteSearcher;
+  let fs: tmoq.IMock<FileSystem>;
 
   const searcher_returns = (results: string[]) => {
     searcher.setup(s =>
@@ -22,8 +24,9 @@ describe('NoteSearcher', () => {
     beforeEach(() => {
       ui = new MockUi();
       searcher = tmoq.Mock.ofType<MultiIndex>();
+      fs = tmoq.Mock.ofType<FileSystem>();
 
-      noteSearcher = new NoteSearcher(ui, searcher.object);
+      noteSearcher = new NoteSearcher(ui, searcher.object, fs.object);
     });
 
     it('updates index', async () => {
@@ -41,7 +44,7 @@ describe('NoteSearcher', () => {
       ui = new MockUi();
       searcher = tmoq.Mock.ofType<MultiIndex>();
 
-      noteSearcher = new NoteSearcher(ui, searcher.object);
+      noteSearcher = new NoteSearcher(ui, searcher.object, fs.object);
     });
 
     it('passes input to searcher', async () => {
@@ -86,7 +89,7 @@ describe('NoteSearcher', () => {
       ui = new MockUi();
       searcher = tmoq.Mock.ofType<MultiIndex>();
 
-      noteSearcher = new NoteSearcher(ui, searcher.object);
+      noteSearcher = new NoteSearcher(ui, searcher.object, fs.object);
     });
 
     it('shows indexing in progress', async () => {
@@ -147,7 +150,7 @@ describe('NoteSearcher', () => {
       ui = new MockUi();
       searcher = tmoq.Mock.ofType<MultiIndex>();
 
-      noteSearcher = new NoteSearcher(ui, searcher.object);
+      noteSearcher = new NoteSearcher(ui, searcher.object, fs.object);
     });
 
     it('copies link relative to open file', () => {
@@ -191,7 +194,7 @@ describe('NoteSearcher', () => {
       ui = new MockUi();
       searcher = tmoq.Mock.ofType<MultiIndex>();
 
-      noteSearcher = new NoteSearcher(ui, searcher.object);
+      noteSearcher = new NoteSearcher(ui, searcher.object, fs.object);
     });
 
     it('copies wiki link with filename without extension', () => {
@@ -237,7 +240,7 @@ describe('NoteSearcher', () => {
 
       ui.currentlyOpenDirReturns('a directory');
 
-      noteSearcher = new NoteSearcher(ui, searcher.object);
+      noteSearcher = new NoteSearcher(ui, searcher.object, fs.object);
     });
 
     it('shows dead links', () => {
@@ -258,7 +261,7 @@ describe('NoteSearcher', () => {
 
       ui.currentlyOpenDirReturns('a directory');
 
-      noteSearcher = new NoteSearcher(ui, searcher.object);
+      noteSearcher = new NoteSearcher(ui, searcher.object, fs.object);
     });
 
     it('checks for dead links', async () => {

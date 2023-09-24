@@ -6,10 +6,12 @@ import { VsCodeExtensionContext } from './vs_code_apis/extensionContext';
 import { createVsCodeRegistry } from './vs_code_apis/registryCreator';
 import { createTagCompleter } from './tag_completion/tagCompleterCreator';
 import { createWikiLinkDefinitionProvider } from './definition_provider/defProviderCreator';
+import { createFileSystem } from './utils/FileSystem';
 
 export const extensionId = 'uozuaho.note-searcher';
 
 export async function activate(context: VsCodeExtensionContext) {
+  const fs = createFileSystem();
   const ui = createNoteSearcherUi();
   const registry = createVsCodeRegistry();
   const workspaceDir = ui.currentlyOpenDir();
@@ -17,7 +19,7 @@ export async function activate(context: VsCodeExtensionContext) {
     return;
   }
   const multiIndex = createMultiIndex(workspaceDir);
-  const noteSearcher = new NoteSearcher(ui, multiIndex);
+  const noteSearcher = new NoteSearcher(ui, multiIndex, fs);
   const noteLocator = new NoteLocator(multiIndex);
 
   context.subscriptions.push(
@@ -55,6 +57,7 @@ export async function activate(context: VsCodeExtensionContext) {
 
     ui.createNoteSavedHandler(),
     ui.createNoteDeletedHandler(),
+    ui.createNoteMovedHandler(),
     ui.createMovedViewToDifferentNoteHandler()
   );
 

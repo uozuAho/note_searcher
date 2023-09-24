@@ -30,11 +30,13 @@ export class FakeUi implements NoteSearcherUi {
   public showError = (e: Error) => Promise.resolve();
   public addNoteSavedListener = (listener: FileChangeListener) => { };
   public addNoteDeletedListener = (listener: FileDeletedListener) => { this._noteDeletedListener = listener; };
+  public addNoteMovedListener = (listener: FileMovedListener) => { this._noteMovedListener = listener; };
   public addMovedViewToDifferentNoteListener = (listener: FileChangeListener) => {
     this._movedViewToDifferentNoteListener = listener;
   };
   public createNoteSavedHandler = () => { return { dispose: () => { } }; };
   public createNoteDeletedHandler = () => { return { dispose: () => { } }; };
+  public createNoteMovedHandler = () => { return { dispose: () => { } }; };
   public createMovedViewToDifferentNoteHandler = () => { return { dispose: () => { } }; };
   // end UI interface
 

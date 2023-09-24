@@ -19,12 +19,15 @@ export interface NoteSearcherUi {
   showError: (e: Error) => Promise<void>;
   addNoteSavedListener: (listener: FileChangeListener) => void;
   addNoteDeletedListener: (listener: FileDeletedListener) => void;
+  addNoteMovedListener: (listener: FileMovedListener) => void;
   addMovedViewToDifferentNoteListener: (listener: FileChangeListener) => void;
-  createMovedViewToDifferentNoteHandler(): { dispose(): any; };
-  createNoteDeletedHandler(): { dispose(): any; };
-  createNoteSavedHandler(): { dispose(): any; };
+  createMovedViewToDifferentNoteHandler(): Disposable;
+  createNoteDeletedHandler(): Disposable;
+  createNoteSavedHandler(): Disposable;
+  createNoteMovedHandler(): Disposable;
 }
 
+type Disposable = { dispose(): any; };
 export type FileChangeListener = (file: File) => Promise<void>;
 export type FileDeletedListener = (path: string) => Promise<void>;
 export type FileMovedListener = (oldPath: string, newPath: string) => Promise<void>;
