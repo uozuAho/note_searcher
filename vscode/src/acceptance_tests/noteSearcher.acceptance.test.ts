@@ -15,8 +15,9 @@ import { FakeUi } from "./FakeUi";
 import { FakeVsCodeNoteSearcher } from "./FakeVsCodeNoteSearcher";
 import { FakeVsCodeRegistry } from "./FakeVsCodeRegistry";
 import { Link } from "../index/LinkIndex";
+import { createFileSystem } from "../utils/FileSystem";
 
-const fs = require('fs');
+const fs = createFileSystem();
 const _path = require('path');
 const demoDir = _path.resolve(__dirname, '../../demo_dir');
 
@@ -79,18 +80,23 @@ describe('note searcher, demo dir', () => {
   describe('on file deleted', () => {
     const readme = _path.join(demoDir, 'readme.md');
     const trains = _path.join(demoDir, 'trains.md');
-    const trainsText = fs.readFileSync(trains, 'utf8');
+    const trainsText = fs.readFile(trains);
 
     beforeAll(async () => {
       await ui.openFile(readme);
       expect(ui.linksToThisNote()).toContain(trains);
 
-      fs.unlinkSync(trains);
+      fs.deleteFile(trains);
       await ui.notifyNoteDeleted(trains);
     });
 
     afterAll(async () => {
-      fs.writeFileSync(trains, trainsText);
+      fs.writeFile(trains, trainsText);
+    });
+
+    it('is not in search results', async () => {
+      await ui.search('trains');
+      expect(ui.linksToThisNote()).not.toContain(trains);
     });
 
     it('removes incoming links from the deleted file', async () => {

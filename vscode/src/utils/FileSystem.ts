@@ -6,6 +6,8 @@ export interface FileSystem {
   fileExists: (path: string) => boolean;
   readFile: (path: string) => string;
   readFileAsync: (path: string) => Promise<string>;
+  writeFile(path: any, text: any): void;
+  deleteFile(path: any): void;
   /**
    * Return all files under the given path (recursively),
    * in the current OS's path format
@@ -22,9 +24,10 @@ class NodeFileSystem implements FileSystem {
     private _diagnostics = createDiagnostics('FileSystem')
   ) {}
 
-  public readFile = (path: string) => {
-    return new String(fs.readFileSync(path)).toString();
-  };
+  public fileExists = (path: string) => fs.existsSync(path);
+  public readFile = (path: string) => new String(fs.readFileSync(path)).toString();
+  public deleteFile = (path: any) => fs.unlinkSync(path);
+  public writeFile = (path: any, text: any) => fs.writeFileSync(path, text);
 
   public readFileAsync = (path: string): Promise<string> => {
     // DIY promise, since graceful-fs doesn't override fs.promises
@@ -38,7 +41,6 @@ class NodeFileSystem implements FileSystem {
     });
   };
 
-  public fileExists = (path: string) => fs.existsSync(path);
 
   public allFilesUnderPath = (path: string, ignore: (path: string) => boolean): Iterable<string> => {
     this._diagnostics.trace('allFilesUnderPath: start');

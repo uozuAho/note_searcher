@@ -39,13 +39,6 @@ Run `npm run build_vsix` in the vscode directory.
 
 
 # WIP todo
-- handle file deleted
-    - DONE: links to
-    - DONE: links from
-    - DONE: dead links
-    - tags
-    - ignored files
-- manual test: copy acceptance tests
 - fix e2e test filesystem conflicts
     - happeneing quite regularly
     - options

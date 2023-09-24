@@ -1,4 +1,4 @@
-import { FileSystem } from '../utils/FileSystem';
+import { FakeFs } from './FakeFs';
 import { FullTextSearch } from './FullTextSearch';
 import { LunrDualFts } from './lunrDualFts';
 
@@ -35,34 +35,6 @@ class FileAndTags {
   ) {}
 }
 
-class FakeFs implements FileSystem {
-  private _files: Map<string, string> = new Map();
-
-  public addFile = (path: string, text: string) => this._files.set(path, text);
-  public isIgnored = (path: string) => false;
-  public fileExists = (path: string) => this._files.has(path);
-  public readFileAsync = (path: string) => Promise.resolve(this.readFile(path));
-  public deleteFile = (path: string) => this._files.delete(path);
-
-  public readFile = (path: string) => {
-    const text = this._files.get(path);
-    if (!text) {
-      throw new Error(`file not found: ${path}`);
-    }
-    return text;
-  };
-
-  public allFilesUnderPath = (path: string) => {
-    const files = [];
-    for (const path of this._files.keys()) {
-      if (path.startsWith(path)) {
-        files.push(path);
-      }
-    }
-    return files;
-  };
-}
-
 let fakeFs: FakeFs;
 
 describe('full text search', () => {
@@ -72,7 +44,7 @@ describe('full text search', () => {
     fts = new LunrDualFts(fakeFs);
     for (const file of files) {
       await fts.addFile(file.path, file.text, file.tags);
-      fakeFs.addFile(file.path, file.text);
+      fakeFs.writeFile(file.path, file.text);
     }
   };
 
@@ -83,7 +55,7 @@ describe('full text search', () => {
   };
 
   const modifyFile = async (file: FileAndTags) => {
-    fakeFs.addFile(file.path, file.text);
+    fakeFs.writeFile(file.path, file.text);
     await fts.onFileModified(file.path, file.text, file.tags);
   };
 
