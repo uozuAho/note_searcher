@@ -16,10 +16,12 @@ import { FakeVsCodeNoteSearcher } from "./FakeVsCodeNoteSearcher";
 import { FakeVsCodeRegistry } from "./FakeVsCodeRegistry";
 import { Link } from "../index/LinkIndex";
 import { createFileSystem } from "../utils/FileSystem";
+import { FakeFs } from "../search/FakeFs";
 
-const fs = createFileSystem();
 const _path = require('path');
 const demoDir = _path.resolve(__dirname, '../../demo_dir');
+const realFs = createFileSystem();
+const fs = FakeFs.fromFs(demoDir, realFs);
 
 const _fakeUi = new FakeUi();
 const ui = new FakeVsCodeNoteSearcher(_fakeUi);
