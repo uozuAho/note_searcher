@@ -153,4 +153,9 @@ describe('on file moved', () => {
     await ns.search('trains');
     expect(ns.searchResults()).toContain(newTrainsPath);
   });
+
+  // todo: enable once link index is fixed
+  it.skip('links to this note point to new location', async () => {
+    expect(ns.linksToThisNote()).toContain(newTrainsPath);
+  });
 });

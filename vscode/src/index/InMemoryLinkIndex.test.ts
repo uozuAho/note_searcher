@@ -1,4 +1,5 @@
 import { InMemoryLinkIndex } from "./InMemoryLinkIndex";
+import { Link } from "./LinkIndex";
 
 describe('InMemoryLinkIndex, mocked filesystem', () => {
   describe('when a file is added', () => {
@@ -90,6 +91,46 @@ describe('InMemoryLinkIndex, mocked filesystem', () => {
     it('removes links', () => {
       expect(index.linksTo(note2)).toEqual([]);
       expect(index.linksFrom(note1)).toEqual([]);
+    });
+  });
+
+  describe('when a file is moved', () => {
+    let index: InMemoryLinkIndex;
+    const note1 = process.platform === 'win32' ? 'C:\\a\\note1.md' : '/a/note1.md';
+    const note2old = process.platform === 'win32' ? 'C:\\a\\note2.md' : '/a/note2.md';
+    const note2new = process.platform === 'win32' ? 'C:\\a\\subdir\\note2.md' : '/a/subdir/note2.md';
+    const note2text = 'has a wiki link: [[link | note1]]';
+
+    beforeAll(() => {
+      index = new InMemoryLinkIndex();
+      index.addFile(note1, 'has a markdown link: [link](note2.md)');
+      index.addFile(note2old, note2text);
+      index.finalise();
+      index.onFileMoved(note2old, note2new, note2text);
+
+      // todo:test:
+      // index.notes
+    });
+
+    it('updates links from', () => {
+      expect(index.linksFrom(note2new)).toEqual([note1]);
+    });
+
+    it('updates dead links', () => {
+      expect(index.findAllDeadLinks()).toEqual([new Link(note1, note2old)]);
+    });
+
+    it('updates links to', () => {
+      index.onFileModified(note1, 'fixed markdown link: [link](subdir/note2.md)');
+      expect(index.linksTo(note2new)).toEqual([note1]);
+    });
+
+    it('updates absolute paths', () => {
+      expect(index.filenameToAbsPath('note2')).toEqual([note2new]);
+    });
+
+    it('updates notes', () => {
+      expect(Array.from(index.notes())).toEqual([note1, note2new]);
     });
   });
 

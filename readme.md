@@ -41,13 +41,13 @@ Run `npm run build_vsix` in the vscode directory.
 # WIP todo
 - handle file moved
     - tests, after move trains to subdir:
-        - WIP: search results should navigate to new location
-        - wiki link should navigate to new location
-        - links to/from should navigate to new location
+        - DONE: search results should navigate to new location
+        - WIP: links to/from should navigate to new location
         - dead links
             - md link to trains should be dead
             - md link from trains to readme should be dead
-    - manual test above
+        - MANUAL TEST: wiki link should navigate to new location
+    - manual test all above
 - handle file renamed
 - manual test: test before/after. expect:
     - (much) faster indexing
