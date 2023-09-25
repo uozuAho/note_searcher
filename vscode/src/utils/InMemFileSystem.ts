@@ -1,6 +1,12 @@
 import { FileSystem } from './FileSystem';
 
+interface File {
+  path: string;
+  text: string;
+}
+
 export class InMemFileSystem implements FileSystem {
+
   private _files: Map<string, string> = new Map();
 
   /**
@@ -10,6 +16,14 @@ export class InMemFileSystem implements FileSystem {
     const newFs = new InMemFileSystem();
     for (const path of fs.allFilesUnderPath(root, () => false)) {
       newFs.writeFile(path, fs.readFile(path));
+    }
+    return newFs;
+  }
+
+  public static fromFiles(files: File[]): FileSystem {
+    const newFs = new InMemFileSystem();
+    for (const file of files) {
+      newFs.writeFile(file.path, file.text);
     }
     return newFs;
   }

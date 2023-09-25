@@ -15,18 +15,17 @@ import { FakeUi } from "./FakeUi";
 import { FakeVsCodeNoteSearcher } from "./FakeVsCodeNoteSearcher";
 import { FakeVsCodeRegistry } from "./FakeVsCodeRegistry";
 import { Link } from "../index/LinkIndex";
-import { createFileSystem } from "../utils/FileSystem";
 import { InMemFileSystem } from "../utils/InMemFileSystem";
 import { FileSystem } from "../utils/FileSystem";
+import { allFilesUnderPath } from "./readAllFiles";
 
 const _path = require('path');
 const demoDir = _path.resolve(__dirname, '../../demo_dir');
-// todo: read files manually from fs instead, insert into memfs
-const realFs = createFileSystem();
 
 let _fakeUi = new FakeUi();
 let ns = new FakeVsCodeNoteSearcher(_fakeUi);
-let fs: FileSystem = InMemFileSystem.fromFs(demoDir, realFs);
+const demoDirFiles = allFilesUnderPath(demoDir);
+let fs: FileSystem = InMemFileSystem.fromFiles(demoDirFiles);
 
 class FakeVsCodeExtensionContext implements VsCodeExtensionContext {
   subscriptions: { dispose(): any; }[] = [];
@@ -106,7 +105,7 @@ describe('on file deleted', () => {
   const trains = _path.join(demoDir, 'trains.md');
 
   beforeAll(async () => {
-    fs = InMemFileSystem.fromFs(demoDir, realFs);
+    fs = InMemFileSystem.fromFiles(demoDirFiles);
     await activate(new FakeVsCodeExtensionContext());
     ns.openFolder(demoDir);
     await ns.openFile(readme);
@@ -141,7 +140,7 @@ describe('on file moved', () => {
   const newTrainsPath = _path.join(demoDir, 'subdir/trains.md');
 
   beforeAll(async () => {
-    fs = InMemFileSystem.fromFs(demoDir, realFs);
+    fs = InMemFileSystem.fromFiles(demoDirFiles);
     await activate(new FakeVsCodeExtensionContext());
     ns.openFolder(demoDir);
 

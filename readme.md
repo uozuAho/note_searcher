@@ -40,7 +40,6 @@ Run `npm run build_vsix` in the vscode directory.
 
 # WIP todo
 - handle file moved
-    - WIP: fix fs in acceptance tests: read files manually instead of importing createFileSystem
     - tests, after move trains to subdir:
         - WIP: search results should navigate to new location
         - wiki link should navigate to new location
