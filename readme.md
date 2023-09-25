@@ -42,11 +42,11 @@ Run `npm run build_vsix` in the vscode directory.
 - handle file moved
     - tests, after move trains to subdir:
         - DONE: search results should navigate to new location
-        - WIP: links to/from should navigate to new location
-        - dead links
-            - md link to trains should be dead
-            - md link from trains to readme should be dead
+        - DONE: links to/from should navigate to new location
+        - WIP: dead links
+            - see inline todos for failing tests
         - MANUAL TEST: wiki link should navigate to new location
+    - on move ignored file
     - manual test all above
 - handle file renamed
 - manual test: test before/after. expect:
@@ -61,6 +61,7 @@ Run `npm run build_vsix` in the vscode directory.
 - fix later: 'links from this note'
     - doesn't show all links, eg. demo_dir/readme links to 'not_a_note.bin'
     - shows dead links, eg delete trains, still shows link to trains
+        - this is dumb, and confusing when you've moved a file (shows both)
 ## code notes: from before my indexing changes
 ### on save
 - noteSearcher.notifyNoteSaved

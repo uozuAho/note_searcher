@@ -34,6 +34,7 @@ export class InMemoryLinkIndex implements LinkIndex, NoteIndex {
   };
 
   public linksFrom(path: string): string[] {
+    // todo: outgoing wiki links should be built here rather than stored against notes
     const links = this._notesByAbsPath.get(path)?.outgoingLinks || [];
     return Array.from(links);
   }
@@ -108,11 +109,6 @@ export class InMemoryLinkIndex implements LinkIndex, NoteIndex {
     if (absPaths) {
       this._absPathsByFilename.set(filename, absPaths.filter(path => path !== absPath));
     }
-  }
-
-  public onFileMoved(oldPath: string, newPath: string, fileText: string) {
-    this.onFileDeleted(oldPath);
-    this.onFileModified(newPath, fileText);
   }
 
   private populateBacklinks = () => {

@@ -125,7 +125,7 @@ describe('DefaultMultiIndex, demo dir, linksFrom', () => {
   it('train links to readme', async () => {
     await index.indexAllFiles(demoDir);
 
-    expect(index.linksFrom(trainsPath)).toStrictEqual([readmePath]);
+    expect(index.linksFrom(trainsPath)).toContain(readmePath);
   });
 
   it('ignores node_modules', async () => {

@@ -106,10 +106,8 @@ describe('InMemoryLinkIndex, mocked filesystem', () => {
       index.addFile(note1, 'has a markdown link: [link](note2.md)');
       index.addFile(note2old, note2text);
       index.finalise();
-      index.onFileMoved(note2old, note2new, note2text);
-
-      // todo:test:
-      // index.notes
+      index.onFileDeleted(note2old);
+      index.onFileModified(note2new, note2text);
     });
 
     it('updates links from', () => {

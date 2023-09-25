@@ -95,6 +95,7 @@ describe('on starting in the demo dir', () => {
     await ns.search('trains');
     expect(ns.searchResults()).toEqual([
       _path.join(demoDir, 'trains.md'),
+      _path.join(demoDir, 'cheese.md'),
       _path.join(demoDir, 'readme.md'),
     ]);
   });
@@ -136,6 +137,7 @@ describe('on file deleted', () => {
 
 describe('on file moved', () => {
   const readme = _path.join(demoDir, 'readme.md');
+  const cheese = _path.join(demoDir, 'cheese.md');
   const oldTrainsPath = _path.join(demoDir, 'trains.md');
   const newTrainsPath = _path.join(demoDir, 'subdir/trains.md');
 
@@ -154,8 +156,31 @@ describe('on file moved', () => {
     expect(ns.searchResults()).toContain(newTrainsPath);
   });
 
-  // todo: enable once link index is fixed
-  it.skip('links to this note point to new location', async () => {
+  it('links to this note point to new location', async () => {
+    await ns.openFile(cheese);
     expect(ns.linksToThisNote()).toContain(newTrainsPath);
+
+    await ns.openFile(newTrainsPath);
+    expect(ns.linksToThisNote()).toContain(readme);
+  });
+
+  it('links from this note point to new location', async () => {
+    await ns.openFile(readme);
+    expect(ns.linksFromThisNote()).toContain(newTrainsPath);
+
+    await ns.openFile(newTrainsPath);
+    expect(ns.linksFromThisNote()).toContain(cheese);
+  });
+
+  it('updates dead links', async () => {
+    // these are both markdown links, so their paths become
+    // invalid when the file is moved
+    const deadLinks = ns.deadLinks();
+    expect(deadLinks).toContainEqual(new Link(readme, oldTrainsPath));
+
+    const incorrectReadmePath = _path.join(demoDir, 'subdir/readme.md');
+    expect(deadLinks).toContainEqual(new Link(newTrainsPath, incorrectReadmePath));
+
+    expect(deadLinks).not.toContainEqual(new Link(cheese, oldTrainsPath));
   });
 });
