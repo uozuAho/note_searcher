@@ -28,7 +28,10 @@ export async function activate(context: VsCodeExtensionContext) {
     registry.registerCommand(
       'noteSearcher.searchForTag', async (tag: string) => await noteSearcher.search('#' + tag)),
     registry.registerCommand(
-      'noteSearcher.index', async () => await noteSearcher.indexWorkspace()),
+      'noteSearcher.index', async () => {
+        await noteSearcher.indexWorkspace();
+        noteSearcher.refreshSidebar();
+      }),
     registry.registerCommand(
       'noteSearcher.openFile', uri => ui.openFile(uri.fsPath)),
     registry.registerCommand(

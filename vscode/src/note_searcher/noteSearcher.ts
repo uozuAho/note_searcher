@@ -112,12 +112,7 @@ export class NoteSearcher {
   public notifyExtensionActivated = async () => {
     if (!this.ui.currentlyOpenDir()) { return; }
     await this.indexWorkspace();
-    this.showTags();
-    this.showDeadLinks();
-    if (this.ui.getCurrentFile()) {
-      this.showBacklinks();
-      this.showForwardLinks();
-    }
+    this.refreshSidebar();
   };
 
   public markdownLinkToClipboard = (filePath: string) => {
@@ -146,14 +141,21 @@ export class NoteSearcher {
     return `[[${filename}]]`;
   };
 
-  public showBacklinks = () => {
+  public refreshSidebar = () => {
+    this.showBacklinks();
+    this.showForwardLinks();
+    this.showDeadLinks();
+    this.showTags();
+  };
+
+  private showBacklinks = () => {
     const currentFilePath = this.ui.getCurrentFile()?.path();
     if (!currentFilePath) { return; }
     const backlinks = this.index.linksTo(currentFilePath);
     this.ui.showBacklinks(backlinks);
   };
 
-  public showForwardLinks = () => {
+  private showForwardLinks = () => {
     const currentFilePath = this.ui.getCurrentFile()?.path();
     if (!currentFilePath) { return; }
     const links = this.index.linksFrom(currentFilePath);
@@ -169,20 +171,14 @@ export class NoteSearcher {
     this.diagnostics.trace('note saved');
 
     await this.index.onFileModified(file.path(), file.text());
-    this.showBacklinks();
-    this.showForwardLinks();
-    this.showDeadLinks();
-    this.showTags();
+    this.refreshSidebar();
   };
 
   private notifyNoteDeleted = async (path: string) => {
     this.diagnostics.trace('note deleted');
 
     await this.index.onFileDeleted(path);
-    this.showBacklinks();
-    this.showForwardLinks();
-    this.showDeadLinks();
-    this.showTags();
+    this.refreshSidebar();
   };
 
   private notifyNoteMoved = async (oldPath: string, newPath: string) => {
@@ -191,10 +187,7 @@ export class NoteSearcher {
     const text = this.fs.readFile(newPath);
     await this.index.onFileDeleted(oldPath);
     await this.index.onFileModified(newPath, text);
-    this.showBacklinks();
-    this.showForwardLinks();
-    this.showDeadLinks();
-    this.showTags();
+    this.refreshSidebar();
   };
 
   private notifyMovedViewToDifferentNote = async (file: File) => {

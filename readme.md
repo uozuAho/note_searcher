@@ -38,11 +38,6 @@ configuration.
 Run `npm run build_vsix` in the vscode directory.
 
 
-# WIP todo
-- 'links from this note'
-    - doesn't show all links, eg. demo_dir/readme links to 'not_a_note.bin'
-    - shows dead links, eg delete trains, still shows link to trains
-        - this is dumb, and confusing when you've moved a file (shows both)
 # todo
 - feature: autocomplete wikilinks
 - feature: make paths queryable. Eg. i want to exclude ABC from path, but not contents

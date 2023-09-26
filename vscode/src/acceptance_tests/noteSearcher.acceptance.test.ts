@@ -118,7 +118,6 @@ describe('on starting in the demo dir', () => {
       _path.join(demoDir, 'cheese.md'),
       _path.join(demoDir, 'subdir/cheese.md'),
       _path.join(demoDir, 'trains.md'),
-      _path.join(demoDir, 'to/nowhere.md'),
     ]);
   });
 });

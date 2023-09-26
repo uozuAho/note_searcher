@@ -37,12 +37,9 @@ export class InMemoryLinkIndex implements LinkIndex, NoteIndex {
     const note = this._notesByAbsPath.get(path);
     if (!note) { return []; }
 
-    const wikiLinks = Array.from(note.outgoingWikiLinkFilenames)
-      .map(filename => this._absPathsByFilename.get(filename))
-      .filter(absPath => !!absPath)
-      .flat() as string[];
-
-    return Array.from(new Set([...wikiLinks, ...note.outgoingMdLinks]));
+    return this
+      .allLinksFrom(note)
+      .filter(link => this.containsNote(link));
   }
 
   public linksTo = (path: string): string[] => {
@@ -53,7 +50,7 @@ export class InMemoryLinkIndex implements LinkIndex, NoteIndex {
   public findAllDeadLinks(): Link[] {
     const deadLinks = [];
     for (const [source, note] of this._notesByAbsPath) {
-      const outgoingLinks = this.linksFrom(source);
+      const outgoingLinks = this.allLinksFrom(note);
       for (const dest of outgoingLinks) {
         if (!this.containsNote(dest)) {
           deadLinks.push(new Link(source, dest));
@@ -130,6 +127,17 @@ export class InMemoryLinkIndex implements LinkIndex, NoteIndex {
       }
     }
   };
+
+  private allLinksFrom(note: Note) {
+    const all = Array.from(note.outgoingWikiLinkFilenames)
+      .map(filename => this._absPathsByFilename.get(filename))
+      .filter(absPath => !!absPath)
+      .flat()
+      .concat(Array.from(note.outgoingMdLinks)) as string[];
+
+    // dedupe
+    return Array.from(new Set(all));
+  }
 }
 
 class Note {
