@@ -39,15 +39,6 @@ Run `npm run build_vsix` in the vscode directory.
 
 
 # WIP todo
-- add manual full reindex if not there already - cater for external fs changes
-- manual test: test before/after. expect:
-    - (much) faster indexing
-    - otherwise same behaviour
-- maybe: DefaultMultiIndex: merge addFile and onFileModified?
-- fix later: 'links from this note' not updated on save
-    - discovered during dev, existing behaviour
-- fix later: extension not activated when no directory is open: provide a help
-  message
 - later: replace mocked/other high level tests with acceptance tests
 - fix later: 'links from this note'
     - doesn't show all links, eg. demo_dir/readme links to 'not_a_note.bin'

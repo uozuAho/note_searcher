@@ -114,6 +114,10 @@ export class NoteSearcher {
     await this.indexWorkspace();
     this.showTags();
     this.showDeadLinks();
+    if (this.ui.getCurrentFile()) {
+      this.showBacklinks();
+      this.showForwardLinks();
+    }
   };
 
   public markdownLinkToClipboard = (filePath: string) => {
@@ -165,6 +169,8 @@ export class NoteSearcher {
     this.diagnostics.trace('note saved');
 
     await this.index.onFileModified(file.path(), file.text());
+    this.showBacklinks();
+    this.showForwardLinks();
     this.showDeadLinks();
     this.showTags();
   };
