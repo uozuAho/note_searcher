@@ -172,7 +172,7 @@ describe('on file moved', () => {
   });
 
   it('updates dead links', async () => {
-    // these are both markdown links, so their paths become
+    // these are markdown links, so their paths become
     // invalid when the file is moved
     const deadLinks = ns.deadLinks();
     expect(deadLinks).toContainEqual(new Link(readme, oldTrainsPath));

@@ -43,12 +43,10 @@ Run `npm run build_vsix` in the vscode directory.
     - tests, after move trains to subdir:
         - DONE: search results should navigate to new location
         - DONE: links to/from should navigate to new location
-        - WIP: dead links
-            - see inline todos for failing tests
-                - WIP: build outgoing links on query
+        - DONE: dead links
         - MANUAL TEST: wiki link should navigate to new location
-    - on move ignored file
     - manual test all above
+    - on move ignored file
 - handle file renamed
 - manual test: test before/after. expect:
     - (much) faster indexing

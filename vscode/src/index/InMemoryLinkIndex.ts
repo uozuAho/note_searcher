@@ -53,7 +53,8 @@ export class InMemoryLinkIndex implements LinkIndex, NoteIndex {
   public findAllDeadLinks(): Link[] {
     const deadLinks = [];
     for (const [source, note] of this._notesByAbsPath) {
-      for (const dest of note.outgoingLinks) {
+      const outgoingLinks = this.linksFrom(source);
+      for (const dest of outgoingLinks) {
         if (!this.containsNote(dest)) {
           deadLinks.push(new Link(source, dest));
         }
@@ -83,17 +84,13 @@ export class InMemoryLinkIndex implements LinkIndex, NoteIndex {
       .filter(link => !link.startsWith('http'))
       .filter(link => isANote(link))
       .map(link => toAbsolutePath(absPath, link))
-      .forEach(link => {
-        note.outgoingLinks.add(link);
-        note.outgoingMdLinks.add(link);
-      });
+      .forEach(link => note.outgoingMdLinks.add(link));
 
     extractWikiLinks(text)
       .forEach(link => note.outgoingWikiLinkFilenames.push(link as string));
   };
 
   public finalise = () => {
-    this.populateOutgoingWikiLinks();
     this.populateBacklinks();
   };
 
@@ -122,26 +119,12 @@ export class InMemoryLinkIndex implements LinkIndex, NoteIndex {
 
   private populateBacklinks = () => {
     for (const [sourcePath, sourceNote] of this._notesByAbsPath) {
-      for (const targetPath of sourceNote.outgoingLinks) {
+      const outgoingLinks = this.linksFrom(sourcePath);
+      for (const targetPath of outgoingLinks) {
         this._notesByAbsPath.get(targetPath)?.incomingLinks.add(sourcePath);
       }
     }
   };
-
-  private populateOutgoingWikiLinks() {
-    for (const [_, note] of this._notesByAbsPath) {
-      note.outgoingWikiLinkFilenames
-        .map(filename => this._absPathsByFilename.get(filename))
-        .filter(absPath => !!absPath)
-        .forEach(links => {
-          if (links) {
-            for (const link of links) {
-              note.outgoingLinks.add(link as string);
-            }
-          }
-        });
-    }
-  }
 }
 
 class Note {
@@ -149,8 +132,6 @@ class Note {
     public incomingLinks: GoodSet<string> = new GoodSet(),
     public outgoingWikiLinkFilenames: string[] = [],
     public outgoingMdLinks: GoodSet<string> = new GoodSet(),
-    // todo: remove this once no longer used
-    public outgoingLinks: GoodSet<string> = new GoodSet(),
   ) {}
 }
 
