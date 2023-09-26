@@ -34,9 +34,15 @@ export class InMemoryLinkIndex implements LinkIndex, NoteIndex {
   };
 
   public linksFrom(path: string): string[] {
-    // todo: outgoing wiki links should be built here rather than stored against notes
-    const links = this._notesByAbsPath.get(path)?.outgoingLinks || [];
-    return Array.from(links);
+    const note = this._notesByAbsPath.get(path);
+    if (!note) { return []; }
+
+    const wikiLinks = note.outgoingWikiLinkFilenames
+      .map(filename => this._absPathsByFilename.get(filename))
+      .filter(absPath => !!absPath)
+      .flat() as string[];
+
+    return [...wikiLinks, ...note.outgoingMdLinks];
   }
 
   public linksTo = (path: string): string[] => {
@@ -77,7 +83,10 @@ export class InMemoryLinkIndex implements LinkIndex, NoteIndex {
       .filter(link => !link.startsWith('http'))
       .filter(link => isANote(link))
       .map(link => toAbsolutePath(absPath, link))
-      .forEach(link => note.outgoingLinks.add(link));
+      .forEach(link => {
+        note.outgoingLinks.add(link);
+        note.outgoingMdLinks.add(link);
+      });
 
     extractWikiLinks(text)
       .forEach(link => note.outgoingWikiLinkFilenames.push(link as string));
@@ -139,7 +148,9 @@ class Note {
   constructor(
     public incomingLinks: GoodSet<string> = new GoodSet(),
     public outgoingWikiLinkFilenames: string[] = [],
-    public outgoingLinks: GoodSet<string> = new GoodSet()
+    public outgoingMdLinks: GoodSet<string> = new GoodSet(),
+    // todo: remove this once no longer used
+    public outgoingLinks: GoodSet<string> = new GoodSet(),
   ) {}
 }
 

@@ -45,7 +45,6 @@ jest.mock('../ui/uiCreator', () => {
 
 jest.mock('../vs_code_apis/registryCreator', () => {
   return {
-    // todo: does this hold onto old ui references?
     createVsCodeRegistry: () => new FakeVsCodeRegistry(ns)
   };
 });

@@ -45,6 +45,7 @@ Run `npm run build_vsix` in the vscode directory.
         - DONE: links to/from should navigate to new location
         - WIP: dead links
             - see inline todos for failing tests
+                - WIP: build outgoing links on query
         - MANUAL TEST: wiki link should navigate to new location
     - on move ignored file
     - manual test all above
