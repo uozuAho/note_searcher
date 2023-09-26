@@ -39,39 +39,12 @@ Run `npm run build_vsix` in the vscode directory.
 
 
 # WIP todo
-- later: replace mocked/other high level tests with acceptance tests
-- fix later: 'links from this note'
+- 'links from this note'
     - doesn't show all links, eg. demo_dir/readme links to 'not_a_note.bin'
     - shows dead links, eg delete trains, still shows link to trains
         - this is dumb, and confusing when you've moved a file (shows both)
-- later: dead links should navigate to the offending link text
-## code notes: from before my indexing changes
-### on save
-- noteSearcher.notifyNoteSaved
-    noteSearcher.index();  # index whole dir
-        noteSearcher.multiIndex.index(folder);
-            DefaultMultiIndex.indexAllFiles
-                _tags.clear();
-                _linkIndex.clear();
-                _lunrSearch.reset();
-                for all files
-                    DefaultMultiIndex.indexFile
-                        index links
-                        index tags
-                        lunr.index
-    noteSearcher.showDeadLinks();
-    noteSearcher.showTags();
-### on activate
-- noteSearcher.notifyExtensionActivated
-    noteSearcher.index();
-    noteSearcher.showDeadLinks();
-    noteSearcher.showTags();
-### if not in a workspace (no dir open)
-- show error in ui
-### ignored files
-- on indexing, FileSystem.allFilesUnderPath loads config file and ignores
-  patterns
 # todo
+- feature: autocomplete wikilinks
 - feature: make paths queryable. Eg. i want to exclude ABC from path, but not contents
 - feature(s): pasting links
     - try this: https://stackoverflow.com/questions/44598894/in-a-vs-code-extension-how-can-i-be-notified-when-the-user-cuts-copies-or-paste
@@ -81,9 +54,9 @@ Run `npm run build_vsix` in the vscode directory.
     - get readme working in extension preview in vscode
     - make screenshot show in extension preview
     - prevent github link replacement in example file links
+- cleanup: replace mocked/other high level tests with acceptance tests
 - better icon
-- break up noteSearcher.ts?
-    - test file is unwieldy
 - feature: suggest tags in search
     - not yet available: https://github.com/microsoft/vscode/issues/35785
 - feature: extract text to new note
+- improvement: dead links should navigate to the offending link text

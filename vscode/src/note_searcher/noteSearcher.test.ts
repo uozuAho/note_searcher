@@ -6,70 +6,20 @@ import { MockUi } from "../mocks/MockUi";
 import { MockFile } from "../mocks/MockFile";
 import { FileSystem } from "../utils/FileSystem";
 
+// OBSOLETE: use noteSearcher.acceptance.test.ts instead
 describe('NoteSearcher', () => {
   let ui: MockUi;
   let searcher: tmoq.IMock<MultiIndex>;
   let noteSearcher: NoteSearcher;
   let fs: tmoq.IMock<FileSystem>;
 
-  const searcher_returns = (results: string[]) => {
-    searcher.setup(s =>
-      s.fullTextSearch(tmoq.It.isAnyString()))
-      .returns(
-        () => Promise.resolve(results)
-      );
-  };
-
-  describe('on extension activated', () => {
+  describe('search', () => {
     beforeEach(() => {
       ui = new MockUi();
       searcher = tmoq.Mock.ofType<MultiIndex>();
       fs = tmoq.Mock.ofType<FileSystem>();
 
       noteSearcher = new NoteSearcher(ui, searcher.object, fs.object);
-    });
-
-    it('updates index', async () => {
-      ui.currentlyOpenDirReturns('some dir');
-      const index = jest.spyOn(noteSearcher, 'indexWorkspace');
-
-      await noteSearcher.notifyExtensionActivated();
-
-      expect(index).toHaveBeenCalled();
-    });
-  });
-
-  describe('search', () => {
-    beforeEach(() => {
-      ui = new MockUi();
-      searcher = tmoq.Mock.ofType<MultiIndex>();
-
-      noteSearcher = new NoteSearcher(ui, searcher.object, fs.object);
-    });
-
-    it('passes input to searcher', async () => {
-      ui.promptForSearchReturns('search phrase');
-
-      await noteSearcher.promptAndSearch();
-
-      searcher.verify(s => s.fullTextSearch('search phrase'), tmoq.Times.once());
-    });
-
-    it('does nothing when input is empty', async () => {
-      ui.promptForSearchReturns('');
-
-      await noteSearcher.promptAndSearch();
-
-      searcher.verify(s => s.fullTextSearch(tmoq.It.isAnyString()), tmoq.Times.never());
-    });
-
-    it('shows search results', async () => {
-      ui.promptForSearchReturns('search phrase');
-      searcher_returns(['a', 'b', 'c']);
-
-      await noteSearcher.promptAndSearch();
-
-      ui.showedSearchResults(['a', 'b', 'c']);
     });
 
     it('shows error when search throws', async () => {
@@ -90,15 +40,6 @@ describe('NoteSearcher', () => {
       searcher = tmoq.Mock.ofType<MultiIndex>();
 
       noteSearcher = new NoteSearcher(ui, searcher.object, fs.object);
-    });
-
-    it('shows indexing in progress', async () => {
-      ui.currentlyOpenDirReturns('a directory');
-
-      await noteSearcher.indexWorkspace();
-
-      ui.notifiedIndexingStarted();
-      searcher.verify(s => s.indexAllFiles(tmoq.It.isAnyString()), tmoq.Times.once());
     });
 
     it('displays message when no open folder', async () => {
@@ -230,47 +171,6 @@ describe('NoteSearcher', () => {
       ui.currentlyOpenDirReturns(null);
 
       noteSearcher.generateWikiLinkTo('/a/b/c/d.md');
-    });
-  });
-
-  describe('show dead links', () => {
-    beforeEach(() => {
-      ui = new MockUi();
-      searcher = tmoq.Mock.ofType<MultiIndex>();
-
-      ui.currentlyOpenDirReturns('a directory');
-
-      noteSearcher = new NoteSearcher(ui, searcher.object, fs.object);
-    });
-
-    it('shows dead links', () => {
-      // deadLinkFinder.setup(d => d.findAllDeadLinks()).returns(() => [
-      //   new Link('/some/path', '/path/to/nowhere')
-      // ]);
-
-      noteSearcher.showDeadLinks();
-
-      ui.showedDeadLinks();
-    });
-  });
-
-  describe('when file is saved', () => {
-    beforeEach(() => {
-      ui = new MockUi();
-      searcher = tmoq.Mock.ofType<MultiIndex>();
-
-      ui.currentlyOpenDirReturns('a directory');
-
-      noteSearcher = new NoteSearcher(ui, searcher.object, fs.object);
-    });
-
-    it('checks for dead links', async () => {
-      const file = new MockFile('path', 'content');
-      const showDeadLinks = jest.spyOn(noteSearcher, 'showDeadLinks');
-
-      await ui.saveFile(file);
-
-      expect(showDeadLinks).toHaveBeenCalled();
     });
   });
 });

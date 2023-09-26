@@ -99,6 +99,12 @@ describe('on starting in the demo dir', () => {
     ]);
   });
 
+  it('searching an empty string does not run search', async () => {
+    const previousSearchResults = ns.searchResults();
+    await ns.search('');
+    expect(ns.searchResults()).toEqual(previousSearchResults);
+  });
+
   it('shows correct links to and from readme', async () => {
     const readme = _path.join(demoDir, 'readme.md');
 
