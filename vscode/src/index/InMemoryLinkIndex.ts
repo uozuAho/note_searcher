@@ -37,7 +37,7 @@ export class InMemoryLinkIndex implements LinkIndex, NoteIndex {
     const note = this._notesByAbsPath.get(path);
     if (!note) { return []; }
 
-    const wikiLinks = note.outgoingWikiLinkFilenames
+    const wikiLinks = Array.from(note.outgoingWikiLinkFilenames)
       .map(filename => this._absPathsByFilename.get(filename))
       .filter(absPath => !!absPath)
       .flat() as string[];
@@ -87,7 +87,7 @@ export class InMemoryLinkIndex implements LinkIndex, NoteIndex {
       .forEach(link => note.outgoingMdLinks.add(link));
 
     extractWikiLinks(text)
-      .forEach(link => note.outgoingWikiLinkFilenames.push(link as string));
+      .forEach(link => note.outgoingWikiLinkFilenames.add(link as string));
   };
 
   public finalise = () => {
@@ -130,7 +130,7 @@ export class InMemoryLinkIndex implements LinkIndex, NoteIndex {
 class Note {
   constructor(
     public incomingLinks: GoodSet<string> = new GoodSet(),
-    public outgoingWikiLinkFilenames: string[] = [],
+    public outgoingWikiLinkFilenames: GoodSet<string> = new GoodSet(),
     public outgoingMdLinks: GoodSet<string> = new GoodSet(),
   ) {}
 }

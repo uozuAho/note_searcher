@@ -167,6 +167,14 @@ describe('on file moved', () => {
     await ns.openFile(readme);
     expect(ns.linksFromThisNote()).toContain(newTrainsPath);
 
+    expect(ns.linksFromThisNote()
+      .filter(link => link === newTrainsPath)
+      .length).toBe(1);
+
+    // todo: fix this once I've figured out what 'links to' should contain
+    // (currently this is the lead md link)
+    // expect(ns.linksFromThisNote()).not.toContain(oldTrainsPath);
+
     await ns.openFile(newTrainsPath);
     expect(ns.linksFromThisNote()).toContain(cheese);
   });
