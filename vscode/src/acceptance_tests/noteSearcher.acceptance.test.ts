@@ -191,3 +191,38 @@ describe('on file moved', () => {
     expect(deadLinks).not.toContainEqual(new Link(cheese, oldTrainsPath));
   });
 });
+
+describe('on file renamed', () => {
+  const readme = _path.join(demoDir, 'readme.md');
+  const cheese = _path.join(demoDir, 'cheese.md');
+  const oldTrainsPath = _path.join(demoDir, 'trains.md');
+  const newTrainsPath = _path.join(demoDir, 'new_trains.md');
+
+  beforeAll(async () => {
+    fs = InMemFileSystem.fromFiles(demoDirFiles);
+    await activate(new FakeVsCodeExtensionContext());
+    ns.openFolder(demoDir);
+
+    await ns.openFile(readme);
+    fs.moveFile(oldTrainsPath, newTrainsPath);
+    await ns.notifyNoteMoved(oldTrainsPath, newTrainsPath);
+  });
+
+  it('search result points to new location', async () => {
+    await ns.search('trains');
+    expect(ns.searchResults()).toContain(newTrainsPath);
+  });
+
+  it('links to the renamed note are broken', async () => {
+    // markdown link
+    expect(ns.deadLinks()).toContainEqual(new Link(readme, oldTrainsPath));
+    // wiki link
+    expect(ns.deadLinks()).toContainEqual(new Link(readme, 'trains'));
+  });
+
+  it('links from the renamed note still work', async () => {
+    await ns.openFile(newTrainsPath);
+    expect(ns.linksFromThisNote()).toContain(readme);
+    expect(ns.linksFromThisNote()).toContain(cheese);
+  });
+});

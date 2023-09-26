@@ -39,7 +39,7 @@ Run `npm run build_vsix` in the vscode directory.
 
 
 # WIP todo
-- handle file renamed
+- bug: readme shows 2 links to trains
 - add manual full reindex if not there already - cater for external fs changes
 - manual test: test before/after. expect:
     - (much) faster indexing
