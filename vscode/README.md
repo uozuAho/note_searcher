@@ -41,8 +41,8 @@ collection:
 
 ### Full text search
 
-On file save this extension indexes all .md, .txt and .log files in the
-currently open folder.
+This extension indexes all .md, .txt and .log files in the currently open
+folder.
 
 You can search for files by pressing `ctrl+alt+s`. Some example queries:
 

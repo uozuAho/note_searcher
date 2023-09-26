@@ -7,7 +7,10 @@ file. Format inspired by https://keepachangelog.com/en/1.0.0/
 ### Removed
 - config: no longer supported. This includes ignoring file/directory patterns
   from indexing.
-
+### Changed
+- Faster indexing: The workspace is indexed once on startup, then incrementally
+  updated as files are modified. Previously, every file saved caused a reindex
+  of the workspace.
 
 ## [2.0.0] - 2023-07-12
 ### Changed
