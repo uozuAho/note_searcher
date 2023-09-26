@@ -4,9 +4,9 @@ All notable changes to the "note-searcher" extension will be documented in this
 file. Format inspired by https://keepachangelog.com/en/1.0.0/
 
 ## unreleased
-### Changed
-- Config: removed relative path ignores. Now paths are ignored if the contain
-  any of the substrings listed in ignore[]
+### Removed
+- config: no longer supported. This includes ignoring file/directory patterns
+  from indexing.
 
 
 ## [2.0.0] - 2023-07-12

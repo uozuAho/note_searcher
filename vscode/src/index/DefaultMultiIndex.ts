@@ -5,21 +5,17 @@ import { extractTags } from '../text_processing/tagExtractor';
 import { TagSet } from './TagIndex';
 import { InMemoryLinkIndex } from "./InMemoryLinkIndex";
 import { LunrDualFts } from "../search/lunrDualFts";
-import { NoteSearcherConfig, NoteSearcherConfigImpl } from "../utils/NoteSearcherConfig";
 
 export class DefaultMultiIndex implements MultiIndex {
   private _fullText: LunrDualFts;
   private _tags = new TagSet();
   private _linkIndex = new InMemoryLinkIndex();
-  private _config: NoteSearcherConfig;
 
   constructor(
     private _fileSystem: FileSystem,
     _workspaceDir: string)
   {
     this._fullText = new LunrDualFts(_fileSystem);
-    this._config = NoteSearcherConfigImpl
-      .fromWorkspace(_workspaceDir, _fileSystem);
   }
 
   public filenameToAbsPath = (filename: string) => this._linkIndex.filenameToAbsPath(filename);
@@ -44,7 +40,7 @@ export class DefaultMultiIndex implements MultiIndex {
     this._fullText = new LunrDualFts(this._fileSystem);
     const jobs: Promise<void>[] = [];
 
-    for (const path of this._fileSystem.allFilesUnderPath(dir, this._config.isIgnored)) {
+    for (const path of this._fileSystem.allFilesUnderPath(dir)) {
       if (!this.shouldIndex(path)) { continue; }
       jobs.push(this.addFile(path));
     }
@@ -91,9 +87,6 @@ export class DefaultMultiIndex implements MultiIndex {
   };
 
   private shouldIndex = (path: string) => {
-    if (this._config.isIgnored(path)) {
-      return false;
-    }
     for (const ext of ['md', 'txt', 'log']) {
       if (path.endsWith(ext)) {
         return true;

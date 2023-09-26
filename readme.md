@@ -39,8 +39,6 @@ Run `npm run build_vsix` in the vscode directory.
 
 
 # WIP todo
-- handle file moved
-    - on move ignored file
 - handle file renamed
 - add manual full reindex if not there already - cater for external fs changes
 - manual test: test before/after. expect:

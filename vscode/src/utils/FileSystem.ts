@@ -13,7 +13,7 @@ export interface FileSystem {
    * Return all files under the given path (recursively),
    * in the current OS's path format
    */
-  allFilesUnderPath: (path: string, ignore: (path: string) => boolean) => Iterable<string>
+  allFilesUnderPath: (path: string, ignore?: (path: string) => boolean) => Iterable<string>
 }
 
 export const createFileSystem = (): FileSystem => {
@@ -44,8 +44,10 @@ class NodeFileSystem implements FileSystem {
   };
 
 
-  public allFilesUnderPath = (path: string, ignore: (path: string) => boolean): Iterable<string> => {
+  public allFilesUnderPath = (path: string, ignore?: (path: string) => boolean): Iterable<string> => {
     this._diagnostics.trace('allFilesUnderPath: start');
+
+    ignore = ignore || (() => false);
 
     const paths: string[] = [];
     walkDir(path, ignore, p => paths.push(p));
