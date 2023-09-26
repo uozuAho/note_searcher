@@ -42,7 +42,7 @@ export class InMemoryLinkIndex implements LinkIndex, NoteIndex {
       .filter(absPath => !!absPath)
       .flat() as string[];
 
-    return [...wikiLinks, ...note.outgoingMdLinks];
+    return Array.from(new Set([...wikiLinks, ...note.outgoingMdLinks]));
   }
 
   public linksTo = (path: string): string[] => {

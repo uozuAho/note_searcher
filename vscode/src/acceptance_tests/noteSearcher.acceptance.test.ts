@@ -81,7 +81,7 @@ describe('on starting in the demo dir', () => {
     ns.openFolder(demoDir);
   });
 
-  it('indexes workspace on startup', async () => {
+  it('full text search works', async () => {
     await ns.search('cheese');
     expect(ns.searchResults()).toEqual([
       _path.join(demoDir, 'cheese.md'),
@@ -96,6 +96,23 @@ describe('on starting in the demo dir', () => {
       _path.join(demoDir, 'trains.md'),
       _path.join(demoDir, 'cheese.md'),
       _path.join(demoDir, 'readme.md'),
+    ]);
+  });
+
+  it('shows correct links to and from readme', async () => {
+    const readme = _path.join(demoDir, 'readme.md');
+
+    await ns.openFile(readme);
+
+    expect(ns.linksToThisNote()).toEqual([
+      _path.join(demoDir, 'trains.md'),
+    ]);
+
+    expect(ns.linksFromThisNote()).toEqual([
+      _path.join(demoDir, 'cheese.md'),
+      _path.join(demoDir, 'subdir/cheese.md'),
+      _path.join(demoDir, 'trains.md'),
+      _path.join(demoDir, 'to/nowhere.md'),
     ]);
   });
 });
