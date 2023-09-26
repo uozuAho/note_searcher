@@ -60,6 +60,10 @@
 		},
 		"commands": [
 			{
+				"command": "noteSearcher.index",
+				"title": "Note searcher: reindex workspace"
+			},
+			{
 				"command": "noteSearcher.search",
 				"title": "Note searcher: search for docs"
 			},
