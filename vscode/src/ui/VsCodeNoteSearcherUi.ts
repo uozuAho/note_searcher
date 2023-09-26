@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 import { SearchResultTree } from './searchResultTree';
-import { NoteSearcherUi, FileChangeListener } from './NoteSearcherUi';
+import { NoteSearcherUi, FileChangeListener, FileDeletedListener, FileMovedListener } from './NoteSearcherUi';
 import { File } from "../utils/File";
 import { DeadLinksTree } from './DeadLinksTree';
 import { LinksTree } from './LinksTree';
@@ -9,13 +9,19 @@ import { Link } from '../index/LinkIndex';
 
 export class VsCodeNoteSearcherUi implements NoteSearcherUi {
   private noteSavedListener: FileChangeListener | null = null;
+  private noteDeletedListener: FileDeletedListener | null = null;
   private movedViewToDifferentNoteListener: FileChangeListener | null = null;
+  private noteMovedListener: FileMovedListener | null = null;
+
+  public openFile(path: any) {
+    return vscode.window.showTextDocument(vscode.Uri.file(path));
+  }
 
   public copyToClipboard = async (text: string) => {
     return await vscode.env.clipboard.writeText(text);
   };
 
-  public getCurrentFile = () => 
+  public getCurrentFile = () =>
     vscode.window.activeTextEditor
       ? new VsCodeFile(vscode.window.activeTextEditor.document)
       : null;
@@ -41,7 +47,6 @@ export class VsCodeNoteSearcherUi implements NoteSearcherUi {
 
     // Hack: Show the view container if it's not currently visible.
     //       Doesn't work if there's no search results :(
-    //       todo: find a way to show the container regardless of search results
     if (uris.length > 0) {
       const children = await searchResults.getChildren();
       return view.reveal(children[0]);
@@ -102,7 +107,7 @@ export class VsCodeNoteSearcherUi implements NoteSearcherUi {
   };
 
   public notifyIndexingStarted = (indexingTask: Promise<void>) => {
-    vscode.window.withProgress({
+    return vscode.window.withProgress({
       location: vscode.ProgressLocation.Window,
       title: 'Note Searcher: indexing...',
     }, () => indexingTask);
@@ -119,6 +124,14 @@ export class VsCodeNoteSearcherUi implements NoteSearcherUi {
     this.noteSavedListener = listener;
   };
 
+  public addNoteDeletedListener = (listener: FileDeletedListener) => {
+    this.noteDeletedListener = listener;
+  };
+
+  public addNoteMovedListener = (listener: FileMovedListener) => {
+    this.noteMovedListener = listener;
+  };
+
   public addMovedViewToDifferentNoteListener = (listener: FileChangeListener) => {
     this.movedViewToDifferentNoteListener = listener;
   };
@@ -127,17 +140,37 @@ export class VsCodeNoteSearcherUi implements NoteSearcherUi {
     return vscode.workspace.onDidSaveTextDocument(doc => {
       if (this.noteSavedListener) {
         const file = new VsCodeFile(doc);
-        this.noteSavedListener(file);
+        return this.noteSavedListener(file);
       }
     });
   };
+
+  public createNoteDeletedHandler(): { dispose(): any; } {
+    return vscode.workspace.onDidDeleteFiles(e => {
+      if (this.noteDeletedListener) {
+        for (const file of e.files) {
+          return this.noteDeletedListener(file.fsPath);
+        }
+      }
+    });
+  }
+
+  public createNoteMovedHandler(): { dispose(): any; } {
+    return vscode.workspace.onDidRenameFiles(e => {
+      if (this.noteMovedListener) {
+        for (const file of e.files) {
+          return this.noteMovedListener(file.oldUri.fsPath, file.newUri.fsPath);
+        }
+      }
+    });
+  }
 
   public createMovedViewToDifferentNoteHandler = () => {
     return vscode.window.onDidChangeActiveTextEditor(e => {
       if (!e) { return; }
       if (this.movedViewToDifferentNoteListener) {
         const file = new VsCodeFile(e.document);
-        this.movedViewToDifferentNoteListener(file);
+        return this.movedViewToDifferentNoteListener(file);
       }
     });
   };

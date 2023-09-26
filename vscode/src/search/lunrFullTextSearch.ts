@@ -1,7 +1,6 @@
 import * as lunr from 'lunr';
 
 import { createDiagnostics } from '../diagnostics/diagnostics';
-import { FullTextSearch } from "./FullTextSearch";
 
 const NUM_RESULTS = 20;
 
@@ -17,15 +16,10 @@ lunr.tokenizer.separator = /[\s\[\]/]+/;
 // An alternative is to implement my own query parser.
 (lunr as any).QueryLexer.termSeparator = lunr.tokenizer.separator;
 
-export class LunrFullTextSearch implements FullTextSearch {
+export class LunrFullTextSearch {
   private _index: lunr.Index | null = null;
   private _diagnostics = createDiagnostics('LunrSearch');
   private _indexBuilder = this.createIndexBuilder();
-
-  public reset = () => {
-    this._index = null;
-    this._indexBuilder = this.createIndexBuilder();
-  };
 
   public finalise = () => {
     this._index = this._indexBuilder.build();
@@ -34,14 +28,25 @@ export class LunrFullTextSearch implements FullTextSearch {
   public search = (query: string) => {
     this.trace('search');
 
-    if (!this._index) { return Promise.resolve([]); }
+    if (!this._index) {
+      if (!this._indexBuilder) {
+        return Promise.resolve([]);
+      } else {
+        // This is a hack for tests, so that tests don't have to call finalise.
+        // Note that you _should_ call finalise once indexing is complete.
+        this._index = this._indexBuilder.build();
+      }
+    }
 
     query = this.expandQueryTags(query);
 
     return Promise.resolve(this._index
       .search(query)
       .slice(0, NUM_RESULTS)
-      .map(r => r.ref));
+      .map(r => ({
+        path: r.ref,
+        score: r.score
+      })));
   };
 
   public expandQueryTags = (query: string) => {
@@ -50,6 +55,10 @@ export class LunrFullTextSearch implements FullTextSearch {
 
   public indexFile = (path: string, text: string, tags: string[]) => {
     this._indexBuilder.add({ path, text, tags });
+  };
+
+  public onFileModified = (path: string, text: string, tags: string[]) => {
+    return Promise.resolve();
   };
 
   private createIndexBuilder() {

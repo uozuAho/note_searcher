@@ -102,24 +102,6 @@ Links to files that can't be found are shown in the dead links section of the
 sidebar.
 
 
-### Configuration
-
-You can customise note searcher's behaviour with a file named
-`.noteSearcher.config.json` in the root directory of your files. For an example,
-see the config file in the [demo directory](demo_dir/.noteSearcher.config.json).
-
-#### Ignoring directories
-
-The `ignore` array in the config file can contain a list of patterns, similar
-to a .gitignore file.
-
-Supported patterns are:
-- plain string, eg. "stuff": any directory containing this string will be
-  ignored
-- relative path, eg. "/stuff": any directory matching this path relative to the
-  root directory will be ignored.
-
-
 ## Reporting bugs/issues/feature requests
 
 If you find any problems, have any questions, or have any requests for features,

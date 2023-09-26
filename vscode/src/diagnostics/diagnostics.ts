@@ -8,7 +8,6 @@ export const createDiagnostics = (
   label: string,
   timeProvider: TimeProvider = createTimeProvider()) =>
 {
-  // todo: config
   // return new ConsoleDiagnostics(label, timeProvider);
   return new NullDiagnostics();
 };

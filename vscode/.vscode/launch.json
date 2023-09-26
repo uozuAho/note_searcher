@@ -26,38 +26,8 @@
       ],
       "console": "integratedTerminal",
       "internalConsoleOptions": "neverOpen",
-      "disableOptimisticBPs": true,
       "windows": {
         "program": "${workspaceFolder}/node_modules/jest/bin/jest",
-      }
-    },
-    {
-      "name": "Debug e2e file",
-      "type": "node",
-      "request": "launch",
-      "program": "${workspaceFolder}/node_modules/.bin/extest",
-      "preLaunchTask": "e2eCompile",
-      "args": [
-        "run-tests",
-
-        // next two lines are for custom vscode settings:
-        // "-o",
-        // "e2e/dead_links_on/settings.json",
-
-        // this is the file you want to debug:
-        "${workspaceFolder}/e2e-out/default_settings/copy-link.test.js",
-
-        // todo: this doesn't work:
-        // "--mocha_config",
-        // "${workspaceFolder}/e2e/.mocharc-debug.js"
-      ],
-      "outFiles": [
-				"${workspaceFolder}/e2e-out/**/*.js"
-			],
-      "console": "integratedTerminal",
-      "internalConsoleOptions": "neverOpen",
-      "windows": {
-        "program": "${workspaceFolder}/node_modules/vscode-extension-tester/out/cli",
       }
     },
 	]

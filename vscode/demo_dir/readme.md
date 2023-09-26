@@ -26,22 +26,12 @@ Add a [link](trains.md) to your files, and vscode makes them clickable
 hyperlinks. Files can be images or other non-text files, eg.
 [not a note](not_a_note.bin).
 
-You can also use wiki links, like this: [[cheese]], or [[this | cheese]].
+You can also use wiki links, like this: [[cheese]], or [[this | trains]].
 
 [Dead links](to/nowhere.md) are shown in the sidebar. Works for markdown and
 [[wiki links | non_existent_note]].
 
 Links to the current note are shown in the 'backlinks' section of the sidebar.
-
-
-## ignored directories
-Directories can be excluded from indexing by adding configuration to a
-`.noteSearcher.config.json` file at the root of your notes directory. See
-[the configuration of this demo directory](.noteSearcher.config.json).
-
-Files in ignored directories are not indexed. Links to ignored files are dead
-links, eg. [[this | ignored_file]]. Note that node_modules directories are
-ignored by default, so [[this | about_node_modules]] is also a dead link.
 
 
 ## quirks

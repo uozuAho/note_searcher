@@ -1,17 +1,19 @@
 import fs = require('graceful-fs');
 import _path = require('path');
 import { createDiagnostics } from '../diagnostics/diagnostics';
-import { NoteSearcherConfig } from './NoteSearcherConfig';
 
 export interface FileSystem {
   fileExists: (path: string) => boolean;
   readFile: (path: string) => string;
   readFileAsync: (path: string) => Promise<string>;
+  writeFile(path: string, text: string): void;
+  deleteFile(path: string): void;
+  moveFile(oldPath: string, newPath: string): void;
   /**
-   * Return all files under the given path, in the current OS's
-   * path format
+   * Return all files under the given path (recursively),
+   * in the current OS's path format
    */
-  allFilesUnderPath: (path: string) => Iterable<string>
+  allFilesUnderPath: (path: string, ignore?: (path: string) => boolean) => Iterable<string>
 }
 
 export const createFileSystem = (): FileSystem => {
@@ -23,9 +25,11 @@ class NodeFileSystem implements FileSystem {
     private _diagnostics = createDiagnostics('FileSystem')
   ) {}
 
-  public readFile = (path: string) => {
-    return new String(fs.readFileSync(path)).toString();
-  };
+  public fileExists = (path: string) => fs.existsSync(path);
+  public readFile = (path: string) => new String(fs.readFileSync(path)).toString();
+  public deleteFile = (path: any) => fs.unlinkSync(path);
+  public writeFile = (path: any, text: any) => fs.writeFileSync(path, text);
+  public moveFile = (oldPath: string, newPath: string) => fs.renameSync(oldPath, newPath);
 
   public readFileAsync = (path: string): Promise<string> => {
     // DIY promise, since graceful-fs doesn't override fs.promises
@@ -39,47 +43,18 @@ class NodeFileSystem implements FileSystem {
     });
   };
 
-  public fileExists = (path: string) => fs.existsSync(path);
 
-  public allFilesUnderPath = (path: string): Iterable<string> => {
+  public allFilesUnderPath = (path: string, ignore?: (path: string) => boolean): Iterable<string> => {
     this._diagnostics.trace('allFilesUnderPath: start');
 
-    const ignores = this.loadIgnores(path);
+    ignore = ignore || (() => false);
 
     const paths: string[] = [];
-    const ignorePatterns = extractPatternsToIgnore(ignores);
-    const ignoreDirs = extractDirsToIgnore(path, ignores);
-    walkDir(path, ignorePatterns, ignoreDirs, p => paths.push(p));
+    walkDir(path, ignore, p => paths.push(p));
 
     this._diagnostics.trace('allFilesUnderPath: end');
     return paths;
   };
-
-  private loadIgnores = (path: string): string[] => {
-    const optionsFilePath = _path.join(path, '.noteSearcher.config.json');
-    let ignores = ['node_modules'];
-
-    if (this.fileExists(optionsFilePath)) {
-      const config = JSON.parse(this.readFile(optionsFilePath)) as NoteSearcherConfig;
-      ignores = ignores.concat(config.ignore);
-    }
-
-    return ignores;
-  };
-}
-
-function extractPatternsToIgnore(ignores: string[]) {
-  return ignores.filter(i => !isRelativePattern(i));
-}
-
-function extractDirsToIgnore(path: string, ignores: string[]) {
-  return ignores
-    .filter(i => isRelativePattern(i))
-    .map(i => _path.resolve(_path.join(path, i)));
-}
-
-function isRelativePattern(pattern: string) {
-  return pattern.includes('/');
 }
 
 /**
@@ -100,32 +75,19 @@ export const posixRelativePath = (path1: string, path2: string) => {
 
 function walkDir(
   dir: string,
-  ignorePatterns: string[],
-  ignoreDirs: string[],
+  ignore: (path: string) => boolean,
   callback: (path: string) => void)
 {
   fs.readdirSync(dir).forEach(f => {
     const path = _path.join(dir, f);
+    if (ignore(path)) {
+      return;
+    }
     const isDirectory = fs.statSync(path).isDirectory();
-    if (!isDirectory) {
-      callback(path);
+    if (isDirectory) {
+      walkDir(path, ignore, callback);
     } else {
-      if (any(ignorePatterns, i => path.includes(i))) {
-        return;
-      }
-      if (any(ignoreDirs, i => i === path)) {
-        return;
-      }
-      walkDir(path, ignorePatterns, ignoreDirs, callback);
+      callback(path);
     }
   });
 };
-
-function any(arr: any[], predicate: (a: any) => boolean) {
-  for (const item of arr) {
-    if (predicate(item)) {
-      return true;
-    }
-  }
-  return false;
-}

@@ -39,11 +39,8 @@ Run `npm run build_vsix` in the vscode directory.
 
 
 # todo
-- improve indexing
-    - incremental: only re-index changed documents
-    - don't index if already indexing, eg. saving multiple files
-    - many options available, see https://github.com/nextapps-de/flexsearch#performance-benchmark-ranking
-        - eg flexsearch, elasticlunr, minisearch
+- feature: autocomplete wikilinks
+- feature: make paths queryable. Eg. i want to exclude ABC from path, but not contents
 - feature(s): pasting links
     - try this: https://stackoverflow.com/questions/44598894/in-a-vs-code-extension-how-can-i-be-notified-when-the-user-cuts-copies-or-paste
     - if no selected text: set cursor inside []
@@ -52,11 +49,9 @@ Run `npm run build_vsix` in the vscode directory.
     - get readme working in extension preview in vscode
     - make screenshot show in extension preview
     - prevent github link replacement in example file links
-- feature: interactive full text search: results with context start appearing as
-  you type
+- cleanup: replace mocked/other high level tests with acceptance tests
 - better icon
-- break up noteSearcher.ts?
-    - test file is unwieldy
 - feature: suggest tags in search
     - not yet available: https://github.com/microsoft/vscode/issues/35785
 - feature: extract text to new note
+- improvement: dead links should navigate to the offending link text

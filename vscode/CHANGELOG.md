@@ -3,6 +3,12 @@
 All notable changes to the "note-searcher" extension will be documented in this
 file. Format inspired by https://keepachangelog.com/en/1.0.0/
 
+## unreleased
+### Removed
+- config: no longer supported. This includes ignoring file/directory patterns
+  from indexing.
+
+
 ## [2.0.0] - 2023-07-12
 ### Changed
 Wiki links no longer match on substrings - exact filenames are expected. For

@@ -4,84 +4,28 @@ import { NoteSearcher } from './noteSearcher';
 import { MultiIndex } from '../index/MultiIndex';
 import { MockUi } from "../mocks/MockUi";
 import { MockFile } from "../mocks/MockFile";
-import { NoteSearcherConfigProvider, NoteSearcherConfig } from './NoteSearcherConfigProvider';
+import { FileSystem } from "../utils/FileSystem";
 
+// OBSOLETE: use noteSearcher.acceptance.test.ts instead
 describe('NoteSearcher', () => {
   let ui: MockUi;
   let searcher: tmoq.IMock<MultiIndex>;
-  let configProvider: tmoq.IMock<NoteSearcherConfigProvider>;
   let noteSearcher: NoteSearcher;
-
-  const searcher_returns = (results: string[]) => {
-    searcher.setup(s =>
-      s.search(tmoq.It.isAnyString()))
-      .returns(
-        () => Promise.resolve(results)
-      );
-  };
-
-  const defaultConfig = (): NoteSearcherConfig => ({});
-
-  describe('on extension activated', () => {
-    beforeEach(() => {
-      ui = new MockUi();
-      searcher = tmoq.Mock.ofType<MultiIndex>();
-      configProvider = tmoq.Mock.ofType<NoteSearcherConfigProvider>();
-
-      noteSearcher = new NoteSearcher(ui,
-        searcher.object, configProvider.object);
-    });
-
-    it('updates index', () => {
-      ui.currentlyOpenDirReturns('some dir');
-      const index = jest.spyOn(noteSearcher, 'index');
-
-      noteSearcher.notifyExtensionActivated();
-
-      expect(index).toHaveBeenCalled();
-    });
-  });
+  let fs: tmoq.IMock<FileSystem>;
 
   describe('search', () => {
     beforeEach(() => {
       ui = new MockUi();
       searcher = tmoq.Mock.ofType<MultiIndex>();
-      configProvider = tmoq.Mock.ofType<NoteSearcherConfigProvider>();
-      configProvider.setup(c => c.getConfig()).returns(() => defaultConfig());
+      fs = tmoq.Mock.ofType<FileSystem>();
 
-      noteSearcher = new NoteSearcher(ui,
-        searcher.object, configProvider.object);
-    });
-
-    it('passes input to searcher', async () => {
-      ui.promptForSearchReturns('search phrase');
-
-      await noteSearcher.promptAndSearch();
-
-      searcher.verify(s => s.search('search phrase'), tmoq.Times.once());
-    });
-
-    it('does nothing when input is empty', async () => {
-      ui.promptForSearchReturns('');
-
-      await noteSearcher.promptAndSearch();
-
-      searcher.verify(s => s.search(tmoq.It.isAnyString()), tmoq.Times.never());
-    });
-
-    it('shows search results', async () => {
-      ui.promptForSearchReturns('search phrase');
-      searcher_returns(['a', 'b', 'c']);
-
-      await noteSearcher.promptAndSearch();
-
-      ui.showedSearchResults(['a', 'b', 'c']);
+      noteSearcher = new NoteSearcher(ui, searcher.object, fs.object);
     });
 
     it('shows error when search throws', async () => {
       ui.promptForSearchReturns('search phrase');
       const error = new Error('boom');
-      searcher.setup(s => s.search(tmoq.It.isAnyString())).throws(error);
+      searcher.setup(s => s.fullTextSearch(tmoq.It.isAnyString())).throws(error);
 
       await noteSearcher.promptAndSearch();
 
@@ -94,37 +38,25 @@ describe('NoteSearcher', () => {
     beforeEach(() => {
       ui = new MockUi();
       searcher = tmoq.Mock.ofType<MultiIndex>();
-      configProvider = tmoq.Mock.ofType<NoteSearcherConfigProvider>();
-      configProvider.setup(c => c.getConfig()).returns(() => defaultConfig());
 
-      noteSearcher = new NoteSearcher(ui,
-        searcher.object, configProvider.object);
-    });
-
-    it('shows indexing in progress', async () => {
-      ui.currentlyOpenDirReturns('a directory');
-
-      await noteSearcher.index();
-
-      ui.notifiedIndexingStarted();
-      searcher.verify(s => s.index(tmoq.It.isAnyString()), tmoq.Times.once());
+      noteSearcher = new NoteSearcher(ui, searcher.object, fs.object);
     });
 
     it('displays message when no open folder', async () => {
       ui.currentlyOpenDirReturns(null);
 
-      await noteSearcher.index();
+      await noteSearcher.indexWorkspace();
 
       ui.showedAnyNotification();
-      searcher.verify(s => s.index(tmoq.It.isAnyString()), tmoq.Times.never());
+      searcher.verify(s => s.indexAllFiles(tmoq.It.isAnyString()), tmoq.Times.never());
     });
 
     it('displays error when indexing throws', async () => {
       const error = new Error('oh no!');
       ui.currentlyOpenDirReturns('a directory');
-      searcher.setup(s => s.index('a directory')).throws(error);
+      searcher.setup(s => s.indexAllFiles('a directory')).throws(error);
 
-      await noteSearcher.index();
+      await noteSearcher.indexWorkspace();
 
       ui.showedError(error);
     });
@@ -158,10 +90,8 @@ describe('NoteSearcher', () => {
     beforeEach(() => {
       ui = new MockUi();
       searcher = tmoq.Mock.ofType<MultiIndex>();
-      configProvider = tmoq.Mock.ofType<NoteSearcherConfigProvider>();
 
-      noteSearcher = new NoteSearcher(ui,
-        searcher.object, configProvider.object);
+      noteSearcher = new NoteSearcher(ui, searcher.object, fs.object);
     });
 
     it('copies link relative to open file', () => {
@@ -204,10 +134,8 @@ describe('NoteSearcher', () => {
     beforeEach(() => {
       ui = new MockUi();
       searcher = tmoq.Mock.ofType<MultiIndex>();
-      configProvider = tmoq.Mock.ofType<NoteSearcherConfigProvider>();
 
-      noteSearcher = new NoteSearcher(ui,
-        searcher.object, configProvider.object);
+      noteSearcher = new NoteSearcher(ui, searcher.object, fs.object);
     });
 
     it('copies wiki link with filename without extension', () => {
@@ -243,62 +171,6 @@ describe('NoteSearcher', () => {
       ui.currentlyOpenDirReturns(null);
 
       noteSearcher.generateWikiLinkTo('/a/b/c/d.md');
-    });
-  });
-
-  describe('show dead links', () => {
-    beforeEach(() => {
-      ui = new MockUi();
-      searcher = tmoq.Mock.ofType<MultiIndex>();
-      configProvider = tmoq.Mock.ofType<NoteSearcherConfigProvider>();
-      configProvider.setup(c => c.getConfig()).returns(() => defaultConfig());
-
-      ui.currentlyOpenDirReturns('a directory');
-
-      noteSearcher = new NoteSearcher(ui,
-        searcher.object, configProvider.object);
-    });
-
-    it('shows dead links', () => {
-      // deadLinkFinder.setup(d => d.findAllDeadLinks()).returns(() => [
-      //   new Link('/some/path', '/path/to/nowhere')
-      // ]);
-
-      noteSearcher.showDeadLinks();
-
-      ui.showedDeadLinks();
-    });
-  });
-
-  describe('when file is saved', () => {
-    beforeEach(() => {
-      ui = new MockUi();
-      searcher = tmoq.Mock.ofType<MultiIndex>();
-      configProvider = tmoq.Mock.ofType<NoteSearcherConfigProvider>();
-      configProvider.setup(c => c.getConfig()).returns(() => defaultConfig());
-
-      ui.currentlyOpenDirReturns('a directory');
-
-      noteSearcher = new NoteSearcher(ui,
-        searcher.object, configProvider.object);
-    });
-
-    it('updates index', async () => {
-      const file = new MockFile('path', 'content');
-      const indexSpy = jest.spyOn(noteSearcher, 'index');
-
-      await ui.saveFile(file);
-
-      expect(indexSpy).toHaveBeenCalled();
-    });
-
-    it('checks for dead links', async () => {
-      const file = new MockFile('path', 'content');
-      const showDeadLinks = jest.spyOn(noteSearcher, 'showDeadLinks');
-
-      await ui.saveFile(file);
-
-      expect(showDeadLinks).toHaveBeenCalled();
     });
   });
 });

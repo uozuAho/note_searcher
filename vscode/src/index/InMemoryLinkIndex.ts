@@ -34,8 +34,12 @@ export class InMemoryLinkIndex implements LinkIndex, NoteIndex {
   };
 
   public linksFrom(path: string): string[] {
-    const links = this._notesByAbsPath.get(path)?.outgoingLinks || [];
-    return Array.from(links);
+    const note = this._notesByAbsPath.get(path);
+    if (!note) { return []; }
+
+    return this
+      .allLinksFrom(note)
+      .filter(link => this.containsNote(link));
   }
 
   public linksTo = (path: string): string[] => {
@@ -46,7 +50,8 @@ export class InMemoryLinkIndex implements LinkIndex, NoteIndex {
   public findAllDeadLinks(): Link[] {
     const deadLinks = [];
     for (const [source, note] of this._notesByAbsPath) {
-      for (const dest of note.outgoingLinks) {
+      const outgoingLinks = this.allLinksFrom(note);
+      for (const dest of outgoingLinks) {
         if (!this.containsNote(dest)) {
           deadLinks.push(new Link(source, dest));
         }
@@ -76,46 +81,70 @@ export class InMemoryLinkIndex implements LinkIndex, NoteIndex {
       .filter(link => !link.startsWith('http'))
       .filter(link => isANote(link))
       .map(link => toAbsolutePath(absPath, link))
-      .forEach(link => note.outgoingLinks.add(link));
+      .forEach(link => note.outgoingMdLinks.add(link));
 
     extractWikiLinks(text)
-      .forEach(link => note.outgoingWikiLinkFilenames.push(link as string));
+      .forEach(link => note.outgoingWikiLinkFilenames.add(link as string));
   };
 
   public finalise = () => {
-    this.populateOutgoingWikiLinks();
     this.populateBacklinks();
   };
 
+  public onFileModified = (absPath: string, text: string) => {
+    const note = this._notesByAbsPath.set(absPath, new Note());
+    for (const note of this._notesByAbsPath.values()) {
+      note.incomingLinks.delete(absPath);
+    }
+    if (!note) { throw new Error(`Note not found: ${absPath}`); }
+    this.addFile(absPath, text);
+    this.finalise();
+  };
+
+  public onFileDeleted(absPath: string) {
+    this._notesByAbsPath.delete(absPath);
+    for (const note of this._notesByAbsPath.values()) {
+      note.incomingLinks.delete(absPath);
+    }
+
+    const filename = _path.parse(absPath).name;
+    const absPaths = this._absPathsByFilename.get(filename);
+    if (absPaths) {
+      const newAbsPaths = absPaths.filter(path => path !== absPath);
+      if (newAbsPaths.length === 0) {
+        this._absPathsByFilename.delete(filename);
+      } else {
+        this._absPathsByFilename.set(filename, newAbsPaths);
+      }
+    }
+  }
+
   private populateBacklinks = () => {
     for (const [sourcePath, sourceNote] of this._notesByAbsPath) {
-      for (const targetPath of sourceNote.outgoingLinks) {
+      const outgoingLinks = this.linksFrom(sourcePath);
+      for (const targetPath of outgoingLinks) {
         this._notesByAbsPath.get(targetPath)?.incomingLinks.add(sourcePath);
       }
     }
   };
 
-  private populateOutgoingWikiLinks() {
-    for (const [_, note] of this._notesByAbsPath) {
-      note.outgoingWikiLinkFilenames
-        .map(filename => this._absPathsByFilename.get(filename))
-        .filter(absPath => !!absPath)
-        .forEach(links => {
-          if (links) {
-            for (const link of links) {
-              note.outgoingLinks.add(link as string);
-            }
-          }
-        });
-    }
+  private allLinksFrom(note: Note) {
+    const all = Array.from(note.outgoingWikiLinkFilenames)
+      .map(filename => this._absPathsByFilename.get(filename))
+      .filter(absPath => !!absPath)
+      .flat()
+      .concat(Array.from(note.outgoingMdLinks)) as string[];
+
+    // dedupe
+    return Array.from(new Set(all));
   }
 }
 
 class Note {
   constructor(
     public incomingLinks: GoodSet<string> = new GoodSet(),
-    public outgoingWikiLinkFilenames: string[] = [],
-    public outgoingLinks: GoodSet<string> = new GoodSet()
+    public outgoingWikiLinkFilenames: GoodSet<string> = new GoodSet(),
+    public outgoingMdLinks: GoodSet<string> = new GoodSet(),
   ) {}
 }
 

@@ -1,6 +1,6 @@
 import * as tmoq from "typemoq";
 import { Link } from "../index/LinkIndex";
-import { NoteSearcherUi, FileChangeListener } from "../ui/NoteSearcherUi";
+import { NoteSearcherUi, FileChangeListener, FileDeletedListener, FileMovedListener } from "../ui/NoteSearcherUi";
 import { File } from "../utils/File";
 import { MockFile } from "./MockFile";
 
@@ -9,6 +9,10 @@ export class MockUi implements NoteSearcherUi {
 
   constructor() {
     this._mock = tmoq.Mock.ofType<NoteSearcherUi>();
+  }
+
+  public openFile(path: any) {
+    throw new Error("Method not implemented.");
   }
 
   public showTags = (tags: string[]) => Promise.resolve();
@@ -111,9 +115,20 @@ export class MockUi implements NoteSearcherUi {
     this._fileSavedListener = listener;
   };
 
+  public addNoteDeletedListener = (listener: FileDeletedListener) => {
+    return;
+  };
+
+  public addNoteMovedListener = (listener: FileMovedListener) => {};
+
   public saveFile = async (file: MockFile) => {
     if (this._fileSavedListener) {
       await this._fileSavedListener(file);
     }
   };
+
+  public createMovedViewToDifferentNoteHandler = () => { return { dispose: () => {} };};
+  public createNoteDeletedHandler = () => { return { dispose: () => {} };};
+  public createNoteSavedHandler = () => { return { dispose: () => {} };};
+  public createNoteMovedHandler = () => { return { dispose: () => {} };};
 }

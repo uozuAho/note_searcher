@@ -1,4 +1,5 @@
 import { InMemoryLinkIndex } from "./InMemoryLinkIndex";
+import { Link } from "./LinkIndex";
 
 describe('InMemoryLinkIndex, mocked filesystem', () => {
   describe('when a file is added', () => {
@@ -48,18 +49,86 @@ describe('InMemoryLinkIndex, mocked filesystem', () => {
     });
   });
 
-  describe('reset', () => {
-    it('clears everything', () => {
-      const index = new InMemoryLinkIndex();
-      const addedFile = '/a/b.txt';
-      index.addFile(addedFile, 'a [link](to/thing)');
+  describe('when a file is modified', () => {
+    let index: InMemoryLinkIndex;
+    const note1 = process.platform === 'win32' ? 'C:\\a\\note1.md' : '/a/note1.md';
+    const note2 = process.platform === 'win32' ? 'C:\\a\\note2.md' : '/a/note2.md';
+
+    beforeAll(() => {
+      index = new InMemoryLinkIndex();
+      index.addFile(note1, 'has a markdown link: [link](note2.md)');
+      index.addFile(note2, 'has a wiki link: [[link | note1]]');
       index.finalise();
+    });
 
-      index.clear();
+    it('removes links', () => {
+      index.onFileModified(note1, 'I removed the link to note2');
+      expect(index.linksFrom(note1)).toEqual([]);
+      expect(index.linksTo(note2)).toEqual([]);
+    });
 
-      expect(index.containsNote(addedFile)).toBe(false);
-      expect(Array.from(index.notes())).toHaveLength(0);
-      expect(index.linksFrom(addedFile)).toHaveLength(0);
+    it('adds links', () => {
+      index.onFileModified(note1, 'I removed the link to note2');
+      index.onFileModified(note1, 'then put it back: [[note2]]');
+      expect(index.linksFrom(note1)).toEqual([note2]);
+      expect(index.linksTo(note2)).toEqual([note1]);
+    });
+  });
+
+  describe('when a file is deleted', () => {
+    let index: InMemoryLinkIndex;
+    const note1 = process.platform === 'win32' ? 'C:\\a\\note1.md' : '/a/note1.md';
+    const note2 = process.platform === 'win32' ? 'C:\\a\\note2.md' : '/a/note2.md';
+
+    beforeAll(() => {
+      index = new InMemoryLinkIndex();
+      index.addFile(note1, 'has a markdown link: [link](note2.md)');
+      index.addFile(note2, 'has a wiki link: [[link | note1]]');
+      index.finalise();
+      index.onFileDeleted(note1);
+    });
+
+    it('removes links', () => {
+      expect(index.linksTo(note2)).toEqual([]);
+      expect(index.linksFrom(note1)).toEqual([]);
+    });
+  });
+
+  describe('when a file is moved', () => {
+    let index: InMemoryLinkIndex;
+    const note1 = process.platform === 'win32' ? 'C:\\a\\note1.md' : '/a/note1.md';
+    const note2old = process.platform === 'win32' ? 'C:\\a\\note2.md' : '/a/note2.md';
+    const note2new = process.platform === 'win32' ? 'C:\\a\\subdir\\note2.md' : '/a/subdir/note2.md';
+    const note2text = 'has a wiki link: [[link | note1]]';
+
+    beforeAll(() => {
+      index = new InMemoryLinkIndex();
+      index.addFile(note1, 'has a markdown link: [link](note2.md)');
+      index.addFile(note2old, note2text);
+      index.finalise();
+      index.onFileDeleted(note2old);
+      index.onFileModified(note2new, note2text);
+    });
+
+    it('updates links from', () => {
+      expect(index.linksFrom(note2new)).toEqual([note1]);
+    });
+
+    it('updates dead links', () => {
+      expect(index.findAllDeadLinks()).toEqual([new Link(note1, note2old)]);
+    });
+
+    it('updates links to', () => {
+      index.onFileModified(note1, 'fixed markdown link: [link](subdir/note2.md)');
+      expect(index.linksTo(note2new)).toEqual([note1]);
+    });
+
+    it('updates absolute paths', () => {
+      expect(index.filenameToAbsPath('note2')).toEqual([note2new]);
+    });
+
+    it('updates notes', () => {
+      expect(Array.from(index.notes())).toEqual([note1, note2new]);
     });
   });
 
@@ -67,6 +136,7 @@ describe('InMemoryLinkIndex, mocked filesystem', () => {
     const index = new InMemoryLinkIndex();
     const addedFile = '/a/b.txt';
     index.addFile('/a/b.txt', 'a [link](http://to/internet/stuff)');
+    index.finalise();
 
     expect(index.linksFrom(addedFile)).toEqual([]);
     expect(index.containsNote(addedFile)).toBe(true);

@@ -1,4 +1,6 @@
-import { LunrFullTextSearch } from './lunrFullTextSearch';
+import { InMemFileSystem } from '../utils/InMemFileSystem';
+import { FullTextSearch } from './FullTextSearch';
+import { LunrDualFts } from './lunrDualFts';
 
 declare global {
   namespace jest {
@@ -33,25 +35,38 @@ class FileAndTags {
   ) {}
 }
 
-describe('lunr full text search', () => {
-  let lunrSearch: LunrFullTextSearch;
+let fakeFs: InMemFileSystem;
+
+describe('full text search', () => {
+  let fts: FullTextSearch;
 
   const index = async (files: FileAndTags[]) => {
-    lunrSearch.reset();
+    fts = new LunrDualFts(fakeFs);
     for (const file of files) {
-      await lunrSearch.indexFile(file.path, file.text, file.tags);
+      await fts.addFile(file.path, file.text, file.tags);
+      fakeFs.writeFile(file.path, file.text);
     }
-    lunrSearch.finalise();
   };
 
   const searchFor = async (query: string, text: string, tags: string[] = []) => {
     await index([new FileAndTags(aTextFilePath, text, tags)]);
 
-    return lunrSearch.search(query);
+    return fts.search(query);
+  };
+
+  const modifyFile = async (file: FileAndTags) => {
+    fakeFs.writeFile(file.path, file.text);
+    await fts.onFileModified(file.path, file.text, file.tags);
+  };
+
+  const deleteFile = async (path: string) => {
+    fakeFs.deleteFile(path);
+    return fts.onFileDeleted(path);
   };
 
   beforeEach(() => {
-    lunrSearch = new LunrFullTextSearch();
+    fakeFs = new InMemFileSystem();
+    fts = new LunrDualFts(fakeFs);
   });
 
   it('index and search example', async () => {
@@ -60,7 +75,7 @@ describe('lunr full text search', () => {
       new FileAndTags('a/b/c.log', 'what about shoes and biscuits'),
     ]);
 
-    const results = await lunrSearch.search('blah');
+    const results = await fts.search('blah');
 
     expect(results.length).toBe(1);
     expect(results[0]).toBe('a/b.txt');
@@ -84,6 +99,101 @@ describe('lunr full text search', () => {
 
   it('finds after slash', async () => {
     await expect(searchFor("refactor", "red/green/refactor")).toBeFound();
+  });
+
+  it('updates index after file is modified', async () => {
+    await index([
+      new FileAndTags('a/b.txt', 'blah blah some stuff and things'),
+      new FileAndTags('a/b/c.log', 'what about shoes and biscuits'),
+    ]);
+
+    let results = await fts.search('blah');
+    expect(results.length).toBe(1);
+
+    let modified = new FileAndTags('a/b.txt', 'some stuff and things and more things');
+    await modifyFile(modified);
+
+    results = await fts.search('blah');
+    expect(results.length).toBe(0);
+
+    modified = new FileAndTags('a/b.txt', 'ok blah is back');
+    await modifyFile(modified);
+
+    results = await fts.search('blah');
+    expect(results.length).toBe(1);
+
+    modified = new FileAndTags('a/b/c.log', 'blah now both notes contain blah');
+    await modifyFile(modified);
+
+    results = await fts.search('blah');
+    expect(results.length).toBe(2);
+  });
+
+  it('orders search results by relevance', async () => {
+    await index([
+      new FileAndTags('lots.of.blah.txt', 'blah blah blah'),
+      new FileAndTags('one.blah.md', 'blah'),
+      new FileAndTags('medium.blah.log', 'blah blah'),
+    ]);
+
+    let results = await fts.search('blah');
+
+    expect(results).toStrictEqual([
+      'lots.of.blah.txt',
+      'medium.blah.log',
+      'one.blah.md'
+    ]);
+  });
+
+  it('orders search results by relevance, after modification', async () => {
+    await index([
+      new FileAndTags('lots.of.blah.txt', 'blah blah blah'),
+      new FileAndTags('medium.blah.log', 'blah blah'),
+      new FileAndTags('one.blah.md', 'blah'),
+    ]);
+
+    let modified = new FileAndTags('one.blah.md', 'most blah! blah blah blah blah');
+    await modifyFile(modified);
+
+    const results = await fts.search('blah');
+
+    expect(results).toStrictEqual([
+      'one.blah.md',
+      'lots.of.blah.txt',
+      'medium.blah.log',
+    ]);
+  });
+
+  it('finds file after it was deleted and recreated', async () => {
+    await index([
+      new FileAndTags('a/b.txt', 'blah blah some stuff and things'),
+      new FileAndTags('a/b/c.log', 'what about shoes and biscuits'),
+    ]);
+
+    await deleteFile('a/b.txt');
+
+    let results = await fts.search('blah');
+    expect(results).toHaveLength(0);
+
+    const modified = new FileAndTags('a/b.txt', 'ok blah is back');
+    await modifyFile(modified);
+
+    results = await fts.search('blah');
+    expect(results.length).toBe(1);
+  });
+
+  it('does not find file after it was modified then deleted', async () => {
+    await index([
+      new FileAndTags('a/b.txt', 'blah blah some stuff and things'),
+      new FileAndTags('a/b/c.log', 'what about shoes and biscuits'),
+    ]);
+
+    const modified = new FileAndTags('a/b.txt', 'modified blah blah');
+    await modifyFile(modified);
+    await deleteFile('a/b.txt');
+
+    let results = await fts.search('blah');
+    expect(results).toHaveLength(0);
   });
 
   describe('markdown links', () => {
@@ -168,38 +278,6 @@ describe('lunr full text search', () => {
       await expect(searchFor("#meat-pie", "I want a", ['meat-pie'])).toBeFound();
       await expect(searchFor("#meat-pie", "I want a", ['meat'])).not.toBeFound();
       await expect(searchFor("#meat", "I want a", ['meat-pie'])).not.toBeFound();
-    });
-  });
-
-  describe('expand query tags', () => {
-    it('replaces tag at the start of a query', () => {
-      const inputQuery = '#tag';
-      const expandedQuery = lunrSearch.expandQueryTags(inputQuery);
-      expect(expandedQuery).toBe('tags:tag');
-    });
-
-    it('replaces tag in the middle of a query', () => {
-      const inputQuery = 'hello #tag boy';
-      const expandedQuery = lunrSearch.expandQueryTags(inputQuery);
-      expect(expandedQuery).toBe('hello tags:tag boy');
-    });
-
-    it('replaces multiple tags', () => {
-      const inputQuery = 'hello #tag #boy';
-      const expandedQuery = lunrSearch.expandQueryTags(inputQuery);
-      expect(expandedQuery).toBe('hello tags:tag tags:boy');
-    });
-
-    it('does not replace non tag', () => {
-      const inputQuery = 'this is no#t a tag';
-      const expandedQuery = lunrSearch.expandQueryTags(inputQuery);
-      expect(expandedQuery).toBe(inputQuery);
-    });
-
-    it('works with operators', () => {
-      const inputQuery = 'dont include this -#tag';
-      const expandedQuery = lunrSearch.expandQueryTags(inputQuery);
-      expect(expandedQuery).toBe('dont include this -tags:tag');
     });
   });
 });

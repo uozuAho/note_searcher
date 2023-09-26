@@ -1,25 +1,25 @@
 import { DefaultMultiIndex } from './DefaultMultiIndex';
 import { createFileSystem } from '../utils/FileSystem';
-import { FullTextSearch } from '../search/FullTextSearch';
-import { TagIndex } from './TagIndex';
-import { LinkIndex } from "./LinkIndex";
-import { NoteIndex } from "./NoteIndex";
+import { Link } from "./LinkIndex";
 
-export type MultiIndex =
-  FileSystemIndexer
-  & FullTextSearch
-  & TagIndex
-  & NoteIndex
-  & LinkIndex;
+export interface MultiIndex {
+  // queries
+  fullTextSearch: (query: string) => Promise<string[]>;
+  allTags: () => string[];
+  filenameToAbsPath(filename: string): string[];
+  notes(): IterableIterator<string>;
+  containsNote(absPathOrFilename: string): boolean;
+  linksFrom(absPath: string): string[];
+  linksTo(path: string): string[];
+  findAllDeadLinks(): Link[];
 
-interface FileSystemIndexer {
-  index: (dir: string) => Promise<void>;
+  // commands
+  indexAllFiles: (dir: string) => Promise<void>;
+  onFileModified: (path: string, text: string) => Promise<void>;
+  onFileDeleted: (path: string) => Promise<void>;
 }
 
-/**
- * @param extensionDir location of this vscode extension's directory
- */
-export const createMultiIndex = (): MultiIndex =>
+export const createMultiIndex = (workspaceDir: string) =>
 {
-  return new DefaultMultiIndex(createFileSystem());
+  return new DefaultMultiIndex(createFileSystem(), workspaceDir);
 };
