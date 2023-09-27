@@ -4,6 +4,8 @@ All notable changes to the "note-searcher" extension will be documented in this
 file. Format inspired by https://keepachangelog.com/en/1.0.0/
 
 ## unreleased
+
+## [3.0.0] - 2023-09-27
 ### Removed
 - config: no longer supported. This includes ignoring file/directory patterns
   from indexing.
