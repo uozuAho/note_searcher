@@ -2,7 +2,7 @@
 	"name": "note-searcher",
 	"displayName": "note-searcher",
 	"description": "Manage your knowledge base of text files",
-  "icon": "img/note-stack.png",
+  "icon": "img/note-stack2.png",
   "galleryBanner": {
     "color": "#060000",
     "theme": "dark"
@@ -35,7 +35,7 @@
 				{
 					"id": "noteSearcher",
 					"title": "Note Searcher",
-					"icon": "img/note-stack.png"
+					"icon": "img/note-stack2.png"
 				}
 			]
 		},
