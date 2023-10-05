@@ -3,7 +3,10 @@
 All notable changes to the "note-searcher" extension will be documented in this
 file. Format inspired by https://keepachangelog.com/en/1.0.0/
 
-## unreleased
+## [3.0.1] - 2023-10-05
+### Changed
+- New icon
+- Updated docs
 
 ## [3.0.0] - 2023-09-27
 ### Removed
