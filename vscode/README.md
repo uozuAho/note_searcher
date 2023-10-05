@@ -32,11 +32,11 @@ collection:
 
 ## How to use this extension
 
-![extension screenshot](./img/ext_screenshot.png)
+![extension screenshot](https://github.com/uozuAho/note_searcher/tree/master/vscode/img/ext_screenshot.png)
 
-![create a new note](./img/new_note.png)
+![create a new note](https://github.com/uozuAho/note_searcher/tree/master/vscode/img/new_note.png)
 
-![tag autocompletion](./img/tag_autocomplete.png)
+![tag autocompletion](https://github.com/uozuAho/note_searcher/tree/master/vscode/img/tag_autocomplete.png)
 
 
 ### Full text search
