@@ -1,20 +1,19 @@
 # Note Searcher
 
-Tool for managing a knowledge base of text files, such as a zettelkasten. Works
-with a flat or hierarchical file structure. Similar to:
+Helps manage your knowledge base of text files, such as a zettelkasten. Works
+with a flat or hierarchical file structure. Very similar to [Foam](https://foambubble.github.io/foam/)!
+Foam is much more popular and well supported. Why does this extension exist?
+Foam wasn't around when I started this extension, and has some key differences
+that keep me using this extension.
 
-- [The Archive](https://zettelkasten.de/the-archive/)
-- [Zettlr](https://www.zettlr.com/)
-- [Foam](https://foambubble.github.io/foam/)
+Key differences to Foam:
++ includes full text search
++ wiki link aliases are backwards: [[like this | some_file.md]]
 
-
-Other nice extensions that do similar/other good things for managing a note
-collection:
-
-- [markdown notes](https://github.com/kortina/vscode-markdown-notes)
-  - wiki links with navigation, backlinks
-- [paste image](https://marketplace.visualstudio.com/items?itemName=mushan.vscode-paste-image)
-  - paste images/screenshots from the clipboard into markdown notes
+Some nice Foam features not in this extension:
+- link autocomplete
+- update links on file rename
+- graph visualisation (I've never found this to be useful)
 
 
 ## Feature summary
@@ -32,14 +31,14 @@ collection:
 
 ## How to use this extension
 
-![extension screenshot](https://github.com/uozuAho/note_searcher/tree/master/vscode/img/ext_screenshot.png)
-
-![create a new note](https://github.com/uozuAho/note_searcher/tree/master/vscode/img/new_note.png)
-
-![tag autocompletion](https://github.com/uozuAho/note_searcher/tree/master/vscode/img/tag_autocomplete.png)
+Install and enable it in your workspace. I don't recommend enabling everywhere,
+as it will try to index every folder, which can take a long time if there are a
+lot of files.
 
 
 ### Full text search
+
+![Sidebar and full text search](./img/fts.png)
 
 This extension indexes all .md, .txt and .log files in the currently open
 folder.
@@ -55,6 +54,8 @@ apple banana #food    # file contains apple, banana, and/or the tag #food
 
 ### Tags
 
+![tag autocompletion](./img/tag_autocomplete2.png)
+
 Any word starting with a '#' character is considered a tag, allowing for
 tag-based searching. #hyphenated-tags are supported.
 
@@ -64,6 +65,8 @@ All existing tags are shown in the sidebar, as per the screenshot.
 
 
 ### Creating notes
+
+![create a new note](./img/new_note2.png)
 
 Press `ctrl+alt+n` to create a new note in the same directory as the currently
 open note.
