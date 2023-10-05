@@ -1,7 +1,12 @@
 {
 	"name": "note-searcher",
 	"displayName": "note-searcher",
-	"description": "Manage a knowledge base of markdown files",
+	"description": "Manage your knowledge base of text files",
+  "icon": "img/note-stack.png",
+  "galleryBanner": {
+    "color": "#060000",
+    "theme": "dark"
+  },
 	"version": "3.0.0",
 	"publisher": "uozuaho",
 	"preview": false,
