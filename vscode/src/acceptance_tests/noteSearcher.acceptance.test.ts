@@ -145,8 +145,7 @@ describe('on file deleted', () => {
     expect(ns.linksToThisNote()).not.toContain(trains);
   });
 
-  // todo: fix this when fixing all 'links to' behaviour
-  it.skip('removes links to the deleted file', async () => {
+  it('removes links to the deleted file', async () => {
     expect(ns.linksFromThisNote()).not.toContain(trains);
   });
 
