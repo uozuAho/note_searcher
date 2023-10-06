@@ -7,7 +7,7 @@
 		"color": "#060000",
 		"theme": "dark"
 	},
-	"version": "3.0.1",
+	"version": "3.0.2",
 	"publisher": "uozuaho",
 	"preview": false,
 	"repository": {
@@ -154,7 +154,7 @@
 		"test": "jest",
 		"test:watch": "jest --watch",
 		"build_vsix": "vsce package",
-		"publish": "vsce publish -p $VSCE_PAT --baseImagesUrl https://github.com/uozuAho/note_searcher/tree/master/vscode"
+		"publish": "vsce publish -p $VSCE_PAT --baseImagesUrl https://github.com/uozuAho/note_searcher/raw/HEAD/vscode"
 	},
 	"devDependencies": {
 		"@types/chai": "^4.2.22",
