@@ -49,9 +49,19 @@ jest.mock('../vs_code_apis/registryCreator', () => {
   };
 });
 
-jest.mock('../tag_completion/tagCompleterCreator', () => {
+jest.mock('../autocomplete/tagCompleterCreator', () => {
   return {
     createTagCompleter: () => {
+      return {
+        provideCompletionItems: () => {}
+      };
+    }
+  };
+});
+
+jest.mock('../autocomplete/createWikilinkCompleter', () => {
+  return {
+    createWikilinkCompleter: () => {
       return {
         provideCompletionItems: () => {}
       };

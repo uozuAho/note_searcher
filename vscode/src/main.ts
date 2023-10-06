@@ -4,9 +4,10 @@ import { NoteLocator } from './definition_provider/NoteLocator';
 import { createNoteSearcherUi } from './ui/uiCreator';
 import { VsCodeExtensionContext } from './vs_code_apis/extensionContext';
 import { createVsCodeRegistry } from './vs_code_apis/registryCreator';
-import { createTagCompleter } from './tag_completion/tagCompleterCreator';
+import { createTagCompleter } from './autocomplete/tagCompleterCreator';
 import { createWikiLinkDefinitionProvider } from './definition_provider/defProviderCreator';
 import { createFileSystem } from './utils/FileSystem';
+import { createWikilinkCompleter } from './autocomplete/createWikilinkCompleter';
 
 export const extensionId = 'uozuaho.note-searcher';
 
@@ -54,6 +55,9 @@ export async function activate(context: VsCodeExtensionContext) {
 
     registry.registerCompletionItemProvider(['markdown', 'plaintext'],
       createTagCompleter(multiIndex), ['#']),
+
+    registry.registerCompletionItemProvider(['markdown', 'plaintext'],
+      createWikilinkCompleter(multiIndex), ['[']),
 
     registry.registerDefinitionProvider(['markdown', 'plaintext'],
       createWikiLinkDefinitionProvider(noteLocator)),
