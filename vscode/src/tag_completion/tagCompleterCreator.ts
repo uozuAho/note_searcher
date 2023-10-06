@@ -1,7 +1,6 @@
 import { TagIndex } from "../index/TagIndex";
-import { TagCompleter } from "./TagCompleter";
 import { VsCodeTagCompleter } from "./VsCodeTagCompleter";
 
-export function createTagCompleter(tagsProvider: TagIndex): TagCompleter {
+export function createTagCompleter(tagsProvider: TagIndex) {
   return new VsCodeTagCompleter(tagsProvider);
 }
