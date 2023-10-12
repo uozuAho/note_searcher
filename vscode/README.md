@@ -8,10 +8,9 @@ that keep me using this extension.
 
 Key differences to Foam:
 + includes full text search
-+ wiki link aliases are backwards: [[like this | some_file.md]]
++ wiki link aliases are backwards: [[like this | some_filename]]
 
 Some nice Foam features not in this extension:
-- link autocomplete
 - update links on file rename
 - graph visualisation (I've never found this to be useful)
 
@@ -20,7 +19,7 @@ Some nice Foam features not in this extension:
 
 - Full text search
 - Quick-create notes
-- Tag autocompletion
+- Link and tag autocompletion
 - Copy markdown/wiki link to note from search results, file explorer
 - Copy markdown/wiki link to note from editor tab
 - Wiki link highlighting and navigation
@@ -74,29 +73,22 @@ open note.
 
 ### Linking notes
 
-With VS Code, you can add links to local files using markdown
-syntax. These become hyperlinks to your local files. Examples:
+![autocomplete wiki links](./img/link_autocomplete.png)
 
-- `[](path/relative/to/file)`
+You can add links to other notes using wiki-style links, like [[this]] or with
+a label first: [[some description | filename]]. If multiple files with the same
+name exist, vscode will prompt for which note to navigate to.
+
+Markdown links are also supported, eg. `[](path/relative/to/file)`.
 
 You can copy a markdown or wiki link to a search result by right-clicking on the
 search result. You can also copy this link from the explorer and editor tabs.
-
-Wiki-style links are also supported. The link must be a filename with no
-extension, with an optional description before a pipe separator. Eg. [[note]] or
-[[a note with a description | and_filename]]. If multiple notes with the same
-name exist, vscode will prompt for which note to navigate to.
 
 Links within code blocks are ignored:
 
 ```sh
 #like this one: [[yo]]
 ```
-
-
-### Links to and from current note
-
-Links to and from  the currently open note are shown in the sidebar.
 
 
 ### Find dead links
