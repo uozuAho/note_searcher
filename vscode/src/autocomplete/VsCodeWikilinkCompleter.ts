@@ -1,37 +1,45 @@
 import * as vscode from 'vscode';
-import { NoteIndex } from '../index/NoteIndex';
 import path = require('path');
+import { NoteIndex } from '../index/NoteIndex';
+import { FileSystem } from '../utils/FileSystem';
 
 export class VsCodeWikilinkCompleter implements vscode.CompletionItemProvider {
-  constructor(private noteIndex: NoteIndex) {}
+  constructor(
+    private noteIndex: NoteIndex,
+    private fileSystem: FileSystem) {}
 
-  provideCompletionItems(
-    document: vscode.TextDocument,
-    position: vscode.Position,
-    token: vscode.CancellationToken,
-    context: vscode.CompletionContext)
-    : vscode.ProviderResult<vscode.CompletionItem[] | vscode.CompletionList>
-  {
+  provideCompletionItems(document: vscode.TextDocument, position: vscode.Position) {
     if (!this.shouldAutocomplete(document, position)) {
       return Promise.resolve([]);
     }
 
     return Promise.resolve(
       Array.from(this.noteIndex.notes())
-        .map(t => path.basename(t, '.md'))
-        .map(t => new vscode.CompletionItem(t, vscode.CompletionItemKind.Text))
+        .map(absPath => {
+          const label = path.basename(absPath, '.md');
+          const item = new vscode.CompletionItem(label, vscode.CompletionItemKind.File);
+          item.detail = absPath;
+          return item;
+        })
     );
   }
 
-  private shouldAutocomplete(document: vscode.TextDocument, position: vscode.Position) {
-    if (position.character < 2) {
-      return false;
+  resolveCompletionItem(item: vscode.CompletionItem) {
+    const notePath = item.detail;
+    if (notePath) {
+      const text = this.fileSystem.readFile(notePath);
+      item.documentation = text;
     }
+    return item;
+  }
 
-    const prev = document
+  private shouldAutocomplete(document: vscode.TextDocument, position: vscode.Position) {
+    const charNum = position.character;
+
+    if (charNum < 2) { return false; }
+
+    return document
       .lineAt(position.line)
-      .text.substring(position.character - 2, position.character - 1);
-
-    return prev === "[";
+      .text.substring(charNum - 2, charNum ) === '[[';
   }
 }

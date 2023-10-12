@@ -57,7 +57,7 @@ export async function activate(context: VsCodeExtensionContext) {
       createTagCompleter(multiIndex), ['#']),
 
     registry.registerCompletionItemProvider(['markdown', 'plaintext'],
-      createWikilinkCompleter(multiIndex), ['[']),
+      createWikilinkCompleter(multiIndex, fs), ['[']),
 
     registry.registerDefinitionProvider(['markdown', 'plaintext'],
       createWikiLinkDefinitionProvider(noteLocator)),
