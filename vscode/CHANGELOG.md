@@ -3,6 +3,10 @@
 All notable changes to the "note-searcher" extension will be documented in this
 file. Format inspired by https://keepachangelog.com/en/1.0.0/
 
+## [3.1.0] - 2023-10-12
+### Added
+- Autocomplete for wiki links
+
 ## [3.0.2] - 2023-10-06
 ### Changed
 - Docs: trying to make screenshots show up in marketplace and extension browser
