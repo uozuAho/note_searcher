@@ -3,7 +3,11 @@
 All notable changes to the "note-searcher" extension will be documented in this
 file. Format inspired by https://keepachangelog.com/en/1.0.0/
 
-## [3.1.1] - 2024-03-02
+## [3.1.2] - 2024-03-02 - BROKEN
+### Changed
+- Fixed broken build in 3.1.1
+
+## [3.1.1] - 2024-03-02 - BROKEN
 ### Security
 - Updating library dependencies
 
