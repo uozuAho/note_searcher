@@ -11,16 +11,10 @@ export class FakeVsCodeRegistry implements VsCodeRegistry {
     selector: string[],
     provider: any,
     triggerChars: string[]) => {
-    return {
-      dispose: () => { },
-      [Symbol.dispose]: () => { }
-    };
+    return { dispose: () => { } };
   };
 
   public registerDefinitionProvider = (selector: string[], provider: any) => {
-    return {
-      dispose: () => { },
-      [Symbol.dispose]: () => { }
-    };
+    return { dispose: () => { } };
   };
 }

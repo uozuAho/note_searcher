@@ -26,10 +26,7 @@ export class FakeVsCodeNoteSearcher {
 
   public registerCommand = (command: string, callback: any) => {
     this._registeredCommands.set(command, callback);
-    return {
-      dispose: () => { },
-      [Symbol.dispose]: () => { }
-    };
+    return { dispose: () => { } };
   };
 
   public search = async (query: string) => {
