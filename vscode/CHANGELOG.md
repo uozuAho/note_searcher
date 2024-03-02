@@ -3,6 +3,10 @@
 All notable changes to the "note-searcher" extension will be documented in this
 file. Format inspired by https://keepachangelog.com/en/1.0.0/
 
+## [3.1.1] - 2024-03-02
+### Security
+- Updating library dependencies
+
 ## [3.1.0] - 2023-10-12
 ### Added
 - Autocomplete for wiki links

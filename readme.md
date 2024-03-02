@@ -38,6 +38,25 @@ configuration.
 Run `npm run build_vsix` in the vscode directory.
 
 
+## Updating dependencies
+
+Speedrun:
+
+```sh
+cd vscode
+npm outdated
+npm update
+npm test
+npm outdated
+# if any major updates available:
+npm rm [list] [of] [deps] [to] [update]
+npm i -D <same list as above>
+npm test
+# just in case:
+npm audit
+```
+
+
 # todo
 - feature: extract text to new note
 - feature: make paths queryable. Eg. i want to exclude ABC from path, but not contents
