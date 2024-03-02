@@ -13,7 +13,7 @@ class RealVsCodeRegistry implements VsCodeRegistry {
     return vscode.languages.registerCompletionItemProvider(selector, provider, ...triggerChars);
   }
 
-  public registerDefinitionProvider(selector: string[], provider: any): Disposable {
+  public registerDefinitionProvider(selector: string[], provider: any) {
     return vscode.languages.registerDefinitionProvider(selector, provider);
   }
 }
