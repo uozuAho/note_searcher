@@ -54,6 +54,8 @@ npm i -D <same list as above>
 npm test
 # just in case:
 npm audit
+# make sure it still builds:
+npm run webpack
 ```
 
 
