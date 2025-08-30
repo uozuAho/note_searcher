@@ -19,7 +19,7 @@ import { InMemFileSystem } from "../utils/InMemFileSystem";
 import { FileSystem } from "../utils/FileSystem";
 import { allFilesUnderPath } from "./readAllFiles";
 
-const _path = require('path');
+import _path = require('path');
 const demoDir = _path.resolve(__dirname, '../../demo_dir');
 
 let _fakeUi = new FakeUi();
