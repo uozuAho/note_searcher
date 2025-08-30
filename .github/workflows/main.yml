@@ -44,7 +44,7 @@ jobs:
 
       - name: upload
         if: github.ref == 'refs/heads/master' && matrix.os == 'ubuntu-latest'
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v4
         with:
           name: note-searcher.vsix
           path: vscode/*.vsix
