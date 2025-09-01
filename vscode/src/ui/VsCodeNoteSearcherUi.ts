@@ -64,7 +64,13 @@ export class VsCodeNoteSearcherUi implements NoteSearcherUi {
   public startNewNote = async (path: string) => {
     const uri = vscode.Uri.file(path).with({scheme: 'untitled'});
     const doc = await vscode.workspace.openTextDocument(uri);
-    await vscode.window.showTextDocument(doc);
+    const pathSegments = uri.path.split('/');
+    const filename = pathSegments[pathSegments.length - 1];
+    const heading = filename.replace(/_/g, ' ').replace('.md', '').trim();
+    const editor = await vscode.window.showTextDocument(doc);
+    await editor.edit(editBuilder => {
+      editBuilder.insert(new vscode.Position(0, 0), `# ${heading}\n\n`);
+    });
     return;
   };
 
