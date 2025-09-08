@@ -3,6 +3,4 @@ search and wiki link indexing and navigation.
 
 The root of the extension project is the `vscode` folder.
 
-The main class the provides all functionality is in
-./vscode/src/note_searcher/noteSearcher.ts . It gets hooked up
-to the extension framework in ./vscode/src/main.ts .
+To understand the code, first read [](../docs/code_explainer.md)

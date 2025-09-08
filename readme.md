@@ -8,17 +8,14 @@ Features:
 - search by tags
 - shortcuts for creating and linking notes
 
-See the [extension marketplace](https://marketplace.visualstudio.com/items?itemName=uozuaho.note-searcher) for more details.
+See the [extension readme](./vscode/README.md) for more info.
 
 
 # Contributing
 
-## Requirements
-
-- nodejs
-
-
-## Run tests
+## Quick start
+Install nodejs (see [github actions](.github/workflows/main.yml) for which
+version). Then:
 
 ```sh
 cd vscode
@@ -26,20 +23,14 @@ npm install
 npm test
 ```
 
-
 ## Run the extension locally
-
 Open the vscode directory with VS code, and run the `Run Extension`
 configuration.
 
-
 ## Build the extension locally
-
 Run `npm run build_vsix` in the vscode directory.
 
-
 ## Updating dependencies
-
 Speedrun:
 
 ```sh
@@ -57,6 +48,9 @@ npm audit
 # make sure it still builds:
 npm run webpack
 ```
+
+## Understanding the code/architecture
+See [code explainer](./docs/code_explainer.md)
 
 
 # todo
