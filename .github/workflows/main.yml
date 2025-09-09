@@ -22,7 +22,7 @@ jobs:
         with:
           node-version: 22
 
-      - run: npm install
+      - run: npm ci
         working-directory: vscode
 
       - name: Run js unit tests
@@ -39,7 +39,7 @@ jobs:
         if: github.ref == 'refs/heads/master' && matrix.os == 'ubuntu-latest'
         working-directory: vscode
         run: |
-          npm install
+          npm ci
           npm run build_vsix
 
       - name: upload
