@@ -1,6 +1,6 @@
 const _path = require('path');
 
-import { posixRelativePath, createFileSystem } from "./FileSystem";
+import { posixRelativePath, createFileSystem } from "./NodeFileSystem";
 
 describe('FileSystem', () => {
   describe('posixRelativePath', () => {

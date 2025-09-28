@@ -1,5 +1,5 @@
 import { DefaultMultiIndex } from './DefaultMultiIndex';
-import { createFileSystem } from '../utils/FileSystem';
+import { createFileSystem } from '../utils/NodeFileSystem';
 import { Link } from "./LinkIndex";
 
 export interface MultiIndex {

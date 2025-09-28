@@ -79,7 +79,7 @@ jest.mock('../definition_provider/defProviderCreator', () => {
   };
 });
 
-jest.mock('../utils/FileSystem', () => {
+jest.mock('../utils/NodeFileSystem', () => {
   return {
     createFileSystem: () => fs
   };

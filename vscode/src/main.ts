@@ -6,7 +6,7 @@ import { VsCodeExtensionContext } from './vs_code_apis/extensionContext';
 import { createVsCodeRegistry } from './vs_code_apis/registryCreator';
 import { createTagCompleter } from './autocomplete/tagCompleterCreator';
 import { createWikiLinkDefinitionProvider } from './definition_provider/defProviderCreator';
-import { createFileSystem } from './utils/FileSystem';
+import { createFileSystem } from './utils/NodeFileSystem';
 import { createWikilinkCompleter } from './autocomplete/createWikilinkCompleter';
 
 export const extensionId = 'uozuaho.note-searcher';

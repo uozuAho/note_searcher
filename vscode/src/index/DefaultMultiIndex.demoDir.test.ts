@@ -1,6 +1,6 @@
 const _path = require('path');
 
-import { createFileSystem } from "../utils/FileSystem";
+import { createFileSystem } from "../utils/NodeFileSystem";
 import { InMemFileSystem } from "../utils/InMemFileSystem";
 import { DefaultMultiIndex } from "./DefaultMultiIndex";
 

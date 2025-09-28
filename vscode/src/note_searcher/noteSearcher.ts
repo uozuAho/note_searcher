@@ -6,7 +6,7 @@ import { MultiIndex } from "../index/MultiIndex";
 import { createDiagnostics, Diagnostics } from "../diagnostics/diagnostics";
 import { TimeProvider, createTimeProvider } from "../utils/timeProvider";
 import { formatDateTime_YYYYMMddhhmm } from "../utils/timeFormatter";
-import { posixRelativePath } from "../utils/FileSystem";
+import { posixRelativePath } from "../utils/NodeFileSystem";
 import { IFileSystem } from '../utils/IFileSystem';
 
 export class NoteSearcher {
