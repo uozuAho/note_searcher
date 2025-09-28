@@ -2,7 +2,7 @@ import { DefaultMultiIndex } from './DefaultMultiIndex';
 import { createFileSystem } from '../utils/NodeFileSystem';
 import { Link } from "./LinkIndex";
 
-export interface MultiIndex {
+export interface IMultiIndex {
   // queries
   fullTextSearch: (query: string) => Promise<string[]>;
   allTags: () => string[];

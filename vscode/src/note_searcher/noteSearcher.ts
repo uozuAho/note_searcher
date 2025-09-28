@@ -2,8 +2,8 @@ const path = require('path');
 
 import { INoteSearcherUi } from "../ui/INoteSearcherUi";
 import { IFile } from "../utils/IFile";
-import { MultiIndex } from "../index/MultiIndex";
-import { createDiagnostics, Diagnostics } from "../diagnostics/diagnostics";
+import { IMultiIndex } from "../index/MultiIndex";
+import { createDiagnostics, IDiagnostics } from "../diagnostics/diagnostics";
 import { ITimeProvider, createTimeProvider } from "../utils/timeProvider";
 import { formatDateTime_YYYYMMddhhmm } from "../utils/timeFormatter";
 import { posixRelativePath } from "../utils/NodeFileSystem";
@@ -11,11 +11,11 @@ import { IFileSystem } from '../utils/IFileSystem';
 
 export class NoteSearcher {
   private previousSearchInput = '';
-  private diagnostics: Diagnostics;
+  private diagnostics: IDiagnostics;
 
   constructor(
     private ui: INoteSearcherUi,
-    private index: MultiIndex,
+    private index: IMultiIndex,
     private fs: IFileSystem,
     private timeProvider: ITimeProvider = createTimeProvider())
   {

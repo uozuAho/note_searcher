@@ -1,7 +1,7 @@
-import { NoteIndex } from "../index/NoteIndex";
+import { INoteIndex } from "../index/INoteIndex";
 
 export class NoteLocator {
-  constructor(private noteIndex: NoteIndex) { }
+  constructor(private noteIndex: INoteIndex) { }
 
   public locateNote(noteName: string) {
     return this.noteIndex.filenameToAbsPath(noteName) || [];

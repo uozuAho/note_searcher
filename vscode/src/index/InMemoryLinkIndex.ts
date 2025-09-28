@@ -3,10 +3,10 @@ const _path = require('path');
 import { extractMarkdownLinks } from "../text_processing/mdLinkExtractor";
 import { extractWikiLinks } from "../text_processing/wikiLinkExtractor";
 import { GoodSet } from "../utils/goodSet";
-import { Link, LinkIndex } from "./LinkIndex";
-import { NoteIndex } from "./NoteIndex";
+import { Link, ILinkIndex } from "./LinkIndex";
+import { INoteIndex } from "./INoteIndex";
 
-export class InMemoryLinkIndex implements LinkIndex, NoteIndex {
+export class InMemoryLinkIndex implements ILinkIndex, INoteIndex {
   private _notesByAbsPath: Map<string, Note>;
   private _absPathsByFilename: Map<string, string[]>;
 

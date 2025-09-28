@@ -1,4 +1,4 @@
-import { MultiIndex } from "./MultiIndex";
+import { IMultiIndex } from "./MultiIndex";
 import { IFileSystem } from '../utils/IFileSystem';
 
 import { extractTags } from '../text_processing/tagExtractor';
@@ -6,7 +6,7 @@ import { TagSet } from './TagIndex';
 import { InMemoryLinkIndex } from "./InMemoryLinkIndex";
 import { LunrDualFts } from "../search/lunrDualFts";
 
-export class DefaultMultiIndex implements MultiIndex {
+export class DefaultMultiIndex implements IMultiIndex {
   private _fullText: LunrDualFts;
   private _tags = new TagSet();
   private _linkIndex = new InMemoryLinkIndex();

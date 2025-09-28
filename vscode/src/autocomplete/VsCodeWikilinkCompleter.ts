@@ -1,11 +1,11 @@
 import * as vscode from 'vscode';
 import path = require('path');
-import { NoteIndex } from '../index/NoteIndex';
+import { INoteIndex } from '../index/INoteIndex';
 import { IFileSystem } from '../utils/IFileSystem';
 
 export class VsCodeWikilinkCompleter implements vscode.CompletionItemProvider {
   constructor(
-    private noteIndex: NoteIndex,
+    private noteIndex: INoteIndex,
     private fileSystem: IFileSystem) {}
 
   provideCompletionItems(document: vscode.TextDocument, position: vscode.Position) {

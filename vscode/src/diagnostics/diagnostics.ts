@@ -1,6 +1,6 @@
 import { ITimeProvider, createTimeProvider } from "../utils/timeProvider";
 
-export interface Diagnostics {
+export interface IDiagnostics {
   trace: (message: string) => void;
 }
 
@@ -12,7 +12,7 @@ export const createDiagnostics = (
   return new NullDiagnostics();
 };
 
-class ConsoleDiagnostics implements Diagnostics {
+class ConsoleDiagnostics implements IDiagnostics {
   private start: number;
 
   constructor(
@@ -30,6 +30,6 @@ class ConsoleDiagnostics implements Diagnostics {
   };
 }
 
-class NullDiagnostics implements Diagnostics {
+class NullDiagnostics implements IDiagnostics {
   public trace = (message: string) => {};
 }
