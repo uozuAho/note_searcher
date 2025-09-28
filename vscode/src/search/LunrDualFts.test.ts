@@ -1,5 +1,5 @@
 import { InMemFileSystem } from '../utils/InMemFileSystem';
-import { FullTextSearch } from './FullTextSearch';
+import { IFullTextSearch } from './IFullTextSearch';
 import { LunrDualFts } from './lunrDualFts';
 
 declare global {
@@ -38,7 +38,7 @@ class FileAndTags {
 let fakeFs: InMemFileSystem;
 
 describe('full text search', () => {
-  let fts: FullTextSearch;
+  let fts: IFullTextSearch;
 
   const index = async (files: FileAndTags[]) => {
     fts = new LunrDualFts(fakeFs);

@@ -1,4 +1,4 @@
-import { FullTextSearch } from "./FullTextSearch";
+import { IFullTextSearch } from "./IFullTextSearch";
 import { LunrFullTextSearch } from "./lunrFullTextSearch";
 import { IFileSystem } from '../utils/IFileSystem';
 import { extractTags } from '../text_processing/tagExtractor';
@@ -11,7 +11,7 @@ import { extractTags } from '../text_processing/tagExtractor';
  * on every file modification. This is done because lunr doesn't support
  * incremental indexing.
  */
-export class LunrDualFts implements FullTextSearch {
+export class LunrDualFts implements IFullTextSearch {
   private _staticIndex: LunrFullTextSearch;
   private _dynamicIndex: LunrFullTextSearch;
   private _modifiedFiles: Set<string> = new Set();

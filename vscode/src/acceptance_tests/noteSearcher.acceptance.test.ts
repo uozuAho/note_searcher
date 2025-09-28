@@ -10,7 +10,7 @@
  */
 
 import { activate } from "../main";
-import { VsCodeExtensionContext } from "../vs_code_apis/extensionContext";
+import { IVsCodeExtensionContext } from "../vs_code_apis/extensionContext";
 import { FakeUi } from "./FakeUi";
 import { FakeVsCodeNoteSearcher } from "./FakeVsCodeNoteSearcher";
 import { FakeVsCodeRegistry } from "./FakeVsCodeRegistry";
@@ -27,7 +27,7 @@ let ns = new FakeVsCodeNoteSearcher(_fakeUi);
 const demoDirFiles = allFilesUnderPath(demoDir);
 let fs: IFileSystem = InMemFileSystem.fromFiles(demoDirFiles);
 
-class FakeVsCodeExtensionContext implements VsCodeExtensionContext {
+class FakeVsCodeExtensionContext implements IVsCodeExtensionContext {
   subscriptions: { dispose(): any; }[] = [];
 }
 

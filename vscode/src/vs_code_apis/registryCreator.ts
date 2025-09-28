@@ -4,7 +4,7 @@ export function createVsCodeRegistry() {
   return new RealVsCodeRegistry();
 }
 
-class RealVsCodeRegistry implements VsCodeRegistry {
+class RealVsCodeRegistry implements IVsCodeRegistry {
   public registerCommand(name: string, callback: (...args: any[]) => any) {
     return vscode.commands.registerCommand(name, callback);
   }
