@@ -1,7 +1,7 @@
 import * as tmoq from "typemoq";
 import { Link } from "../index/LinkIndex";
 import { INoteSearcherUi, FileChangeListener, FileDeletedListener, FileMovedListener } from "../ui/INoteSearcherUi";
-import { File } from "../utils/File";
+import { IFile } from "../utils/IFile";
 import { MockFile } from "./MockFile";
 
 export class MockUi implements INoteSearcherUi {
@@ -29,9 +29,9 @@ export class MockUi implements INoteSearcherUi {
 
   public startNewNote = (noteName: string) => Promise.resolve();
 
-  private _currentFile: File | null = null;
+  private _currentFile: IFile | null = null;
 
-  public getCurrentFileReturns = (file: File | null) => {
+  public getCurrentFileReturns = (file: IFile | null) => {
     this._currentFile = file;
   };
 

@@ -1,7 +1,7 @@
 const path = require('path');
 
 import { INoteSearcherUi } from "../ui/INoteSearcherUi";
-import { File } from "../utils/File";
+import { IFile } from "../utils/IFile";
 import { MultiIndex } from "../index/MultiIndex";
 import { createDiagnostics, Diagnostics } from "../diagnostics/diagnostics";
 import { TimeProvider, createTimeProvider } from "../utils/timeProvider";
@@ -167,7 +167,7 @@ export class NoteSearcher {
     this.ui.showTags(tags);
   };
 
-  private notifyNoteSaved = async (file: File) => {
+  private notifyNoteSaved = async (file: IFile) => {
     this.diagnostics.trace('note saved');
 
     await this.index.onFileModified(file.path(), file.text());
@@ -190,7 +190,7 @@ export class NoteSearcher {
     this.refreshSidebar();
   };
 
-  private notifyMovedViewToDifferentNote = async (file: File) => {
+  private notifyMovedViewToDifferentNote = async (file: IFile) => {
     this.showBacklinks();
     this.showForwardLinks();
   };

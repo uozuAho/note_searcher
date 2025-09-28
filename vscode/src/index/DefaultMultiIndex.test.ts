@@ -2,7 +2,7 @@ import * as tmoq from 'typemoq';
 
 import { DefaultMultiIndex } from "./DefaultMultiIndex";
 import { FileSystem } from "../utils/FileSystem";
-import { File } from '../utils/File';
+import { IFile } from '../utils/IFile';
 import { MockFile } from '../mocks/MockFile';
 
 declare global {
@@ -35,7 +35,7 @@ describe('DefaultMultiIndex, mocked filesystem', () => {
   let fileSystem: tmoq.IMock<FileSystem>;
   let index: DefaultMultiIndex;
 
-  const setupFiles = (files: File[]) => {
+  const setupFiles = (files: IFile[]) => {
     fileSystem.setup(w => w.allFilesUnderPath(tmoq.It.isAny(), tmoq.It.isAny()))
       .returns(() => files.map(f => f.path()));
     for (const file of files) {

@@ -1,8 +1,8 @@
 import { Link } from "../index/LinkIndex";
 import { FileChangeListener, FileDeletedListener, FileMovedListener, INoteSearcherUi } from "../ui/INoteSearcherUi";
-import { File } from "../utils/File";
+import { IFile } from "../utils/IFile";
 
-class FakeFile implements File {
+class FakeFile implements IFile {
   constructor(private _path: string, private _text: string) { }
   text = () => this._text;
   path = () => this._path;

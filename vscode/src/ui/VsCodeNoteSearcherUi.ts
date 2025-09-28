@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 import { SearchResultTree } from './searchResultTree';
 import { INoteSearcherUi, FileChangeListener, FileDeletedListener, FileMovedListener } from './INoteSearcherUi';
-import { File } from "../utils/File";
+import { IFile } from "../utils/IFile";
 import { DeadLinksTree } from './DeadLinksTree';
 import { LinksTree } from './LinksTree';
 import { TagsTree } from './TagsTree';
@@ -182,7 +182,7 @@ export class VsCodeNoteSearcherUi implements INoteSearcherUi {
   };
 }
 
-class VsCodeFile implements File {
+class VsCodeFile implements IFile {
   constructor(private doc: vscode.TextDocument) {}
 
   text = () => this.doc.getText();
