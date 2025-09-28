@@ -141,9 +141,7 @@ describe('on file deleted', () => {
     await activate(new FakeVsCodeExtensionContext());
     ns.openFolder(demoDir);
     await ns.openFile(readme);
-
-    // memFs.deleteFile(trains);
-    await ns.deleteNote(trains);
+    await ns.deleteFile(trains);
   });
 
   it('is not in search results', async () => {
@@ -175,11 +173,8 @@ describe('on file moved', () => {
     memFs = InMemFileSystem.fromFiles(demoDirFiles);
     await activate(new FakeVsCodeExtensionContext());
     ns.openFolder(demoDir);
-
     await ns.openFile(readme);
-    // memFs.moveFile(oldTrainsPath, newTrainsPath);
-    // await ns.notifyNoteMoved(oldTrainsPath, newTrainsPath);
-    await ns.moveNote(oldTrainsPath, newTrainsPath);
+    await ns.moveFile(oldTrainsPath, newTrainsPath);
   });
 
   it('search result points to new location', async () => {
@@ -234,10 +229,8 @@ describe('on file renamed', () => {
     memFs = InMemFileSystem.fromFiles(demoDirFiles);
     await activate(new FakeVsCodeExtensionContext());
     ns.openFolder(demoDir);
-
     await ns.openFile(readme);
-    memFs.moveFile(oldTrainsPath, newTrainsPath);
-    await ns.notifyNoteMoved(oldTrainsPath, newTrainsPath);
+    await ns.renameFile(oldTrainsPath, newTrainsPath);
   });
 
   it('search result points to new location', async () => {

@@ -17,11 +17,18 @@ export class FakeVsCodeNoteSearcher {
 
   // commands
   public openFolder = (path: string) => this._ui.openFolder(path);
-  public deleteNote = async (path: string) => {
+
+  public deleteFile = async (path: string) => {
     this._fs.deleteFile(path);
     await this._ui.notifyNoteDeleted(path);
   };
-  public moveNote = async (oldPath: string, newPath: string) => {
+
+  public moveFile = async (oldPath: string, newPath: string) => {
+    this._fs.moveFile(oldPath, newPath);
+    await this._ui.notifyNoteMoved(oldPath, newPath);
+  };
+
+  public renameFile = async (oldPath: string, newPath: string) => {
     this._fs.moveFile(oldPath, newPath);
     await this._ui.notifyNoteMoved(oldPath, newPath);
   };
