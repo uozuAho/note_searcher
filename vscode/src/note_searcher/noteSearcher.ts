@@ -4,7 +4,7 @@ import { INoteSearcherUi } from "../ui/INoteSearcherUi";
 import { IFile } from "../utils/IFile";
 import { MultiIndex } from "../index/MultiIndex";
 import { createDiagnostics, Diagnostics } from "../diagnostics/diagnostics";
-import { TimeProvider, createTimeProvider } from "../utils/timeProvider";
+import { ITimeProvider, createTimeProvider } from "../utils/timeProvider";
 import { formatDateTime_YYYYMMddhhmm } from "../utils/timeFormatter";
 import { posixRelativePath } from "../utils/NodeFileSystem";
 import { IFileSystem } from '../utils/IFileSystem';
@@ -17,7 +17,7 @@ export class NoteSearcher {
     private ui: INoteSearcherUi,
     private index: MultiIndex,
     private fs: IFileSystem,
-    private timeProvider: TimeProvider = createTimeProvider())
+    private timeProvider: ITimeProvider = createTimeProvider())
   {
     ui.addNoteSavedListener(this.notifyNoteSaved);
     ui.addNoteDeletedListener(this.notifyNoteDeleted);
