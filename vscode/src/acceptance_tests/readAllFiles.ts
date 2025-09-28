@@ -1,23 +1,29 @@
 import fs = require('graceful-fs');
 import _path = require('path');
+import { IFile } from '../utils/IFile';
 
-interface File {
-  path: string;
-  text: string;
+class File implements IFile {
+  private _path: string;
+  private _text: string;
+
+  constructor(path: string, text: string) {
+    this._path = path;
+    this._text = text;
+  }
+
+  public path() { return this._path; }
+  public text() { return this._text; }
 }
 
 export function allFilesUnderPath(path: string) {
-  const paths: File[] = [];
+  const paths: IFile[] = [];
   walkDir(path, p => paths.push(readFile(p)));
   return paths;
 };
 
 function readFile(path: string) {
   const text = fs.readFileSync(path, 'utf8');
-  return {
-    path,
-    text
-  };
+  return new File(path, text);
 }
 
 function walkDir(dir: string, callback: (path: string) => void)

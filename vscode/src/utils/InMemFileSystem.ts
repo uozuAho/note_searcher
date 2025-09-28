@@ -1,9 +1,5 @@
+import { IFile } from './IFile';
 import { IFileSystem } from './IFileSystem';
-
-interface File {
-  path: string;
-  text: string;
-}
 
 export class InMemFileSystem implements IFileSystem {
 
@@ -20,10 +16,10 @@ export class InMemFileSystem implements IFileSystem {
     return newFs;
   }
 
-  public static fromFiles(files: File[]): IFileSystem {
+  public static fromFiles(files: IFile[]): IFileSystem {
     const newFs = new InMemFileSystem();
     for (const file of files) {
-      newFs.writeFile(file.path, file.text);
+      newFs.writeFile(file.path(), file.text());
     }
     return newFs;
   }
