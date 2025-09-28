@@ -2,10 +2,10 @@ import * as tmoq from 'typemoq';
 
 import { InMemoryLinkIndex } from "./InMemoryLinkIndex";
 import { MockFile } from "../mocks/MockFile";
-import { FileSystem } from "../utils/FileSystem";
+import { IFileSystem } from '../utils/IFileSystem';
 
 describe('InMemoryLinkIndex, dead links, mocked filesystem', () => {
-  let fileSystem: tmoq.IMock<FileSystem>;
+  let fileSystem: tmoq.IMock<IFileSystem>;
   let linkIndex: InMemoryLinkIndex;
 
   const setupFiles = (fileLinks: MockFile[]) => {
@@ -18,7 +18,7 @@ describe('InMemoryLinkIndex, dead links, mocked filesystem', () => {
 
   describe('on file modified', () => {
     beforeEach(() => {
-      fileSystem = tmoq.Mock.ofType<FileSystem>();
+      fileSystem = tmoq.Mock.ofType<IFileSystem>();
       linkIndex = new InMemoryLinkIndex();
     });
 
@@ -49,7 +49,7 @@ describe('InMemoryLinkIndex, dead links, mocked filesystem', () => {
     if (process.platform === 'win32') { return; }
 
     beforeEach(() => {
-      fileSystem = tmoq.Mock.ofType<FileSystem>();
+      fileSystem = tmoq.Mock.ofType<IFileSystem>();
       linkIndex = new InMemoryLinkIndex();
     });
 
@@ -136,7 +136,7 @@ describe('InMemoryLinkIndex, dead links, mocked filesystem', () => {
     if (process.platform === 'win32') { return; }
 
     beforeEach(() => {
-      fileSystem = tmoq.Mock.ofType<FileSystem>();
+      fileSystem = tmoq.Mock.ofType<IFileSystem>();
       linkIndex = new InMemoryLinkIndex();
     });
 
@@ -190,7 +190,7 @@ describe('InMemoryLinkIndex, dead links, mocked filesystem', () => {
     if (process.platform !== 'win32') { return; }
 
     beforeEach(() => {
-      fileSystem = tmoq.Mock.ofType<FileSystem>();
+      fileSystem = tmoq.Mock.ofType<IFileSystem>();
       linkIndex = new InMemoryLinkIndex();
     });
 
@@ -277,7 +277,7 @@ describe('InMemoryLinkIndex, dead links, mocked filesystem', () => {
     if (process.platform !== 'win32') { return; }
 
     beforeEach(() => {
-      fileSystem = tmoq.Mock.ofType<FileSystem>();
+      fileSystem = tmoq.Mock.ofType<IFileSystem>();
       linkIndex = new InMemoryLinkIndex();
     });
 

@@ -4,20 +4,20 @@ import { NoteSearcher } from './noteSearcher';
 import { MultiIndex } from '../index/MultiIndex';
 import { MockUi } from "../mocks/MockUi";
 import { MockFile } from "../mocks/MockFile";
-import { FileSystem } from "../utils/FileSystem";
+import { IFileSystem } from '../utils/IFileSystem';
 
 // OBSOLETE: use noteSearcher.acceptance.test.ts instead
 describe('NoteSearcher', () => {
   let ui: MockUi;
   let searcher: tmoq.IMock<MultiIndex>;
   let noteSearcher: NoteSearcher;
-  let fs: tmoq.IMock<FileSystem>;
+  let fs: tmoq.IMock<IFileSystem>;
 
   describe('search', () => {
     beforeEach(() => {
       ui = new MockUi();
       searcher = tmoq.Mock.ofType<MultiIndex>();
-      fs = tmoq.Mock.ofType<FileSystem>();
+      fs = tmoq.Mock.ofType<IFileSystem>();
 
       noteSearcher = new NoteSearcher(ui, searcher.object, fs.object);
     });

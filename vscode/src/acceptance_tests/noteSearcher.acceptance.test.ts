@@ -16,7 +16,7 @@ import { FakeVsCodeNoteSearcher } from "./FakeVsCodeNoteSearcher";
 import { FakeVsCodeRegistry } from "./FakeVsCodeRegistry";
 import { Link } from "../index/LinkIndex";
 import { InMemFileSystem } from "../utils/InMemFileSystem";
-import { FileSystem } from "../utils/FileSystem";
+import { IFileSystem } from '../utils/IFileSystem';
 import { allFilesUnderPath } from "./readAllFiles";
 
 import _path = require('path');
@@ -25,7 +25,7 @@ const demoDir = _path.resolve(__dirname, '../../demo_dir');
 let _fakeUi = new FakeUi();
 let ns = new FakeVsCodeNoteSearcher(_fakeUi);
 const demoDirFiles = allFilesUnderPath(demoDir);
-let fs: FileSystem = InMemFileSystem.fromFiles(demoDirFiles);
+let fs: IFileSystem = InMemFileSystem.fromFiles(demoDirFiles);
 
 class FakeVsCodeExtensionContext implements VsCodeExtensionContext {
   subscriptions: { dispose(): any; }[] = [];

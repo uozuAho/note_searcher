@@ -1,26 +1,13 @@
 import fs = require('graceful-fs');
 import _path = require('path');
 import { createDiagnostics } from '../diagnostics/diagnostics';
+import { IFileSystem } from './IFileSystem';
 
-export interface FileSystem {
-  fileExists: (path: string) => boolean;
-  readFile: (path: string) => string;
-  readFileAsync: (path: string) => Promise<string>;
-  writeFile(path: string, text: string): void;
-  deleteFile(path: string): void;
-  moveFile(oldPath: string, newPath: string): void;
-  /**
-   * Return all files under the given path (recursively),
-   * in the current OS's path format
-   */
-  allFilesUnderPath: (path: string, ignore?: (path: string) => boolean) => Iterable<string>
-}
-
-export const createFileSystem = (): FileSystem => {
+export const createFileSystem = (): IFileSystem => {
   return new NodeFileSystem();
 };
 
-class NodeFileSystem implements FileSystem {
+class NodeFileSystem implements IFileSystem {
   public constructor(
     private _diagnostics = createDiagnostics('FileSystem')
   ) {}

@@ -1,7 +1,7 @@
 import * as tmoq from 'typemoq';
 
 import { DefaultMultiIndex } from "./DefaultMultiIndex";
-import { FileSystem } from "../utils/FileSystem";
+import { IFileSystem } from '../utils/IFileSystem';
 import { IFile } from '../utils/IFile';
 import { MockFile } from '../mocks/MockFile';
 
@@ -32,7 +32,7 @@ const aTextFilePath = '/a/b/c.txt';
 
 
 describe('DefaultMultiIndex, mocked filesystem', () => {
-  let fileSystem: tmoq.IMock<FileSystem>;
+  let fileSystem: tmoq.IMock<IFileSystem>;
   let index: DefaultMultiIndex;
 
   const setupFiles = (files: IFile[]) => {
@@ -54,7 +54,7 @@ describe('DefaultMultiIndex, mocked filesystem', () => {
   };
 
   beforeEach(() => {
-    fileSystem = tmoq.Mock.ofType<FileSystem>();
+    fileSystem = tmoq.Mock.ofType<IFileSystem>();
     const ignoredWorkspaceDir = '';
     index = new DefaultMultiIndex(fileSystem.object, ignoredWorkspaceDir);
   });

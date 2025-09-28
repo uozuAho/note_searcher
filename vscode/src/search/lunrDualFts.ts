@@ -1,6 +1,6 @@
 import { FullTextSearch } from "./FullTextSearch";
 import { LunrFullTextSearch } from "./lunrFullTextSearch";
-import { FileSystem } from "../utils/FileSystem";
+import { IFileSystem } from '../utils/IFileSystem';
 import { extractTags } from '../text_processing/tagExtractor';
 
 /**
@@ -16,9 +16,9 @@ export class LunrDualFts implements FullTextSearch {
   private _dynamicIndex: LunrFullTextSearch;
   private _modifiedFiles: Set<string> = new Set();
   private _deletedFiles: Set<string> = new Set();
-  private _fileSystem: FileSystem;
+  private _fileSystem: IFileSystem;
 
-  constructor(fileSystem: FileSystem) {
+  constructor(fileSystem: IFileSystem) {
     this._fileSystem = fileSystem;
     this._staticIndex = new LunrFullTextSearch();
     this._dynamicIndex = new LunrFullTextSearch();

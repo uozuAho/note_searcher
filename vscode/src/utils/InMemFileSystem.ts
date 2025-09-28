@@ -1,18 +1,18 @@
-import { FileSystem } from './FileSystem';
+import { IFileSystem } from './IFileSystem';
 
 interface File {
   path: string;
   text: string;
 }
 
-export class InMemFileSystem implements FileSystem {
+export class InMemFileSystem implements IFileSystem {
 
   private _files: Map<string, string> = new Map();
 
   /**
    * Return a FakeFs that contains all files under the given root
    */
-  public static fromFs(root: string, fs: FileSystem) {
+  public static fromFs(root: string, fs: IFileSystem) {
     const newFs = new InMemFileSystem();
     for (const path of fs.allFilesUnderPath(root, () => false)) {
       newFs.writeFile(path, fs.readFile(path));
@@ -20,7 +20,7 @@ export class InMemFileSystem implements FileSystem {
     return newFs;
   }
 
-  public static fromFiles(files: File[]): FileSystem {
+  public static fromFiles(files: File[]): IFileSystem {
     const newFs = new InMemFileSystem();
     for (const file of files) {
       newFs.writeFile(file.path, file.text);

@@ -1,5 +1,5 @@
 import { MultiIndex } from "./MultiIndex";
-import { FileSystem } from "../utils/FileSystem";
+import { IFileSystem } from '../utils/IFileSystem';
 
 import { extractTags } from '../text_processing/tagExtractor';
 import { TagSet } from './TagIndex';
@@ -12,7 +12,7 @@ export class DefaultMultiIndex implements MultiIndex {
   private _linkIndex = new InMemoryLinkIndex();
 
   constructor(
-    private _fileSystem: FileSystem,
+    private _fileSystem: IFileSystem,
     _workspaceDir: string)
   {
     this._fullText = new LunrDualFts(_fileSystem);

@@ -1,7 +1,7 @@
 import { NoteIndex } from '../index/NoteIndex';
-import { FileSystem } from '../utils/FileSystem';
+import { IFileSystem } from '../utils/IFileSystem';
 import { VsCodeWikilinkCompleter } from './VsCodeWikilinkCompleter';
 
-export function createWikilinkCompleter(noteIndex: NoteIndex, fileSystem: FileSystem) {
+export function createWikilinkCompleter(noteIndex: NoteIndex, fileSystem: IFileSystem) {
   return new VsCodeWikilinkCompleter(noteIndex, fileSystem);
 }
