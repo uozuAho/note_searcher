@@ -1,7 +1,7 @@
 import { Link } from "../index/LinkIndex";
 import { File } from "../utils/File";
 
-export interface NoteSearcherUi {
+export interface INoteSearcherUi {
   openFile(path: any): any;
   showTags: (tags: string[]) => void;
   copyToClipboard: (text: string) => Promise<void>;

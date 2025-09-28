@@ -1,6 +1,6 @@
-import { NoteSearcherUi } from "./NoteSearcherUi";
+import { INoteSearcherUi } from "./INoteSearcherUi";
 import { VsCodeNoteSearcherUi } from "./VsCodeNoteSearcherUi";
 
-export function createNoteSearcherUi(): NoteSearcherUi {
+export function createNoteSearcherUi(): INoteSearcherUi {
   return new VsCodeNoteSearcherUi();
 }

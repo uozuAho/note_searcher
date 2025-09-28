@@ -1,13 +1,13 @@
 import * as vscode from 'vscode';
 import { SearchResultTree } from './searchResultTree';
-import { NoteSearcherUi, FileChangeListener, FileDeletedListener, FileMovedListener } from './NoteSearcherUi';
+import { INoteSearcherUi, FileChangeListener, FileDeletedListener, FileMovedListener } from './INoteSearcherUi';
 import { File } from "../utils/File";
 import { DeadLinksTree } from './DeadLinksTree';
 import { LinksTree } from './LinksTree';
 import { TagsTree } from './TagsTree';
 import { Link } from '../index/LinkIndex';
 
-export class VsCodeNoteSearcherUi implements NoteSearcherUi {
+export class VsCodeNoteSearcherUi implements INoteSearcherUi {
   private noteSavedListener: FileChangeListener | null = null;
   private noteDeletedListener: FileDeletedListener | null = null;
   private movedViewToDifferentNoteListener: FileChangeListener | null = null;
