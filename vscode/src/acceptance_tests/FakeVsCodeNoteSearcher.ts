@@ -1,3 +1,4 @@
+import { IFileSystem } from "../utils/IFileSystem";
 import { FakeUi } from "./FakeUi";
 
 /**
@@ -6,7 +7,7 @@ import { FakeUi } from "./FakeUi";
 export class FakeVsCodeNoteSearcher {
   private _registeredCommands: Map<string, any> = new Map();
 
-  constructor(private _ui: FakeUi) { }
+  constructor(private _ui: FakeUi, private _fs: IFileSystem) { }
 
   // queries
   public searchResults = () => this._ui.searchResults();
@@ -15,9 +16,21 @@ export class FakeVsCodeNoteSearcher {
   public deadLinks = () => this._ui.deadLinks();
 
   // commands
-  public notifyNoteDeleted = (path: string) => this._ui.notifyNoteDeleted(path);
-  public notifyNoteMoved = (oldPath: string, newPath: string) => this._ui.notifyNoteMoved(oldPath, newPath);
   public openFolder = (path: string) => this._ui.openFolder(path);
+  public deleteNote = async (path: string) => {
+    this._fs.deleteFile(path);
+    await this._ui.notifyNoteDeleted(path);
+  };
+  public moveNote = async (oldPath: string, newPath: string) => {
+    this._fs.moveFile(oldPath, newPath);
+    await this._ui.notifyNoteMoved(oldPath, newPath);
+  };
+
+  /// obsolete: use deleteNote
+  public notifyNoteDeleted = (path: string) => this._ui.notifyNoteDeleted(path);
+
+  /// obsolete: use moveNote
+  public notifyNoteMoved = (oldPath: string, newPath: string) => this._ui.notifyNoteMoved(oldPath, newPath);
 
   public openFile = async (path: any) => {
     this._ui.openFile(path);

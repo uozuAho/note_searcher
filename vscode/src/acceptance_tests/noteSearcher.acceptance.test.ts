@@ -22,10 +22,10 @@ import { allFilesUnderPath } from "./readAllFiles";
 import _path = require('path');
 const demoDir = _path.resolve(__dirname, '../../demo_dir');
 
-let _fakeUi = new FakeUi();
-let ns = new FakeVsCodeNoteSearcher(_fakeUi);
 const demoDirFiles = allFilesUnderPath(demoDir);
-let fs: IFileSystem = InMemFileSystem.fromFiles(demoDirFiles);
+let memFs: IFileSystem = InMemFileSystem.fromFiles(demoDirFiles);
+let _fakeUi = new FakeUi();
+let ns = new FakeVsCodeNoteSearcher(_fakeUi, memFs);
 
 class FakeVsCodeExtensionContext implements IVsCodeExtensionContext {
   subscriptions: { dispose(): any; }[] = [];
@@ -35,7 +35,7 @@ jest.mock('../ui/uiCreator', () => {
   return {
     createNoteSearcherUi: () => {
       _fakeUi = new FakeUi();
-      ns = new FakeVsCodeNoteSearcher(_fakeUi);
+      ns = new FakeVsCodeNoteSearcher(_fakeUi, memFs);
       // folder needs to be open before activating
       ns.openFolder(demoDir);
       return _fakeUi;
@@ -81,7 +81,7 @@ jest.mock('../definition_provider/defProviderCreator', () => {
 
 jest.mock('../utils/NodeFileSystem', () => {
   return {
-    createFileSystem: () => fs
+    createFileSystem: () => memFs
   };
 });
 
@@ -137,13 +137,13 @@ describe('on file deleted', () => {
   const trains = _path.join(demoDir, 'trains.md');
 
   beforeAll(async () => {
-    fs = InMemFileSystem.fromFiles(demoDirFiles);
+    memFs = InMemFileSystem.fromFiles(demoDirFiles);
     await activate(new FakeVsCodeExtensionContext());
     ns.openFolder(demoDir);
     await ns.openFile(readme);
 
-    fs.deleteFile(trains);
-    await ns.notifyNoteDeleted(trains);
+    // memFs.deleteFile(trains);
+    await ns.deleteNote(trains);
   });
 
   it('is not in search results', async () => {
@@ -172,13 +172,14 @@ describe('on file moved', () => {
   const newTrainsPath = _path.join(demoDir, 'subdir/trains.md');
 
   beforeAll(async () => {
-    fs = InMemFileSystem.fromFiles(demoDirFiles);
+    memFs = InMemFileSystem.fromFiles(demoDirFiles);
     await activate(new FakeVsCodeExtensionContext());
     ns.openFolder(demoDir);
 
     await ns.openFile(readme);
-    fs.moveFile(oldTrainsPath, newTrainsPath);
-    await ns.notifyNoteMoved(oldTrainsPath, newTrainsPath);
+    // memFs.moveFile(oldTrainsPath, newTrainsPath);
+    // await ns.notifyNoteMoved(oldTrainsPath, newTrainsPath);
+    await ns.moveNote(oldTrainsPath, newTrainsPath);
   });
 
   it('search result points to new location', async () => {
@@ -230,12 +231,12 @@ describe('on file renamed', () => {
   const newTrainsPath = _path.join(demoDir, 'new_trains.md');
 
   beforeAll(async () => {
-    fs = InMemFileSystem.fromFiles(demoDirFiles);
+    memFs = InMemFileSystem.fromFiles(demoDirFiles);
     await activate(new FakeVsCodeExtensionContext());
     ns.openFolder(demoDir);
 
     await ns.openFile(readme);
-    fs.moveFile(oldTrainsPath, newTrainsPath);
+    memFs.moveFile(oldTrainsPath, newTrainsPath);
     await ns.notifyNoteMoved(oldTrainsPath, newTrainsPath);
   });
 
