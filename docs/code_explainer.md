@@ -7,41 +7,41 @@ Why is the code in this project the way it is? This file tries to explain.
 # todo
 - add a diagram of classes and how they interact with vs code / test fakes
 
-# important classes
+# important types
 - NoteSearcher
     - path: vscode/src/note_searcher/noteSearcher.ts
     - this is the central hub through which most extension functionality is
       coordinated
     - has
-        - ui:           NoteSearcherUi
-        - index:        MultiIndex
+        - ui:           INoteSearcherUi
+        - index:        IMultiIndex
         - fs:           FileSystem
         - timeProvider: TimeProvider
 
-- NoteSearcherUi
-    - path: vscode/src/ui/NoteSearcherUi.ts
+- INoteSearcherUi
+    - path: vscode/src/ui/INoteSearcherUi.ts
     - interface to the UI, which in this extension's case is VS code
     - main implementation: VsCodeNoteSearcherUi
 
-- MultiIndex
+- IMultiIndex
     - path: vscode/src/index/MultiIndex.ts
     - single interface to all indexing functionality: full text, links, tags
 
-- DefaultMultiIndex (implements MultiIndex)
+- DefaultMultiIndex (implements IMultiIndex)
     - path: vscode/src/index/DefaultMultiIndex.ts
     - has
         - LunrDualFts
         - TagSet: simple set of tags
         - InMemoryLinkIndex: implements LinkIndex, NoteIndex
 
-- LunrDualFts (implements FullTextSearch)
+- LunrDualFts (implements IFullTextSearch)
     - path: vscode/src/search/lunrDualFts.ts
     - provides full text search capability, using lunr
     - has
         - 2x LunrFullTextSearch (hence 'dual')
 
-- FileSystem
-    - path: vscode/src/utils/FileSystem.ts
+- IFileSystem
+    - path: vscode/src/utils/IFileSystem.ts
     - interface to filesystem operations
 
 # extension initialisation & plumbing
