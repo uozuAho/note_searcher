@@ -21,13 +21,11 @@ import { allFilesUnderPath } from "./readAllFiles";
 
 import _path = require('path');
 import { DefaultMultiIndex } from "../index/DefaultMultiIndex";
-const demoDir = _path.resolve(__dirname, '../../demo_dir');
 
+const demoDir = _path.resolve(__dirname, '../../demo_dir');
 const demoDirFiles = allFilesUnderPath(demoDir);
 
-// todo: don't init here, only in builddeps?
 let memFs: IFileSystem;
-let _fakeUi: FakeUi; // todo: why the leading underscore?
 let ns: FakeVsCodeNoteSearcher;
 
 class FakeVsCodeExtensionContext implements IVsCodeExtensionContext {
@@ -39,8 +37,8 @@ jest.mock('../buildDeps', () => {
     buildDeps: () => {
       // reset local fakes
       memFs = InMemFileSystem.fromFiles(demoDirFiles);
-      _fakeUi = new FakeUi();
-      ns = new FakeVsCodeNoteSearcher(_fakeUi, memFs);
+      let fakeUi = new FakeUi();
+      ns = new FakeVsCodeNoteSearcher(fakeUi, memFs);
 
       // folder needs to be open before activating, otherwise activate
       // short-circuits
@@ -48,7 +46,7 @@ jest.mock('../buildDeps', () => {
 
       return {
         fs: memFs,
-        ui: _fakeUi,
+        ui: fakeUi,
         registry: new FakeVsCodeRegistry(ns),
         indexBuilder: (dir: string) => new DefaultMultiIndex(memFs, dir)
       };
