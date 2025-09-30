@@ -26,11 +26,10 @@ const demoDir = _path.resolve(__dirname, '../../demo_dir');
 const demoDirFiles = allFilesUnderPath(demoDir);
 
 // todo: don't init here, only in builddeps?
-let memFs: IFileSystem = InMemFileSystem.fromFiles(demoDirFiles);
-let _fakeUi = new FakeUi(); // todo: why the leading underscore?
-let ns = new FakeVsCodeNoteSearcher(_fakeUi, memFs);
+let memFs: IFileSystem;
+let _fakeUi: FakeUi; // todo: why the leading underscore?
+let ns: FakeVsCodeNoteSearcher;
 
-// is this needed?
 class FakeVsCodeExtensionContext implements IVsCodeExtensionContext {
   subscriptions: { dispose(): any; }[] = [];
 }
