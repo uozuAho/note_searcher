@@ -40,7 +40,7 @@ jest.mock('../buildDeps', () => {
       let fakeUi = new FakeUi();
       ns = new FakeVsCodeNoteSearcher(fakeUi, memFs);
 
-      // folder needs to be open before activating, otherwise activate
+      // folder needs to be open before activating, otherwise activate()
       // short-circuits
       ns.openFolder(demoDir);
 
@@ -54,6 +54,8 @@ jest.mock('../buildDeps', () => {
   };
 });
 
+// ----------------------------
+// these are needed to stub out functions that depend on the real VS code API
 jest.mock('../autocomplete/tagCompleterCreator', () => {
   return {
     createTagCompleter: () => {
@@ -64,7 +66,6 @@ jest.mock('../autocomplete/tagCompleterCreator', () => {
   };
 });
 
-// is this needed?
 jest.mock('../autocomplete/createWikilinkCompleter', () => {
   return {
     createWikilinkCompleter: () => {
@@ -84,6 +85,7 @@ jest.mock('../definition_provider/defProviderCreator', () => {
     }
   };
 });
+// ----------------------------
 
 describe('on starting in the demo dir', () => {
   beforeAll(async () => {
