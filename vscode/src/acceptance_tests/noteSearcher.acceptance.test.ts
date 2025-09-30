@@ -20,32 +20,40 @@ import { IFileSystem } from '../utils/IFileSystem';
 import { allFilesUnderPath } from "./readAllFiles";
 
 import _path = require('path');
+import { DefaultMultiIndex } from "../index/DefaultMultiIndex";
 const demoDir = _path.resolve(__dirname, '../../demo_dir');
 
 const demoDirFiles = allFilesUnderPath(demoDir);
+
+// todo: don't init here, only in builddeps?
 let memFs: IFileSystem = InMemFileSystem.fromFiles(demoDirFiles);
-let _fakeUi = new FakeUi();
+let _fakeUi = new FakeUi(); // todo: why the leading underscore?
 let ns = new FakeVsCodeNoteSearcher(_fakeUi, memFs);
 
+// is this needed?
 class FakeVsCodeExtensionContext implements IVsCodeExtensionContext {
   subscriptions: { dispose(): any; }[] = [];
 }
 
-jest.mock('../ui/uiCreator', () => {
+jest.mock('../buildDeps', () => {
   return {
-    createNoteSearcherUi: () => {
+    buildDeps: () => {
+      // reset local fakes
+      memFs = InMemFileSystem.fromFiles(demoDirFiles);
       _fakeUi = new FakeUi();
       ns = new FakeVsCodeNoteSearcher(_fakeUi, memFs);
-      // folder needs to be open before activating
-      ns.openFolder(demoDir);
-      return _fakeUi;
-    }
-  };
-});
 
-jest.mock('../vs_code_apis/registryCreator', () => {
-  return {
-    createVsCodeRegistry: () => new FakeVsCodeRegistry(ns)
+      // folder needs to be open before activating, otherwise activate
+      // short-circuits
+      ns.openFolder(demoDir);
+
+      return {
+        fs: memFs,
+        ui: _fakeUi,
+        registry: new FakeVsCodeRegistry(ns),
+        indexBuilder: (dir: string) => new DefaultMultiIndex(memFs, dir)
+      };
+    }
   };
 });
 
@@ -59,6 +67,7 @@ jest.mock('../autocomplete/tagCompleterCreator', () => {
   };
 });
 
+// is this needed?
 jest.mock('../autocomplete/createWikilinkCompleter', () => {
   return {
     createWikilinkCompleter: () => {
@@ -76,12 +85,6 @@ jest.mock('../definition_provider/defProviderCreator', () => {
         provideDefinition: () => {}
       };
     }
-  };
-});
-
-jest.mock('../utils/NodeFileSystem', () => {
-  return {
-    createFileSystem: () => memFs
   };
 });
 
