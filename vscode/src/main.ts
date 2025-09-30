@@ -1,40 +1,15 @@
-import { IMultiIndex } from './index/MultiIndex';
 import { NoteSearcher } from './note_searcher/noteSearcher';
 import { NoteLocator } from './definition_provider/NoteLocator';
 import { IVsCodeExtensionContext } from './vs_code_apis/extensionContext';
-import { createVsCodeRegistry } from './vs_code_apis/registryCreator';
 import { createTagCompleter } from './autocomplete/tagCompleterCreator';
 import { createWikiLinkDefinitionProvider } from './definition_provider/defProviderCreator';
-import { createFileSystem } from './utils/NodeFileSystem';
 import { createWikilinkCompleter } from './autocomplete/createWikilinkCompleter';
-import { IFileSystem } from './utils/IFileSystem';
-import { INoteSearcherUi } from './ui/INoteSearcherUi';
-import { DefaultMultiIndex } from './index/DefaultMultiIndex';
-import { createNoteSearcherUi } from './ui/uiCreator';
+import { buildDeps } from './buildDeps';
 
 export const extensionId = 'uozuaho.note-searcher';
 
-interface IExtensionDeps {
-  fs: IFileSystem,
-  ui: INoteSearcherUi,
-  registry: IVsCodeRegistry, // todo: is this really needed?
-  indexBuilder: (dir: string) => IMultiIndex,
-}
-
-// todo: extract to file, mock in acceptance tests.
-function getDeps(): IExtensionDeps {
-  const fs = createFileSystem();
-
-  return {
-    fs,
-    ui: createNoteSearcherUi(), // todo: inline these
-    registry: createVsCodeRegistry(),
-    indexBuilder: dir => new DefaultMultiIndex(fs, dir)
-  };
-}
-
 export async function activate(context: IVsCodeExtensionContext) {
-  const {fs, ui, registry, indexBuilder } = getDeps();
+  const {fs, ui, registry, indexBuilder } = buildDeps();
   if (!ui.currentlyOpenDir()) {
     return;
   }
