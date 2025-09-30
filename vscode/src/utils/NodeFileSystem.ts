@@ -3,7 +3,7 @@ import _path = require('path');
 import { createDiagnostics } from '../diagnostics/diagnostics';
 import { IFileSystem } from './IFileSystem';
 
-export const createFileSystem = (): IFileSystem => {
+export const createNodeFileSystem = (): IFileSystem => {
   return new NodeFileSystem();
 };
 

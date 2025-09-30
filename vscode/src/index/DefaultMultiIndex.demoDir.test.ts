@@ -1,6 +1,6 @@
 const _path = require('path');
 
-import { createFileSystem } from "../utils/NodeFileSystem";
+import { createNodeFileSystem } from "../utils/NodeFileSystem";
 import { InMemFileSystem } from "../utils/InMemFileSystem";
 import { DefaultMultiIndex } from "./DefaultMultiIndex";
 
@@ -10,7 +10,7 @@ const readmePath = _path.resolve(demoDir, 'readme.md');
 const cheesePath = _path.resolve(demoDir, 'cheese.md');
 
 function inMemDemoDirFs() {
-  const fs = createFileSystem();
+  const fs = createNodeFileSystem();
   return InMemFileSystem.fromFs(demoDir, fs);
 }
 

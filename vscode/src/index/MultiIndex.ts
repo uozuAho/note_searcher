@@ -1,5 +1,5 @@
 import { DefaultMultiIndex } from './DefaultMultiIndex';
-import { createFileSystem } from '../utils/NodeFileSystem';
+import { createNodeFileSystem } from '../utils/NodeFileSystem';
 import { Link } from "./LinkIndex";
 
 export interface IMultiIndex {
@@ -21,5 +21,5 @@ export interface IMultiIndex {
 
 export const createMultiIndex = (workspaceDir: string) =>
 {
-  return new DefaultMultiIndex(createFileSystem(), workspaceDir);
+  return new DefaultMultiIndex(createNodeFileSystem(), workspaceDir);
 };
