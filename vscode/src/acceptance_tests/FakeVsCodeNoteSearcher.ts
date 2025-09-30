@@ -33,12 +33,6 @@ export class FakeVsCodeNoteSearcher {
     await this._ui.notifyNoteMoved(oldPath, newPath);
   };
 
-  /// obsolete: use deleteNote
-  public notifyNoteDeleted = (path: string) => this._ui.notifyNoteDeleted(path);
-
-  /// obsolete: use moveNote
-  public notifyNoteMoved = (oldPath: string, newPath: string) => this._ui.notifyNoteMoved(oldPath, newPath);
-
   public openFile = async (path: any) => {
     this._ui.openFile(path);
     return this._ui.moveViewToNote(path);
