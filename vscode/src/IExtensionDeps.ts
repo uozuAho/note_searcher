@@ -5,6 +5,6 @@ import { IFileSystem } from './utils/IFileSystem';
 export interface IExtensionDeps {
   fs: IFileSystem;
   ui: INoteSearcherUi;
-  registry: IVsCodeRegistry; // todo: is this really needed?
+  registry: IVsCodeRegistry;
   indexBuilder: (dir: string) => IMultiIndex;
 }
