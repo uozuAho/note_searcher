@@ -48,7 +48,8 @@ jest.mock('../buildDeps', () => {
         fs: memFs,
         ui: fakeUi,
         registry: new FakeVsCodeRegistry(ns),
-        indexBuilder: (dir: string) => new DefaultMultiIndex(memFs, dir)
+        buildMultiIndex: (dir: string) => new DefaultMultiIndex(memFs, dir),
+        buildTagCompleter: (x: any) => {}
       };
     }
   };
@@ -56,15 +57,6 @@ jest.mock('../buildDeps', () => {
 
 // ----------------------------
 // these are needed to stub out functions that depend on the real VS code API
-jest.mock('../autocomplete/tagCompleterCreator', () => {
-  return {
-    createTagCompleter: () => {
-      return {
-        provideCompletionItems: () => {}
-      };
-    }
-  };
-});
 
 jest.mock('../autocomplete/createWikilinkCompleter', () => {
   return {

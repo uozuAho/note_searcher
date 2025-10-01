@@ -1,3 +1,4 @@
+import { createTagCompleter } from './autocomplete/tagCompleterCreator';
 import { IExtensionDeps } from './IExtensionDeps';
 import { DefaultMultiIndex } from './index/DefaultMultiIndex';
 import { VsCodeNoteSearcherUi } from './ui/VsCodeNoteSearcherUi';
@@ -11,6 +12,7 @@ export function buildDeps(): IExtensionDeps {
     fs,
     ui: new VsCodeNoteSearcherUi(),
     registry: new RealVsCodeRegistry(),
-    indexBuilder: dir => new DefaultMultiIndex(fs, dir)
+    buildMultiIndex: dir => new DefaultMultiIndex(fs, dir),
+    buildTagCompleter: index => createTagCompleter(index),
   };
 }

@@ -1,7 +1,6 @@
 import { NoteSearcher } from './note_searcher/noteSearcher';
 import { NoteLocator } from './definition_provider/NoteLocator';
 import { IVsCodeExtensionContext } from './vs_code_apis/extensionContext';
-import { createTagCompleter } from './autocomplete/tagCompleterCreator';
 import { createWikiLinkDefinitionProvider } from './definition_provider/defProviderCreator';
 import { createWikilinkCompleter } from './autocomplete/createWikilinkCompleter';
 import { buildDeps } from './buildDeps';
@@ -9,11 +8,19 @@ import { buildDeps } from './buildDeps';
 export const extensionId = 'uozuaho.note-searcher';
 
 export async function activate(context: IVsCodeExtensionContext) {
-  const {fs, ui, registry, indexBuilder } = buildDeps();
+  const {
+    fs,
+    ui,
+    registry,
+    buildMultiIndex,
+    buildTagCompleter
+  } = buildDeps();
+
   if (!ui.currentlyOpenDir()) {
     return;
   }
-  const multiIndex = indexBuilder(ui.currentlyOpenDir()!);
+
+  const multiIndex = buildMultiIndex(ui.currentlyOpenDir()!);
   const noteSearcher = new NoteSearcher(ui, multiIndex, fs);
   const noteLocator = new NoteLocator(multiIndex);
 
@@ -48,7 +55,7 @@ export async function activate(context: IVsCodeExtensionContext) {
       'noteSearcher.createNote', () => noteSearcher.createNote()),
 
     registry.registerCompletionItemProvider(['markdown', 'plaintext'],
-      createTagCompleter(multiIndex), ['#']),
+      buildTagCompleter(multiIndex), ['#']),
 
     registry.registerCompletionItemProvider(['markdown', 'plaintext'],
       createWikilinkCompleter(multiIndex, fs), ['[']),

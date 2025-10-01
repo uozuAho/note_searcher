@@ -6,5 +6,6 @@ export interface IExtensionDeps {
   fs: IFileSystem;
   ui: INoteSearcherUi;
   registry: IVsCodeRegistry;
-  indexBuilder: (dir: string) => IMultiIndex;
+  buildMultiIndex: (dir: string) => IMultiIndex;
+  buildTagCompleter: (index: IMultiIndex) => any;
 }
