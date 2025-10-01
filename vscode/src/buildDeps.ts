@@ -1,3 +1,4 @@
+import { createWikilinkCompleter } from './autocomplete/createWikilinkCompleter';
 import { createTagCompleter } from './autocomplete/tagCompleterCreator';
 import { IExtensionDeps } from './IExtensionDeps';
 import { DefaultMultiIndex } from './index/DefaultMultiIndex';
@@ -14,5 +15,6 @@ export function buildDeps(): IExtensionDeps {
     registry: new RealVsCodeRegistry(),
     buildMultiIndex: dir => new DefaultMultiIndex(fs, dir),
     buildTagCompleter: index => createTagCompleter(index),
+    buildWikilinkCompleter: (index, fs) => createWikilinkCompleter(index, fs),
   };
 }

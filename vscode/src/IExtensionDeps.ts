@@ -8,4 +8,5 @@ export interface IExtensionDeps {
   registry: IVsCodeRegistry;
   buildMultiIndex: (dir: string) => IMultiIndex;
   buildTagCompleter: (index: IMultiIndex) => any;
+  buildWikilinkCompleter: (index: IMultiIndex, fs: IFileSystem) => any;
 }

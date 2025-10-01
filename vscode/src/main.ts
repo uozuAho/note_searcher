@@ -2,7 +2,6 @@ import { NoteSearcher } from './note_searcher/noteSearcher';
 import { NoteLocator } from './definition_provider/NoteLocator';
 import { IVsCodeExtensionContext } from './vs_code_apis/extensionContext';
 import { createWikiLinkDefinitionProvider } from './definition_provider/defProviderCreator';
-import { createWikilinkCompleter } from './autocomplete/createWikilinkCompleter';
 import { buildDeps } from './buildDeps';
 
 export const extensionId = 'uozuaho.note-searcher';
@@ -13,7 +12,8 @@ export async function activate(context: IVsCodeExtensionContext) {
     ui,
     registry,
     buildMultiIndex,
-    buildTagCompleter
+    buildTagCompleter,
+    buildWikilinkCompleter
   } = buildDeps();
 
   if (!ui.currentlyOpenDir()) {
@@ -58,7 +58,7 @@ export async function activate(context: IVsCodeExtensionContext) {
       buildTagCompleter(multiIndex), ['#']),
 
     registry.registerCompletionItemProvider(['markdown', 'plaintext'],
-      createWikilinkCompleter(multiIndex, fs), ['[']),
+      buildWikilinkCompleter(multiIndex, fs), ['[']),
 
     registry.registerDefinitionProvider(['markdown', 'plaintext'],
       createWikiLinkDefinitionProvider(noteLocator)),
