@@ -164,16 +164,14 @@
 		"@types/lunr": "^2.3.4",
 		"@types/mocha": "^10.0.0",
 		"@types/node": "^24.3.0",
+    "@types/vscode": "^1.61.0",
 		"@typescript-eslint/eslint-plugin": "^8.6.0",
 		"@typescript-eslint/parser": "^8.6.0",
 		"@vscode/vsce": "^3.1.0",
 		"chai": "^6.0.1",
-		"clipboardy": "^4.0.0",
 		"eslint": "^9.10.0",
-		"glob": "^11.0.0",
-		"graceful-fs": "^4.2.8",
+    "glob": "^11.0.0",
 		"jest": "^30.1.1",
-		"lunr": "^2.3.9",
 		"mocha": "^11.0.1",
 		"ts-jest": "^29.0.3",
 		"ts-loader": "^9.2.6",
@@ -183,6 +181,7 @@
 		"webpack-cli": "^6.0.1"
 	},
 	"dependencies": {
-		"@types/vscode": "^1.61.0"
+    "graceful-fs": "^4.2.8",
+    "lunr": "^2.3.9"
 	}
 }
