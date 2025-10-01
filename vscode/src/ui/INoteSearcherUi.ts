@@ -1,13 +1,13 @@
 import { Link } from "../index/LinkIndex";
-import { File } from "../utils/File";
+import { IFile } from "../utils/IFile";
 
-export interface NoteSearcherUi {
+export interface INoteSearcherUi {
   openFile(path: any): any;
   showTags: (tags: string[]) => void;
   copyToClipboard: (text: string) => Promise<void>;
   startNewNote: (path: string) => Promise<void>;
   promptForNewNoteName: (noteId: string) => Promise<string | undefined>;
-  getCurrentFile: () => File | null;
+  getCurrentFile: () => IFile | null;
   currentlyOpenDir: () => string | null;
   promptForSearch: (prefill: string) => Promise<string | undefined>;
   showSearchResults: (files: string[]) => Promise<void>;
@@ -28,6 +28,6 @@ export interface NoteSearcherUi {
 }
 
 type Disposable = { dispose(): any; };
-export type FileChangeListener = (file: File) => Promise<void>;
+export type FileChangeListener = (file: IFile) => Promise<void>;
 export type FileDeletedListener = (path: string) => Promise<void>;
 export type FileMovedListener = (oldPath: string, newPath: string) => Promise<void>;

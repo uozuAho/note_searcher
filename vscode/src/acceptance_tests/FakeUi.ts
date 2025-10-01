@@ -1,14 +1,14 @@
 import { Link } from "../index/LinkIndex";
-import { FileChangeListener, FileDeletedListener, FileMovedListener, NoteSearcherUi } from "../ui/NoteSearcherUi";
-import { File } from "../utils/File";
+import { FileChangeListener, FileDeletedListener, FileMovedListener, INoteSearcherUi } from "../ui/INoteSearcherUi";
+import { IFile } from "../utils/IFile";
 
-class FakeFile implements File {
+class FakeFile implements IFile {
   constructor(private _path: string, private _text: string) { }
   text = () => this._text;
   path = () => this._path;
 }
 
-export class FakeUi implements NoteSearcherUi {
+export class FakeUi implements INoteSearcherUi {
   // UI interface
   public openFile = (path: any) => { };
   public showTags = (tags: string[]) => { };

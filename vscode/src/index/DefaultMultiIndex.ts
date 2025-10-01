@@ -1,18 +1,18 @@
-import { MultiIndex } from "./MultiIndex";
-import { FileSystem } from "../utils/FileSystem";
+import { IMultiIndex } from "./MultiIndex";
+import { IFileSystem } from '../utils/IFileSystem';
 
 import { extractTags } from '../text_processing/tagExtractor';
 import { TagSet } from './TagIndex';
 import { InMemoryLinkIndex } from "./InMemoryLinkIndex";
 import { LunrDualFts } from "../search/lunrDualFts";
 
-export class DefaultMultiIndex implements MultiIndex {
+export class DefaultMultiIndex implements IMultiIndex {
   private _fullText: LunrDualFts;
   private _tags = new TagSet();
   private _linkIndex = new InMemoryLinkIndex();
 
   constructor(
-    private _fileSystem: FileSystem,
+    private _fileSystem: IFileSystem,
     _workspaceDir: string)
   {
     this._fullText = new LunrDualFts(_fileSystem);

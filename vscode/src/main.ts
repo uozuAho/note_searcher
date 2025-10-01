@@ -1,25 +1,26 @@
-import { createMultiIndex } from './index/MultiIndex';
 import { NoteSearcher } from './note_searcher/noteSearcher';
 import { NoteLocator } from './definition_provider/NoteLocator';
-import { createNoteSearcherUi } from './ui/uiCreator';
-import { VsCodeExtensionContext } from './vs_code_apis/extensionContext';
-import { createVsCodeRegistry } from './vs_code_apis/registryCreator';
-import { createTagCompleter } from './autocomplete/tagCompleterCreator';
-import { createWikiLinkDefinitionProvider } from './definition_provider/defProviderCreator';
-import { createFileSystem } from './utils/FileSystem';
-import { createWikilinkCompleter } from './autocomplete/createWikilinkCompleter';
+import { IVsCodeExtensionContext } from './vs_code_apis/extensionContext';
+import { buildDeps } from './buildDeps';
 
 export const extensionId = 'uozuaho.note-searcher';
 
-export async function activate(context: VsCodeExtensionContext) {
-  const fs = createFileSystem();
-  const ui = createNoteSearcherUi();
-  const registry = createVsCodeRegistry();
-  const workspaceDir = ui.currentlyOpenDir();
-  if (!workspaceDir) {
+export async function activate(context: IVsCodeExtensionContext) {
+  const {
+    fs,
+    ui,
+    registry,
+    buildMultiIndex,
+    buildTagCompleter,
+    buildWikilinkCompleter,
+    buildWikiLinkDefinitionProvider
+  } = buildDeps();
+
+  if (!ui.currentlyOpenDir()) {
     return;
   }
-  const multiIndex = createMultiIndex(workspaceDir);
+
+  const multiIndex = buildMultiIndex(ui.currentlyOpenDir()!);
   const noteSearcher = new NoteSearcher(ui, multiIndex, fs);
   const noteLocator = new NoteLocator(multiIndex);
 
@@ -54,13 +55,13 @@ export async function activate(context: VsCodeExtensionContext) {
       'noteSearcher.createNote', () => noteSearcher.createNote()),
 
     registry.registerCompletionItemProvider(['markdown', 'plaintext'],
-      createTagCompleter(multiIndex), ['#']),
+      buildTagCompleter(multiIndex), ['#']),
 
     registry.registerCompletionItemProvider(['markdown', 'plaintext'],
-      createWikilinkCompleter(multiIndex, fs), ['[']),
+      buildWikilinkCompleter(multiIndex, fs), ['[']),
 
     registry.registerDefinitionProvider(['markdown', 'plaintext'],
-      createWikiLinkDefinitionProvider(noteLocator)),
+      buildWikiLinkDefinitionProvider(noteLocator)),
 
     ui.createNoteSavedHandler(),
     ui.createNoteDeletedHandler(),

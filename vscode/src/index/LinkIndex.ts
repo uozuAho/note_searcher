@@ -1,4 +1,4 @@
-export interface LinkIndex {
+export interface ILinkIndex {
   /** returns note paths linked from the given note */
   linksFrom(absPath: string): string[];
 

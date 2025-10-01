@@ -1,10 +1,6 @@
 import * as vscode from 'vscode';
 
-export function createVsCodeRegistry() {
-  return new RealVsCodeRegistry();
-}
-
-class RealVsCodeRegistry implements VsCodeRegistry {
+export class RealVsCodeRegistry implements IVsCodeRegistry {
   public registerCommand(name: string, callback: (...args: any[]) => any) {
     return vscode.commands.registerCommand(name, callback);
   }

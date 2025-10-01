@@ -1,8 +1,8 @@
 import { DefaultMultiIndex } from './DefaultMultiIndex';
-import { createFileSystem } from '../utils/FileSystem';
+import { createNodeFileSystem } from '../utils/NodeFileSystem';
 import { Link } from "./LinkIndex";
 
-export interface MultiIndex {
+export interface IMultiIndex {
   // queries
   fullTextSearch: (query: string) => Promise<string[]>;
   allTags: () => string[];
@@ -21,5 +21,5 @@ export interface MultiIndex {
 
 export const createMultiIndex = (workspaceDir: string) =>
 {
-  return new DefaultMultiIndex(createFileSystem(), workspaceDir);
+  return new DefaultMultiIndex(createNodeFileSystem(), workspaceDir);
 };

@@ -1,4 +1,4 @@
-export interface TimeProvider {
+export interface ITimeProvider {
   /**
    * Returns the number of milliseconds since 1970-01-01 00:00 UTC
    */
@@ -15,7 +15,7 @@ export const createTimeProvider = () => {
   return new DateTimeProvider();
 };
 
-class DateTimeProvider implements TimeProvider {
+class DateTimeProvider implements ITimeProvider {
   public millisecondsSinceEpochUtc = () => Date.now();
 
   public millisecondsSinceEpochLocal = () =>

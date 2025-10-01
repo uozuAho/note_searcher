@@ -1,6 +1,6 @@
 import { FakeVsCodeNoteSearcher } from "./FakeVsCodeNoteSearcher";
 
-export class FakeVsCodeRegistry implements VsCodeRegistry {
+export class FakeVsCodeRegistry implements IVsCodeRegistry {
   constructor(private vscode: FakeVsCodeNoteSearcher) { }
 
   public registerCommand = (command: string, callback: any) => {

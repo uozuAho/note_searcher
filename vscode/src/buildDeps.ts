@@ -1,0 +1,23 @@
+import { VsCodeTagCompleter } from './autocomplete/VsCodeTagCompleter';
+import { VsCodeWikilinkCompleter } from './autocomplete/VsCodeWikilinkCompleter';
+import { VsCodeWikiLinkDefinitionProvider } from './definition_provider/VsCodeWikiLinkDefinitionProvider';
+import { IExtensionDeps } from './IExtensionDeps';
+import { DefaultMultiIndex } from './index/DefaultMultiIndex';
+import { VsCodeNoteSearcherUi } from './ui/VsCodeNoteSearcherUi';
+import { createNodeFileSystem } from './utils/NodeFileSystem';
+import { RealVsCodeRegistry } from './vs_code_apis/registryCreator';
+
+export function buildDeps(): IExtensionDeps {
+  const fs = createNodeFileSystem();
+
+  return {
+    fs,
+    ui: new VsCodeNoteSearcherUi(),
+    registry: new RealVsCodeRegistry(),
+    buildMultiIndex: dir => new DefaultMultiIndex(fs, dir),
+    buildTagCompleter: index => new VsCodeTagCompleter(index),
+    buildWikilinkCompleter: (index, fs) => new VsCodeWikilinkCompleter(index, fs),
+    buildWikiLinkDefinitionProvider: noteLocator =>
+      new VsCodeWikiLinkDefinitionProvider(noteLocator),
+  };
+}

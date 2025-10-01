@@ -1,23 +1,23 @@
-import { TimeProvider, createTimeProvider } from "../utils/timeProvider";
+import { ITimeProvider, createTimeProvider } from "../utils/timeProvider";
 
-export interface Diagnostics {
+export interface IDiagnostics {
   trace: (message: string) => void;
 }
 
 export const createDiagnostics = (
   label: string,
-  timeProvider: TimeProvider = createTimeProvider()) =>
+  timeProvider: ITimeProvider = createTimeProvider()) =>
 {
   // return new ConsoleDiagnostics(label, timeProvider);
   return new NullDiagnostics();
 };
 
-class ConsoleDiagnostics implements Diagnostics {
+class ConsoleDiagnostics implements IDiagnostics {
   private start: number;
 
   constructor(
     private label: string,
-    private timeProvider: TimeProvider)
+    private timeProvider: ITimeProvider)
   {
     this.start = timeProvider.millisecondsSinceEpochUtc();
   }
@@ -30,6 +30,6 @@ class ConsoleDiagnostics implements Diagnostics {
   };
 }
 
-class NullDiagnostics implements Diagnostics {
+class NullDiagnostics implements IDiagnostics {
   public trace = (message: string) => {};
 }

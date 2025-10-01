@@ -19,7 +19,7 @@ version). Then:
 
 ```sh
 cd vscode
-npm install
+npm ci
 npm test
 ```
 

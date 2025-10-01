@@ -1,4 +1,4 @@
-export interface File {
+export interface IFile {
   text: () => string;
   path: () => string;
 }

@@ -1,22 +1,23 @@
 const path = require('path');
 
-import { NoteSearcherUi } from "../ui/NoteSearcherUi";
-import { File } from "../utils/File";
-import { MultiIndex } from "../index/MultiIndex";
-import { createDiagnostics, Diagnostics } from "../diagnostics/diagnostics";
-import { TimeProvider, createTimeProvider } from "../utils/timeProvider";
+import { INoteSearcherUi } from "../ui/INoteSearcherUi";
+import { IFile } from "../utils/IFile";
+import { IMultiIndex } from "../index/MultiIndex";
+import { createDiagnostics, IDiagnostics } from "../diagnostics/diagnostics";
+import { ITimeProvider, createTimeProvider } from "../utils/timeProvider";
 import { formatDateTime_YYYYMMddhhmm } from "../utils/timeFormatter";
-import { FileSystem, posixRelativePath } from "../utils/FileSystem";
+import { posixRelativePath } from "../utils/NodeFileSystem";
+import { IFileSystem } from '../utils/IFileSystem';
 
 export class NoteSearcher {
   private previousSearchInput = '';
-  private diagnostics: Diagnostics;
+  private diagnostics: IDiagnostics;
 
   constructor(
-    private ui: NoteSearcherUi,
-    private index: MultiIndex,
-    private fs: FileSystem,
-    private timeProvider: TimeProvider = createTimeProvider())
+    private ui: INoteSearcherUi,
+    private index: IMultiIndex,
+    private fs: IFileSystem,
+    private timeProvider: ITimeProvider = createTimeProvider())
   {
     ui.addNoteSavedListener(this.notifyNoteSaved);
     ui.addNoteDeletedListener(this.notifyNoteDeleted);
@@ -167,7 +168,7 @@ export class NoteSearcher {
     this.ui.showTags(tags);
   };
 
-  private notifyNoteSaved = async (file: File) => {
+  private notifyNoteSaved = async (file: IFile) => {
     this.diagnostics.trace('note saved');
 
     await this.index.onFileModified(file.path(), file.text());
@@ -190,7 +191,7 @@ export class NoteSearcher {
     this.refreshSidebar();
   };
 
-  private notifyMovedViewToDifferentNote = async (file: File) => {
+  private notifyMovedViewToDifferentNote = async (file: IFile) => {
     this.showBacklinks();
     this.showForwardLinks();
   };

@@ -1,6 +1,6 @@
 const _path = require('path');
 
-import { posixRelativePath, createFileSystem } from "./FileSystem";
+import { posixRelativePath, createNodeFileSystem } from "./NodeFileSystem";
 
 describe('FileSystem', () => {
   describe('posixRelativePath', () => {
@@ -30,7 +30,7 @@ const demoDir = _path.resolve(__dirname, '../../demo_dir');
 const readmePath = _path.resolve(demoDir, 'readme.md');
 
 describe('FileSystem, demo dir', () => {
-  const fs = createFileSystem();
+  const fs = createNodeFileSystem();
 
   it('ignores specific file', () => {
     const ignore = (path: string) => path === readmePath;
@@ -49,7 +49,7 @@ describe('FileSystem, demo dir, allFilesUnderPath', () => {
   let allDemoDirFiles: string[];
 
   beforeEach(() => {
-    const fs = createFileSystem();
+    const fs = createNodeFileSystem();
     allDemoDirFiles = Array.from(fs.allFilesUnderPath(demoDir));
   });
 
@@ -65,7 +65,7 @@ describe('FileSystem, demo subdir, allFilesUnderPath', () => {
   let allDemoDirFiles: string[];
 
   beforeEach(() => {
-    const fs = createFileSystem();
+    const fs = createNodeFileSystem();
     allDemoDirFiles = Array.from(fs.allFilesUnderPath(demoSubDir));
   });
 

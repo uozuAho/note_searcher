@@ -1,14 +1,14 @@
 import * as tmoq from "typemoq";
 import { Link } from "../index/LinkIndex";
-import { NoteSearcherUi, FileChangeListener, FileDeletedListener, FileMovedListener } from "../ui/NoteSearcherUi";
-import { File } from "../utils/File";
+import { INoteSearcherUi, FileChangeListener, FileDeletedListener, FileMovedListener } from "../ui/INoteSearcherUi";
+import { IFile } from "../utils/IFile";
 import { MockFile } from "./MockFile";
 
-export class MockUi implements NoteSearcherUi {
-  private _mock: tmoq.IMock<NoteSearcherUi>;
+export class MockUi implements INoteSearcherUi {
+  private _mock: tmoq.IMock<INoteSearcherUi>;
 
   constructor() {
-    this._mock = tmoq.Mock.ofType<NoteSearcherUi>();
+    this._mock = tmoq.Mock.ofType<INoteSearcherUi>();
   }
 
   public openFile(path: any) {
@@ -29,9 +29,9 @@ export class MockUi implements NoteSearcherUi {
 
   public startNewNote = (noteName: string) => Promise.resolve();
 
-  private _currentFile: File | null = null;
+  private _currentFile: IFile | null = null;
 
-  public getCurrentFileReturns = (file: File | null) => {
+  public getCurrentFileReturns = (file: IFile | null) => {
     this._currentFile = file;
   };
 

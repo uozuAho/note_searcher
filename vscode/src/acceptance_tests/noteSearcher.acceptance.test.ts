@@ -10,78 +10,50 @@
  */
 
 import { activate } from "../main";
-import { VsCodeExtensionContext } from "../vs_code_apis/extensionContext";
+import { IVsCodeExtensionContext } from "../vs_code_apis/extensionContext";
 import { FakeUi } from "./FakeUi";
 import { FakeVsCodeNoteSearcher } from "./FakeVsCodeNoteSearcher";
 import { FakeVsCodeRegistry } from "./FakeVsCodeRegistry";
 import { Link } from "../index/LinkIndex";
 import { InMemFileSystem } from "../utils/InMemFileSystem";
-import { FileSystem } from "../utils/FileSystem";
+import { IFileSystem } from '../utils/IFileSystem';
 import { allFilesUnderPath } from "./readAllFiles";
 
 import _path = require('path');
+import { DefaultMultiIndex } from "../index/DefaultMultiIndex";
+
 const demoDir = _path.resolve(__dirname, '../../demo_dir');
-
-let _fakeUi = new FakeUi();
-let ns = new FakeVsCodeNoteSearcher(_fakeUi);
 const demoDirFiles = allFilesUnderPath(demoDir);
-let fs: FileSystem = InMemFileSystem.fromFiles(demoDirFiles);
 
-class FakeVsCodeExtensionContext implements VsCodeExtensionContext {
+let memFs: IFileSystem;
+let ns: FakeVsCodeNoteSearcher;
+
+class FakeVsCodeExtensionContext implements IVsCodeExtensionContext {
   subscriptions: { dispose(): any; }[] = [];
 }
 
-jest.mock('../ui/uiCreator', () => {
+jest.mock('../buildDeps', () => {
   return {
-    createNoteSearcherUi: () => {
-      _fakeUi = new FakeUi();
-      ns = new FakeVsCodeNoteSearcher(_fakeUi);
-      // folder needs to be open before activating
+    buildDeps: () => {
+      // reset local fakes
+      memFs = InMemFileSystem.fromFiles(demoDirFiles);
+      let fakeUi = new FakeUi();
+      ns = new FakeVsCodeNoteSearcher(fakeUi, memFs);
+
+      // folder needs to be open before activating, otherwise activate()
+      // short-circuits
       ns.openFolder(demoDir);
-      return _fakeUi;
-    }
-  };
-});
 
-jest.mock('../vs_code_apis/registryCreator', () => {
-  return {
-    createVsCodeRegistry: () => new FakeVsCodeRegistry(ns)
-  };
-});
-
-jest.mock('../autocomplete/tagCompleterCreator', () => {
-  return {
-    createTagCompleter: () => {
       return {
-        provideCompletionItems: () => {}
+        fs: memFs,
+        ui: fakeUi,
+        registry: new FakeVsCodeRegistry(ns),
+        buildMultiIndex: (dir: string) => new DefaultMultiIndex(memFs, dir),
+        buildTagCompleter: () => {},
+        buildWikilinkCompleter: () => {},
+        buildWikiLinkDefinitionProvider: () => {}
       };
     }
-  };
-});
-
-jest.mock('../autocomplete/createWikilinkCompleter', () => {
-  return {
-    createWikilinkCompleter: () => {
-      return {
-        provideCompletionItems: () => {}
-      };
-    }
-  };
-});
-
-jest.mock('../definition_provider/defProviderCreator', () => {
-  return {
-    createWikiLinkDefinitionProvider: () => {
-      return {
-        provideDefinition: () => {}
-      };
-    }
-  };
-});
-
-jest.mock('../utils/FileSystem', () => {
-  return {
-    createFileSystem: () => fs
   };
 });
 
@@ -137,13 +109,11 @@ describe('on file deleted', () => {
   const trains = _path.join(demoDir, 'trains.md');
 
   beforeAll(async () => {
-    fs = InMemFileSystem.fromFiles(demoDirFiles);
+    memFs = InMemFileSystem.fromFiles(demoDirFiles);
     await activate(new FakeVsCodeExtensionContext());
     ns.openFolder(demoDir);
     await ns.openFile(readme);
-
-    fs.deleteFile(trains);
-    await ns.notifyNoteDeleted(trains);
+    await ns.deleteFile(trains);
   });
 
   it('is not in search results', async () => {
@@ -172,13 +142,11 @@ describe('on file moved', () => {
   const newTrainsPath = _path.join(demoDir, 'subdir/trains.md');
 
   beforeAll(async () => {
-    fs = InMemFileSystem.fromFiles(demoDirFiles);
+    memFs = InMemFileSystem.fromFiles(demoDirFiles);
     await activate(new FakeVsCodeExtensionContext());
     ns.openFolder(demoDir);
-
     await ns.openFile(readme);
-    fs.moveFile(oldTrainsPath, newTrainsPath);
-    await ns.notifyNoteMoved(oldTrainsPath, newTrainsPath);
+    await ns.moveFile(oldTrainsPath, newTrainsPath);
   });
 
   it('search result points to new location', async () => {
@@ -230,13 +198,11 @@ describe('on file renamed', () => {
   const newTrainsPath = _path.join(demoDir, 'new_trains.md');
 
   beforeAll(async () => {
-    fs = InMemFileSystem.fromFiles(demoDirFiles);
+    memFs = InMemFileSystem.fromFiles(demoDirFiles);
     await activate(new FakeVsCodeExtensionContext());
     ns.openFolder(demoDir);
-
     await ns.openFile(readme);
-    fs.moveFile(oldTrainsPath, newTrainsPath);
-    await ns.notifyNoteMoved(oldTrainsPath, newTrainsPath);
+    await ns.renameFile(oldTrainsPath, newTrainsPath);
   });
 
   it('search result points to new location', async () => {

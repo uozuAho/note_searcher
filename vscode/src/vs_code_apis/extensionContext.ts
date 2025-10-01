@@ -1,3 +1,3 @@
-export interface VsCodeExtensionContext {
+export interface IVsCodeExtensionContext {
   subscriptions: { dispose(): any }[];
 }
