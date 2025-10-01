@@ -1,6 +1,6 @@
-import { createWikilinkCompleter } from './autocomplete/createWikilinkCompleter';
-import { createTagCompleter } from './autocomplete/tagCompleterCreator';
-import { createWikiLinkDefinitionProvider } from './definition_provider/defProviderCreator';
+import { VsCodeTagCompleter } from './autocomplete/VsCodeTagCompleter';
+import { VsCodeWikilinkCompleter } from './autocomplete/VsCodeWikilinkCompleter';
+import { VsCodeWikiLinkDefinitionProvider } from './definition_provider/VsCodeWikiLinkDefinitionProvider';
 import { IExtensionDeps } from './IExtensionDeps';
 import { DefaultMultiIndex } from './index/DefaultMultiIndex';
 import { VsCodeNoteSearcherUi } from './ui/VsCodeNoteSearcherUi';
@@ -15,9 +15,9 @@ export function buildDeps(): IExtensionDeps {
     ui: new VsCodeNoteSearcherUi(),
     registry: new RealVsCodeRegistry(),
     buildMultiIndex: dir => new DefaultMultiIndex(fs, dir),
-    buildTagCompleter: index => createTagCompleter(index),
-    buildWikilinkCompleter: (index, fs) => createWikilinkCompleter(index, fs),
+    buildTagCompleter: index => new VsCodeTagCompleter(index),
+    buildWikilinkCompleter: (index, fs) => new VsCodeWikilinkCompleter(index, fs),
     buildWikiLinkDefinitionProvider: noteLocator =>
-      createWikiLinkDefinitionProvider(noteLocator),
+      new VsCodeWikiLinkDefinitionProvider(noteLocator),
   };
 }
