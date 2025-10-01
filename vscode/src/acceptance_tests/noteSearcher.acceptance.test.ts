@@ -49,25 +49,13 @@ jest.mock('../buildDeps', () => {
         ui: fakeUi,
         registry: new FakeVsCodeRegistry(ns),
         buildMultiIndex: (dir: string) => new DefaultMultiIndex(memFs, dir),
-        buildTagCompleter: (x: any) => {},
-        buildWikilinkCompleter: () => {}
+        buildTagCompleter: () => {},
+        buildWikilinkCompleter: () => {},
+        buildWikiLinkDefinitionProvider: () => {}
       };
     }
   };
 });
-
-// ----------------------------
-// these are needed to stub out functions that depend on the real VS code API
-jest.mock('../definition_provider/defProviderCreator', () => {
-  return {
-    createWikiLinkDefinitionProvider: () => {
-      return {
-        provideDefinition: () => {}
-      };
-    }
-  };
-});
-// ----------------------------
 
 describe('on starting in the demo dir', () => {
   beforeAll(async () => {

@@ -1,5 +1,6 @@
 import { createWikilinkCompleter } from './autocomplete/createWikilinkCompleter';
 import { createTagCompleter } from './autocomplete/tagCompleterCreator';
+import { createWikiLinkDefinitionProvider } from './definition_provider/defProviderCreator';
 import { IExtensionDeps } from './IExtensionDeps';
 import { DefaultMultiIndex } from './index/DefaultMultiIndex';
 import { VsCodeNoteSearcherUi } from './ui/VsCodeNoteSearcherUi';
@@ -16,5 +17,7 @@ export function buildDeps(): IExtensionDeps {
     buildMultiIndex: dir => new DefaultMultiIndex(fs, dir),
     buildTagCompleter: index => createTagCompleter(index),
     buildWikilinkCompleter: (index, fs) => createWikilinkCompleter(index, fs),
+    buildWikiLinkDefinitionProvider: noteLocator =>
+      createWikiLinkDefinitionProvider(noteLocator),
   };
 }
