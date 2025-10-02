@@ -1,5 +1,11 @@
 import { Link } from "../index/LinkIndex";
-import { FileChangeListener, FileDeletedListener, FileMovedListener, INoteSearcherUi } from "../ui/INoteSearcherUi";
+import {
+  FileChangeListener,
+  FileDeletedListener,
+  FileMovedListener,
+  FileRenamedListener,
+  INoteSearcherUi
+} from "../ui/INoteSearcherUi";
 import { IFile } from "../utils/IFile";
 
 class FakeFile implements IFile {
@@ -31,6 +37,7 @@ export class FakeUi implements INoteSearcherUi {
   public addNoteSavedListener = (listener: FileChangeListener) => { };
   public addNoteDeletedListener = (listener: FileDeletedListener) => { this._noteDeletedListener = listener; };
   public addNoteMovedListener = (listener: FileMovedListener) => { this._noteMovedListener = listener; };
+  public addNoteRenamedListener = (listener: FileRenamedListener) => { this._noteRenamedListener = listener; };
   public addMovedViewToDifferentNoteListener = (listener: FileChangeListener) => {
     this._movedViewToDifferentNoteListener = listener;
   };
@@ -50,6 +57,7 @@ export class FakeUi implements INoteSearcherUi {
   private _movedViewToDifferentNoteListener: FileChangeListener | null = null;
   private _noteDeletedListener: FileDeletedListener | null = null;
   private _noteMovedListener: FileMovedListener | null = null;
+  private _noteRenamedListener: FileRenamedListener | null = null;
 
   // queries
   public searchResults = () => this._searchResults;
@@ -74,6 +82,11 @@ export class FakeUi implements INoteSearcherUi {
   public notifyNoteMoved(oldPath: string, newPath: string) {
     if (this._noteMovedListener) {
       return this._noteMovedListener(oldPath, newPath);
+    }
+  }
+  public notifyFileRenamed(oldPath: string, newPath: string) {
+    if (this._noteRenamedListener) {
+      return this._noteRenamedListener(oldPath, newPath);
     }
   }
 }

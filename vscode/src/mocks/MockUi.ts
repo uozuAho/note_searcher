@@ -1,6 +1,6 @@
 import * as tmoq from "typemoq";
 import { Link } from "../index/LinkIndex";
-import { INoteSearcherUi, FileChangeListener, FileDeletedListener, FileMovedListener } from "../ui/INoteSearcherUi";
+import { INoteSearcherUi, FileChangeListener, FileDeletedListener, FileMovedListener, FileRenamedListener } from "../ui/INoteSearcherUi";
 import { IFile } from "../utils/IFile";
 import { MockFile } from "./MockFile";
 
@@ -120,6 +120,8 @@ export class MockUi implements INoteSearcherUi {
   };
 
   public addNoteMovedListener = (listener: FileMovedListener) => {};
+
+  public addNoteRenamedListener = (listener: FileRenamedListener) => {};
 
   public saveFile = async (file: MockFile) => {
     if (this._fileSavedListener) {

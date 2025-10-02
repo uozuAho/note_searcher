@@ -30,7 +30,7 @@ export class FakeVsCodeNoteSearcher {
 
   public renameFile = async (oldPath: string, newPath: string) => {
     this._fs.moveFile(oldPath, newPath);
-    await this._ui.notifyNoteMoved(oldPath, newPath);
+    await this._ui.notifyFileRenamed(oldPath, newPath);
   };
 
   public openFile = async (path: any) => {

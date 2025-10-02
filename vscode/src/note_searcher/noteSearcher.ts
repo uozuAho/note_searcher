@@ -22,6 +22,7 @@ export class NoteSearcher {
     ui.addNoteSavedListener(this.notifyNoteSaved);
     ui.addNoteDeletedListener(this.notifyNoteDeleted);
     ui.addNoteMovedListener(this.notifyNoteMoved);
+    ui.addNoteRenamedListener(this.notifyNoteMoved);
     ui.addMovedViewToDifferentNoteListener(this.notifyMovedViewToDifferentNote);
     this.diagnostics = createDiagnostics('noteSearcher');
   }
