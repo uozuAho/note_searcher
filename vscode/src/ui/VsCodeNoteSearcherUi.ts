@@ -160,7 +160,17 @@ export class VsCodeNoteSearcherUi implements INoteSearcherUi {
   };
 
   public addNoteMovedListener = (listener: FileMovedListener) => {
+    if (this.noteMovedListener) {
+      throw new Error("Listener already set. Probably a bug.");
+    }
+
     this.noteMovedListener = listener;
+
+    return vscode.workspace.onDidRenameFiles(e => {
+      for (const file of e.files) {
+        return this.noteMovedListener!(file.oldUri.fsPath, file.newUri.fsPath);
+      }
+    });
   };
 
   public addMovedViewToDifferentNoteListener = (listener: FileChangeListener) => {
@@ -169,17 +179,6 @@ export class VsCodeNoteSearcherUi implements INoteSearcherUi {
 
   public addNoteRenamedListener = (listener: FileRenamedListener) => {
   };
-
-  // todo: delete me
-  public createNoteMovedHandler(): { dispose(): any; } {
-    return vscode.workspace.onDidRenameFiles(e => {
-      if (this.noteMovedListener) {
-        for (const file of e.files) {
-          return this.noteMovedListener(file.oldUri.fsPath, file.newUri.fsPath);
-        }
-      }
-    });
-  }
 
   // todo: delete me
   public createMovedViewToDifferentNoteHandler = () => {

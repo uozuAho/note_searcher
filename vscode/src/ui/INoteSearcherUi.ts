@@ -21,11 +21,10 @@ export interface INoteSearcherUi {
   showError: (e: Error) => Promise<void>;
   addNoteSavedListener: (listener: FileChangeListener) => Disposable;
   addNoteDeletedListener: (listener: FileDeletedListener) => Disposable;
-  addNoteMovedListener: (listener: FileMovedListener) => void;
+  addNoteMovedListener: (listener: FileMovedListener) => Disposable;
   addNoteRenamedListener: (listener: FileRenamedListener) => void;
   addMovedViewToDifferentNoteListener: (listener: FileChangeListener) => void;
   createMovedViewToDifferentNoteHandler(): Disposable;
-  createNoteMovedHandler(): Disposable;
 }
 
 export type FileChangeListener = (file: IFile) => Promise<void>;

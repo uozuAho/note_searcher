@@ -35,12 +35,14 @@ export class FakeUi implements INoteSearcherUi {
     this._noteDeletedListener = listener;
     return { dispose: () => { } };
   };
-  public addNoteMovedListener = (listener: FileMovedListener) => { this._noteMovedListener = listener; };
+  public addNoteMovedListener = (listener: FileMovedListener) => {
+    this._noteMovedListener = listener;
+    return { dispose: () => { } };
+  };
   public addNoteRenamedListener = (listener: FileRenamedListener) => { this._noteRenamedListener = listener; };
   public addMovedViewToDifferentNoteListener = (listener: FileChangeListener) => {
     this._movedViewToDifferentNoteListener = listener;
   };
-  public createNoteMovedHandler = () => { return { dispose: () => { } }; };
   public createMovedViewToDifferentNoteHandler = () => { return { dispose: () => { } }; };
   // end UI interface
 

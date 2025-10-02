@@ -119,7 +119,9 @@ export class MockUi implements INoteSearcherUi {
     return { dispose: () => { } };
   };
 
-  public addNoteMovedListener = (listener: FileMovedListener) => {};
+  public addNoteMovedListener = (listener: FileMovedListener) => {
+    return { dispose: () => { } };
+  };
 
   public addNoteRenamedListener = (listener: FileRenamedListener) => {};
 
@@ -130,5 +132,4 @@ export class MockUi implements INoteSearcherUi {
   };
 
   public createMovedViewToDifferentNoteHandler = () => { return { dispose: () => {} };};
-  public createNoteMovedHandler = () => { return { dispose: () => {} };};
 }
