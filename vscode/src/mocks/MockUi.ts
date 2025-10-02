@@ -112,10 +112,11 @@ export class MockUi implements INoteSearcherUi {
 
   public addNoteSavedListener = (listener: FileChangeListener) => {
     this._fileSavedListener = listener;
+    return { dispose: () => { } };
   };
 
   public addNoteDeletedListener = (listener: FileDeletedListener) => {
-    return;
+    return { dispose: () => { } };
   };
 
   public addNoteMovedListener = (listener: FileMovedListener) => {};

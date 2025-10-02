@@ -24,6 +24,8 @@ export async function activate(context: IVsCodeExtensionContext) {
   const noteSearcher = new NoteSearcher(ui, multiIndex, fs);
   const noteLocator = new NoteLocator(multiIndex);
 
+  context.subscriptions.push(...noteSearcher.setUiListeners());
+
   context.subscriptions.push(
     registry.registerCommand(
       'noteSearcher.search', async () => await noteSearcher.promptAndSearch()),
@@ -63,8 +65,7 @@ export async function activate(context: IVsCodeExtensionContext) {
     registry.registerDefinitionProvider(['markdown', 'plaintext'],
       buildWikiLinkDefinitionProvider(noteLocator)),
 
-    ui.createNoteSavedHandler(),
-    ui.createNoteDeletedHandler(),
+    // ui.createNoteDeletedHandler(),
     ui.createNoteMovedHandler(),
     ui.createMovedViewToDifferentNoteHandler()
   );

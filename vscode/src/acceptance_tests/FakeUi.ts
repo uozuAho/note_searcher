@@ -28,8 +28,13 @@ export class FakeUi implements INoteSearcherUi {
   public showForwardLinks = (links: string[]) => this._forwardLinks = links;
   public notifyIndexingStarted = (indexingTask: Promise<void>) => { };
   public showError = (e: Error) => Promise.resolve();
-  public addNoteSavedListener = (listener: FileChangeListener) => { };
-  public addNoteDeletedListener = (listener: FileDeletedListener) => { this._noteDeletedListener = listener; };
+  public addNoteSavedListener = (listener: FileChangeListener) => {
+    return { dispose: () => { } };
+  };
+  public addNoteDeletedListener = (listener: FileDeletedListener) => {
+    this._noteDeletedListener = listener;
+    return { dispose: () => { } };
+  };
   public addNoteMovedListener = (listener: FileMovedListener) => { this._noteMovedListener = listener; };
   public addNoteRenamedListener = (listener: FileRenamedListener) => { this._noteRenamedListener = listener; };
   public addMovedViewToDifferentNoteListener = (listener: FileChangeListener) => {

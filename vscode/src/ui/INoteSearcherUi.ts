@@ -1,6 +1,8 @@
 import { Link } from "../index/LinkIndex";
 import { IFile } from "../utils/IFile";
 
+type Disposable = { dispose(): any; };
+
 export interface INoteSearcherUi {
   openFile(path: any): any;
   showTags: (tags: string[]) => void;
@@ -17,8 +19,8 @@ export interface INoteSearcherUi {
   showForwardLinks: (links: string[]) => void;
   notifyIndexingStarted: (indexingTask: Promise<void>) => void;
   showError: (e: Error) => Promise<void>;
-  addNoteSavedListener: (listener: FileChangeListener) => void;
-  addNoteDeletedListener: (listener: FileDeletedListener) => void;
+  addNoteSavedListener: (listener: FileChangeListener) => Disposable;
+  addNoteDeletedListener: (listener: FileDeletedListener) => Disposable;
   addNoteMovedListener: (listener: FileMovedListener) => void;
   addNoteRenamedListener: (listener: FileRenamedListener) => void;
   addMovedViewToDifferentNoteListener: (listener: FileChangeListener) => void;
@@ -28,7 +30,6 @@ export interface INoteSearcherUi {
   createNoteMovedHandler(): Disposable;
 }
 
-type Disposable = { dispose(): any; };
 export type FileChangeListener = (file: IFile) => Promise<void>;
 export type FileDeletedListener = (path: string) => Promise<void>;
 export type FileMovedListener = (oldPath: string, newPath: string) => Promise<void>;
