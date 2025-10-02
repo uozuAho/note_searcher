@@ -6,6 +6,11 @@ file. Format inspired by https://keepachangelog.com/en/1.0.0/
 ## Next
 ### Added
 - Wiki links are updated when a file is renamed
+### Changed
+- Updated supported vscode.engine to 1.104.0. Dunno if this actually changes
+  anything.
+### Security
+- Updating library dependencies
 
 ## [3.2.0] - 2025-09-01
 ### Added
