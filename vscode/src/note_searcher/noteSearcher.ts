@@ -204,15 +204,16 @@ export class NoteSearcher {
     await this.index.onFileDeleted(oldPath);
     await this.index.onFileModified(newPath, text);
 
-    const asdf = notesLinkedToOldPath
-      .map(f => new SimpleFile(
-        f.path(),
-        updateLinks(oldPath, newPath, f.text())))
-
-    for (const f of asdf) {
-      this.fs.writeFile(f.path(), f.text())
-      await this.index.onFileModified(f.path(), f.text());
-    }
+    await Promise.all(
+      notesLinkedToOldPath
+        .map(f => new SimpleFile(
+          f.path(),
+          updateLinks(oldPath, newPath, f.text())))
+        .map(f => {
+          this.fs.writeFile(f.path(), f.text());
+          return this.index.onFileModified(f.path(), f.text());
+        })
+    );
 
     this.refreshSidebar();
   };
