@@ -1,13 +1,15 @@
 const path = require('path');
 
 import { INoteSearcherUi } from "../ui/INoteSearcherUi";
-import { IFile } from "../utils/IFile";
+import { IFile, SimpleFile } from "../utils/IFile";
 import { IMultiIndex } from "../index/MultiIndex";
 import { createDiagnostics, IDiagnostics } from "../diagnostics/diagnostics";
 import { ITimeProvider, createTimeProvider } from "../utils/timeProvider";
 import { formatDateTime_YYYYMMddhhmm } from "../utils/timeFormatter";
 import { posixRelativePath } from "../utils/NodeFileSystem";
 import { IFileSystem } from '../utils/IFileSystem';
+import { updateLinks } from "../text_processing/wikilinkUpdater";
+import { noteName } from "../utils/pathUtils";
 
 export class NoteSearcher {
   private previousSearchInput = '';
@@ -19,11 +21,16 @@ export class NoteSearcher {
     private fs: IFileSystem,
     private timeProvider: ITimeProvider = createTimeProvider())
   {
-    ui.addNoteSavedListener(this.notifyNoteSaved);
-    ui.addNoteDeletedListener(this.notifyNoteDeleted);
-    ui.addNoteMovedListener(this.notifyNoteMoved);
-    ui.addMovedViewToDifferentNoteListener(this.notifyMovedViewToDifferentNote);
     this.diagnostics = createDiagnostics('noteSearcher');
+  }
+
+  public setUiListeners() {
+    return [
+      this.ui.addNoteSavedListener(this.notifyNoteSaved),
+      this.ui.addNoteDeletedListener(this.notifyNoteDeleted),
+      this.ui.addNoteRenamedListener(this.notifyNoteRenamed),
+      this.ui.addMovedViewToDifferentNoteListener(this.notifyMovedViewToDifferentNote)
+    ];
   }
 
   public promptAndSearch = async () => {
@@ -182,7 +189,19 @@ export class NoteSearcher {
     this.refreshSidebar();
   };
 
-  private notifyNoteMoved = async (oldPath: string, newPath: string) => {
+  private notifyNoteRenamed = async (oldPath: string, newPath: string) => {
+    if (this.didNoteNameChange(oldPath, newPath)) {
+      await this.handleNoteRenamed(oldPath, newPath);
+    } else {
+      await this.handleNoteMoved(oldPath, newPath);
+    }
+  };
+
+  private didNoteNameChange(oldPath: string, newPath: string) {
+    return noteName(oldPath) !== noteName(newPath);
+  }
+
+  private handleNoteMoved = async (oldPath: string, newPath: string) => {
     this.diagnostics.trace('note moved');
 
     const text = this.fs.readFile(newPath);
@@ -191,8 +210,39 @@ export class NoteSearcher {
     this.refreshSidebar();
   };
 
+  private handleNoteRenamed = async (oldPath: string, newPath: string) => {
+    this.diagnostics.trace(`renamed: ${oldPath} -> ${newPath}`);
+
+    const notesLinkedToOldPath =
+      this.index.linksTo(oldPath)
+        .map(p => new SimpleFile(p, this.fs.readFile(p)));
+
+    const text = this.fs.readFile(newPath);
+    await this.index.onFileDeleted(oldPath);
+    await this.index.onFileModified(newPath, text);
+    await this.updateNoteLinks(notesLinkedToOldPath, oldPath, newPath);
+
+    this.refreshSidebar();
+  };
+
   private notifyMovedViewToDifferentNote = async (file: IFile) => {
     this.showBacklinks();
     this.showForwardLinks();
   };
+
+  private async updateNoteLinks(
+    notesLinkedToOldPath: SimpleFile[],
+    oldPath: string,
+    newPath: string
+  ) {
+    const updatedNotes = notesLinkedToOldPath
+      .map(f => new SimpleFile(
+        f.path(),
+        updateLinks(oldPath, newPath, f.text())));
+
+    for (const note of updatedNotes) {
+      this.fs.writeFile(note.path(), note.text());
+      await this.index.onFileModified(note.path(), note.text());
+    }
+  }
 }

@@ -1,8 +1,7 @@
 import * as tmoq from "typemoq";
 import { Link } from "../index/LinkIndex";
-import { INoteSearcherUi, FileChangeListener, FileDeletedListener, FileMovedListener } from "../ui/INoteSearcherUi";
+import { INoteSearcherUi, FileChangeListener, FileDeletedListener, FileMovedListener, FileRenamedListener } from "../ui/INoteSearcherUi";
 import { IFile } from "../utils/IFile";
-import { MockFile } from "./MockFile";
 
 export class MockUi implements INoteSearcherUi {
   private _mock: tmoq.IMock<INoteSearcherUi>;
@@ -21,7 +20,9 @@ export class MockUi implements INoteSearcherUi {
 
   public showForwardLinks = (links: string[]) => Promise.resolve();
 
-  public addMovedViewToDifferentNoteListener = (listener: FileChangeListener) => {};
+  public addMovedViewToDifferentNoteListener = (listener: FileChangeListener) => {
+    return { dispose: () => { } };
+  };
 
   public copyToClipboard = (text: string) => Promise.resolve();
 
@@ -113,22 +114,20 @@ export class MockUi implements INoteSearcherUi {
 
   public addNoteSavedListener = (listener: FileChangeListener) => {
     this._fileSavedListener = listener;
+    return { dispose: () => { } };
   };
 
   public addNoteDeletedListener = (listener: FileDeletedListener) => {
-    return;
+    return { dispose: () => { } };
   };
 
-  public addNoteMovedListener = (listener: FileMovedListener) => {};
+  public addNoteRenamedListener = (listener: FileRenamedListener) => {
+    return { dispose: () => { } };
+  };
 
-  public saveFile = async (file: MockFile) => {
+  public saveFile = async (file: IFile) => {
     if (this._fileSavedListener) {
       await this._fileSavedListener(file);
     }
   };
-
-  public createMovedViewToDifferentNoteHandler = () => { return { dispose: () => {} };};
-  public createNoteDeletedHandler = () => { return { dispose: () => {} };};
-  public createNoteSavedHandler = () => { return { dispose: () => {} };};
-  public createNoteMovedHandler = () => { return { dispose: () => {} };};
 }

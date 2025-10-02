@@ -2,8 +2,7 @@ import * as tmoq from 'typemoq';
 
 import { DefaultMultiIndex } from "./DefaultMultiIndex";
 import { IFileSystem } from '../utils/IFileSystem';
-import { IFile } from '../utils/IFile';
-import { MockFile } from '../mocks/MockFile';
+import { IFile, SimpleFile } from '../utils/IFile';
 
 declare global {
   namespace jest {
@@ -46,7 +45,7 @@ describe('DefaultMultiIndex, mocked filesystem', () => {
   };
 
   const searchFor = async (query: string, text: string) => {
-    setupFiles([new MockFile(aTextFilePath, text)]);
+    setupFiles([new SimpleFile(aTextFilePath, text)]);
 
     await index.indexAllFiles('some dir');
 
@@ -90,8 +89,8 @@ describe('DefaultMultiIndex, mocked filesystem', () => {
   describe('allTags', () => {
     it('returns all tags', async () => {
       setupFiles([
-        new MockFile('a/b.txt', 'this has a #tag'),
-        new MockFile('a/b/c.log', 'this has a #different tag'),
+        new SimpleFile('a/b.txt', 'this has a #tag'),
+        new SimpleFile('a/b/c.log', 'this has a #different tag'),
       ]);
 
       await index.indexAllFiles('some dir');
@@ -101,8 +100,8 @@ describe('DefaultMultiIndex, mocked filesystem', () => {
 
     it('returns unique tags', async () => {
       setupFiles([
-        new MockFile('a/b.txt', 'this has a #tag'),
-        new MockFile('a/b/c.log', 'this has the same #tag'),
+        new SimpleFile('a/b.txt', 'this has a #tag'),
+        new SimpleFile('a/b/c.log', 'this has the same #tag'),
       ]);
 
       await index.indexAllFiles('some dir');
@@ -111,7 +110,7 @@ describe('DefaultMultiIndex, mocked filesystem', () => {
     });
 
     it('does not clear tags on save', async () => {
-      setupFiles([new MockFile('a/b.txt', 'this has a #tag')]);
+      setupFiles([new SimpleFile('a/b.txt', 'this has a #tag')]);
 
       await index.indexAllFiles('some dir');
 
@@ -125,7 +124,7 @@ describe('DefaultMultiIndex, mocked filesystem', () => {
     });
 
     it('adds new tags on save', async () => {
-      setupFiles([new MockFile('a/b.txt', 'this has a #tag')]);
+      setupFiles([new SimpleFile('a/b.txt', 'this has a #tag')]);
 
       await index.indexAllFiles('some dir');
 
@@ -140,8 +139,8 @@ describe('DefaultMultiIndex, mocked filesystem', () => {
   describe('note index', () => {
     it('indexes all notes', async () => {
       const files = [
-        new MockFile('a/b.txt', ''),
-        new MockFile('a/b/c.log', ''),
+        new SimpleFile('a/b.txt', ''),
+        new SimpleFile('a/b/c.log', ''),
       ];
       setupFiles(files);
 
@@ -153,7 +152,7 @@ describe('DefaultMultiIndex, mocked filesystem', () => {
     });
 
     it('does not index non-text files', async () => {
-      setupFiles([new MockFile('source_file.cpp', '')]);
+      setupFiles([new SimpleFile('source_file.cpp', '')]);
 
       await index.indexAllFiles('some dir');
 

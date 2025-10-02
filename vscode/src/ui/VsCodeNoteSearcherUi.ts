@@ -1,17 +1,25 @@
 import * as vscode from 'vscode';
 import { SearchResultTree } from './searchResultTree';
-import { INoteSearcherUi, FileChangeListener, FileDeletedListener, FileMovedListener } from './INoteSearcherUi';
+import {
+  INoteSearcherUi,
+  FileChangeListener,
+  FileDeletedListener,
+  FileMovedListener,
+  FileRenamedListener
+} from './INoteSearcherUi';
 import { IFile } from "../utils/IFile";
 import { DeadLinksTree } from './DeadLinksTree';
 import { LinksTree } from './LinksTree';
 import { TagsTree } from './TagsTree';
 import { Link } from '../index/LinkIndex';
+import { noteName } from '../utils/pathUtils';
 
 export class VsCodeNoteSearcherUi implements INoteSearcherUi {
   private noteSavedListener: FileChangeListener | null = null;
   private noteDeletedListener: FileDeletedListener | null = null;
   private movedViewToDifferentNoteListener: FileChangeListener | null = null;
   private noteMovedListener: FileMovedListener | null = null;
+  private noteRenamedListener: FileRenamedListener | null = null;
 
   public openFile(path: any) {
     return vscode.window.showTextDocument(vscode.Uri.file(path));
@@ -127,56 +135,56 @@ export class VsCodeNoteSearcherUi implements INoteSearcherUi {
   };
 
   public addNoteSavedListener = (listener: FileChangeListener) => {
+    if (this.noteSavedListener) {
+      throw new Error("Listener already set. Probably a bug.");
+    }
+
     this.noteSavedListener = listener;
+
+    return vscode.workspace.onDidSaveTextDocument(doc => {
+      const file = new VsCodeFile(doc);
+      return this.noteSavedListener!(file);
+    });
   };
 
   public addNoteDeletedListener = (listener: FileDeletedListener) => {
-    this.noteDeletedListener = listener;
-  };
+    if (this.noteDeletedListener) {
+      throw new Error("Listener already set. Probably a bug.");
+    }
 
-  public addNoteMovedListener = (listener: FileMovedListener) => {
-    this.noteMovedListener = listener;
+    this.noteDeletedListener = listener;
+
+    return vscode.workspace.onDidDeleteFiles(e => {
+      for (const file of e.files) {
+        return this.noteDeletedListener!(file.fsPath);
+      }
+    });
   };
 
   public addMovedViewToDifferentNoteListener = (listener: FileChangeListener) => {
+    if (this.movedViewToDifferentNoteListener) {
+      throw new Error("Listener already set. Probably a bug.");
+    }
+
     this.movedViewToDifferentNoteListener = listener;
-  };
 
-  public createNoteSavedHandler = () => {
-    return vscode.workspace.onDidSaveTextDocument(doc => {
-      if (this.noteSavedListener) {
-        const file = new VsCodeFile(doc);
-        return this.noteSavedListener(file);
-      }
-    });
-  };
-
-  public createNoteDeletedHandler(): { dispose(): any; } {
-    return vscode.workspace.onDidDeleteFiles(e => {
-      if (this.noteDeletedListener) {
-        for (const file of e.files) {
-          return this.noteDeletedListener(file.fsPath);
-        }
-      }
-    });
-  }
-
-  public createNoteMovedHandler(): { dispose(): any; } {
-    return vscode.workspace.onDidRenameFiles(e => {
-      if (this.noteMovedListener) {
-        for (const file of e.files) {
-          return this.noteMovedListener(file.oldUri.fsPath, file.newUri.fsPath);
-        }
-      }
-    });
-  }
-
-  public createMovedViewToDifferentNoteHandler = () => {
     return vscode.window.onDidChangeActiveTextEditor(e => {
       if (!e) { return; }
-      if (this.movedViewToDifferentNoteListener) {
-        const file = new VsCodeFile(e.document);
-        return this.movedViewToDifferentNoteListener(file);
+      const file = new VsCodeFile(e.document);
+      return this.movedViewToDifferentNoteListener!(file);
+    });
+  };
+
+  public addNoteRenamedListener = (listener: FileRenamedListener) => {
+    if (this.noteRenamedListener) {
+      throw new Error("Listener already set. Probably a bug.");
+    }
+
+    this.noteRenamedListener = listener;
+
+    return vscode.workspace.onDidRenameFiles(e => {
+      for (const file of e.files) {
+        return this.noteRenamedListener!(file.oldUri.fsPath, file.newUri.fsPath);
       }
     });
   };

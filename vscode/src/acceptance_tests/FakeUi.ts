@@ -1,12 +1,12 @@
 import { Link } from "../index/LinkIndex";
-import { FileChangeListener, FileDeletedListener, FileMovedListener, INoteSearcherUi } from "../ui/INoteSearcherUi";
-import { IFile } from "../utils/IFile";
-
-class FakeFile implements IFile {
-  constructor(private _path: string, private _text: string) { }
-  text = () => this._text;
-  path = () => this._path;
-}
+import {
+  FileChangeListener,
+  FileDeletedListener,
+  FileMovedListener,
+  FileRenamedListener,
+  INoteSearcherUi
+} from "../ui/INoteSearcherUi";
+import { SimpleFile } from "../utils/IFile";
 
 export class FakeUi implements INoteSearcherUi {
   // UI interface
@@ -15,7 +15,7 @@ export class FakeUi implements INoteSearcherUi {
   public copyToClipboard = (text: string) => Promise.resolve();
   public startNewNote = (path: string) => Promise.resolve();
   public promptForNewNoteName = (noteId: string) => Promise.resolve(noteId);
-  public getCurrentFile = () => this._currentlyOpenFile ? new FakeFile(this._currentlyOpenFile, '') : null;
+  public getCurrentFile = () => this._currentlyOpenFile ? new SimpleFile(this._currentlyOpenFile, '') : null;
   public currentlyOpenDir = () => this._currentlyOpenDir;
   public promptForSearch = (prefill: string) => Promise.resolve(this._searchInput);
   public showSearchResults = (files: string[]) => {
@@ -28,16 +28,21 @@ export class FakeUi implements INoteSearcherUi {
   public showForwardLinks = (links: string[]) => this._forwardLinks = links;
   public notifyIndexingStarted = (indexingTask: Promise<void>) => { };
   public showError = (e: Error) => Promise.resolve();
-  public addNoteSavedListener = (listener: FileChangeListener) => { };
-  public addNoteDeletedListener = (listener: FileDeletedListener) => { this._noteDeletedListener = listener; };
-  public addNoteMovedListener = (listener: FileMovedListener) => { this._noteMovedListener = listener; };
+  public addNoteSavedListener = (listener: FileChangeListener) => {
+    return { dispose: () => { } };
+  };
+  public addNoteDeletedListener = (listener: FileDeletedListener) => {
+    this._noteDeletedListener = listener;
+    return { dispose: () => { } };
+  };
+  public addNoteRenamedListener = (listener: FileRenamedListener) => {
+    this._noteRenamedListener = listener;
+    return { dispose: () => { } };
+  };
   public addMovedViewToDifferentNoteListener = (listener: FileChangeListener) => {
     this._movedViewToDifferentNoteListener = listener;
+    return { dispose: () => { } };
   };
-  public createNoteSavedHandler = () => { return { dispose: () => { } }; };
-  public createNoteDeletedHandler = () => { return { dispose: () => { } }; };
-  public createNoteMovedHandler = () => { return { dispose: () => { } }; };
-  public createMovedViewToDifferentNoteHandler = () => { return { dispose: () => { } }; };
   // end UI interface
 
   private _currentlyOpenDir: string | null = null;
@@ -50,6 +55,7 @@ export class FakeUi implements INoteSearcherUi {
   private _movedViewToDifferentNoteListener: FileChangeListener | null = null;
   private _noteDeletedListener: FileDeletedListener | null = null;
   private _noteMovedListener: FileMovedListener | null = null;
+  private _noteRenamedListener: FileRenamedListener | null = null;
 
   // queries
   public searchResults = () => this._searchResults;
@@ -62,7 +68,7 @@ export class FakeUi implements INoteSearcherUi {
   public moveViewToNote = (file: string) => {
     if (this._movedViewToDifferentNoteListener) {
       this._currentlyOpenFile = file;
-      return this._movedViewToDifferentNoteListener(new FakeFile(file, ''));
+      return this._movedViewToDifferentNoteListener(new SimpleFile(file, ''));
     }
   };
   public notifyNoteDeleted = (path: string) => {
@@ -70,10 +76,9 @@ export class FakeUi implements INoteSearcherUi {
       return this._noteDeletedListener(path);
     }
   };
-
-  public notifyNoteMoved(oldPath: string, newPath: string) {
-    if (this._noteMovedListener) {
-      return this._noteMovedListener(oldPath, newPath);
+  public notifyFileRenamed(oldPath: string, newPath: string) {
+    if (this._noteRenamedListener) {
+      return this._noteRenamedListener(oldPath, newPath);
     }
   }
 }

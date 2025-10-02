@@ -23,15 +23,12 @@ export class FakeVsCodeNoteSearcher {
     await this._ui.notifyNoteDeleted(path);
   };
 
-  public moveFile = async (oldPath: string, newPath: string) => {
-    this._fs.moveFile(oldPath, newPath);
-    await this._ui.notifyNoteMoved(oldPath, newPath);
-  };
-
   public renameFile = async (oldPath: string, newPath: string) => {
     this._fs.moveFile(oldPath, newPath);
-    await this._ui.notifyNoteMoved(oldPath, newPath);
+    await this._ui.notifyFileRenamed(oldPath, newPath);
   };
+
+  public moveFile = this.renameFile;
 
   public openFile = async (path: any) => {
     this._ui.openFile(path);
