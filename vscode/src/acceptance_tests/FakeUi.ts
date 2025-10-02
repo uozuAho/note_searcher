@@ -35,10 +35,6 @@ export class FakeUi implements INoteSearcherUi {
     this._noteDeletedListener = listener;
     return { dispose: () => { } };
   };
-  public addNoteMovedListener = (listener: FileMovedListener) => {
-    this._noteMovedListener = listener;
-    return { dispose: () => { } };
-  };
   public addNoteRenamedListener = (listener: FileRenamedListener) => {
     this._noteRenamedListener = listener;
     return { dispose: () => { } };
@@ -80,12 +76,6 @@ export class FakeUi implements INoteSearcherUi {
       return this._noteDeletedListener(path);
     }
   };
-
-  public notifyNoteMoved(oldPath: string, newPath: string) {
-    if (this._noteMovedListener) {
-      return this._noteMovedListener(oldPath, newPath);
-    }
-  }
   public notifyFileRenamed(oldPath: string, newPath: string) {
     if (this._noteRenamedListener) {
       return this._noteRenamedListener(oldPath, newPath);

@@ -161,26 +161,6 @@ export class VsCodeNoteSearcherUi implements INoteSearcherUi {
     });
   };
 
-  public addNoteMovedListener = (listener: FileMovedListener) => {
-    if (this.noteMovedListener) {
-      throw new Error("Listener already set. Probably a bug.");
-    }
-
-    this.noteMovedListener = listener;
-
-    return vscode.workspace.onDidRenameFiles(e => {
-      for (const file of e.files) {
-        if (!this.noteNameChanged(file.oldUri, file.newUri)) {
-          return this.noteMovedListener!(file.oldUri.fsPath, file.newUri.fsPath);
-        }
-      }
-    });
-  };
-
-  private noteNameChanged(old: vscode.Uri, new_: vscode.Uri) {
-    return noteName(old.fsPath) !== noteName(new_.fsPath);
-  }
-
   public addMovedViewToDifferentNoteListener = (listener: FileChangeListener) => {
     if (this.movedViewToDifferentNoteListener) {
       throw new Error("Listener already set. Probably a bug.");
@@ -204,9 +184,7 @@ export class VsCodeNoteSearcherUi implements INoteSearcherUi {
 
     return vscode.workspace.onDidRenameFiles(e => {
       for (const file of e.files) {
-        if (this.noteNameChanged(file.oldUri, file.newUri)) {
-          return this.noteRenamedListener!(file.oldUri.fsPath, file.newUri.fsPath);
-        }
+        return this.noteRenamedListener!(file.oldUri.fsPath, file.newUri.fsPath);
       }
     });
   };

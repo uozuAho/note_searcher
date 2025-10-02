@@ -9,6 +9,7 @@ import { formatDateTime_YYYYMMddhhmm } from "../utils/timeFormatter";
 import { posixRelativePath } from "../utils/NodeFileSystem";
 import { IFileSystem } from '../utils/IFileSystem';
 import { updateLinks } from "../text_processing/wikilinkUpdater";
+import { noteName } from "../utils/pathUtils";
 
 export class NoteSearcher {
   private previousSearchInput = '';
@@ -27,7 +28,6 @@ export class NoteSearcher {
     return [
       this.ui.addNoteSavedListener(this.notifyNoteSaved),
       this.ui.addNoteDeletedListener(this.notifyNoteDeleted),
-      this.ui.addNoteMovedListener(this.notifyNoteMoved),
       this.ui.addNoteRenamedListener(this.notifyNoteRenamed),
       this.ui.addMovedViewToDifferentNoteListener(this.notifyMovedViewToDifferentNote)
     ];
@@ -189,7 +189,19 @@ export class NoteSearcher {
     this.refreshSidebar();
   };
 
-  private notifyNoteMoved = async (oldPath: string, newPath: string) => {
+  private notifyNoteRenamed = async (oldPath: string, newPath: string) => {
+    if (this.didNoteNameChange(oldPath, newPath)) {
+      await this.handleNoteRenamed(oldPath, newPath);
+    } else {
+      await this.handleNoteMoved(oldPath, newPath);
+    }
+  };
+
+  private didNoteNameChange(oldPath: string, newPath: string) {
+    return noteName(oldPath) !== noteName(newPath);
+  }
+
+  private handleNoteMoved = async (oldPath: string, newPath: string) => {
     this.diagnostics.trace('note moved');
 
     const text = this.fs.readFile(newPath);
@@ -198,7 +210,7 @@ export class NoteSearcher {
     this.refreshSidebar();
   };
 
-  private notifyNoteRenamed = async (oldPath: string, newPath: string) => {
+  private handleNoteRenamed = async (oldPath: string, newPath: string) => {
     this.diagnostics.trace(`renamed: ${oldPath} -> ${newPath}`);
 
     const notesLinkedToOldPath =

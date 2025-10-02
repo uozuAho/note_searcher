@@ -21,8 +21,13 @@ export interface INoteSearcherUi {
   showError: (e: Error) => Promise<void>;
   addNoteSavedListener: (listener: FileChangeListener) => Disposable;
   addNoteDeletedListener: (listener: FileDeletedListener) => Disposable;
-  addNoteMovedListener: (listener: FileMovedListener) => Disposable;
+
+  /**
+   * Rename handles moves & renames. VS code only provides a 'onDidRenameFile'
+   * event.
+   */
   addNoteRenamedListener: (listener: FileRenamedListener) => Disposable;
+
   addMovedViewToDifferentNoteListener: (listener: FileChangeListener) => Disposable;
 }
 
