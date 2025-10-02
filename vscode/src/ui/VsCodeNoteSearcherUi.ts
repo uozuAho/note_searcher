@@ -1,6 +1,12 @@
 import * as vscode from 'vscode';
 import { SearchResultTree } from './searchResultTree';
-import { INoteSearcherUi, FileChangeListener, FileDeletedListener, FileMovedListener } from './INoteSearcherUi';
+import {
+  INoteSearcherUi,
+  FileChangeListener,
+  FileDeletedListener,
+  FileMovedListener,
+  FileRenamedListener
+} from './INoteSearcherUi';
 import { IFile } from "../utils/IFile";
 import { DeadLinksTree } from './DeadLinksTree';
 import { LinksTree } from './LinksTree';
@@ -140,6 +146,9 @@ export class VsCodeNoteSearcherUi implements INoteSearcherUi {
 
   public addMovedViewToDifferentNoteListener = (listener: FileChangeListener) => {
     this.movedViewToDifferentNoteListener = listener;
+  };
+
+  public addNoteRenamedListener = (listener: FileRenamedListener) => {
   };
 
   public createNoteSavedHandler = () => {
