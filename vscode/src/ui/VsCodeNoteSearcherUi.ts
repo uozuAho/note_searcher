@@ -133,11 +133,30 @@ export class VsCodeNoteSearcherUi implements INoteSearcherUi {
   };
 
   public addNoteSavedListener = (listener: FileChangeListener) => {
+    if (this.noteSavedListener) {
+      throw new Error("Listener already set. Probably a bug.");
+    }
+
     this.noteSavedListener = listener;
+
+    return vscode.workspace.onDidSaveTextDocument(doc => {
+      const file = new VsCodeFile(doc);
+      return this.noteSavedListener!(file);
+    });
   };
 
   public addNoteDeletedListener = (listener: FileDeletedListener) => {
+    if (this.noteDeletedListener) {
+      throw new Error("Listener already set. Probably a bug.");
+    }
+
     this.noteDeletedListener = listener;
+
+    return vscode.workspace.onDidDeleteFiles(e => {
+      for (const file of e.files) {
+        return this.noteDeletedListener!(file.fsPath);
+      }
+    });
   };
 
   public addNoteMovedListener = (listener: FileMovedListener) => {
@@ -151,6 +170,7 @@ export class VsCodeNoteSearcherUi implements INoteSearcherUi {
   public addNoteRenamedListener = (listener: FileRenamedListener) => {
   };
 
+  // todo: delete me
   public createNoteSavedHandler = () => {
     return vscode.workspace.onDidSaveTextDocument(doc => {
       if (this.noteSavedListener) {
@@ -160,6 +180,7 @@ export class VsCodeNoteSearcherUi implements INoteSearcherUi {
     });
   };
 
+  // todo: delete me
   public createNoteDeletedHandler(): { dispose(): any; } {
     return vscode.workspace.onDidDeleteFiles(e => {
       if (this.noteDeletedListener) {
@@ -170,6 +191,7 @@ export class VsCodeNoteSearcherUi implements INoteSearcherUi {
     });
   }
 
+  // todo: delete me
   public createNoteMovedHandler(): { dispose(): any; } {
     return vscode.workspace.onDidRenameFiles(e => {
       if (this.noteMovedListener) {
@@ -180,6 +202,7 @@ export class VsCodeNoteSearcherUi implements INoteSearcherUi {
     });
   }
 
+  // todo: delete me
   public createMovedViewToDifferentNoteHandler = () => {
     return vscode.window.onDidChangeActiveTextEditor(e => {
       if (!e) { return; }
