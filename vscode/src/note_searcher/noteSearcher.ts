@@ -22,7 +22,7 @@ export class NoteSearcher {
     ui.addNoteSavedListener(this.notifyNoteSaved);
     ui.addNoteDeletedListener(this.notifyNoteDeleted);
     ui.addNoteMovedListener(this.notifyNoteMoved);
-    ui.addNoteRenamedListener(this.notifyNoteMoved);
+    ui.addNoteRenamedListener(this.notifyNoteRenamed);
     ui.addMovedViewToDifferentNoteListener(this.notifyMovedViewToDifferentNote);
     this.diagnostics = createDiagnostics('noteSearcher');
   }
@@ -192,8 +192,34 @@ export class NoteSearcher {
     this.refreshSidebar();
   };
 
+  private notifyNoteRenamed = async (oldPath: string, newPath: string) => {
+    this.diagnostics.trace('note renamed');
+
+    const text = this.fs.readFile(newPath);
+    await this.index.onFileDeleted(oldPath);
+    await this.index.onFileModified(newPath, text);
+
+    // todo: need single IFile impl
+    // const notesLinkedToOldPath = this.index.linksTo(oldPath).map(p => new Fil)
+
+    // for (const file of files) {
+    //   this.fs.writeFile(file.path(), file.text());
+    // }
+
+    this.refreshSidebar();
+  };
+
   private notifyMovedViewToDifferentNote = async (file: IFile) => {
     this.showBacklinks();
     this.showForwardLinks();
   };
 }
+
+// class LinkTextUpdater {
+//   public buildUpdates(oldPath: string, newPath: string, notes: IFile[]): IFile[] {
+//     for (const note of notes) {
+//       const oldText = this.fs.readFile(note.path());
+//       const newText = "asdf"; // todo: replace old links with new
+//     }
+//   }
+// }
