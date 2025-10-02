@@ -171,27 +171,6 @@ export class VsCodeNoteSearcherUi implements INoteSearcherUi {
   };
 
   // todo: delete me
-  public createNoteSavedHandler = () => {
-    return vscode.workspace.onDidSaveTextDocument(doc => {
-      if (this.noteSavedListener) {
-        const file = new VsCodeFile(doc);
-        return this.noteSavedListener(file);
-      }
-    });
-  };
-
-  // todo: delete me
-  public createNoteDeletedHandler(): { dispose(): any; } {
-    return vscode.workspace.onDidDeleteFiles(e => {
-      if (this.noteDeletedListener) {
-        for (const file of e.files) {
-          return this.noteDeletedListener(file.fsPath);
-        }
-      }
-    });
-  }
-
-  // todo: delete me
   public createNoteMovedHandler(): { dispose(): any; } {
     return vscode.workspace.onDidRenameFiles(e => {
       if (this.noteMovedListener) {

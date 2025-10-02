@@ -40,8 +40,6 @@ export class FakeUi implements INoteSearcherUi {
   public addMovedViewToDifferentNoteListener = (listener: FileChangeListener) => {
     this._movedViewToDifferentNoteListener = listener;
   };
-  public createNoteSavedHandler = () => { return { dispose: () => { } }; };
-  public createNoteDeletedHandler = () => { return { dispose: () => { } }; };
   public createNoteMovedHandler = () => { return { dispose: () => { } }; };
   public createMovedViewToDifferentNoteHandler = () => { return { dispose: () => { } }; };
   // end UI interface

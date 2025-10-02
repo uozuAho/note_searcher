@@ -130,7 +130,5 @@ export class MockUi implements INoteSearcherUi {
   };
 
   public createMovedViewToDifferentNoteHandler = () => { return { dispose: () => {} };};
-  public createNoteDeletedHandler = () => { return { dispose: () => {} };};
-  public createNoteSavedHandler = () => { return { dispose: () => {} };};
   public createNoteMovedHandler = () => { return { dispose: () => {} };};
 }
