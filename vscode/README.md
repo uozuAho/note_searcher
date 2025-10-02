@@ -9,10 +9,7 @@ that keep me using this extension.
 Key differences to Foam:
 + includes full text search
 + wiki link aliases are backwards: [[like this | some_filename]]
-
-Some nice Foam features not in this extension:
-- update links on file rename
-- graph visualisation (I've never found this to be useful)
++ no graph visualisation (I've never found this to be useful)
 
 
 ## Feature summary
@@ -23,6 +20,7 @@ Some nice Foam features not in this extension:
 - Copy markdown/wiki link to note from search results, file explorer
 - Copy markdown/wiki link to note from editor tab
 - Wiki link highlighting and navigation
+- Update wiki links when files are renamed
 - Shows links to and from current note in sidebar
 - Shows dead links in sidebar
 - Shows all tags in sidebar

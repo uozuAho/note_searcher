@@ -3,6 +3,10 @@
 All notable changes to the "note-searcher" extension will be documented in this
 file. Format inspired by https://keepachangelog.com/en/1.0.0/
 
+## Next
+### Added
+- Wiki links are updated when a file is renamed
+
 ## [3.2.0] - 2025-09-01
 ### Added
 - When creating a new note, the filename is used to create a note heading
