@@ -11,9 +11,9 @@ export function updateLinks(oldPath: string, newPath: string, noteText: string) 
       const newLeft = left.replace(regex, `$1${newName}$2`);
       return `[[${newLeft}]]`;
     } else {
-      const regex = new RegExp(`(\\s*)${oldName}(\\s*)`);
-      const newRight = right.replace(regex, `${newName}`);
-      return `[[${left}| ${newRight}]]`;
+      const regex = new RegExp(`(\\b\\s*)${oldName}(\\s*\\b)`);
+      const newRight = right.replace(regex, `$1${newName}$2`);
+      return `[[${left}|${newRight}]]`;
     }
   });
 }
