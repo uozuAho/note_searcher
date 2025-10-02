@@ -214,7 +214,7 @@ describe('on file renamed', () => {
     expect(ns.deadLinks()).toContainEqual(new Link(readme, oldTrainsPath));
   });
 
-  it.skip('wiki links are updated to the renamed note', async () => {
+  it('wiki links are updated to the renamed note', async () => {
     expect(ns.deadLinks()).not.toContainEqual(new Link(readme, 'trains'));
     expect(ns.deadLinks()).not.toContainEqual(new Link(readme, 'new_trains'));
   });

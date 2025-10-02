@@ -8,6 +8,7 @@ import { ITimeProvider, createTimeProvider } from "../utils/timeProvider";
 import { formatDateTime_YYYYMMddhhmm } from "../utils/timeFormatter";
 import { posixRelativePath } from "../utils/NodeFileSystem";
 import { IFileSystem } from '../utils/IFileSystem';
+import { updateLinks } from "../text_processing/wikilinkUpdater";
 
 export class NoteSearcher {
   private previousSearchInput = '';
@@ -195,17 +196,23 @@ export class NoteSearcher {
   private notifyNoteRenamed = async (oldPath: string, newPath: string) => {
     this.diagnostics.trace('note renamed');
 
-    const text = this.fs.readFile(newPath);
-    await this.index.onFileDeleted(oldPath);
-    await this.index.onFileModified(newPath, text);
-
     const notesLinkedToOldPath =
       this.index.linksTo(oldPath)
         .map(p => new SimpleFile(p, this.fs.readFile(p)));
 
-    const updates = WikiLinkTextUpdater.buildUpdates(
-      oldPath, newPath, notesLinkedToOldPath);
-    // todo: write updated files
+    const text = this.fs.readFile(newPath);
+    await this.index.onFileDeleted(oldPath);
+    await this.index.onFileModified(newPath, text);
+
+    const asdf = notesLinkedToOldPath
+      .map(f => new SimpleFile(
+        f.path(),
+        updateLinks(oldPath, newPath, f.text())))
+
+    for (const f of asdf) {
+      this.fs.writeFile(f.path(), f.text())
+      await this.index.onFileModified(f.path(), f.text());
+    }
 
     this.refreshSidebar();
   };
@@ -214,21 +221,4 @@ export class NoteSearcher {
     this.showBacklinks();
     this.showForwardLinks();
   };
-}
-
-class WikiLinkTextUpdater {
-  public static buildUpdates(oldPath: string, newPath: string, notes: IFile[]): IFile[] {
-    return notes.map(
-      n => new SimpleFile(
-        n.path(),
-        this.replaceLinks(oldPath, newPath, n.text())
-      )
-    );
-  }
-
-  public static replaceLinks(oldPath: string, newPath: string, noteText: string): string {
-    const oldFilename = path.parse(oldPath).name;
-    const newFilename = path.parse(newPath).name;
-    return "asdf";
-  }
 }
