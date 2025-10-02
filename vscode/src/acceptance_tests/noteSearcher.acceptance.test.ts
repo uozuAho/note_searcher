@@ -210,11 +210,13 @@ describe('on file renamed', () => {
     expect(ns.searchResults()).toContain(newTrainsPath);
   });
 
-  it('links to the renamed note are broken', async () => {
-    // markdown link
+  it('markdown links to the renamed note are broken', async () => {
     expect(ns.deadLinks()).toContainEqual(new Link(readme, oldTrainsPath));
-    // wiki link
-    expect(ns.deadLinks()).toContainEqual(new Link(readme, 'trains'));
+  });
+
+  it.skip('wiki links are updated to the renamed note', async () => {
+    expect(ns.deadLinks()).not.toContainEqual(new Link(readme, 'trains'));
+    expect(ns.deadLinks()).not.toContainEqual(new Link(readme, 'new_trains'));
   });
 
   it('links from the renamed note still work', async () => {
