@@ -123,7 +123,9 @@ export class MockUi implements INoteSearcherUi {
     return { dispose: () => { } };
   };
 
-  public addNoteRenamedListener = (listener: FileRenamedListener) => {};
+  public addNoteRenamedListener = (listener: FileRenamedListener) => {
+    return { dispose: () => { } };
+  };
 
   public saveFile = async (file: IFile) => {
     if (this._fileSavedListener) {

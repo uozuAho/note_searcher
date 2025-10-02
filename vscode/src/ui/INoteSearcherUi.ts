@@ -22,7 +22,7 @@ export interface INoteSearcherUi {
   addNoteSavedListener: (listener: FileChangeListener) => Disposable;
   addNoteDeletedListener: (listener: FileDeletedListener) => Disposable;
   addNoteMovedListener: (listener: FileMovedListener) => Disposable;
-  addNoteRenamedListener: (listener: FileRenamedListener) => void;
+  addNoteRenamedListener: (listener: FileRenamedListener) => Disposable;
   addMovedViewToDifferentNoteListener: (listener: FileChangeListener) => void;
   createMovedViewToDifferentNoteHandler(): Disposable;
 }

@@ -178,6 +178,12 @@ export class VsCodeNoteSearcherUi implements INoteSearcherUi {
   };
 
   public addNoteRenamedListener = (listener: FileRenamedListener) => {
+    return vscode.workspace.onDidRenameFiles(e => {
+      // todo: this!
+      // for (const file of e.files) {
+      //   return this.noteren!(file.oldUri.fsPath, file.newUri.fsPath);
+      // }
+    });
   };
 
   // todo: delete me
