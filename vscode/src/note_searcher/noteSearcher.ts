@@ -199,7 +199,7 @@ export class NoteSearcher {
   };
 
   private notifyNoteRenamed = async (oldPath: string, newPath: string) => {
-    this.diagnostics.trace('note renamed');
+    this.diagnostics.trace(`renamed: ${oldPath} -> ${newPath}`);
 
     const notesLinkedToOldPath =
       this.index.linksTo(oldPath)
