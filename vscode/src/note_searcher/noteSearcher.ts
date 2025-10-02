@@ -1,7 +1,7 @@
 const path = require('path');
 
 import { INoteSearcherUi } from "../ui/INoteSearcherUi";
-import { IFile } from "../utils/IFile";
+import { IFile, SimpleFile } from "../utils/IFile";
 import { IMultiIndex } from "../index/MultiIndex";
 import { createDiagnostics, IDiagnostics } from "../diagnostics/diagnostics";
 import { ITimeProvider, createTimeProvider } from "../utils/timeProvider";
@@ -199,12 +199,13 @@ export class NoteSearcher {
     await this.index.onFileDeleted(oldPath);
     await this.index.onFileModified(newPath, text);
 
-    // todo: need single IFile impl
-    // const notesLinkedToOldPath = this.index.linksTo(oldPath).map(p => new Fil)
+    const notesLinkedToOldPath =
+      this.index.linksTo(oldPath)
+        .map(p => new SimpleFile(p, this.fs.readFile(p)));
 
-    // for (const file of files) {
-    //   this.fs.writeFile(file.path(), file.text());
-    // }
+    const updates = WikiLinkTextUpdater.buildUpdates(
+      oldPath, newPath, notesLinkedToOldPath);
+    // todo: write updated files
 
     this.refreshSidebar();
   };
@@ -215,11 +216,19 @@ export class NoteSearcher {
   };
 }
 
-// class LinkTextUpdater {
-//   public buildUpdates(oldPath: string, newPath: string, notes: IFile[]): IFile[] {
-//     for (const note of notes) {
-//       const oldText = this.fs.readFile(note.path());
-//       const newText = "asdf"; // todo: replace old links with new
-//     }
-//   }
-// }
+class WikiLinkTextUpdater {
+  public static buildUpdates(oldPath: string, newPath: string, notes: IFile[]): IFile[] {
+    return notes.map(
+      n => new SimpleFile(
+        n.path(),
+        this.replaceLinks(oldPath, newPath, n.text())
+      )
+    );
+  }
+
+  public static replaceLinks(oldPath: string, newPath: string, noteText: string): string {
+    const oldFilename = path.parse(oldPath).name;
+    const newFilename = path.parse(newPath).name;
+    return "asdf";
+  }
+}
