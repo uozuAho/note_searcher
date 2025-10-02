@@ -203,17 +203,7 @@ export class NoteSearcher {
     const text = this.fs.readFile(newPath);
     await this.index.onFileDeleted(oldPath);
     await this.index.onFileModified(newPath, text);
-
-    await Promise.all(
-      notesLinkedToOldPath
-        .map(f => new SimpleFile(
-          f.path(),
-          updateLinks(oldPath, newPath, f.text())))
-        .map(f => {
-          this.fs.writeFile(f.path(), f.text());
-          return this.index.onFileModified(f.path(), f.text());
-        })
-    );
+    await this.updateNoteLinks(notesLinkedToOldPath, oldPath, newPath);
 
     this.refreshSidebar();
   };
@@ -222,4 +212,20 @@ export class NoteSearcher {
     this.showBacklinks();
     this.showForwardLinks();
   };
+
+  private async updateNoteLinks(
+    notesLinkedToOldPath: SimpleFile[],
+    oldPath: string,
+    newPath: string
+  ) {
+    const updatedNotes = notesLinkedToOldPath
+      .map(f => new SimpleFile(
+        f.path(),
+        updateLinks(oldPath, newPath, f.text())));
+
+    for (const note of updatedNotes) {
+      this.fs.writeFile(note.path(), note.text());
+      await this.index.onFileModified(note.path(), note.text());
+    }
+  }
 }
