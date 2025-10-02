@@ -3,8 +3,8 @@ import * as tmoq from "typemoq";
 import { NoteSearcher } from './noteSearcher';
 import { IMultiIndex } from '../index/MultiIndex';
 import { MockUi } from "../mocks/MockUi";
-import { MockFile } from "../mocks/MockFile";
 import { IFileSystem } from '../utils/IFileSystem';
+import { SimpleFile } from "../utils/IFile";
 
 // OBSOLETE: use noteSearcher.acceptance.test.ts instead
 describe('NoteSearcher', () => {
@@ -95,7 +95,7 @@ describe('NoteSearcher', () => {
     });
 
     it('copies link relative to open file', () => {
-      ui.getCurrentFileReturns(new MockFile('/a/b/c.md', ''));
+      ui.getCurrentFileReturns(new SimpleFile('/a/b/c.md', ''));
 
       const link = noteSearcher.generateMarkdownLinkTo('/a/b/c/d.md');
 
@@ -106,7 +106,7 @@ describe('NoteSearcher', () => {
       // only test on windows
       if (process.platform !== 'win32') { return; }
 
-      ui.getCurrentFileReturns(new MockFile('c:\\a\\b.md', ''));
+      ui.getCurrentFileReturns(new SimpleFile('c:\\a\\b.md', ''));
 
       const link = noteSearcher.generateMarkdownLinkTo('c:\\a\\b\\c\\d.md');
 
@@ -139,7 +139,7 @@ describe('NoteSearcher', () => {
     });
 
     it('copies wiki link with filename without extension', () => {
-      ui.getCurrentFileReturns(new MockFile('/a/b/c.md', ''));
+      ui.getCurrentFileReturns(new SimpleFile('/a/b/c.md', ''));
 
       const link = noteSearcher.generateWikiLinkTo('/a/b/c/d.md');
 
@@ -150,7 +150,7 @@ describe('NoteSearcher', () => {
       // only test on windows
       if (process.platform !== 'win32') { return; }
 
-      ui.getCurrentFileReturns(new MockFile('c:\\a\\b.md', ''));
+      ui.getCurrentFileReturns(new SimpleFile('c:\\a\\b.md', ''));
 
       const link = noteSearcher.generateWikiLinkTo('c:\\a\\b\\c\\d.md');
 

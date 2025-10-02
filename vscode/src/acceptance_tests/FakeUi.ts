@@ -6,13 +6,7 @@ import {
   FileRenamedListener,
   INoteSearcherUi
 } from "../ui/INoteSearcherUi";
-import { IFile } from "../utils/IFile";
-
-class FakeFile implements IFile {
-  constructor(private _path: string, private _text: string) { }
-  text = () => this._text;
-  path = () => this._path;
-}
+import { SimpleFile } from "../utils/IFile";
 
 export class FakeUi implements INoteSearcherUi {
   // UI interface
@@ -21,7 +15,7 @@ export class FakeUi implements INoteSearcherUi {
   public copyToClipboard = (text: string) => Promise.resolve();
   public startNewNote = (path: string) => Promise.resolve();
   public promptForNewNoteName = (noteId: string) => Promise.resolve(noteId);
-  public getCurrentFile = () => this._currentlyOpenFile ? new FakeFile(this._currentlyOpenFile, '') : null;
+  public getCurrentFile = () => this._currentlyOpenFile ? new SimpleFile(this._currentlyOpenFile, '') : null;
   public currentlyOpenDir = () => this._currentlyOpenDir;
   public promptForSearch = (prefill: string) => Promise.resolve(this._searchInput);
   public showSearchResults = (files: string[]) => {
@@ -70,7 +64,7 @@ export class FakeUi implements INoteSearcherUi {
   public moveViewToNote = (file: string) => {
     if (this._movedViewToDifferentNoteListener) {
       this._currentlyOpenFile = file;
-      return this._movedViewToDifferentNoteListener(new FakeFile(file, ''));
+      return this._movedViewToDifferentNoteListener(new SimpleFile(file, ''));
     }
   };
   public notifyNoteDeleted = (path: string) => {
