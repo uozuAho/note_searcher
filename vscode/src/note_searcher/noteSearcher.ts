@@ -20,8 +20,6 @@ export class NoteSearcher {
     private fs: IFileSystem,
     private timeProvider: ITimeProvider = createTimeProvider())
   {
-
-    ui.addMovedViewToDifferentNoteListener(this.notifyMovedViewToDifferentNote);
     this.diagnostics = createDiagnostics('noteSearcher');
   }
 
@@ -31,6 +29,7 @@ export class NoteSearcher {
       this.ui.addNoteDeletedListener(this.notifyNoteDeleted),
       this.ui.addNoteMovedListener(this.notifyNoteMoved),
       this.ui.addNoteRenamedListener(this.notifyNoteRenamed),
+      this.ui.addMovedViewToDifferentNoteListener(this.notifyMovedViewToDifferentNote)
     ];
   }
 

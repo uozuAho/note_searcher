@@ -174,7 +174,17 @@ export class VsCodeNoteSearcherUi implements INoteSearcherUi {
   };
 
   public addMovedViewToDifferentNoteListener = (listener: FileChangeListener) => {
+    if (this.movedViewToDifferentNoteListener) {
+      throw new Error("Listener already set. Probably a bug.");
+    }
+
     this.movedViewToDifferentNoteListener = listener;
+
+    return vscode.window.onDidChangeActiveTextEditor(e => {
+      if (!e) { return; }
+      const file = new VsCodeFile(e.document);
+      return this.movedViewToDifferentNoteListener!(file);
+    });
   };
 
   public addNoteRenamedListener = (listener: FileRenamedListener) => {
@@ -183,17 +193,6 @@ export class VsCodeNoteSearcherUi implements INoteSearcherUi {
       // for (const file of e.files) {
       //   return this.noteren!(file.oldUri.fsPath, file.newUri.fsPath);
       // }
-    });
-  };
-
-  // todo: delete me
-  public createMovedViewToDifferentNoteHandler = () => {
-    return vscode.window.onDidChangeActiveTextEditor(e => {
-      if (!e) { return; }
-      if (this.movedViewToDifferentNoteListener) {
-        const file = new VsCodeFile(e.document);
-        return this.movedViewToDifferentNoteListener(file);
-      }
     });
   };
 }

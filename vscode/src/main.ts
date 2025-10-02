@@ -64,8 +64,6 @@ export async function activate(context: IVsCodeExtensionContext) {
 
     registry.registerDefinitionProvider(['markdown', 'plaintext'],
       buildWikiLinkDefinitionProvider(noteLocator)),
-
-    ui.createMovedViewToDifferentNoteHandler()
   );
 
   await noteSearcher.notifyExtensionActivated();

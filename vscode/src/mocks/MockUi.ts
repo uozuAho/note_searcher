@@ -20,7 +20,9 @@ export class MockUi implements INoteSearcherUi {
 
   public showForwardLinks = (links: string[]) => Promise.resolve();
 
-  public addMovedViewToDifferentNoteListener = (listener: FileChangeListener) => {};
+  public addMovedViewToDifferentNoteListener = (listener: FileChangeListener) => {
+    return { dispose: () => { } };
+  };
 
   public copyToClipboard = (text: string) => Promise.resolve();
 
@@ -132,6 +134,4 @@ export class MockUi implements INoteSearcherUi {
       await this._fileSavedListener(file);
     }
   };
-
-  public createMovedViewToDifferentNoteHandler = () => { return { dispose: () => {} };};
 }
