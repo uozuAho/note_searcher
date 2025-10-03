@@ -41,8 +41,8 @@ describe('wikilink text updater', () => {
       `Hey ho multiline, sometimes I like to type [[ but this
       should ]] not be interpreted as a link.`],
 
-    // dunno why you'd do this, but replacing this text seems harmless
-    ["/a/b/cat.txt", "/a/b/dog.txt", "[[my [[cat]] yeah]]", "[[my [[dog]] yeah]]"],
+    // nested links not supported
+    ["/a/b/cat.txt", "/a/b/dog.txt", "[[my [[cat]] yeah]]", "[[my [[cat]] yeah]]"],
   ])('oldPath: %s, newPath: %s, oldText: %s, expectedText: %s',
     (oldPath, newPath, noteText, expectedText) => {
       const newText = updateLinks(oldPath, newPath, noteText);
