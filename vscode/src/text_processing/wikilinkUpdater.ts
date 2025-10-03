@@ -7,9 +7,8 @@ export function updateLinks(oldPath: string, newPath: string, noteText: string) 
     let [left, right] = p1.split('|');
 
     if (right === undefined) {
-      const regex = new RegExp(`(\\b\\s*)${oldName}(\\s*\\b)`);
-      const newLeft = left.replace(regex, `$1${newName}$2`);
-      return `[[${newLeft}]]`;
+      const regex = new RegExp(`(\\[\\[\\s*)${oldName}(\\s*\\]\\])`);
+      return match.replace(regex, `$1${newName}$2`);
     } else {
       const regex = new RegExp(`(\\b\\s*)${oldName}(\\s*\\b)`);
       const newRight = right.replace(regex, `$1${newName}$2`);

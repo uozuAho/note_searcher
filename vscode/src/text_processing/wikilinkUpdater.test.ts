@@ -12,12 +12,24 @@ describe('wikilink text updater', () => {
     ["/a/b/cat.txt", "/a/b/dog.txt", "[[unrelated | note]]", "[[unrelated | note]]"],
     ["/a/b/cat.txt", "/a/b/dog.txt", "[[unrelated | cats]]", "[[unrelated | cats]]"],
     ["/a/b/cat.txt", "/a/b/dog.txt",
+      "[[not a link to cat or anything]]", "[[not a link to cat or anything]]"],
+
+    ["/a/b/cat.txt", "/a/b/dog.txt",
+      "[[also not a link to cat | or anything]]", "[[also not a link to cat | or anything]]"],
+
+    ["/a/b/cat.txt", "/a/b/dog.txt",
       `Multiline note [[about cats | cat]]
       hey ho [[cats]]
       [[cat]]`,
       `Multiline note [[about cats | dog]]
       hey ho [[cats]]
-      [[dog]]`]
+      [[dog]]`],
+
+    ["/a/b/cat.txt", "/a/b/dog.txt",
+      `Hey ho multiline, sometimes I like to type [[ but this
+      should ]] not be interpreted as a link.`,
+      `Hey ho multiline, sometimes I like to type [[ but this
+      should ]] not be interpreted as a link.`],
   ])('oldPath: %s, newPath: %s, oldText: %s, expectedText: %s',
     (oldPath, newPath, noteText, expectedText) => {
       const newText = updateLinks(oldPath, newPath, noteText);
