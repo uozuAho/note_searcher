@@ -3,8 +3,8 @@ import path = require("path");
 export function updateLinks(oldPath: string, newPath: string, noteText: string) {
   const oldName = path.parse(oldPath).name;
   const newName = path.parse(newPath).name;
-  return noteText.replace(/\[\[(.+?)\]\]/gm, (match, p1) => {
-    let [left, right] = p1.split('|');
+  return noteText.replace(/\[\[(.+?)\]\]/gm, (match, innerText) => {
+    let [left, right] = innerText.split('|');
 
     if (!match.includes(oldName)) {
       return match;
