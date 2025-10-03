@@ -3,7 +3,11 @@
 All notable changes to the "note-searcher" extension will be documented in this
 file. Format inspired by https://keepachangelog.com/en/1.0.0/
 
-## Next
+## [3.3.1] - 2025-09-03
+### Fixed
+- Minor text replacement bugs when updating wiki links on file rename
+
+## [3.3.0] - 2025-09-02
 ### Added
 - Wiki links are updated when a file is renamed
 ### Changed
