@@ -153,7 +153,7 @@ function buildDocStats(docs: IFile[], query: Query) {
     docLenSum += doc.text().length;
     let excludeDoc = false;
     for (const term of query.mustHave) {
-      const regex = new RegExp(`${term}`, 'g');
+      const regex = new RegExp(`\\b${term}s?\\b`, 'g');
       const count = (doc.text().match(regex) || []).length;
       if (count > 0) {
         stats.addTermCount(doc.path(), term, count);

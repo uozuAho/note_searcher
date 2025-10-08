@@ -63,9 +63,9 @@ See [code explainer](./docs/code_explainer.md)
             - my notes search: "house board  -recip"
             - myFts matches on board, lots of ids results due to 'onboarding'?
                 - don't match substring
-                    - test: board onboarding
+                    - DONE test: board onboarding
+                    - DONE test: +adfa steadfast
                     - test: -ham nottingham
-                    - test: +adfa steadfast
     - manual test in my notes
     - rm lunr impl, deps, mentions etc.
     - rm tag search, impl, sidebar, names etc.

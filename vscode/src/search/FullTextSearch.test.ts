@@ -92,8 +92,20 @@ describe('full text search', () => {
     await expect(searchFor("bike", "I own several bikes")).toBeFound();
   });
 
+  it('findsStemmedWord+', async () => {
+    await expect(searchFor("+bike", "I own several bikes")).toBeFound();
+  });
+
   it('does not match substrings', async () => {
     await expect(searchFor("board", "onboarding")).not.toBeFound();
+    await expect(searchFor("board", "boardahol")).not.toBeFound();
+    await expect(searchFor("board", "wackyboard")).not.toBeFound();
+  });
+
+  it('does not match substrings+', async () => {
+    await expect(searchFor("+board", "onboarding")).not.toBeFound();
+    await expect(searchFor("+board", "boardahol")).not.toBeFound();
+    await expect(searchFor("+board", "wackyboard")).not.toBeFound();
   });
 
   it('finds word before slash', async () => {
