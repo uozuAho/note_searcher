@@ -273,7 +273,8 @@ describe('full text search', () => {
 
     it.each([
       ['cat', ['cats'], ['catermaran']],
-      ['house', ['housing', 'houses'], []]
+      ['house', ['housing', 'houses'], []],
+      ['brief', ['briefly'], []]
     ])('', async (word, shouldFind, shouldNotFind) => {
       for (const x of shouldFind) {
         try {

@@ -201,10 +201,12 @@ function countStemmed(docText: string, term: string) {
   // todo: perf: (maybe) combine regexes?
   let temp =
       count(docText, new RegExp(`\\b${term}s?\\b`, 'gi'))
-    + count(docText, new RegExp(`\\b${term}(ing)?\\b`, 'gi'));
+    + count(docText, new RegExp(`\\b${term}ing\\b`, 'gi'))
+    + count(docText, new RegExp(`\\b${term}ly\\b`, 'gi'))
+  ;
 
   if (term.endsWith('e')) {
-    temp += count(docText, new RegExp(`\\b${term.slice(0, -1)}(ing)?\\b`, 'gi'));
+    temp += count(docText, new RegExp(`\\b${term.slice(0, -1)}ing\\b`, 'gi'));
   }
 
   return temp;
