@@ -54,6 +54,14 @@ See [code explainer](./docs/code_explainer.md)
 
 
 # todo
+- WIP myFTS
+    - add my impl
+    - get tests working
+    - manual test in my notes
+    - update docs
+        - rm tags
+        - rm mention of indexing
+        - note change in how search works
 - bug?
     - search for something
     - edit a doc to contain that something
