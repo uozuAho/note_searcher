@@ -167,7 +167,8 @@ function buildDocStats(docs: IFile[], query: Query) {
       break;
     }
     for (const term of query.exclude) {
-      if (doc.text().includes(term)) {
+      const regex = new RegExp(`\\b${term}s?\\b`, 'g');
+      if (count(doc.text(), regex) > 0) {
         stats.removeDoc(doc.path());
         excludeDoc = true;
         break;

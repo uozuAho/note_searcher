@@ -60,12 +60,9 @@ See [code explainer](./docs/code_explainer.md)
     - DONE replace lunr with my impl
     - fix search results
         - add ranking/results list tests
-            - my notes search: "house board  -recip"
-            - myFts matches on board, lots of ids results due to 'onboarding'?
-                - don't match substring
-                    - DONE test: board onboarding
-                    - DONE test: +adfa steadfast
-                    - test: -ham nottingham
+        - "house board -recipe" returns 1
+        - "house board -recip" returns many
+            - also results differ quite a bit. which are more relevant?
     - manual test in my notes
     - rm lunr impl, deps, mentions etc.
     - rm tag search, impl, sidebar, names etc.

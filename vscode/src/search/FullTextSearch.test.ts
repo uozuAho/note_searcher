@@ -108,6 +108,10 @@ describe('full text search', () => {
     await expect(searchFor("+board", "wackyboard")).not.toBeFound();
   });
 
+  it('does not match substrings-', async () => {
+    await expect(searchFor("beach -ham", "beach nottingham")).toBeFound();
+  });
+
   it('finds word before slash', async () => {
     await expect(searchFor("red", "red/green/refactor")).toBeFound();
   });
