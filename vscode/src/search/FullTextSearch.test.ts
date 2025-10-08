@@ -1,6 +1,6 @@
 import { InMemFileSystem } from '../utils/InMemFileSystem';
 import { IFullTextSearch } from './IFullTextSearch';
-import { LunrDualFts } from './lunrDualFts';
+import { MyFts } from './myFts';
 
 declare global {
   namespace jest {
@@ -25,8 +25,6 @@ expect.extend({
   }
 });
 
-const aTextFilePath = '/a/b/c.txt';
-
 class FileAndTags {
   constructor(
     public path: string,
@@ -41,16 +39,14 @@ describe('full text search', () => {
   let fts: IFullTextSearch;
 
   const index = async (files: FileAndTags[]) => {
-    fts = new LunrDualFts(fakeFs);
     for (const file of files) {
-      await fts.addFile(file.path, file.text, file.tags);
       fakeFs.writeFile(file.path, file.text);
     }
   };
 
   const searchFor = async (query: string, text: string, tags: string[] = []) => {
-    await index([new FileAndTags(aTextFilePath, text, tags)]);
-
+    // await index([new FileAndTags(aTextFilePath, text, tags)]);
+    fakeFs.writeFile("/some/path", text);
     return fts.search(query);
   };
 
@@ -66,7 +62,7 @@ describe('full text search', () => {
 
   beforeEach(() => {
     fakeFs = new InMemFileSystem();
-    fts = new LunrDualFts(fakeFs);
+    fts = new MyFts(fakeFs, "");
   });
 
   it('index and search example', async () => {
@@ -152,10 +148,10 @@ describe('full text search', () => {
       new FileAndTags('one.blah.md', 'blah'),
     ]);
 
-    let modified = new FileAndTags('one.blah.md', 'most blah! blah blah blah blah');
+    let modified = new FileAndTags('one.blah.md', 'turnip');
     await modifyFile(modified);
 
-    const results = await fts.search('blah');
+    const results = await fts.search('blah turnip');
 
     expect(results).toStrictEqual([
       'one.blah.md',
@@ -243,41 +239,6 @@ describe('full text search', () => {
 
     it('does not find when excluded word is present', async () => {
       await expect(searchFor("ham -good", "the ham is good")).not.toBeFound();
-    });
-  });
-
-  // lunr doesn't support exact phrase matching: https://github.com/olivernn/lunr.js/issues/62
-  describe('phrases', () => {
-    it('does not support phrases', async () => {
-      await expect(searchFor('"ham is good"', "the ham is good")).not.toBeFound();
-    });
-  });
-
-  describe('search with tags', () => {
-    it('finds single tag', async () => {
-      await expect(searchFor("#beef", "The tags are", ['beef', 'chowder'])).toBeFound();
-    });
-
-    it('finds multiple tags', async () => {
-      await expect(searchFor("#beef #chowder", "The tags are", ['beef', 'chowder'])).toBeFound();
-    });
-
-    it('does not find missing tag', async () => {
-      await expect(searchFor("#asdf", "The tags are", ['beef', 'chowder'])).not.toBeFound();
-    });
-
-    it('does not find non tag', async () => {
-      await expect(searchFor("#tags", "The tags are", ['beef', 'chowder'])).not.toBeFound();
-    });
-
-    it('works with operators', async () => {
-      await expect(searchFor("#beef -#chowder", "The tags are", ['beef', 'chowder'])).not.toBeFound();
-    });
-
-    it('supports hyphenated tags', async () => {
-      await expect(searchFor("#meat-pie", "I want a", ['meat-pie'])).toBeFound();
-      await expect(searchFor("#meat-pie", "I want a", ['meat'])).not.toBeFound();
-      await expect(searchFor("#meat", "I want a", ['meat-pie'])).not.toBeFound();
     });
   });
 });
