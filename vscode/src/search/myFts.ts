@@ -178,10 +178,9 @@ function buildDocStats(docs: IFile[], query: Query) {
       continue;
     }
     for (const term of query.other) {
-      const allcount =
-        count(doc.text(), new RegExp(`\\b${term}s?\\b`, 'gi')); // poorman's stemming
-      if (allcount > 0) {
-        stats.addTermCount(doc.path(), term, allcount);
+      const stemCount = countStemmed(doc.text(), term);
+      if (stemCount > 0) {
+        stats.addTermCount(doc.path(), term, stemCount);
       }
     }
     if (stats.containsDoc(doc.path())) {
@@ -195,4 +194,18 @@ function buildDocStats(docs: IFile[], query: Query) {
 
 function count(str: string, regex: RegExp) {
   return (str.match(regex) || []).length;
+}
+
+function countStemmed(docText: string, term: string) {
+  // poor man's stemming
+  // todo: perf: (maybe) combine regexes?
+  let temp =
+      count(docText, new RegExp(`\\b${term}s?\\b`, 'gi'))
+    + count(docText, new RegExp(`\\b${term}(ing)?\\b`, 'gi'));
+
+  if (term.endsWith('e')) {
+    temp += count(docText, new RegExp(`\\b${term.slice(0, -1)}(ing)?\\b`, 'gi'));
+  }
+
+  return temp;
 }

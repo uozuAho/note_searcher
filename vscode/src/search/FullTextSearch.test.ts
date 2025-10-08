@@ -19,7 +19,7 @@ expect.extend({
         pass: true
       }
       : {
-        message: () => 'returned no results',
+        message: () => `returned no results`,
         pass: false
       };
   }
@@ -88,14 +88,6 @@ describe('full text search', () => {
 
   it('doesNotFindMissingWord', async () => {
     await expect(searchFor("pizza", "the ham is good")).not.toBeFound();
-  });
-
-  it('findsStemmedWord', async () => {
-    await expect(searchFor("bike", "I own several bikes")).toBeFound();
-  });
-
-  it('findsStemmedWord+', async () => {
-    await expect(searchFor("+bike", "I own several bikes")).toBeFound();
   });
 
   it('does not match substrings', async () => {
@@ -263,6 +255,40 @@ describe('full text search', () => {
 
     it('does not match substrings-', async () => {
       await expect(searchFor("beach -ham", "beach nottingham")).toBeFound();
+    });
+  });
+
+  describe('stemming', () => {
+    it('basic stem', async () => {
+      await expect(searchFor("bike", "I own several bikes")).toBeFound();
+    });
+
+    it('basic stem+', async () => {
+      await expect(searchFor("+bike", "I own several bikes")).toBeFound();
+    });
+
+    it('basic stem-', async () => {
+      await expect(searchFor("-bike", "I own several bikes")).not.toBeFound();
+    });
+
+    it.each([
+      ['cat', ['cats'], ['catermaran']],
+      ['house', ['housing', 'houses'], []]
+    ])('', async (word, shouldFind, shouldNotFind) => {
+      for (const x of shouldFind) {
+        try {
+          await expect(searchFor(word, x)).toBeFound();
+        } catch (err) {
+          throw new Error(`looking for word "${word}" in "${x}": ${err}`);
+        }
+      }
+      for (const x of shouldNotFind) {
+        try {
+          await expect(searchFor(word, x)).not.toBeFound();
+        } catch (err) {
+          throw new Error(`looking for word "${word}" in "${x}": ${err}`);
+        }
+      }
     });
   });
 });
