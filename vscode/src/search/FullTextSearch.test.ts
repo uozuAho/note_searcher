@@ -77,6 +77,10 @@ describe('full text search', () => {
     expect(results[0]).toBe('a/b.txt');
   });
 
+  it('is case insensitive', async () => {
+    await expect(searchFor("ham", "the Ham is good")).toBeFound();
+  });
+
   it('findsSingleWord', async () => {
     await expect(searchFor("ham", "the ham is good")).toBeFound();
   });
