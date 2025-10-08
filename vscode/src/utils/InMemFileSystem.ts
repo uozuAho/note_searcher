@@ -35,7 +35,7 @@ export class InMemFileSystem implements IFileSystem {
 
   public readFile = (path: string) => {
     const text = this._files.get(path);
-    if (!text) {
+    if (text === undefined) {
       throw new Error(`file not found: ${path}`);
     }
     return text;
