@@ -57,8 +57,10 @@ See [code explainer](./docs/code_explainer.md)
 - WIP myFTS
     - DONE add my impl
     - DONE get tests working
-    - WIP replace lunr with my impl
-        - fix tests
+    - DONE replace lunr with my impl
+    - fix: slow in my notes
+        - only search txt, md files
+        - only return top 20 results
     - manual test in my notes
     - rm lunr impl, deps, mentions etc.
     - rm tag search, impl, sidebar, names etc.
