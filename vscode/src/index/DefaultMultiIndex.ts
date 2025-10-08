@@ -4,10 +4,11 @@ import { IFileSystem } from '../utils/IFileSystem';
 import { extractTags } from '../text_processing/tagExtractor';
 import { TagSet } from './TagIndex';
 import { InMemoryLinkIndex } from "./InMemoryLinkIndex";
-import { LunrDualFts } from "../search/lunrDualFts";
+import { MyFts } from "../search/myFts";
+import { IFullTextSearch } from "../search/IFullTextSearch";
 
 export class DefaultMultiIndex implements IMultiIndex {
-  private _fullText: LunrDualFts;
+  private _fullText: IFullTextSearch;
   private _tags = new TagSet();
   private _linkIndex = new InMemoryLinkIndex();
 
@@ -15,7 +16,7 @@ export class DefaultMultiIndex implements IMultiIndex {
     private _fileSystem: IFileSystem,
     _workspaceDir: string)
   {
-    this._fullText = new LunrDualFts(_fileSystem);
+    this._fullText = new MyFts(_fileSystem, _workspaceDir);
   }
 
   public filenameToAbsPath = (filename: string) => this._linkIndex.filenameToAbsPath(filename);
@@ -37,7 +38,6 @@ export class DefaultMultiIndex implements IMultiIndex {
   public indexAllFiles = async (dir: string) => {
     this._tags.clear();
     this._linkIndex.clear();
-    this._fullText = new LunrDualFts(this._fileSystem);
     const jobs: Promise<void>[] = [];
 
     for (const path of this._fileSystem.allFilesUnderPath(dir)) {
@@ -47,7 +47,7 @@ export class DefaultMultiIndex implements IMultiIndex {
 
     await Promise.all(jobs);
     this._linkIndex.finalise();
-    this._fullText.finalise();
+    // this._fullText.finalise();
   };
 
   public onFileModified = async (path: string, text: string) => {

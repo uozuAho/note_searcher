@@ -55,9 +55,12 @@ See [code explainer](./docs/code_explainer.md)
 
 # todo
 - WIP myFTS
-    - add my impl
-    - get tests working
+    - DONE add my impl
+    - DONE get tests working
+    - WIP replace lunr with my impl
     - manual test in my notes
+    - rm lunr impl, deps, mentions etc.
+    - rm tag search, impl, names etc.
     - update docs
         - rm tags
         - rm mention of indexing
