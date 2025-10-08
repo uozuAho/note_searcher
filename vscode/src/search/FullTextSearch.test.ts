@@ -45,8 +45,7 @@ describe('full text search', () => {
   };
 
   const searchFor = async (query: string, text: string, tags: string[] = []) => {
-    // await index([new FileAndTags(aTextFilePath, text, tags)]);
-    fakeFs.writeFile("/some/path", text);
+    fakeFs.writeFile("/some/path.txt", text);
     return fts.search(query);
   };
 
@@ -91,6 +90,10 @@ describe('full text search', () => {
 
   it('findsStemmedWord', async () => {
     await expect(searchFor("bike", "I own several bikes")).toBeFound();
+  });
+
+  it('does not match substrings', async () => {
+    await expect(searchFor("board", "onboarding")).not.toBeFound();
   });
 
   it('finds word before slash', async () => {

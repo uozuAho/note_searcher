@@ -14,8 +14,8 @@ export class MyFts implements IFullTextSearch {
     for (const path of this.fs.allFilesUnderPath(dir)) {
       if (path.endsWith('md') || path.endsWith('txt') || path.endsWith('log'))
       {
-      const text = this.fs.readFile(path);
-      docs.push(new SimpleFile(path, text));
+        const text = this.fs.readFile(path);
+        docs.push(new SimpleFile(path, text));
       }
     }
     return this.searchDocs(docs, query);
@@ -84,8 +84,7 @@ function parseQuery(query: string) {
     .filter(t => t.startsWith("-"))
     .map(t => t.substring(1));
   let plainTerms = queryTerms2
-    .filter(t => !t.startsWith("+") && !t.startsWith("-"))
-    .map(t => crappyStem(t));
+    .filter(t => !t.startsWith("+") && !t.startsWith("-"));
 
   return new Query(mustIncludeTerms, mustNotIncludeTerms, plainTerms);
 }
@@ -178,10 +177,10 @@ function buildDocStats(docs: IFile[], query: Query) {
       break;
     }
     for (const term of query.other) {
-      const regex = new RegExp(`${term}`, 'gi');
-      const count = (doc.text().match(regex) || []).length;
-      if (count > 0) {
-        stats.addTermCount(doc.path(), term, count);
+      const allcount =
+        count(doc.text(), new RegExp(`\\b${term}s?\\b`, 'gi')); // poorman's stemming
+      if (allcount > 0) {
+        stats.addTermCount(doc.path(), term, allcount);
       }
     }
     if (stats.containsDoc(doc.path())) {
@@ -193,12 +192,6 @@ function buildDocStats(docs: IFile[], query: Query) {
   return stats;
 }
 
-function crappyStem(word: string) {
-  if (word.endsWith('ing') || word.endsWith('ies')) {
-    return word.substring(0, word.length - 3);
-  }
-  if (word.endsWith('e') || word.endsWith('y')) {
-    return word.substring(0, word.length - 1);
-  }
-  return word;
+function count(str: string, regex: RegExp) {
+  return (str.match(regex) || []).length;
 }
