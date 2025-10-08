@@ -1,8 +1,6 @@
-import * as tmoq from 'typemoq';
-
 import { DefaultMultiIndex } from "./DefaultMultiIndex";
-import { IFileSystem } from '../utils/IFileSystem';
 import { IFile, SimpleFile } from '../utils/IFile';
+import { InMemFileSystem } from '../utils/InMemFileSystem';
 
 declare global {
   namespace jest {
@@ -31,16 +29,12 @@ const aTextFilePath = '/a/b/c.txt';
 
 
 describe('DefaultMultiIndex, mocked filesystem', () => {
-  let fileSystem: tmoq.IMock<IFileSystem>;
+  let fileSystem: InMemFileSystem;
   let index: DefaultMultiIndex;
 
   const setupFiles = (files: IFile[]) => {
-    fileSystem.setup(w => w.allFilesUnderPath(tmoq.It.isAny(), tmoq.It.isAny()))
-      .returns(() => files.map(f => f.path()));
     for (const file of files) {
-      fileSystem.setup(f =>
-        f.readFileAsync(file.path()))
-        .returns(() => Promise.resolve(file.text()));
+      fileSystem.writeFile(file.path(), file.text());
     }
   };
 
@@ -53,9 +47,9 @@ describe('DefaultMultiIndex, mocked filesystem', () => {
   };
 
   beforeEach(() => {
-    fileSystem = tmoq.Mock.ofType<IFileSystem>();
+    fileSystem = InMemFileSystem.createEmpty();
     const ignoredWorkspaceDir = '';
-    index = new DefaultMultiIndex(fileSystem.object, ignoredWorkspaceDir);
+    index = new DefaultMultiIndex(fileSystem, ignoredWorkspaceDir);
   });
 
   describe('search with tags', () => {

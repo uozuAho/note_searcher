@@ -58,6 +58,7 @@ See [code explainer](./docs/code_explainer.md)
     - DONE add my impl
     - DONE get tests working
     - WIP replace lunr with my impl
+        - fix tests
     - manual test in my notes
     - rm lunr impl, deps, mentions etc.
     - rm tag search, impl, names etc.

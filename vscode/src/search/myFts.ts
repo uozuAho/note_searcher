@@ -1,5 +1,6 @@
 import { IFullTextSearch } from './IFullTextSearch';
 import { IFileSystem } from '../utils/IFileSystem';
+import { IFile, SimpleFile } from '../utils/IFile';
 
 export class MyFts implements IFullTextSearch {
   constructor(private fs: IFileSystem, private rootDir: string) {}
@@ -9,15 +10,15 @@ export class MyFts implements IFullTextSearch {
   }
 
   private searchPath = async (path: string, query: string) => {
-    const docs: IDocument[] = [];
+    const docs: IFile[] = [];
     for (const file of this.fs.allFilesUnderPath(path)) {
       const text = this.fs.readFile(file);
-      docs.push({ path: file, text });
+      docs.push(new SimpleFile(path, text));
     }
     return this.searchDocs(docs, query);
   };
 
-  private searchDocs = async (docs: IDocument[], queryStr: string) => {
+  private searchDocs = async (docs: IFile[], queryStr: string) => {
     const k1 = 1.5;
     const b = 0.75;
 
@@ -60,11 +61,6 @@ export class MyFts implements IFullTextSearch {
   public onFileDeleted = (path: string) => {
     return Promise.resolve();
   }
-}
-
-interface IDocument {
-  path: string,
-  text: string
 }
 
 class Query {
@@ -146,7 +142,7 @@ class DocStats {
   }
 }
 
-function buildDocStats(docs: IDocument[], query: Query) {
+function buildDocStats(docs: IFile[], query: Query) {
   const stats = new DocStats();
   let docLenSum = 0;
 
@@ -155,12 +151,12 @@ function buildDocStats(docs: IDocument[], query: Query) {
     let excludeDoc = false;
     for (const term of query.mustHave) {
       const regex = new RegExp(`${term}`, 'g');
-      const count = (doc.text.match(regex) || []).length;
+      const count = (doc.text().match(regex) || []).length;
       if (count > 0) {
-        stats.addTermCount(doc.path, term, count);
+        stats.addTermCount(doc.path(), term, count);
       } else {
         excludeDoc = true;
-        stats.removeDoc(doc.path);
+        stats.removeDoc(doc.path());
         break;
       }
     }
@@ -168,8 +164,8 @@ function buildDocStats(docs: IDocument[], query: Query) {
       break;
     }
     for (const term of query.exclude) {
-      if (doc.text.includes(term)) {
-        stats.removeDoc(doc.path);
+      if (doc.text().includes(term)) {
+        stats.removeDoc(doc.path());
         excludeDoc = true;
         break;
       }
@@ -179,13 +175,13 @@ function buildDocStats(docs: IDocument[], query: Query) {
     }
     for (const term of query.other) {
       const regex = new RegExp(`${term}`, 'g');
-      const count = (doc.text.match(regex) || []).length;
+      const count = (doc.text().match(regex) || []).length;
       if (count > 0) {
-        stats.addTermCount(doc.path, term, count);
+        stats.addTermCount(doc.path(), term, count);
       }
     }
-    if (stats.containsDoc(doc.path)) {
-      stats.setDocLen(doc.path, doc.text.length);
+    if (stats.containsDoc(doc.path())) {
+      stats.setDocLen(doc.path(), doc.text.length);
     }
   }
   stats.AvgDocLen = docLenSum / docs.length;

@@ -5,6 +5,10 @@ export class InMemFileSystem implements IFileSystem {
 
   private _files: Map<string, string> = new Map();
 
+  public static createEmpty() {
+    return new InMemFileSystem();
+  }
+
   /**
    * Return a FakeFs that contains all files under the given root
    */
