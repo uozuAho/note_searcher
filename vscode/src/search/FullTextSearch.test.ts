@@ -66,14 +66,16 @@ describe('full text search', () => {
 
   it('index and search example', async () => {
     await index([
-      new FileAndTags('a/b.txt', 'blah blah some stuff and things'),
-      new FileAndTags('a/b/c.log', 'what about shoes and biscuits'),
+      new FileAndTags('blah.txt', 'blah blah stuff'),
+      new FileAndTags('shoe.log', 'shoes and stuff'),
     ]);
 
-    const results = await fts.search('blah');
-
-    expect(results.length).toBe(1);
-    expect(results[0]).toBe('a/b.txt');
+    expect(await fts.search('blah')).toEqual(['blah.txt']);
+    expect(await fts.search('stuff')).toEqual(['blah.txt', 'shoe.log']);
+    expect(await fts.search('stuff -shoe')).toEqual(['blah.txt']);
+    expect(await fts.search('shoe')).toEqual(['shoe.log']);
+    expect(await fts.search('shoe')).toEqual(['shoe.log']);
+    expect(await fts.search('+shoe')).toEqual(['shoe.log']);
   });
 
   it('is case insensitive', async () => {
@@ -100,16 +102,6 @@ describe('full text search', () => {
     await expect(searchFor("board", "onboarding")).not.toBeFound();
     await expect(searchFor("board", "boardahol")).not.toBeFound();
     await expect(searchFor("board", "wackyboard")).not.toBeFound();
-  });
-
-  it('does not match substrings+', async () => {
-    await expect(searchFor("+board", "onboarding")).not.toBeFound();
-    await expect(searchFor("+board", "boardahol")).not.toBeFound();
-    await expect(searchFor("+board", "wackyboard")).not.toBeFound();
-  });
-
-  it('does not match substrings-', async () => {
-    await expect(searchFor("beach -ham", "beach nottingham")).toBeFound();
   });
 
   it('finds word before slash', async () => {
@@ -244,7 +236,6 @@ describe('full text search', () => {
     });
   });
 
-  // note: lunr doesn't have an AND operator
   describe('plus operator', () => {
     it('finds multiple words', async () => {
       await expect(searchFor("+ham +good", "the ham is good")).toBeFound();
@@ -252,6 +243,12 @@ describe('full text search', () => {
 
     it('rejects any missing words', async () => {
       await expect(searchFor("+ham +pizza", "the ham is good")).not.toBeFound();
+    });
+
+    it('does not match substrings+', async () => {
+      await expect(searchFor("+board", "onboarding")).not.toBeFound();
+      await expect(searchFor("+board", "boardahol")).not.toBeFound();
+      await expect(searchFor("+board", "wackyboard")).not.toBeFound();
     });
   });
 
@@ -262,6 +259,10 @@ describe('full text search', () => {
 
     it('does not find when excluded word is present', async () => {
       await expect(searchFor("ham -good", "the ham is good")).not.toBeFound();
+    });
+
+    it('does not match substrings-', async () => {
+      await expect(searchFor("beach -ham", "beach nottingham")).toBeFound();
     });
   });
 });

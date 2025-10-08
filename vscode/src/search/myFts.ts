@@ -164,7 +164,7 @@ function buildDocStats(docs: IFile[], query: Query) {
       }
     }
     if (excludeDoc) {
-      break;
+      continue;
     }
     for (const term of query.exclude) {
       const regex = new RegExp(`\\b${term}s?\\b`, 'g');
@@ -175,7 +175,7 @@ function buildDocStats(docs: IFile[], query: Query) {
       }
     }
     if (excludeDoc) {
-      break;
+      continue;
     }
     for (const term of query.other) {
       const allcount =
