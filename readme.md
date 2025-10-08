@@ -58,9 +58,14 @@ See [code explainer](./docs/code_explainer.md)
     - DONE add my impl
     - DONE get tests working
     - DONE replace lunr with my impl
-    - fix: slow in my notes
-        - only search txt, md files
-        - only return top 20 results
+    - fix search results
+        - add ranking/results list tests
+            - my notes search: "house board  -recip"
+            - myFts matches on board, lots of ids results due to 'onboarding'?
+                - don't match substring
+                    - test: board onboarding
+                    - test: -ham nottingham
+                    - test: +adfa steadfast
     - manual test in my notes
     - rm lunr impl, deps, mentions etc.
     - rm tag search, impl, sidebar, names etc.

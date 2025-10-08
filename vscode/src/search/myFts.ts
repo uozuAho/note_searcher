@@ -12,8 +12,11 @@ export class MyFts implements IFullTextSearch {
   private searchDir = async (dir: string, query: string) => {
     const docs: IFile[] = [];
     for (const path of this.fs.allFilesUnderPath(dir)) {
+      if (path.endsWith('md') || path.endsWith('txt') || path.endsWith('log'))
+      {
       const text = this.fs.readFile(path);
       docs.push(new SimpleFile(path, text));
+      }
     }
     return this.searchDocs(docs, query);
   };
@@ -48,7 +51,8 @@ export class MyFts implements IFullTextSearch {
       .map((path, i) => ({ path, score: myScores[i] }))
       .filter(d => d.score > 0)
       .sort((a, b) => b.score - a.score)
-      .map(d => d.path);
+      .map(d => d.path)
+      .slice(0, 20);
 
     return myRanked;
   }
