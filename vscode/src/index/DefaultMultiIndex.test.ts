@@ -49,7 +49,7 @@ describe('DefaultMultiIndex, mocked filesystem', () => {
       ];
       setupFiles(files);
 
-      await index.indexAllFiles('some dir');
+      await index.indexAllFiles('');
 
       const notes = Array.from(index.notes());
       expect(notes).toEqual(files.map(f => f.path()));
@@ -59,7 +59,7 @@ describe('DefaultMultiIndex, mocked filesystem', () => {
     it('does not index non-text files', async () => {
       setupFiles([new SimpleFile('source_file.cpp', '')]);
 
-      await index.indexAllFiles('some dir');
+      await index.indexAllFiles('');
 
       const notes = Array.from(index.notes());
       expect(notes).toHaveLength(0);

@@ -61,7 +61,7 @@ See [code explainer](./docs/code_explainer.md)
         - fix tests
     - manual test in my notes
     - rm lunr impl, deps, mentions etc.
-    - rm tag search, impl, names etc.
+    - rm tag search, impl, sidebar, names etc.
     - update docs
         - rm tags
         - rm mention of indexing

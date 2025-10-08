@@ -47,7 +47,6 @@ export class DefaultMultiIndex implements IMultiIndex {
 
     await Promise.all(jobs);
     this._linkIndex.finalise();
-    // this._fullText.finalise();
   };
 
   public onFileModified = async (path: string, text: string) => {

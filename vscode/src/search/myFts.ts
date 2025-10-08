@@ -6,13 +6,13 @@ export class MyFts implements IFullTextSearch {
   constructor(private fs: IFileSystem, private rootDir: string) {}
 
   public search = (query: string) => {
-    return this.searchPath(this.rootDir, query);
+    return this.searchDir(this.rootDir, query);
   }
 
-  private searchPath = async (path: string, query: string) => {
+  private searchDir = async (dir: string, query: string) => {
     const docs: IFile[] = [];
-    for (const file of this.fs.allFilesUnderPath(path)) {
-      const text = this.fs.readFile(file);
+    for (const path of this.fs.allFilesUnderPath(dir)) {
+      const text = this.fs.readFile(path);
       docs.push(new SimpleFile(path, text));
     }
     return this.searchDocs(docs, query);
@@ -147,7 +147,7 @@ function buildDocStats(docs: IFile[], query: Query) {
   let docLenSum = 0;
 
   for (const doc of docs) {
-    docLenSum += doc.text.length;
+    docLenSum += doc.text().length;
     let excludeDoc = false;
     for (const term of query.mustHave) {
       const regex = new RegExp(`${term}`, 'g');
@@ -181,7 +181,7 @@ function buildDocStats(docs: IFile[], query: Query) {
       }
     }
     if (stats.containsDoc(doc.path())) {
-      stats.setDocLen(doc.path(), doc.text.length);
+      stats.setDocLen(doc.path(), doc.text().length);
     }
   }
   stats.AvgDocLen = docLenSum / docs.length;
