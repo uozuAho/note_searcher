@@ -7,23 +7,24 @@ import { InMemoryLinkIndex } from "./InMemoryLinkIndex";
 import { LunrDualFts } from "../search/lunrDualFts";
 import { MyFts } from "../search/myFts";
 import { IFullTextSearch } from "../search/IFullTextSearch";
-import { createDiagnostics, IDiagnostics } from "../diagnostics/diagnostics";
+import { IDiagnostics } from "../diagnostics/IDiagnostics";
 import { GoodSet } from "../utils/goodSet";
+import { NullDiagnostics } from "../diagnostics/diagnostics";
 
 export class DefaultMultiIndex implements IMultiIndex {
   private _fullText: LunrDualFts;
   private _tags = new TagSet();
   private _linkIndex = new InMemoryLinkIndex();
   private _altFullText: IFullTextSearch;
-  private _diagnostics: IDiagnostics;
 
   constructor(
     private _fileSystem: IFileSystem,
-    _workspaceDir: string)
+    workspaceDir: string,
+    private _diagnostics: IDiagnostics = new NullDiagnostics()
+  )
   {
     this._fullText = new LunrDualFts(_fileSystem);
-    this._altFullText = new MyFts(_fileSystem, _workspaceDir);
-    this._diagnostics = createDiagnostics("MultiIndex");
+    this._altFullText = new MyFts(_fileSystem, workspaceDir);
   }
 
   public filenameToAbsPath = (filename: string) => this._linkIndex.filenameToAbsPath(filename);

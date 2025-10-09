@@ -21,6 +21,7 @@ import { allFilesUnderPath } from "./readAllFiles";
 
 import _path = require('path');
 import { DefaultMultiIndex } from "../index/DefaultMultiIndex";
+import { NullDiagnostics } from "../diagnostics/diagnostics";
 
 const demoDir = _path.resolve(__dirname, '../../demo_dir');
 const demoDirFiles = allFilesUnderPath(demoDir);
@@ -48,7 +49,8 @@ jest.mock('../buildDeps', () => {
         fs: memFs,
         ui: fakeUi,
         registry: new FakeVsCodeRegistry(ns),
-        buildMultiIndex: (dir: string) => new DefaultMultiIndex(memFs, dir),
+        buildMultiIndex: (dir: string) =>
+          new DefaultMultiIndex(memFs, dir, new NullDiagnostics()),
         buildTagCompleter: () => {},
         buildWikilinkCompleter: () => {},
         buildWikiLinkDefinitionProvider: () => {}

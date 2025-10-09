@@ -1,18 +1,7 @@
-import { ITimeProvider, createTimeProvider } from "../utils/timeProvider";
+import { ITimeProvider } from "../utils/timeProvider";
+import { IDiagnostics } from "./IDiagnostics";
 
-export interface IDiagnostics {
-  trace: (message: string) => void;
-}
-
-export const createDiagnostics = (
-  label: string,
-  timeProvider: ITimeProvider = createTimeProvider()) =>
-{
-  return new ConsoleDiagnostics(label, timeProvider);
-  // return new NullDiagnostics();
-};
-
-class ConsoleDiagnostics implements IDiagnostics {
+export class ConsoleDiagnostics implements IDiagnostics {
   private start: number;
 
   constructor(
@@ -30,6 +19,6 @@ class ConsoleDiagnostics implements IDiagnostics {
   };
 }
 
-class NullDiagnostics implements IDiagnostics {
+export class NullDiagnostics implements IDiagnostics {
   public trace = (message: string) => {};
 }

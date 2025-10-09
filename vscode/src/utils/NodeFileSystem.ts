@@ -1,7 +1,7 @@
 import fs = require('graceful-fs');
 import _path = require('path');
-import { createDiagnostics } from '../diagnostics/diagnostics';
 import { IFileSystem } from './IFileSystem';
+import { NullDiagnostics } from '../diagnostics/diagnostics';
 
 export const createNodeFileSystem = (): IFileSystem => {
   return new NodeFileSystem();
@@ -9,7 +9,7 @@ export const createNodeFileSystem = (): IFileSystem => {
 
 class NodeFileSystem implements IFileSystem {
   public constructor(
-    private _diagnostics = createDiagnostics('FileSystem')
+    private _diagnostics = new NullDiagnostics()
   ) {}
 
   public fileExists = (path: string) => fs.existsSync(path);

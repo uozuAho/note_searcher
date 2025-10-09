@@ -1,6 +1,7 @@
 import { DefaultMultiIndex } from "./DefaultMultiIndex";
 import { IFile, SimpleFile } from '../utils/IFile';
 import { InMemFileSystem } from '../utils/InMemFileSystem';
+import { NullDiagnostics } from "../diagnostics/diagnostics";
 
 declare global {
   namespace jest {
@@ -46,7 +47,7 @@ describe('DefaultMultiIndex, mocked filesystem', () => {
   beforeEach(() => {
     fileSystem = InMemFileSystem.createEmpty();
     const ignoredWorkspaceDir = '';
-    index = new DefaultMultiIndex(fileSystem, ignoredWorkspaceDir);
+    index = new DefaultMultiIndex(fileSystem, ignoredWorkspaceDir, new NullDiagnostics());
   });
 
   describe('search with tags', () => {

@@ -3,25 +3,26 @@ const path = require('path');
 import { INoteSearcherUi } from "../ui/INoteSearcherUi";
 import { IFile, SimpleFile } from "../utils/IFile";
 import { IMultiIndex } from "../index/MultiIndex";
-import { createDiagnostics, IDiagnostics } from "../diagnostics/diagnostics";
+import { IDiagnostics } from "../diagnostics/IDiagnostics";
 import { ITimeProvider, createTimeProvider } from "../utils/timeProvider";
 import { formatDateTime_YYYYMMddhhmm } from "../utils/timeFormatter";
 import { posixRelativePath } from "../utils/NodeFileSystem";
 import { IFileSystem } from '../utils/IFileSystem';
 import { updateLinks } from "../text_processing/wikilinkUpdater";
 import { noteName } from "../utils/pathUtils";
+import { NullDiagnostics } from "../diagnostics/diagnostics";
 
 export class NoteSearcher {
   private previousSearchInput = '';
-  private diagnostics: IDiagnostics;
 
   constructor(
     private ui: INoteSearcherUi,
     private index: IMultiIndex,
     private fs: IFileSystem,
-    private timeProvider: ITimeProvider = createTimeProvider())
+    private timeProvider: ITimeProvider = createTimeProvider(),
+    private diagnostics: IDiagnostics = new NullDiagnostics()
+  )
   {
-    this.diagnostics = createDiagnostics('noteSearcher');
   }
 
   public setUiListeners() {

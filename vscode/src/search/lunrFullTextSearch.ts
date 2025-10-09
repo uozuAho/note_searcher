@@ -1,7 +1,5 @@
 import * as lunr from 'lunr';
 
-import { createDiagnostics } from '../diagnostics/diagnostics';
-
 const NUM_RESULTS = 20;
 
 // lunr's default separator is hyphens and whitespace: /[\s\-]+/;
@@ -18,7 +16,6 @@ lunr.tokenizer.separator = /[\s\[\]/]+/;
 
 export class LunrFullTextSearch {
   private _index: lunr.Index | null = null;
-  private _diagnostics = createDiagnostics('LunrSearch');
   private _indexBuilder = this.createIndexBuilder();
 
   public finalise = () => {
@@ -77,9 +74,5 @@ export class LunrFullTextSearch {
     builder.field('tags');
 
     return builder;
-  };
-
-  private trace = (message: string) => {
-    this._diagnostics.trace(message);
   };
 }
