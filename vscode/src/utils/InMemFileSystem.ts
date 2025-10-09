@@ -5,6 +5,10 @@ export class InMemFileSystem implements IFileSystem {
 
   private _files: Map<string, string> = new Map();
 
+  public static createEmpty() {
+    return new InMemFileSystem();
+  }
+
   /**
    * Return a FakeFs that contains all files under the given root
    */
@@ -31,7 +35,7 @@ export class InMemFileSystem implements IFileSystem {
 
   public readFile = (path: string) => {
     const text = this._files.get(path);
-    if (!text) {
+    if (text === undefined) {
       throw new Error(`file not found: ${path}`);
     }
     return text;

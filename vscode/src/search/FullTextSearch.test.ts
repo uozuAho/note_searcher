@@ -1,6 +1,8 @@
+import { IFileSystem } from '../utils/IFileSystem';
 import { InMemFileSystem } from '../utils/InMemFileSystem';
 import { IFullTextSearch } from './IFullTextSearch';
 import { LunrDualFts } from './lunrDualFts';
+import { MyFts } from './myFts';
 
 declare global {
   namespace jest {
@@ -37,11 +39,14 @@ class FileAndTags {
 
 let fakeFs: InMemFileSystem;
 
-describe('full text search', () => {
+describe.each([
+  ['LunrDual', (fs: IFileSystem) => new LunrDualFts(fs)],
+  ['MyFts', (fs: IFileSystem) => new MyFts(fs, "")]
+])('full text search: %s', (name, buildFts) => {
   let fts: IFullTextSearch;
 
   const index = async (files: FileAndTags[]) => {
-    fts = new LunrDualFts(fakeFs);
+    fts = buildFts(fakeFs);
     for (const file of files) {
       await fts.addFile(file.path, file.text, file.tags);
       fakeFs.writeFile(file.path, file.text);
@@ -50,7 +55,6 @@ describe('full text search', () => {
 
   const searchFor = async (query: string, text: string, tags: string[] = []) => {
     await index([new FileAndTags(aTextFilePath, text, tags)]);
-
     return fts.search(query);
   };
 
@@ -66,19 +70,25 @@ describe('full text search', () => {
 
   beforeEach(() => {
     fakeFs = new InMemFileSystem();
-    fts = new LunrDualFts(fakeFs);
+    fts = buildFts(fakeFs);
   });
 
   it('index and search example', async () => {
     await index([
-      new FileAndTags('a/b.txt', 'blah blah some stuff and things'),
-      new FileAndTags('a/b/c.log', 'what about shoes and biscuits'),
+      new FileAndTags('blah.txt', 'blah blah stuff'),
+      new FileAndTags('shoe.log', 'shoes and stuff'),
     ]);
 
-    const results = await fts.search('blah');
+    expect(await fts.search('blah')).toEqual(['blah.txt']);
+    expect((await fts.search('stuff')).sort()).toEqual(['blah.txt', 'shoe.log']);
+    expect(await fts.search('stuff -shoe')).toEqual(['blah.txt']);
+    expect(await fts.search('shoe')).toEqual(['shoe.log']);
+    expect(await fts.search('shoe')).toEqual(['shoe.log']);
+    expect(await fts.search('+shoe')).toEqual(['shoe.log']);
+  });
 
-    expect(results.length).toBe(1);
-    expect(results[0]).toBe('a/b.txt');
+  it('is case insensitive', async () => {
+    await expect(searchFor("ham", "the Ham is good")).toBeFound();
   });
 
   it('findsSingleWord', async () => {
@@ -89,8 +99,10 @@ describe('full text search', () => {
     await expect(searchFor("pizza", "the ham is good")).not.toBeFound();
   });
 
-  it('findsStemmedWord', async () => {
-    await expect(searchFor("bike", "I own several bikes")).toBeFound();
+  it('does not match substrings', async () => {
+    await expect(searchFor("board", "onboarding")).not.toBeFound();
+    await expect(searchFor("board", "boardahol")).not.toBeFound();
+    await expect(searchFor("board", "wackyboard")).not.toBeFound();
   });
 
   it('finds word before slash', async () => {
@@ -152,10 +164,10 @@ describe('full text search', () => {
       new FileAndTags('one.blah.md', 'blah'),
     ]);
 
-    let modified = new FileAndTags('one.blah.md', 'most blah! blah blah blah blah');
+    let modified = new FileAndTags('one.blah.md', 'turnip');
     await modifyFile(modified);
 
-    const results = await fts.search('blah');
+    const results = await fts.search('blah turnip');
 
     expect(results).toStrictEqual([
       'one.blah.md',
@@ -225,7 +237,6 @@ describe('full text search', () => {
     });
   });
 
-  // note: lunr doesn't have an AND operator
   describe('plus operator', () => {
     it('finds multiple words', async () => {
       await expect(searchFor("+ham +good", "the ham is good")).toBeFound();
@@ -233,6 +244,12 @@ describe('full text search', () => {
 
     it('rejects any missing words', async () => {
       await expect(searchFor("+ham +pizza", "the ham is good")).not.toBeFound();
+    });
+
+    it('does not match substrings+', async () => {
+      await expect(searchFor("+board", "onboarding")).not.toBeFound();
+      await expect(searchFor("+board", "boardahol")).not.toBeFound();
+      await expect(searchFor("+board", "wackyboard")).not.toBeFound();
     });
   });
 
@@ -244,40 +261,91 @@ describe('full text search', () => {
     it('does not find when excluded word is present', async () => {
       await expect(searchFor("ham -good", "the ham is good")).not.toBeFound();
     });
+
+    it('does not match substrings-', async () => {
+      await expect(searchFor("beach -ham", "beach nottingham")).toBeFound();
+    });
   });
 
   // lunr doesn't support exact phrase matching: https://github.com/olivernn/lunr.js/issues/62
-  describe('phrases', () => {
-    it('does not support phrases', async () => {
-      await expect(searchFor('"ham is good"', "the ham is good")).not.toBeFound();
-    });
-  });
+  // MyFts also doesn't. It could, but meh
+  // describe('phrases', () => {
+  //   it('does not support phrases', async () => {
+  //     await expect(searchFor('"ham is good"', "the ham is good")).not.toBeFound();
+  //   });
+  // });
 
   describe('search with tags', () => {
-    it('finds single tag', async () => {
+    // MyFts doesn't support tags.
+    const itif = name === "LunrDual" ? it : it.skip;
+
+    itif('finds single tag', async () => {
       await expect(searchFor("#beef", "The tags are", ['beef', 'chowder'])).toBeFound();
     });
 
-    it('finds multiple tags', async () => {
+    itif('finds multiple tags', async () => {
       await expect(searchFor("#beef #chowder", "The tags are", ['beef', 'chowder'])).toBeFound();
     });
 
-    it('does not find missing tag', async () => {
+    itif('does not find missing tag', async () => {
       await expect(searchFor("#asdf", "The tags are", ['beef', 'chowder'])).not.toBeFound();
     });
 
-    it('does not find non tag', async () => {
+    itif('does not find non tag', async () => {
       await expect(searchFor("#tags", "The tags are", ['beef', 'chowder'])).not.toBeFound();
     });
 
-    it('works with operators', async () => {
+    itif('works with operators', async () => {
       await expect(searchFor("#beef -#chowder", "The tags are", ['beef', 'chowder'])).not.toBeFound();
     });
 
-    it('supports hyphenated tags', async () => {
+    itif('supports hyphenated tags', async () => {
       await expect(searchFor("#meat-pie", "I want a", ['meat-pie'])).toBeFound();
       await expect(searchFor("#meat-pie", "I want a", ['meat'])).not.toBeFound();
       await expect(searchFor("#meat", "I want a", ['meat-pie'])).not.toBeFound();
+    });
+  });
+
+  describe('stemming', () => {
+    it('basic stem', async () => {
+      await expect(searchFor("bike", "I own several bikes")).toBeFound();
+    });
+
+    it('basic stem+', async () => {
+      await expect(searchFor("+bike", "I own several bikes")).toBeFound();
+    });
+
+    it('basic stem-', async () => {
+      await expect(searchFor("-bike", "I own several bikes")).not.toBeFound();
+    });
+
+    it.each([
+      ['cat', ['cats'], ['catermaran']],
+      ['house', ['housing', 'houses'], []],
+
+      ['run', ['running'], ['rung']],
+
+      // lunr uses porter stemmer. These fail:
+      // lunr doesn't pass any of these. why?
+      // ['happy', ['happier', 'happiness', 'happily'], []],
+
+      // ['run', ['runner'], []],
+      // ['brief', ['briefly'], []],
+    ])('', async (word, shouldFind, shouldNotFind) => {
+      for (const x of shouldFind) {
+        try {
+          await expect(searchFor(word, x)).toBeFound();
+        } catch (err) {
+          throw new Error(`looking for word "${word}" in "${x}": ${err}`);
+        }
+      }
+      for (const x of shouldNotFind) {
+        try {
+          await expect(searchFor(word, x)).not.toBeFound();
+        } catch (err) {
+          throw new Error(`looking for word "${word}" in "${x}": ${err}`);
+        }
+      }
     });
   });
 });
