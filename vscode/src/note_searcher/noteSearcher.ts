@@ -4,7 +4,7 @@ import { INoteSearcherUi } from "../ui/INoteSearcherUi";
 import { IFile, SimpleFile } from "../utils/IFile";
 import { IMultiIndex } from "../index/MultiIndex";
 import { IDiagnostics } from "../diagnostics/IDiagnostics";
-import { ITimeProvider, createTimeProvider } from "../utils/timeProvider";
+import { DateTimeProvider, ITimeProvider } from "../utils/timeProvider";
 import { formatDateTime_YYYYMMddhhmm } from "../utils/timeFormatter";
 import { posixRelativePath } from "../utils/NodeFileSystem";
 import { IFileSystem } from '../utils/IFileSystem';
@@ -19,7 +19,7 @@ export class NoteSearcher {
     private ui: INoteSearcherUi,
     private index: IMultiIndex,
     private fs: IFileSystem,
-    private timeProvider: ITimeProvider = createTimeProvider(),
+    private timeProvider: ITimeProvider = new DateTimeProvider(),
     private diagnostics: IDiagnostics = new NullDiagnostics()
   )
   {

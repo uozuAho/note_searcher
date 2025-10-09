@@ -11,13 +11,8 @@ export interface ITimeProvider {
   millisecondsSinceEpochLocal: () => number;
 }
 
-export const createTimeProvider = () => {
-  return new DateTimeProvider();
-};
-
 export class DateTimeProvider implements ITimeProvider {
   public millisecondsSinceEpochUtc = () => Date.now();
-
   public millisecondsSinceEpochLocal = () =>
     Date.now() - new Date().getTimezoneOffset() * 60 * 1000;
 }
