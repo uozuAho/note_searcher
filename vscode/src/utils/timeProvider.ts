@@ -15,7 +15,7 @@ export const createTimeProvider = () => {
   return new DateTimeProvider();
 };
 
-class DateTimeProvider implements ITimeProvider {
+export class DateTimeProvider implements ITimeProvider {
   public millisecondsSinceEpochUtc = () => Date.now();
 
   public millisecondsSinceEpochLocal = () =>
