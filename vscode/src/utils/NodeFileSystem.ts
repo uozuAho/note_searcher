@@ -32,14 +32,11 @@ class NodeFileSystem implements IFileSystem {
 
 
   public allFilesUnderPath = (path: string, ignore?: (path: string) => boolean): Iterable<string> => {
-    this._diagnostics.trace('allFilesUnderPath: start');
-
     ignore = ignore || (() => false);
 
     const paths: string[] = [];
     walkDir(path, ignore, p => paths.push(p));
 
-    this._diagnostics.trace('allFilesUnderPath: end');
     return paths;
   };
 }

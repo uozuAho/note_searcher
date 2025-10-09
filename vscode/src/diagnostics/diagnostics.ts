@@ -8,8 +8,8 @@ export const createDiagnostics = (
   label: string,
   timeProvider: ITimeProvider = createTimeProvider()) =>
 {
-  // return new ConsoleDiagnostics(label, timeProvider);
-  return new NullDiagnostics();
+  return new ConsoleDiagnostics(label, timeProvider);
+  // return new NullDiagnostics();
 };
 
 class ConsoleDiagnostics implements IDiagnostics {

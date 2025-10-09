@@ -26,8 +26,6 @@ export class LunrFullTextSearch {
   };
 
   public search = (query: string) => {
-    this.trace('search');
-
     if (!this._index) {
       if (!this._indexBuilder) {
         return Promise.resolve([]);
