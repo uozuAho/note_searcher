@@ -30,12 +30,13 @@ export class DefaultMultiIndex implements IMultiIndex {
   public filenameToAbsPath = (filename: string) => this._linkIndex.filenameToAbsPath(filename);
 
   public fullTextSearch = async (query: string) => {
+    this._diagnostics.trace(`search: "${query}"`);
     this._diagnostics.trace("lunr search start");
     const realResults = await this._fullText.search(query);
     this._diagnostics.trace("lunr search done");
-    this._diagnostics.trace("my search start");
+    this._diagnostics.trace("alt search start");
     const altResults = await this._altFullText.search(query);
-    this._diagnostics.trace("my search end");
+    this._diagnostics.trace("alt search end");
 
     const realSet = new GoodSet(realResults);
     const altSet = new GoodSet(altResults);
@@ -43,12 +44,13 @@ export class DefaultMultiIndex implements IMultiIndex {
     const newInAlt = Array.from(altSet.difference(realSet));
     const notInAlt = Array.from(realSet.difference(altSet));
 
-    this._diagnostics.trace("My FTS results diff:");
+    this._diagnostics.trace("real results:");
+    this._diagnostics.trace('\n' + realResults.map(x => `  ${x}`).join('\n'));
+    this._diagnostics.trace("alt results:");
+    this._diagnostics.trace('\n' + altResults.map(x => `  ${x}`).join('\n'));
+    this._diagnostics.trace("diff:");
     this._diagnostics.trace('\n' + newInAlt.map(x => `  +${x}`).join('\n'))
     this._diagnostics.trace('\n' + notInAlt.map(x => `  -${x}`).join('\n'))
-    this._diagnostics.trace("");
-    this._diagnostics.trace("all my results:");
-    this._diagnostics.trace('\n' + altResults.map(x => `  ${x}`).join('\n'));
 
     return realResults;
   }
