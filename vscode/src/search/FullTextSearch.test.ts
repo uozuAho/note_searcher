@@ -332,7 +332,7 @@ describe.each([
         ['run', ['running'], ['rung']],
         ['brief', ['briefly'], []],
         ['run', ['running', 'runner'], ['rung']],
-        ['happy', ['happier', 'happiness', 'happily'], []],
+        ['happy', ['happier', 'happiness', 'happily'], ['happening']],
         ['program', ['programming', 'programmer'], []],
       ]);
     }
