@@ -3,6 +3,10 @@
 All notable changes to the "note-searcher" extension will be documented in this
 file. Format inspired by https://keepachangelog.com/en/1.0.0/
 
+## [3.4.2] - 2025-10-16
+### Changed
+- Add more english word stemming to alternate full text search
+
 ## [3.4.1] - 2025-10-10
 ### Changed
 - Change logging of alternate search results for easier copy paste
