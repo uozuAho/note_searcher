@@ -214,10 +214,6 @@ function countStemmed(docText: string, term: string) {
     temp += count(docText, new RegExp(`\\b${term.slice(0, -1)}ing\\b`, 'gi'));
     temp += count(docText, new RegExp(`\\b${term}r\\b`, 'gi'));
   }
-  if (term.endsWith('n')) {
-    temp += count(docText, new RegExp(`\\b${term}ning\\b`, 'gi'));
-    temp += count(docText, new RegExp(`\\b${term}ner\\b`, 'gi'));
-  }
   if (term.endsWith('y')) {
     temp += count(docText, new RegExp(`\\b${term.slice(0, -1)}ier\\b`, 'gi'));
     temp += count(docText, new RegExp(`\\b${term.slice(0, -1)}iness\\b`, 'gi'));
