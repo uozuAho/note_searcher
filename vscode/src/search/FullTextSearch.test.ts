@@ -1,5 +1,7 @@
+import { IFileSystem } from '../utils/IFileSystem';
 import { InMemFileSystem } from '../utils/InMemFileSystem';
 import { IFullTextSearch } from './IFullTextSearch';
+import { LunrDualFts } from './lunrDualFts';
 import { MyFts } from './myFts';
 
 declare global {
@@ -19,11 +21,13 @@ expect.extend({
         pass: true
       }
       : {
-        message: () => `returned no results`,
+        message: () => 'returned no results',
         pass: false
       };
   }
 });
+
+const aTextFilePath = '/a/b/c.txt';
 
 class FileAndTags {
   constructor(
@@ -35,17 +39,22 @@ class FileAndTags {
 
 let fakeFs: InMemFileSystem;
 
-describe('full text search', () => {
+describe.each([
+  ['LunrDual', (fs: IFileSystem) => new LunrDualFts(fs)],
+  ['MyFts', (fs: IFileSystem) => new MyFts(fs, "")]
+])('full text search: %s', (name, buildFts) => {
   let fts: IFullTextSearch;
 
   const index = async (files: FileAndTags[]) => {
+    fts = buildFts(fakeFs);
     for (const file of files) {
+      await fts.addFile(file.path, file.text, file.tags);
       fakeFs.writeFile(file.path, file.text);
     }
   };
 
   const searchFor = async (query: string, text: string, tags: string[] = []) => {
-    fakeFs.writeFile("/some/path.txt", text);
+    await index([new FileAndTags(aTextFilePath, text, tags)]);
     return fts.search(query);
   };
 
@@ -61,7 +70,7 @@ describe('full text search', () => {
 
   beforeEach(() => {
     fakeFs = new InMemFileSystem();
-    fts = new MyFts(fakeFs, "");
+    fts = buildFts(fakeFs);
   });
 
   it('index and search example', async () => {
@@ -71,7 +80,7 @@ describe('full text search', () => {
     ]);
 
     expect(await fts.search('blah')).toEqual(['blah.txt']);
-    expect(await fts.search('stuff')).toEqual(['blah.txt', 'shoe.log']);
+    expect((await fts.search('stuff')).sort()).toEqual(['blah.txt', 'shoe.log']);
     expect(await fts.search('stuff -shoe')).toEqual(['blah.txt']);
     expect(await fts.search('shoe')).toEqual(['shoe.log']);
     expect(await fts.search('shoe')).toEqual(['shoe.log']);
@@ -258,6 +267,45 @@ describe('full text search', () => {
     });
   });
 
+  // lunr doesn't support exact phrase matching: https://github.com/olivernn/lunr.js/issues/62
+  // MyFts also doesn't. It could, but meh
+  // describe('phrases', () => {
+  //   it('does not support phrases', async () => {
+  //     await expect(searchFor('"ham is good"', "the ham is good")).not.toBeFound();
+  //   });
+  // });
+
+  describe('search with tags', () => {
+    // MyFts doesn't support tags.
+    const itif = name === "LunrDual" ? it : it.skip;
+
+    itif('finds single tag', async () => {
+      await expect(searchFor("#beef", "The tags are", ['beef', 'chowder'])).toBeFound();
+    });
+
+    itif('finds multiple tags', async () => {
+      await expect(searchFor("#beef #chowder", "The tags are", ['beef', 'chowder'])).toBeFound();
+    });
+
+    itif('does not find missing tag', async () => {
+      await expect(searchFor("#asdf", "The tags are", ['beef', 'chowder'])).not.toBeFound();
+    });
+
+    itif('does not find non tag', async () => {
+      await expect(searchFor("#tags", "The tags are", ['beef', 'chowder'])).not.toBeFound();
+    });
+
+    itif('works with operators', async () => {
+      await expect(searchFor("#beef -#chowder", "The tags are", ['beef', 'chowder'])).not.toBeFound();
+    });
+
+    itif('supports hyphenated tags', async () => {
+      await expect(searchFor("#meat-pie", "I want a", ['meat-pie'])).toBeFound();
+      await expect(searchFor("#meat-pie", "I want a", ['meat'])).not.toBeFound();
+      await expect(searchFor("#meat", "I want a", ['meat-pie'])).not.toBeFound();
+    });
+  });
+
   describe('stemming', () => {
     it('basic stem', async () => {
       await expect(searchFor("bike", "I own several bikes")).toBeFound();
@@ -271,26 +319,35 @@ describe('full text search', () => {
       await expect(searchFor("-bike", "I own several bikes")).not.toBeFound();
     });
 
-    it.each([
+    let stemCases = [
       ['cat', ['cats'], ['catermaran']],
       ['game', ['games'], ['gambling']],
       ['profile', ['profiler', 'profiling'], []],
       ['house', ['housing', 'houses'], []],
-      ['brief', ['briefly'], []],
-      ['run', ['running', 'runner'], ['rung']],
-      ['happy', ['happier', 'happiness', 'happily'], []],
-      ['program', ['programming', 'programmer'], []],
-    ])('', async (word, shouldFind, shouldNotFind) => {
+    ];
+
+    if (name === "MyFts") {
+      // lunr fails these, MyFts doesn't. I prefer MyFts.
+      stemCases = stemCases.concat([
+        ['run', ['running'], ['rung']],
+        ['brief', ['briefly'], []],
+        ['run', ['running', 'runner'], ['rung']],
+        ['happy', ['happier', 'happiness', 'happily'], ['happening']],
+        ['program', ['programming', 'programmer'], []],
+      ]);
+    }
+
+    it.each(stemCases)('', async (word, shouldFind, shouldNotFind) => {
       for (const x of shouldFind) {
         try {
-          await expect(searchFor(word, x)).toBeFound();
+          await expect(searchFor(word as string, x)).toBeFound();
         } catch (err) {
           throw new Error(`looking for word "${word}" in "${x}": ${err}`);
         }
       }
       for (const x of shouldNotFind) {
         try {
-          await expect(searchFor(word, x)).not.toBeFound();
+          await expect(searchFor(word as string, x)).not.toBeFound();
         } catch (err) {
           throw new Error(`looking for word "${word}" in "${x}": ${err}`);
         }

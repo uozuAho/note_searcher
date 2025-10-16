@@ -1,5 +1,3 @@
-import { DefaultMultiIndex } from './DefaultMultiIndex';
-import { createNodeFileSystem } from '../utils/NodeFileSystem';
 import { Link } from "./LinkIndex";
 
 export interface IMultiIndex {
@@ -18,8 +16,3 @@ export interface IMultiIndex {
   onFileModified: (path: string, text: string) => Promise<void>;
   onFileDeleted: (path: string) => Promise<void>;
 }
-
-export const createMultiIndex = (workspaceDir: string) =>
-{
-  return new DefaultMultiIndex(createNodeFileSystem(), workspaceDir);
-};

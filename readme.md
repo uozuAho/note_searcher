@@ -54,22 +54,6 @@ See [code explainer](./docs/code_explainer.md)
 
 
 # todo
-- WIP myFTS
-    - DONE add my impl
-    - DONE get tests working
-    - DONE replace lunr with my impl
-    - fix search results
-        - add ranking/results list tests
-        - "house board -recipe" returns 1
-        - "house board -recip" returns many
-            - also results differ quite a bit. which are more relevant?
-    - manual test in my notes
-    - rm lunr impl, deps, mentions etc.
-    - rm tag search, impl, sidebar, names etc.
-    - update docs
-        - rm tags
-        - rm mention of indexing
-        - note change in how search works
 - bug?
     - search for something
     - edit a doc to contain that something

@@ -3,6 +3,20 @@
 All notable changes to the "note-searcher" extension will be documented in this
 file. Format inspired by https://keepachangelog.com/en/1.0.0/
 
+## [3.4.2] - 2025-10-16
+### Changed
+- Add more english word stemming to alternate full text search
+
+## [3.4.1] - 2025-10-10
+### Changed
+- Change logging of alternate search results for easier copy paste
+
+## [3.4.0] - 2025-10-09
+### Added
+- Add new trial full text search. Runs in the background - no change to the UI
+  other than a tiny delay when running full text search. Outputs results to
+  output window -> NoteSearcher for my analysis.
+
 ## [3.3.1] - 2025-09-03
 ### Fixed
 - Minor text replacement bugs when updating wiki links on file rename
