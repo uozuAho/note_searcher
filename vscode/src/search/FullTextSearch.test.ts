@@ -273,10 +273,13 @@ describe('full text search', () => {
 
     it.each([
       ['cat', ['cats'], ['catermaran']],
+      ['game', ['games'], ['gambling']],
+      ['profile', ['profiler', 'profiling'], []],
       ['house', ['housing', 'houses'], []],
       ['brief', ['briefly'], []],
       ['run', ['running', 'runner'], ['rung']],
       ['happy', ['happier', 'happiness', 'happily'], []],
+      ['program', ['programming', 'programmer'], []],
     ])('', async (word, shouldFind, shouldNotFind) => {
       for (const x of shouldFind) {
         try {

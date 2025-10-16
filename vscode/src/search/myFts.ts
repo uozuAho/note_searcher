@@ -205,8 +205,14 @@ function countStemmed(docText: string, term: string) {
     + count(docText, new RegExp(`\\b${term}ly\\b`, 'gi'))
   ;
 
+  let lastLetter = term[term.length - 1];
+
+  temp += count(docText, new RegExp(`\\b${term}${lastLetter}ing\\b`, 'gi'));
+  temp += count(docText, new RegExp(`\\b${term}${lastLetter}er\\b`, 'gi'));
+
   if (term.endsWith('e')) {
     temp += count(docText, new RegExp(`\\b${term.slice(0, -1)}ing\\b`, 'gi'));
+    temp += count(docText, new RegExp(`\\b${term}r\\b`, 'gi'));
   }
   if (term.endsWith('n')) {
     temp += count(docText, new RegExp(`\\b${term}ning\\b`, 'gi'));
