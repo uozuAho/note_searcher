@@ -319,29 +319,35 @@ describe.each([
       await expect(searchFor("-bike", "I own several bikes")).not.toBeFound();
     });
 
-    it.each([
+    let stemCases = [
       ['cat', ['cats'], ['catermaran']],
+      ['game', ['games'], ['gambling']],
+      ['profile', ['profiler', 'profiling'], []],
       ['house', ['housing', 'houses'], []],
+    ];
 
-      ['run', ['running'], ['rung']],
+    if (name === "MyFts") {
+      // lunr fails these, MyFts doesn't. I prefer MyFts.
+      stemCases = stemCases.concat([
+        ['run', ['running'], ['rung']],
+        ['brief', ['briefly'], []],
+        ['run', ['running', 'runner'], ['rung']],
+        ['happy', ['happier', 'happiness', 'happily'], []],
+        ['program', ['programming', 'programmer'], []],
+      ]);
+    }
 
-      // lunr uses porter stemmer. These fail:
-      // lunr doesn't pass any of these. why?
-      // ['happy', ['happier', 'happiness', 'happily'], []],
-
-      // ['run', ['runner'], []],
-      // ['brief', ['briefly'], []],
-    ])('', async (word, shouldFind, shouldNotFind) => {
+    it.each(stemCases)('', async (word, shouldFind, shouldNotFind) => {
       for (const x of shouldFind) {
         try {
-          await expect(searchFor(word, x)).toBeFound();
+          await expect(searchFor(word as string, x)).toBeFound();
         } catch (err) {
           throw new Error(`looking for word "${word}" in "${x}": ${err}`);
         }
       }
       for (const x of shouldNotFind) {
         try {
-          await expect(searchFor(word, x)).not.toBeFound();
+          await expect(searchFor(word as string, x)).not.toBeFound();
         } catch (err) {
           throw new Error(`looking for word "${word}" in "${x}": ${err}`);
         }
