@@ -4,7 +4,6 @@ import { IFileSystem } from '../utils/IFileSystem';
 import { extractTags } from '../text_processing/tagExtractor';
 import { TagSet } from './TagIndex';
 import { InMemoryLinkIndex } from "./InMemoryLinkIndex";
-import { LunrDualFts } from "../search/lunrDualFts";
 import { MyFts } from "../search/myFts";
 import { IFullTextSearch } from "../search/IFullTextSearch";
 import { IDiagnostics } from "../diagnostics/IDiagnostics";
@@ -47,7 +46,6 @@ export class DefaultMultiIndex implements IMultiIndex {
   public indexAllFiles = async (dir: string) => {
     this._tags.clear();
     this._linkIndex.clear();
-    this._fullText = new LunrDualFts(this._fileSystem);
     const jobs: Promise<void>[] = [];
 
     for (const path of this._fileSystem.allFilesUnderPath(dir)) {

@@ -1,7 +1,6 @@
 import { IFileSystem } from '../utils/IFileSystem';
 import { InMemFileSystem } from '../utils/InMemFileSystem';
 import { IFullTextSearch } from './IFullTextSearch';
-import { LunrDualFts } from './lunrDualFts';
 import { MyFts } from './myFts';
 
 declare global {
@@ -40,7 +39,6 @@ class FileAndTags {
 let fakeFs: InMemFileSystem;
 
 describe.each([
-  ['LunrDual', (fs: IFileSystem) => new LunrDualFts(fs)],
   ['MyFts', (fs: IFileSystem) => new MyFts(fs, "")]
 ])('full text search: %s', (name, buildFts) => {
   let fts: IFullTextSearch;

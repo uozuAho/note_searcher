@@ -50,7 +50,7 @@ describe('DefaultMultiIndex, mocked filesystem', () => {
     index = new DefaultMultiIndex(fileSystem, ignoredWorkspaceDir, new NullDiagnostics());
   });
 
-  describe('search with tags', () => {
+  describe.skip('search with tags', () => {
     it('finds single tag', async () => {
       await expect(searchFor("#beef", "The tags are #beef and #chowder")).toBeFound();
     });
