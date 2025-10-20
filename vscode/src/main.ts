@@ -11,7 +11,6 @@ export async function activate(context: IVsCodeExtensionContext) {
     ui,
     registry,
     buildMultiIndex,
-    buildTagCompleter,
     buildWikilinkCompleter,
     buildWikiLinkDefinitionProvider
   } = buildDeps();
@@ -29,8 +28,6 @@ export async function activate(context: IVsCodeExtensionContext) {
   context.subscriptions.push(
     registry.registerCommand(
       'noteSearcher.search', async () => await noteSearcher.promptAndSearch()),
-    registry.registerCommand(
-      'noteSearcher.searchForTag', async (tag: string) => await noteSearcher.search('#' + tag)),
     registry.registerCommand(
       'noteSearcher.index', async () => {
         await noteSearcher.indexWorkspace();
@@ -55,9 +52,6 @@ export async function activate(context: IVsCodeExtensionContext) {
       uri => noteSearcher.wikiLinkToClipboard(uri.fsPath)),
     registry.registerCommand(
       'noteSearcher.createNote', () => noteSearcher.createNote()),
-
-    registry.registerCompletionItemProvider(['markdown', 'plaintext'],
-      buildTagCompleter(multiIndex), ['#']),
 
     registry.registerCompletionItemProvider(['markdown', 'plaintext'],
       buildWikilinkCompleter(multiIndex, fs), ['[']),

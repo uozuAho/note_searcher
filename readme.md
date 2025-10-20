@@ -5,7 +5,6 @@ VS code extension for managing a collection of local text files, eg. a
 
 Features:
 - full text search
-- search by tags
 - shortcuts for creating and linking notes
 
 See the [extension readme](./vscode/README.md) for more info.
@@ -54,12 +53,6 @@ See [code explainer](./docs/code_explainer.md)
 
 
 # todo
-- bug?
-    - search for something
-    - edit a doc to contain that something
-    - search again
-    - expected: edited doc near the top
-    - actual: edited doc near the bottom
 - feature: extract text to new note
 - feature: make paths queryable. Eg. i want to exclude ABC from path, but not contents
 - feature(s): pasting links
@@ -67,6 +60,4 @@ See [code explainer](./docs/code_explainer.md)
     - if no selected text: set cursor inside []
     - if text selected: use selected text as description. eg. 'this' becomes [this]()
 - cleanup: replace mocked/other high level tests with acceptance tests
-- feature: suggest tags in search
-    - not yet available: https://github.com/microsoft/vscode/issues/35785
 - improvement: dead links should navigate to the offending link text

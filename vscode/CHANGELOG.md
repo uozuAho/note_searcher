@@ -3,6 +3,14 @@
 All notable changes to the "note-searcher" extension will be documented in this
 file. Format inspired by https://keepachangelog.com/en/1.0.0/
 
+## [4.0.0] - 2025-10-20
+### Changed
+- Full text search no longer uses an index. Searching takes longer (on the order
+  of ~100ms for 2k text files). Results are quite similar.
+### Removed
+- Tag functionality. I don't use tags, and no one uses this extension. In the
+  bin!
+
 ## [3.4.2] - 2025-10-16
 ### Changed
 - Add more english word stemming to alternate full text search

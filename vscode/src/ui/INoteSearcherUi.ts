@@ -5,7 +5,6 @@ type Disposable = { dispose(): any; };
 
 export interface INoteSearcherUi {
   openFile(path: any): any;
-  showTags: (tags: string[]) => void;
   copyToClipboard: (text: string) => Promise<void>;
   startNewNote: (path: string) => Promise<void>;
   promptForNewNoteName: (noteId: string) => Promise<string | undefined>;

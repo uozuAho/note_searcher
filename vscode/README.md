@@ -16,14 +16,13 @@ Key differences to Foam:
 
 - Full text search
 - Quick-create notes
-- Link and tag autocompletion
+- Link autocompletion
 - Copy markdown/wiki link to note from search results, file explorer
 - Copy markdown/wiki link to note from editor tab
 - Wiki link highlighting and navigation
 - Update wiki links when files are renamed
 - Shows links to and from current note in sidebar
 - Shows dead links in sidebar
-- Shows all tags in sidebar
 
 
 ## How to use this extension
@@ -37,28 +36,15 @@ lot of files.
 
 ![Sidebar and full text search](./img/fts.png)
 
-This extension indexes all .md, .txt and .log files in the currently open
-folder.
+Full text search searches all .md, .txt and .log files in the currently open
+workspace.
 
 You can search for files by pressing `ctrl+alt+s`. Some example queries:
 
 ```
 apple banana +carrot  # file contains the word carrot, and possibly apple or banana
 apple banana -carrot  # file does not contain carrot, but either apple and/or banana
-apple banana #food    # file contains apple, banana, and/or the tag #food
 ```
-
-
-### Tags
-
-![tag autocompletion](./img/tag_autocomplete2.png)
-
-Any word starting with a '#' character is considered a tag, allowing for
-tag-based searching. #hyphenated-tags are supported.
-
-Typing '#' will suggest auto-complete options based on existing tags.
-
-All existing tags are shown in the sidebar, as per the screenshot.
 
 
 ### Creating notes

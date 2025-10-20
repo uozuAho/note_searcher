@@ -38,21 +38,6 @@ describe('DefaultMultiIndex, demo dir, dead links', () => {
   });
 });
 
-describe('DefaultMultiIndex, demo dir, tags', () => {
-  let index: DefaultMultiIndex;
-
-  beforeEach(() => {
-    const fs = inMemDemoDirFs();
-    index = new DefaultMultiIndex(fs, demoDir);
-  });
-
-  it('contains transport', async () => {
-    await index.indexAllFiles(demoDir);
-
-    expect(index.allTags()).toContain('transport');
-  });
-});
-
 describe('DefaultMultiIndex, demo dir, containsNote', () => {
   let index: DefaultMultiIndex;
 

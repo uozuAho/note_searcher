@@ -14,8 +14,6 @@ export class MockUi implements INoteSearcherUi {
     throw new Error("Method not implemented.");
   }
 
-  public showTags = (tags: string[]) => Promise.resolve();
-
   public showBacklinks = (links: string[]) => Promise.resolve();
 
   public showForwardLinks = (links: string[]) => Promise.resolve();

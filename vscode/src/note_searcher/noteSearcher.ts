@@ -154,7 +154,6 @@ export class NoteSearcher {
     this.showBacklinks();
     this.showForwardLinks();
     this.showDeadLinks();
-    this.showTags();
   };
 
   private showBacklinks = () => {
@@ -169,11 +168,6 @@ export class NoteSearcher {
     if (!currentFilePath) { return; }
     const links = this.index.linksFrom(currentFilePath);
     this.ui.showForwardLinks(links);
-  };
-
-  private showTags = () => {
-    const tags = this.index.allTags();
-    this.ui.showTags(tags);
   };
 
   private notifyNoteSaved = async (file: IFile) => {

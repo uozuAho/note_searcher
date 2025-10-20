@@ -7,7 +7,7 @@
 		"color": "#060000",
 		"theme": "dark"
 	},
-	"version": "3.4.2",
+	"version": "4.0.0",
 	"publisher": "uozuaho",
 	"preview": false,
 	"repository": {
@@ -56,10 +56,6 @@
 				{
 					"id": "noteSearcher-deadLinks",
 					"name": "Dead links"
-				},
-				{
-					"id": "noteSearcher-tags",
-					"name": "All Tags"
 				}
 			]
 		},
@@ -161,7 +157,6 @@
 		"@types/glob": "^8.0.0",
 		"@types/graceful-fs": "^4.1.9",
 		"@types/jest": "^30.0.0",
-		"@types/lunr": "^2.3.4",
 		"@types/mocha": "^10.0.0",
 		"@types/node": "^24.3.0",
 		"@types/vscode": "^1.104.0",
@@ -181,7 +176,6 @@
 		"webpack-cli": "^6.0.1"
 	},
 	"dependencies": {
-		"graceful-fs": "^4.2.8",
-		"lunr": "^2.3.9"
+		"graceful-fs": "^4.2.8"
 	}
 }

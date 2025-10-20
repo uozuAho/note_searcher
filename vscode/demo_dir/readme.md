@@ -12,15 +12,6 @@ queries:
 `cheese +train`
 
 
-## tags
-You can also put tags anywhere in your files, eg. #weapons or #public-speaking.
-These are also searchable:
-
-`cheese +#transport`
-
-All tags used across all notes are shown in the sidebar.
-
-
 ## links
 Add a [link](trains.md) to your files, and vscode makes them clickable
 hyperlinks. Files can be images or other non-text files, eg.

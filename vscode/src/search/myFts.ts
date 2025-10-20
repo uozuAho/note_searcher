@@ -58,8 +58,8 @@ export class MyFts implements IFullTextSearch {
   }
 
   // no-ops to satisfy IFullTextSearch
-  public addFile(path: string, text: string, tags: string[]) {}
-  public onFileModified = (path: string, text: string, tags: string[]) => {
+  public addFile(path: string, text: string) {}
+  public onFileModified = (path: string, text: string) => {
     return Promise.resolve();
   }
   public onFileDeleted = (path: string) => {
