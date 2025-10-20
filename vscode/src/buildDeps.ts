@@ -1,19 +1,17 @@
 import { VsCodeTagCompleter } from './autocomplete/VsCodeTagCompleter';
 import { VsCodeWikilinkCompleter } from './autocomplete/VsCodeWikilinkCompleter';
 import { VsCodeWikiLinkDefinitionProvider } from './definition_provider/VsCodeWikiLinkDefinitionProvider';
-// import { NullDiagnostics } from './diagnostics/diagnostics';
-import { VsCodeDiagnostics } from './diagnostics/VsCodeDiagnostics';
+import { NullDiagnostics } from './diagnostics/diagnostics';
 import { IExtensionDeps } from './IExtensionDeps';
 import { DefaultMultiIndex } from './index/DefaultMultiIndex';
 import { VsCodeNoteSearcherUi } from './ui/VsCodeNoteSearcherUi';
 import { createNodeFileSystem } from './utils/NodeFileSystem';
-import { DateTimeProvider } from './utils/timeProvider';
 import { RealVsCodeRegistry } from './vs_code_apis/registryCreator';
 
 export function buildDeps(): IExtensionDeps {
   const fs = createNodeFileSystem();
-  // const diagnostics = new NullDiagnostics();
-  const diagnostics = new VsCodeDiagnostics(new DateTimeProvider());
+  const diagnostics = new NullDiagnostics();
+  // const diagnostics = new VsCodeDiagnostics(new DateTimeProvider());
 
   return {
     fs,

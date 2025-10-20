@@ -8,14 +8,12 @@ import { LunrDualFts } from "../search/lunrDualFts";
 import { MyFts } from "../search/myFts";
 import { IFullTextSearch } from "../search/IFullTextSearch";
 import { IDiagnostics } from "../diagnostics/IDiagnostics";
-import { GoodSet } from "../utils/goodSet";
 import { NullDiagnostics } from "../diagnostics/diagnostics";
 
 export class DefaultMultiIndex implements IMultiIndex {
-  private _fullText: LunrDualFts;
+  private _fullText: IFullTextSearch;
   private _tags = new TagSet();
   private _linkIndex = new InMemoryLinkIndex();
-  private _altFullText: IFullTextSearch;
 
   constructor(
     private _fileSystem: IFileSystem,
@@ -23,35 +21,14 @@ export class DefaultMultiIndex implements IMultiIndex {
     private _diagnostics: IDiagnostics = new NullDiagnostics()
   )
   {
-    this._fullText = new LunrDualFts(_fileSystem);
-    this._altFullText = new MyFts(_fileSystem, workspaceDir);
+    this._fullText = new MyFts(_fileSystem, workspaceDir);
   }
 
   public filenameToAbsPath = (filename: string) => this._linkIndex.filenameToAbsPath(filename);
 
   public fullTextSearch = async (query: string) => {
     this._diagnostics.trace(`search: "${query}"`);
-    this._diagnostics.trace("lunr search start");
     const realResults = await this._fullText.search(query);
-    this._diagnostics.trace("lunr search done");
-    this._diagnostics.trace("alt search start");
-    const altResults = await this._altFullText.search(query);
-    this._diagnostics.trace("alt search end");
-
-    const realSet = new GoodSet(realResults);
-    const altSet = new GoodSet(altResults);
-
-    const newInAlt = Array.from(altSet.difference(realSet));
-    const notInAlt = Array.from(realSet.difference(altSet));
-
-    this._diagnostics.trace("real results:");
-    this._diagnostics.trace('\n' + realResults.map(x => `  ${x}`).join('\n'));
-    this._diagnostics.trace("alt results:");
-    this._diagnostics.trace('\n' + altResults.map(x => `  ${x}`).join('\n'));
-    this._diagnostics.trace("diff:");
-    this._diagnostics.trace('\n' + newInAlt.map(x => `  +${x}`).join('\n'))
-    this._diagnostics.trace('\n' + notInAlt.map(x => `  -${x}`).join('\n'))
-
     return realResults;
   }
 
@@ -80,7 +57,6 @@ export class DefaultMultiIndex implements IMultiIndex {
 
     await Promise.all(jobs);
     this._linkIndex.finalise();
-    this._fullText.finalise();
   };
 
   public onFileModified = async (path: string, text: string) => {
