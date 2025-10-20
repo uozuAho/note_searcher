@@ -1,8 +1,6 @@
 import { IMultiIndex } from "./MultiIndex";
 import { IFileSystem } from '../utils/IFileSystem';
 
-import { extractTags } from '../text_processing/tagExtractor';
-import { TagSet } from './TagIndex';
 import { InMemoryLinkIndex } from "./InMemoryLinkIndex";
 import { MyFts } from "../search/myFts";
 import { IFullTextSearch } from "../search/IFullTextSearch";
@@ -11,7 +9,6 @@ import { NullDiagnostics } from "../diagnostics/diagnostics";
 
 export class DefaultMultiIndex implements IMultiIndex {
   private _fullText: IFullTextSearch;
-  private _tags = new TagSet();
   private _linkIndex = new InMemoryLinkIndex();
 
   constructor(
@@ -31,8 +28,6 @@ export class DefaultMultiIndex implements IMultiIndex {
     return realResults;
   }
 
-  public allTags = () => this._tags.allTags();
-
   public notes = () => this._linkIndex.notes();
 
   public containsNote = (path: string) => this._linkIndex.containsNote(path);
@@ -44,7 +39,6 @@ export class DefaultMultiIndex implements IMultiIndex {
   public findAllDeadLinks = () => this._linkIndex.findAllDeadLinks();
 
   public indexAllFiles = async (dir: string) => {
-    this._tags.clear();
     this._linkIndex.clear();
     const jobs: Promise<void>[] = [];
 
@@ -60,15 +54,9 @@ export class DefaultMultiIndex implements IMultiIndex {
   public onFileModified = async (path: string, text: string) => {
     if (!this.shouldIndex(path)) { return; }
 
-    const tags = extractTags(text);
-
     const tasks = [
-      this._fullText.onFileModified(path, text, tags),
+      this._fullText.onFileModified(path, text, []), // todo: tags: not needed
       this._linkIndex.onFileModified(path, text),
-      // note: I can't see an easy way to make tag index consistent here without
-      //       a full re-index, so we just add the new tags. I don't really use
-      //       tags so I figure it's not a big deal.
-      this._tags.addTags(tags),
     ];
 
     await Promise.all(tasks);
@@ -88,9 +76,7 @@ export class DefaultMultiIndex implements IMultiIndex {
   private addFile = async (path: string) => {
     const text = await this._fileSystem.readFileAsync(path);
     this._linkIndex.addFile(path, text);
-    const tags = extractTags(text);
-    this._tags.addTags(tags);
-    this._fullText.addFile(path, text, tags);
+    this._fullText.addFile(path, text, []); // todo: tags: not needed
   };
 
   private shouldIndex = (path: string) => {

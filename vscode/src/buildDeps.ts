@@ -1,4 +1,3 @@
-import { VsCodeTagCompleter } from './autocomplete/VsCodeTagCompleter';
 import { VsCodeWikilinkCompleter } from './autocomplete/VsCodeWikilinkCompleter';
 import { VsCodeWikiLinkDefinitionProvider } from './definition_provider/VsCodeWikiLinkDefinitionProvider';
 import { NullDiagnostics } from './diagnostics/diagnostics';
@@ -18,7 +17,6 @@ export function buildDeps(): IExtensionDeps {
     ui: new VsCodeNoteSearcherUi(),
     registry: new RealVsCodeRegistry(),
     buildMultiIndex: dir => new DefaultMultiIndex(fs, dir, diagnostics),
-    buildTagCompleter: index => new VsCodeTagCompleter(index),
     buildWikilinkCompleter: (index, fs) => new VsCodeWikilinkCompleter(index, fs),
     buildWikiLinkDefinitionProvider: noteLocator =>
       new VsCodeWikiLinkDefinitionProvider(noteLocator),

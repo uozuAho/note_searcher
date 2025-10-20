@@ -10,9 +10,7 @@ import {
 import { IFile } from "../utils/IFile";
 import { DeadLinksTree } from './DeadLinksTree';
 import { LinksTree } from './LinksTree';
-import { TagsTree } from './TagsTree';
 import { Link } from '../index/LinkIndex';
-import { noteName } from '../utils/pathUtils';
 
 export class VsCodeNoteSearcherUi implements INoteSearcherUi {
   private noteSavedListener: FileChangeListener | null = null;
@@ -109,14 +107,6 @@ export class VsCodeNoteSearcherUi implements INoteSearcherUi {
 
     vscode.window.createTreeView('noteSearcher-forwardLinks', {
       treeDataProvider: backlinks
-    });
-  };
-
-  public showTags = (tags: string[]) => {
-    const tagsTree = new TagsTree(tags.sort());
-
-    vscode.window.createTreeView('noteSearcher-tags', {
-      treeDataProvider: tagsTree
     });
   };
 

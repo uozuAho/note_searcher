@@ -265,45 +265,6 @@ describe.each([
     });
   });
 
-  // lunr doesn't support exact phrase matching: https://github.com/olivernn/lunr.js/issues/62
-  // MyFts also doesn't. It could, but meh
-  // describe('phrases', () => {
-  //   it('does not support phrases', async () => {
-  //     await expect(searchFor('"ham is good"', "the ham is good")).not.toBeFound();
-  //   });
-  // });
-
-  describe('search with tags', () => {
-    // MyFts doesn't support tags.
-    const itif = name === "LunrDual" ? it : it.skip;
-
-    itif('finds single tag', async () => {
-      await expect(searchFor("#beef", "The tags are", ['beef', 'chowder'])).toBeFound();
-    });
-
-    itif('finds multiple tags', async () => {
-      await expect(searchFor("#beef #chowder", "The tags are", ['beef', 'chowder'])).toBeFound();
-    });
-
-    itif('does not find missing tag', async () => {
-      await expect(searchFor("#asdf", "The tags are", ['beef', 'chowder'])).not.toBeFound();
-    });
-
-    itif('does not find non tag', async () => {
-      await expect(searchFor("#tags", "The tags are", ['beef', 'chowder'])).not.toBeFound();
-    });
-
-    itif('works with operators', async () => {
-      await expect(searchFor("#beef -#chowder", "The tags are", ['beef', 'chowder'])).not.toBeFound();
-    });
-
-    itif('supports hyphenated tags', async () => {
-      await expect(searchFor("#meat-pie", "I want a", ['meat-pie'])).toBeFound();
-      await expect(searchFor("#meat-pie", "I want a", ['meat'])).not.toBeFound();
-      await expect(searchFor("#meat", "I want a", ['meat-pie'])).not.toBeFound();
-    });
-  });
-
   describe('stemming', () => {
     it('basic stem', async () => {
       await expect(searchFor("bike", "I own several bikes")).toBeFound();

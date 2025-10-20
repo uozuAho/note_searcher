@@ -11,7 +11,6 @@ export async function activate(context: IVsCodeExtensionContext) {
     ui,
     registry,
     buildMultiIndex,
-    buildTagCompleter,
     buildWikilinkCompleter,
     buildWikiLinkDefinitionProvider
   } = buildDeps();
@@ -55,9 +54,6 @@ export async function activate(context: IVsCodeExtensionContext) {
       uri => noteSearcher.wikiLinkToClipboard(uri.fsPath)),
     registry.registerCommand(
       'noteSearcher.createNote', () => noteSearcher.createNote()),
-
-    registry.registerCompletionItemProvider(['markdown', 'plaintext'],
-      buildTagCompleter(multiIndex), ['#']),
 
     registry.registerCompletionItemProvider(['markdown', 'plaintext'],
       buildWikilinkCompleter(multiIndex, fs), ['[']),

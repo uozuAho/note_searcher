@@ -8,7 +8,6 @@ export interface IExtensionDeps {
   ui: INoteSearcherUi;
   registry: IVsCodeRegistry;
   buildMultiIndex: (dir: string) => IMultiIndex;
-  buildTagCompleter: (index: IMultiIndex) => any;
   buildWikilinkCompleter: (index: IMultiIndex, fs: IFileSystem) => any;
   buildWikiLinkDefinitionProvider: (noteLocator: NoteLocator) => any;
 }

@@ -51,7 +51,6 @@ jest.mock('../buildDeps', () => {
         registry: new FakeVsCodeRegistry(ns),
         buildMultiIndex: (dir: string) =>
           new DefaultMultiIndex(memFs, dir, new NullDiagnostics()),
-        buildTagCompleter: () => {},
         buildWikilinkCompleter: () => {},
         buildWikiLinkDefinitionProvider: () => {}
       };

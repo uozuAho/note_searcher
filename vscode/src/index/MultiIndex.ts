@@ -3,7 +3,6 @@ import { Link } from "./LinkIndex";
 export interface IMultiIndex {
   // queries
   fullTextSearch: (query: string) => Promise<string[]>;
-  allTags: () => string[];
   filenameToAbsPath(filename: string): string[];
   notes(): IterableIterator<string>;
   containsNote(absPathOrFilename: string): boolean;
