@@ -56,10 +56,6 @@
 				{
 					"id": "noteSearcher-deadLinks",
 					"name": "Dead links"
-				},
-				{
-					"id": "noteSearcher-tags",
-					"name": "All Tags"
 				}
 			]
 		},
