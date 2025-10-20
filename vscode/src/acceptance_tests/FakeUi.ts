@@ -11,7 +11,6 @@ import { SimpleFile } from "../utils/IFile";
 export class FakeUi implements INoteSearcherUi {
   // UI interface
   public openFile = (path: any) => { };
-  public showTags = (tags: string[]) => { };
   public copyToClipboard = (text: string) => Promise.resolve();
   public startNewNote = (path: string) => Promise.resolve();
   public promptForNewNoteName = (noteId: string) => Promise.resolve(noteId);

@@ -55,7 +55,7 @@ export class DefaultMultiIndex implements IMultiIndex {
     if (!this.shouldIndex(path)) { return; }
 
     const tasks = [
-      this._fullText.onFileModified(path, text, []), // todo: tags: not needed
+      this._fullText.onFileModified(path, text),
       this._linkIndex.onFileModified(path, text),
     ];
 
@@ -76,7 +76,7 @@ export class DefaultMultiIndex implements IMultiIndex {
   private addFile = async (path: string) => {
     const text = await this._fileSystem.readFileAsync(path);
     this._linkIndex.addFile(path, text);
-    this._fullText.addFile(path, text, []); // todo: tags: not needed
+    this._fullText.addFile(path, text);
   };
 
   private shouldIndex = (path: string) => {

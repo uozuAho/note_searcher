@@ -29,8 +29,6 @@ export async function activate(context: IVsCodeExtensionContext) {
     registry.registerCommand(
       'noteSearcher.search', async () => await noteSearcher.promptAndSearch()),
     registry.registerCommand(
-      'noteSearcher.searchForTag', async (tag: string) => await noteSearcher.search('#' + tag)),
-    registry.registerCommand(
       'noteSearcher.index', async () => {
         await noteSearcher.indexWorkspace();
         noteSearcher.refreshSidebar();

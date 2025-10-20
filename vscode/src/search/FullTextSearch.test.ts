@@ -28,11 +28,11 @@ expect.extend({
 
 const aTextFilePath = '/a/b/c.txt';
 
-class FileAndTags {
+// todo: use simple file?
+class File {
   constructor(
     public path: string,
     public text: string,
-    public tags: string[] = []
   ) {}
 }
 
@@ -43,22 +43,22 @@ describe.each([
 ])('full text search: %s', (name, buildFts) => {
   let fts: IFullTextSearch;
 
-  const index = async (files: FileAndTags[]) => {
+  const index = async (files: File[]) => {
     fts = buildFts(fakeFs);
     for (const file of files) {
-      await fts.addFile(file.path, file.text, file.tags);
+      await fts.addFile(file.path, file.text);
       fakeFs.writeFile(file.path, file.text);
     }
   };
 
-  const searchFor = async (query: string, text: string, tags: string[] = []) => {
-    await index([new FileAndTags(aTextFilePath, text, tags)]);
+  const searchFor = async (query: string, text: string) => {
+    await index([new File(aTextFilePath, text)]);
     return fts.search(query);
   };
 
-  const modifyFile = async (file: FileAndTags) => {
+  const modifyFile = async (file: File) => {
     fakeFs.writeFile(file.path, file.text);
-    await fts.onFileModified(file.path, file.text, file.tags);
+    await fts.onFileModified(file.path, file.text);
   };
 
   const deleteFile = async (path: string) => {
@@ -73,8 +73,8 @@ describe.each([
 
   it('index and search example', async () => {
     await index([
-      new FileAndTags('blah.txt', 'blah blah stuff'),
-      new FileAndTags('shoe.log', 'shoes and stuff'),
+      new File('blah.txt', 'blah blah stuff'),
+      new File('shoe.log', 'shoes and stuff'),
     ]);
 
     expect(await fts.search('blah')).toEqual(['blah.txt']);
@@ -113,26 +113,26 @@ describe.each([
 
   it('updates index after file is modified', async () => {
     await index([
-      new FileAndTags('a/b.txt', 'blah blah some stuff and things'),
-      new FileAndTags('a/b/c.log', 'what about shoes and biscuits'),
+      new File('a/b.txt', 'blah blah some stuff and things'),
+      new File('a/b/c.log', 'what about shoes and biscuits'),
     ]);
 
     let results = await fts.search('blah');
     expect(results.length).toBe(1);
 
-    let modified = new FileAndTags('a/b.txt', 'some stuff and things and more things');
+    let modified = new File('a/b.txt', 'some stuff and things and more things');
     await modifyFile(modified);
 
     results = await fts.search('blah');
     expect(results.length).toBe(0);
 
-    modified = new FileAndTags('a/b.txt', 'ok blah is back');
+    modified = new File('a/b.txt', 'ok blah is back');
     await modifyFile(modified);
 
     results = await fts.search('blah');
     expect(results.length).toBe(1);
 
-    modified = new FileAndTags('a/b/c.log', 'blah now both notes contain blah');
+    modified = new File('a/b/c.log', 'blah now both notes contain blah');
     await modifyFile(modified);
 
     results = await fts.search('blah');
@@ -141,9 +141,9 @@ describe.each([
 
   it('orders search results by relevance', async () => {
     await index([
-      new FileAndTags('lots.of.blah.txt', 'blah blah blah'),
-      new FileAndTags('one.blah.md', 'blah'),
-      new FileAndTags('medium.blah.log', 'blah blah'),
+      new File('lots.of.blah.txt', 'blah blah blah'),
+      new File('one.blah.md', 'blah'),
+      new File('medium.blah.log', 'blah blah'),
     ]);
 
     let results = await fts.search('blah');
@@ -157,12 +157,12 @@ describe.each([
 
   it('orders search results by relevance, after modification', async () => {
     await index([
-      new FileAndTags('lots.of.blah.txt', 'blah blah blah'),
-      new FileAndTags('medium.blah.log', 'blah blah'),
-      new FileAndTags('one.blah.md', 'blah'),
+      new File('lots.of.blah.txt', 'blah blah blah'),
+      new File('medium.blah.log', 'blah blah'),
+      new File('one.blah.md', 'blah'),
     ]);
 
-    let modified = new FileAndTags('one.blah.md', 'turnip');
+    let modified = new File('one.blah.md', 'turnip');
     await modifyFile(modified);
 
     const results = await fts.search('blah turnip');
@@ -176,8 +176,8 @@ describe.each([
 
   it('finds file after it was deleted and recreated', async () => {
     await index([
-      new FileAndTags('a/b.txt', 'blah blah some stuff and things'),
-      new FileAndTags('a/b/c.log', 'what about shoes and biscuits'),
+      new File('a/b.txt', 'blah blah some stuff and things'),
+      new File('a/b/c.log', 'what about shoes and biscuits'),
     ]);
 
     await deleteFile('a/b.txt');
@@ -185,7 +185,7 @@ describe.each([
     let results = await fts.search('blah');
     expect(results).toHaveLength(0);
 
-    const modified = new FileAndTags('a/b.txt', 'ok blah is back');
+    const modified = new File('a/b.txt', 'ok blah is back');
     await modifyFile(modified);
 
     results = await fts.search('blah');
@@ -194,11 +194,11 @@ describe.each([
 
   it('does not find file after it was modified then deleted', async () => {
     await index([
-      new FileAndTags('a/b.txt', 'blah blah some stuff and things'),
-      new FileAndTags('a/b/c.log', 'what about shoes and biscuits'),
+      new File('a/b.txt', 'blah blah some stuff and things'),
+      new File('a/b/c.log', 'what about shoes and biscuits'),
     ]);
 
-    const modified = new FileAndTags('a/b.txt', 'modified blah blah');
+    const modified = new File('a/b.txt', 'modified blah blah');
     await modifyFile(modified);
     await deleteFile('a/b.txt');
 

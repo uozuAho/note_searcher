@@ -27,7 +27,7 @@ expect.extend({
 });
 
 // todo: remove these tests? these tests are kinda unnecessary now that FTS is
-// similar and there's no tags
+// simple and there's no tags
 describe('DefaultMultiIndex, mocked filesystem', () => {
   let fileSystem: InMemFileSystem;
   let index: DefaultMultiIndex;

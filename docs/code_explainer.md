@@ -25,13 +25,12 @@ Why is the code in this project the way it is? This file tries to explain.
 
 - IMultiIndex
     - path: vscode/src/index/MultiIndex.ts
-    - single interface to all indexing functionality: full text, links, tags
+    - single interface to all indexing functionality: full text, links
 
 - DefaultMultiIndex (implements IMultiIndex)
     - path: vscode/src/index/DefaultMultiIndex.ts
     - has
         - LunrDualFts
-        - TagSet: simple set of tags
         - InMemoryLinkIndex: implements LinkIndex, NoteIndex
 
 - LunrDualFts (implements IFullTextSearch)
@@ -98,7 +97,6 @@ has a reference to `FakeUi`, and is intended to have an API that resembles using
 VS code with the extension.
 
 Not tested:
-- tag completion:       simple, doesn't change often, don't care
 - wikilink completion:  simple, doesn't change often, don't care
 - link navigation:      simple, doesn't change often, don't care
 - real ui actions: given VsCodeNoteSearcherUi is a pretty dumb plumbing object,
