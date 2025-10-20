@@ -53,12 +53,6 @@ See [code explainer](./docs/code_explainer.md)
 
 
 # todo
-- bug?
-    - search for something
-    - edit a doc to contain that something
-    - search again
-    - expected: edited doc near the top
-    - actual: edited doc near the bottom
 - feature: extract text to new note
 - feature: make paths queryable. Eg. i want to exclude ABC from path, but not contents
 - feature(s): pasting links
