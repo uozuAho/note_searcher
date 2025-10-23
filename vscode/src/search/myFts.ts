@@ -14,7 +14,21 @@ export class MyFts implements IFullTextSearch {
 
   private searchDir = async (dir: string, query: string) => {
     const docs: IFile[] = [];
+    // todo: pass this down
+    const pQuery = parseQuery(query);
     for (const path of this.fs.allFilesUnderPath(dir)) {
+      // todo: use reduce?
+      let pathFiltered = false;
+      for (const f of pQuery.pathFilters) {
+        if (!path.includes(f)) {
+          pathFiltered = true;
+          break;
+        }
+      }
+      if (pathFiltered) {
+        continue;
+      }
+
       if (path.endsWith('md') || path.endsWith('txt') || path.endsWith('log'))
       {
         const text = this.fs.readFile(path);
@@ -74,22 +88,28 @@ class Query {
   constructor(
     public mustHave: string[],
     public exclude: string[],
-    public other: string[]
+    public other: string[],
+    public pathFilters: string[]
   ) { }
 }
 
 function parseQuery(query: string) {
-  let queryTerms2 = query.split(' ');
-  let mustIncludeTerms = queryTerms2
+  const queryTerms = query.split(' ');
+  const nonPathTerms = queryTerms.filter(x => !x.includes('path:'));
+
+  const mustIncludeTerms = nonPathTerms
     .filter(t => t.startsWith("+"))
     .map(t => t.substring(1));
-  let mustNotIncludeTerms = queryTerms2
+  const mustNotIncludeTerms = nonPathTerms
     .filter(t => t.startsWith("-"))
     .map(t => t.substring(1));
-  let plainTerms = queryTerms2
+  const plainTerms = nonPathTerms
     .filter(t => !t.startsWith("+") && !t.startsWith("-"));
 
-  return new Query(mustIncludeTerms, mustNotIncludeTerms, plainTerms);
+  const pathTerms = queryTerms.filter(x => x.includes('path:'));
+  const pathFilters = pathTerms.map(x => x.replace('path:', ''));
+
+  return new Query(mustIncludeTerms, mustNotIncludeTerms, plainTerms, pathFilters);
 }
 
 class DocStats {

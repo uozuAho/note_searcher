@@ -266,6 +266,13 @@ describe.each([
       fakeFs.writeFile(file.path(), file.text());
 
       expect(await fts.search("hello path:.log")).not.toBeFound();
+
+      // todo:
+      // +path
+      // -path
+      // path:1 path:2
+      // path:1 -path:2
+      // path query doesn't search for regular text
     });
   });
 
