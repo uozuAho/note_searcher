@@ -260,11 +260,12 @@ describe.each([
   });
 
   describe('paths', () => {
-    it('filters paths', async () => {
+    it('filters extensions', async () => {
       const file = new SimpleFile("/a/b/c.txt", "hello please");
       await fts.addFile(file.path(), file.text());
       fakeFs.writeFile(file.path(), file.text());
-      expect(await fts.search("")).not.toBeFound();
+
+      expect(await fts.search("hello path:.log")).not.toBeFound();
     });
   });
 
