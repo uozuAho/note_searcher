@@ -36,16 +36,17 @@ describe.each([
 ])('full text search: %s', (name, buildFts) => {
   let fts: IFullTextSearch;
 
-  const index = async (files: SimpleFile[]) => {
+  const prepare = async (files: SimpleFile[]) => {
     fts = buildFts(fakeFs);
     for (const file of files) {
+      // addFile: relic of indexed full text search. Keep just in case
       await fts.addFile(file.path(), file.text());
       fakeFs.writeFile(file.path(), file.text());
     }
   };
 
   const searchFor = async (query: string, text: string) => {
-    await index([new SimpleFile(aTextFilePath, text)]);
+    await prepare([new SimpleFile(aTextFilePath, text)]);
     return fts.search(query);
   };
 
@@ -65,7 +66,7 @@ describe.each([
   });
 
   it('index and search example', async () => {
-    await index([
+    await prepare([
       new SimpleFile('blah.txt', 'blah blah stuff'),
       new SimpleFile('shoe.log', 'shoes and stuff'),
     ]);
@@ -104,8 +105,8 @@ describe.each([
     await expect(searchFor("refactor", "red/green/refactor")).toBeFound();
   });
 
-  it('updates index after file is modified', async () => {
-    await index([
+  it('finds modified file', async () => {
+    await prepare([
       new SimpleFile('a/b.txt', 'blah blah some stuff and things'),
       new SimpleFile('a/b/c.log', 'what about shoes and biscuits'),
     ]);
@@ -133,7 +134,7 @@ describe.each([
   });
 
   it('orders search results by relevance', async () => {
-    await index([
+    await prepare([
       new SimpleFile('lots.of.blah.txt', 'blah blah blah'),
       new SimpleFile('one.blah.md', 'blah'),
       new SimpleFile('medium.blah.log', 'blah blah'),
@@ -149,7 +150,7 @@ describe.each([
   });
 
   it('orders search results by relevance, after modification', async () => {
-    await index([
+    await prepare([
       new SimpleFile('lots.of.blah.txt', 'blah blah blah'),
       new SimpleFile('medium.blah.log', 'blah blah'),
       new SimpleFile('one.blah.md', 'blah'),
@@ -168,7 +169,7 @@ describe.each([
   });
 
   it('finds file after it was deleted and recreated', async () => {
-    await index([
+    await prepare([
       new SimpleFile('a/b.txt', 'blah blah some stuff and things'),
       new SimpleFile('a/b/c.log', 'what about shoes and biscuits'),
     ]);
@@ -186,7 +187,7 @@ describe.each([
   });
 
   it('does not find file after it was modified then deleted', async () => {
-    await index([
+    await prepare([
       new SimpleFile('a/b.txt', 'blah blah some stuff and things'),
       new SimpleFile('a/b/c.log', 'what about shoes and biscuits'),
     ]);
@@ -258,6 +259,41 @@ describe.each([
     });
   });
 
+  describe('paths', () => {
+    beforeEach(async () => {
+      await prepare([
+        new SimpleFile("/a/b/c.txt", "hello please"),
+        new SimpleFile("/d/e/f.log", "hello please log")
+      ]);
+    });
+
+    it('filters extensions', async () => {
+      expect(await fts.search("hello path:.log")).toHaveLength(1);
+      expect(await fts.search("hello path:.txt")).toHaveLength(1);
+    });
+
+    it('filters path segments', async () => {
+      expect(await fts.search("hello path:/a/b")).toHaveLength(1);
+    });
+
+    it('+ has no effect', async () => {
+      expect(await fts.search("hello +path:/a/b")).toHaveLength(1);
+    });
+
+    it('filters all', async () => {
+      expect(await fts.search("hello path:/nothing")).toHaveLength(0);
+    });
+
+    it('- excludes', async () => {
+      expect(await fts.search("hello -path:.log")).toEqual(["/a/b/c.txt"]);
+    });
+
+    it('supports multiple path terms', async () => {
+      expect(await fts.search("hello path:/a path:.txt")).toEqual(["/a/b/c.txt"]);
+      expect(await fts.search("hello path:/a -path:.log")).toEqual(["/a/b/c.txt"]);
+    });
+  });
+
   describe('stemming', () => {
     it('basic stem', async () => {
       await expect(searchFor("bike", "I own several bikes")).toBeFound();
@@ -276,18 +312,12 @@ describe.each([
       ['game', ['games'], ['gambling']],
       ['profile', ['profiler', 'profiling'], []],
       ['house', ['housing', 'houses'], []],
+      ['run', ['running'], ['rung']],
+      ['brief', ['briefly'], []],
+      ['run', ['running', 'runner'], ['rung']],
+      ['happy', ['happier', 'happiness', 'happily'], ['happening']],
+      ['program', ['programming', 'programmer'], []],
     ];
-
-    if (name === "MyFts") {
-      // lunr fails these, MyFts doesn't. I prefer MyFts.
-      stemCases = stemCases.concat([
-        ['run', ['running'], ['rung']],
-        ['brief', ['briefly'], []],
-        ['run', ['running', 'runner'], ['rung']],
-        ['happy', ['happier', 'happiness', 'happily'], ['happening']],
-        ['program', ['programming', 'programmer'], []],
-      ]);
-    }
 
     it.each(stemCases)('', async (word, shouldFind, shouldNotFind) => {
       for (const x of shouldFind) {

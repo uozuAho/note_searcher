@@ -6,26 +6,35 @@ export class MyFts implements IFullTextSearch {
   constructor(private fs: IFileSystem, private rootDir: string) {}
 
   public search = (query: string) => {
+    if (query.trim() === "") {
+      return Promise.resolve([]);
+    }
     return this.searchDir(this.rootDir, query);
   }
 
   private searchDir = async (dir: string, query: string) => {
     const docs: IFile[] = [];
+    const pQuery = parseQuery(query);
+
     for (const path of this.fs.allFilesUnderPath(dir)) {
+      if (pQuery.pathIncludes.some(x => !path.includes(x))) {
+        continue;
+      }
+      if (pQuery.pathExcludes.some(x => path.includes(x))) {
+        continue;
+      }
       if (path.endsWith('md') || path.endsWith('txt') || path.endsWith('log'))
       {
         const text = this.fs.readFile(path);
         docs.push(new SimpleFile(path, text));
       }
     }
-    return this.searchDocs(docs, query);
+    return this.searchDocs(docs, pQuery);
   };
 
-  private searchDocs = async (docs: IFile[], queryStr: string) => {
+  private searchDocs = async (docs: IFile[], query: Query) => {
     const k1 = 1.5;
     const b = 0.75;
-
-    const query = parseQuery(queryStr);
 
     var docStats = buildDocStats(docs, query);
 
@@ -71,22 +80,40 @@ class Query {
   constructor(
     public mustHave: string[],
     public exclude: string[],
-    public other: string[]
+    public other: string[],
+    public pathIncludes: string[],
+    public pathExcludes: string[]
   ) { }
 }
 
 function parseQuery(query: string) {
-  let queryTerms2 = query.split(' ');
-  let mustIncludeTerms = queryTerms2
+  const queryTerms = query.split(' ');
+  const nonPathTerms = queryTerms.filter(x => !x.includes('path:'));
+
+  const mustIncludeTerms = nonPathTerms
     .filter(t => t.startsWith("+"))
     .map(t => t.substring(1));
-  let mustNotIncludeTerms = queryTerms2
+  const mustNotIncludeTerms = nonPathTerms
     .filter(t => t.startsWith("-"))
     .map(t => t.substring(1));
-  let plainTerms = queryTerms2
+  const plainTerms = nonPathTerms
     .filter(t => !t.startsWith("+") && !t.startsWith("-"));
 
-  return new Query(mustIncludeTerms, mustNotIncludeTerms, plainTerms);
+  const pathTerms = queryTerms
+    .filter(x => x.includes('path:'))
+    .map(x => x.replace('path:', '').replace('+', ''));
+  const pathIncludes = pathTerms.filter(x => !x.includes('-'));
+  const pathExcludes = pathTerms
+    .filter(x => x.includes('-'))
+    .map(x => x.replace('-', ''));
+
+  return new Query(
+    mustIncludeTerms,
+    mustNotIncludeTerms,
+    plainTerms,
+    pathIncludes,
+    pathExcludes
+  );
 }
 
 class DocStats {
