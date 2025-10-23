@@ -42,8 +42,10 @@ workspace.
 You can search for files by pressing `ctrl+alt+s`. Some example queries:
 
 ```
-apple banana +carrot  # file contains the word carrot, and possibly apple or banana
-apple banana -carrot  # file does not contain carrot, but either apple and/or banana
+apple banana +carrot          # file contains the word carrot, and possibly apple or banana
+apple banana -carrot          # file does not contain carrot, but either apple and/or banana
+apple banana path:/some/path  # apple or banana, only in files containing /some/path
+apple banana -path:.log       # apple or banana, not in log files
 ```
 
 

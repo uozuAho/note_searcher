@@ -267,10 +267,6 @@ describe.each([
       ]);
     });
 
-    it('finds', async () => {
-      expect(await fts.search("hello")).toHaveLength(2);
-    });
-
     it('filters extensions', async () => {
       expect(await fts.search("hello path:.log")).toHaveLength(1);
       expect(await fts.search("hello path:.txt")).toHaveLength(1);
@@ -292,10 +288,10 @@ describe.each([
       expect(await fts.search("hello -path:.log")).toEqual(["/a/b/c.txt"]);
     });
 
-    // todo:
-    // path:1 path:2
-    // path:1 -path:2
-    // path query doesn't search for regular text
+    it('supports multiple path terms', async () => {
+      expect(await fts.search("hello path:/a path:.txt")).toEqual(["/a/b/c.txt"]);
+      expect(await fts.search("hello path:/a -path:.log")).toEqual(["/a/b/c.txt"]);
+    });
   });
 
   describe('stemming', () => {

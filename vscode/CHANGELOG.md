@@ -3,6 +3,10 @@
 All notable changes to the "note-searcher" extension will be documented in this
 file. Format inspired by https://keepachangelog.com/en/1.0.0/
 
+## [4.1.0] - 2025-10-23
+### Added
+- Filter paths in full text search with `path:`
+
 ## [4.0.0] - 2025-10-20
 ### Changed
 - Full text search no longer uses an index. Searching takes longer (on the order

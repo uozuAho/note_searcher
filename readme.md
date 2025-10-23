@@ -54,7 +54,6 @@ See [code explainer](./docs/code_explainer.md)
 
 # todo
 - feature: extract text to new note
-- feature: make paths queryable. Eg. i want to exclude ABC from path, but not contents
 - feature(s): pasting links
     - try this: https://stackoverflow.com/questions/44598894/in-a-vs-code-extension-how-can-i-be-notified-when-the-user-cuts-copies-or-paste
     - if no selected text: set cursor inside []
