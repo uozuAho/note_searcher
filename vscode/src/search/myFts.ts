@@ -14,35 +14,24 @@ export class MyFts implements IFullTextSearch {
 
   private searchDir = async (dir: string, query: string) => {
     const docs: IFile[] = [];
-    // todo: pass this down
     const pQuery = parseQuery(query);
+
     for (const path of this.fs.allFilesUnderPath(dir)) {
-      // todo: use reduce?
-      let pathFiltered = false;
-      for (const f of pQuery.pathFilters) {
-        if (!path.includes(f)) {
-          pathFiltered = true;
-          break;
-        }
-      }
-      if (pathFiltered) {
+      if (pQuery.pathFilters.some(x => !path.includes(x))) {
         continue;
       }
-
       if (path.endsWith('md') || path.endsWith('txt') || path.endsWith('log'))
       {
         const text = this.fs.readFile(path);
         docs.push(new SimpleFile(path, text));
       }
     }
-    return this.searchDocs(docs, query);
+    return this.searchDocs(docs, pQuery);
   };
 
-  private searchDocs = async (docs: IFile[], queryStr: string) => {
+  private searchDocs = async (docs: IFile[], query: Query) => {
     const k1 = 1.5;
     const b = 0.75;
-
-    const query = parseQuery(queryStr);
 
     var docStats = buildDocStats(docs, query);
 
