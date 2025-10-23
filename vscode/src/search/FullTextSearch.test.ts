@@ -260,20 +260,26 @@ describe.each([
   });
 
   describe('paths', () => {
-    it('filters extensions', async () => {
-      const file = new SimpleFile("/a/b/c.txt", "hello please");
-      await fts.addFile(file.path(), file.text());
-      fakeFs.writeFile(file.path(), file.text());
-
-      expect(await fts.search("hello path:.log")).not.toBeFound();
-
-      // todo:
-      // +path
-      // -path
-      // path:1 path:2
-      // path:1 -path:2
-      // path query doesn't search for regular text
+    beforeEach(async () => {
+      await prepare([
+        new SimpleFile("/a/b/c.txt", "hello please")
+      ]);
     });
+
+    it('finds', async () => {
+      expect(await fts.search("hello")).toBeFound();
+    });
+
+    it('filters extensions', async () => {
+      expect(await fts.search("hello path:.log")).not.toBeFound();
+    });
+
+    // todo:
+    // +path
+    // -path
+    // path:1 path:2
+    // path:1 -path:2
+    // path query doesn't search for regular text
   });
 
   describe('stemming', () => {
