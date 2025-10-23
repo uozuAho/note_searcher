@@ -17,7 +17,10 @@ export class MyFts implements IFullTextSearch {
     const pQuery = parseQuery(query);
 
     for (const path of this.fs.allFilesUnderPath(dir)) {
-      if (pQuery.pathFilters.some(x => !path.includes(x))) {
+      if (pQuery.pathIncludes.some(x => !path.includes(x))) {
+        continue;
+      }
+      if (pQuery.pathExcludes.some(x => path.includes(x))) {
         continue;
       }
       if (path.endsWith('md') || path.endsWith('txt') || path.endsWith('log'))
@@ -78,7 +81,8 @@ class Query {
     public mustHave: string[],
     public exclude: string[],
     public other: string[],
-    public pathFilters: string[]
+    public pathIncludes: string[],
+    public pathExcludes: string[]
   ) { }
 }
 
@@ -95,11 +99,21 @@ function parseQuery(query: string) {
   const plainTerms = nonPathTerms
     .filter(t => !t.startsWith("+") && !t.startsWith("-"));
 
-  const pathFilters = queryTerms
+  const pathTerms = queryTerms
     .filter(x => x.includes('path:'))
-    .map(x => x.replace('path:', '').replace('+', ''))
+    .map(x => x.replace('path:', '').replace('+', ''));
+  const pathIncludes = pathTerms.filter(x => !x.includes('-'));
+  const pathExcludes = pathTerms
+    .filter(x => x.includes('-'))
+    .map(x => x.replace('-', ''));
 
-  return new Query(mustIncludeTerms, mustNotIncludeTerms, plainTerms, pathFilters);
+  return new Query(
+    mustIncludeTerms,
+    mustNotIncludeTerms,
+    plainTerms,
+    pathIncludes,
+    pathExcludes
+  );
 }
 
 class DocStats {

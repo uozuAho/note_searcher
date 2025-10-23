@@ -288,9 +288,11 @@ describe.each([
       expect(await fts.search("hello path:/nothing")).toHaveLength(0);
     });
 
+    it('- excludes', async () => {
+      expect(await fts.search("hello -path:.log")).toEqual(["/a/b/c.txt"]);
+    });
+
     // todo:
-    // +path
-    // -path
     // path:1 path:2
     // path:1 -path:2
     // path query doesn't search for regular text
