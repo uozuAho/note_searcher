@@ -6,6 +6,9 @@ export class MyFts implements IFullTextSearch {
   constructor(private fs: IFileSystem, private rootDir: string) {}
 
   public search = (query: string) => {
+    if (query.trim() === "") {
+      return Promise.resolve([]);
+    }
     return this.searchDir(this.rootDir, query);
   }
 

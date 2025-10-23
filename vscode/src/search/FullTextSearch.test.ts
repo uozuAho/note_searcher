@@ -259,11 +259,14 @@ describe.each([
     });
   });
 
-  // describe('paths', () => {
-  //   it('filters paths', async () => {
-  //     await expect(searchFor("ham -pizza", "the ham is good")).toBeFound();
-  //   });
-  // });
+  describe('paths', () => {
+    it('filters paths', async () => {
+      const file = new SimpleFile("/a/b/c.txt", "hello please");
+      await fts.addFile(file.path(), file.text());
+      fakeFs.writeFile(file.path(), file.text());
+      expect(await fts.search("")).not.toBeFound();
+    });
+  });
 
   describe('stemming', () => {
     it('basic stem', async () => {
