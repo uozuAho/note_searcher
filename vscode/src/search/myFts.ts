@@ -95,8 +95,9 @@ function parseQuery(query: string) {
   const plainTerms = nonPathTerms
     .filter(t => !t.startsWith("+") && !t.startsWith("-"));
 
-  const pathTerms = queryTerms.filter(x => x.includes('path:'));
-  const pathFilters = pathTerms.map(x => x.replace('path:', ''));
+  const pathFilters = queryTerms
+    .filter(x => x.includes('path:'))
+    .map(x => x.replace('path:', '').replace('+', ''))
 
   return new Query(mustIncludeTerms, mustNotIncludeTerms, plainTerms, pathFilters);
 }

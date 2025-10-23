@@ -262,16 +262,30 @@ describe.each([
   describe('paths', () => {
     beforeEach(async () => {
       await prepare([
-        new SimpleFile("/a/b/c.txt", "hello please")
+        new SimpleFile("/a/b/c.txt", "hello please"),
+        new SimpleFile("/d/e/f.log", "hello please log")
       ]);
     });
 
     it('finds', async () => {
-      expect(await fts.search("hello")).toBeFound();
+      expect(await fts.search("hello")).toHaveLength(2);
     });
 
     it('filters extensions', async () => {
-      expect(await fts.search("hello path:.log")).not.toBeFound();
+      expect(await fts.search("hello path:.log")).toHaveLength(1);
+      expect(await fts.search("hello path:.txt")).toHaveLength(1);
+    });
+
+    it('filters path segments', async () => {
+      expect(await fts.search("hello path:/a/b")).toHaveLength(1);
+    });
+
+    it('+ has no effect', async () => {
+      expect(await fts.search("hello +path:/a/b")).toHaveLength(1);
+    });
+
+    it('filters all', async () => {
+      expect(await fts.search("hello path:/nothing")).toHaveLength(0);
     });
 
     // todo:
