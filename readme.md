@@ -53,6 +53,12 @@ See [code explainer](./docs/code_explainer.md)
 
 
 # todo
+- update node version locally and on github actions
+- update deps
+    - how to safely, using only deps that have been out for > X days/months?
+- add config file support, .notesearcher
+    - ignore dirs: start with anything that contains given string, eg 'debris/'
+      in path
 - feature: extract text to new note
 - feature(s): pasting links
     - try this: https://stackoverflow.com/questions/44598894/in-a-vs-code-extension-how-can-i-be-notified-when-the-user-cuts-copies-or-paste
