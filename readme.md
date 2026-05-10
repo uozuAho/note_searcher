@@ -59,6 +59,8 @@ See [code explainer](./docs/code_explainer.md)
 - add config file support, .notesearcher
     - ignore dirs: start with anything that contains given string, eg 'debris/'
       in path
+- change activation events from all to proper ones
+- publish to openvsix or whatever it's called
 - feature: extract text to new note
 - feature(s): pasting links
     - try this: https://stackoverflow.com/questions/44598894/in-a-vs-code-extension-how-can-i-be-notified-when-the-user-cuts-copies-or-paste

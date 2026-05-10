@@ -1,54 +1,41 @@
 # Code explainer
 
-Welcome human and machine coders.
+Welcome human and machine coders. This project is a visual studio code extension
+that provides full text search and wiki-style links with forward and backward
+link navigation.
 
-Why is the code in this project the way it is? This file tries to explain.
+# project structure and important types
+- ./src/note_searcher/noteSearcher.ts
+    - `NoteSearcher`
+        - this is the central hub through which most extension functionality is
+          coordinated
+        - has
+            - ui:           INoteSearcherUi
+            - index:        IMultiIndex
+            - fs:           FileSystem
+            - timeProvider: TimeProvider
+- ./src/ui/INoteSearcherUi.ts
+    - `INoteSearcherUi`
+        - interface to the UI, which in this extension's case is VS code
+        - main implementation: VsCodeNoteSearcherUi
+- ./src/index/MultiIndex.ts
+    - `IMultiIndex`
+        - single interface to all indexing functionality: full text, links
+- ./src/index/DefaultMultiIndex.ts
+    - `DefaultMultiIndex` (implements IMultiIndex)
+        - has
+            - InMemoryLinkIndex: implements LinkIndex, NoteIndex
+- ./src/utils/IFileSystem.ts
+    - `IFileSystem`
+        - interface to filesystem operations
 
-# todo
-- add a diagram of classes and how they interact with vs code / test fakes
-
-# important types
-- NoteSearcher
-    - path: vscode/src/note_searcher/noteSearcher.ts
-    - this is the central hub through which most extension functionality is
-      coordinated
-    - has
-        - ui:           INoteSearcherUi
-        - index:        IMultiIndex
-        - fs:           FileSystem
-        - timeProvider: TimeProvider
-
-- INoteSearcherUi
-    - path: vscode/src/ui/INoteSearcherUi.ts
-    - interface to the UI, which in this extension's case is VS code
-    - main implementation: VsCodeNoteSearcherUi
-
-- IMultiIndex
-    - path: vscode/src/index/MultiIndex.ts
-    - single interface to all indexing functionality: full text, links
-
-- DefaultMultiIndex (implements IMultiIndex)
-    - path: vscode/src/index/DefaultMultiIndex.ts
-    - has
-        - LunrDualFts
-        - InMemoryLinkIndex: implements LinkIndex, NoteIndex
-
-- LunrDualFts (implements IFullTextSearch)
-    - path: vscode/src/search/lunrDualFts.ts
-    - provides full text search capability, using lunr
-    - has
-        - 2x LunrFullTextSearch (hence 'dual')
-
-- IFileSystem
-    - path: vscode/src/utils/IFileSystem.ts
-    - interface to filesystem operations
 
 # extension initialisation & plumbing
 The extension initialises immediately (see `activationEvents` in package.json).
 While this is not recommended, it's fine for my use as I only have the extension
 enabled in certain workspaces.
 
-Initialisation happens in vscode/src/main.ts. This is where all major classes
+Initialisation happens in ./src/main.ts. This is where all major classes
 are built, connected together, and connected to the vscode extension framework.
 
 # testing
@@ -57,8 +44,8 @@ Most tests are low level and easy to follow. There are a couple of exceptions:
 ## DefaultMultiIndex
 There are a couple of files that contain tests:
 
-vscode/src/index/DefaultMultiIndex.test.ts
-vscode/src/index/DefaultMultiIndex.demoDir.test.ts
+./src/index/DefaultMultiIndex.test.ts
+./src/index/DefaultMultiIndex.demoDir.test.ts
 
 DefaultMultiIndex may look like just an index of indexes, but it's really a
 coordinator. There is enough complexity within it to warrant testing. I don't
@@ -66,7 +53,7 @@ think there's a way to simplify this, so I try to be careful not to duplicate
 test responsibilities between here and the individual indexes.
 
 ## Acceptance tests
-vscode/src/acceptance_tests/noteSearcher.acceptance.test.ts
+./src/acceptance_tests/noteSearcher.acceptance.test.ts
 
 The intent here is to test something as close as possible to the actual
 extension. It replaces a previous attempt that used a selenium-like driver that
