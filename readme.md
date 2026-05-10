@@ -49,7 +49,7 @@ npm run webpack
 ```
 
 ## Understanding the code/architecture
-See [code explainer](./docs/code_explainer.md)
+See ./AGENTS.md
 
 
 # todo
