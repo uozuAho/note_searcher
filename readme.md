@@ -53,9 +53,6 @@ See [code explainer](./docs/code_explainer.md)
 
 
 # todo
-- update node version locally and on github actions
-- update deps
-    - how to safely, using only deps that have been out for > X days/months?
 - add config file support, .notesearcher
     - ignore dirs: start with anything that contains given string, eg 'debris/'
       in path
