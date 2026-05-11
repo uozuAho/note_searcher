@@ -1,3 +1,6 @@
+const _path = require('path');
+import { IFileSystem } from "./IFileSystem";
+
 export interface WorkspaceConfig {
   ignore_paths_containing: string[];
 }
@@ -7,11 +10,13 @@ export const defaultWorkspaceConfig = (): WorkspaceConfig => ({
 });
 
 export const loadWorkspaceConfig = (
-  readJsonFile: <T>(path: string) => T | undefined,
-  configPath: string
+  fs: IFileSystem,
+  workspaceRoot: string
 ): WorkspaceConfig => {
   try {
-    const config = readJsonFile<WorkspaceConfig>(configPath);
+    const configPath = _path.join(workspaceRoot, '.notesearcher');
+    const contents = fs.readFile(configPath);
+    const config = JSON.parse(contents);
     if (!config || !Array.isArray(config.ignore_paths_containing)) {
       return defaultWorkspaceConfig();
     }

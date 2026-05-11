@@ -71,7 +71,7 @@ describe('DefaultMultiIndex, mocked filesystem', () => {
 
     it('does not index ignored paths', async () => {
       setupFiles([
-        new SimpleFile('.notesearcher', JSON.stringify({ignore_paths_containing: "skip/me"})),
+        new SimpleFile('.notesearcher', JSON.stringify({ignore_paths_containing: ["skip/me"]})),
         new SimpleFile('keep/a.txt', ''),
         new SimpleFile('skip/me/b.txt', ''),
       ]);

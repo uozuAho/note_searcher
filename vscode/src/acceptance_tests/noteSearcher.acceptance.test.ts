@@ -68,8 +68,8 @@ describe('on starting in the demo dir', () => {
     await ns.search('cheese');
     expect(ns.searchResults()).toEqual([
       _path.join(demoDir, 'cheese.md'),
-      _path.join(demoDir, 'cheese_hat.md'),
       _path.join(demoDir, 'subdir/cheese.md'),
+      _path.join(demoDir, 'cheese_hat.md'),
       _path.join(demoDir, 'trains.md'),
       _path.join(demoDir, 'readme.md'),
     ]);

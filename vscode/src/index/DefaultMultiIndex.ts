@@ -21,8 +21,7 @@ export class DefaultMultiIndex implements IMultiIndex {
     private _diagnostics: IDiagnostics = new NullDiagnostics(),
   )
   {
-    const adsf = _path.join(workspaceDir, ".notesearcher");
-    const config = loadWorkspaceConfig(_fileSystem.readJsonFile!, adsf);
+    const config = loadWorkspaceConfig(_fileSystem, workspaceDir);
     this._ignorePathsContaining = config.ignore_paths_containing;
     this._fullText = new MyFts(_fileSystem, workspaceDir, config.ignore_paths_containing);
   }

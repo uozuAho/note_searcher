@@ -54,7 +54,6 @@ See ./AGENTS.md
 
 # todo
 - WIP add config file support, .notesearcher
-    - WIP add acceptance tests for ignored dirs, files
     - agent work to refactor
         - buildDeps.loadWorkspaceConfig looks weird
         - pass ignore list to fs instead of downstream deps?
