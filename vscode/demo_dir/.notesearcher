@@ -1,0 +1,6 @@
+{
+  "ignore_paths_containing": [
+    "ignored_stuff/ignored.md",
+    "ignored_dir"
+  ]
+}

@@ -54,7 +54,6 @@ See ./AGENTS.md
 
 # todo
 - WIP add config file support, .notesearcher
-    - WIP review & commit agent work
     - add acceptance tests for ignored dirs, files
     - agent work to refactor
         - buildDeps.loadWorkspaceConfig looks weird
