@@ -103,6 +103,27 @@ describe('on starting in the demo dir', () => {
       _path.join(demoDir, 'trains.md'),
     ]);
   });
+
+  it('ignores ignored stuff', async () => {
+    const expected_ignoreds = [
+      "01_nothing",
+      "02_in",
+      "03_here",
+      "04_should",
+      "05_appear",
+      "ignored_stuff/ignored",
+    ];
+
+    await ns.search('ignored');
+
+    expected_ignoreds.forEach(ign => {
+      for (const result of ns.searchResults()) {
+        expect(result).not.toContain(ign)
+      }
+    });
+
+    expect(ns.searchResults()).toContain(_path.join(demoDir, 'subdir', 'not_ignored.md'));
+  });
 });
 
 describe('on file deleted', () => {
