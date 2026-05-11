@@ -53,9 +53,15 @@ See ./AGENTS.md
 
 
 # todo
-- add config file support, .notesearcher
-    - ignore dirs: start with anything that contains given string, eg 'debris/'
-      in path
+- WIP add config file support, .notesearcher
+    - WIP review & commit agent work
+    - add acceptance tests for ignored dirs, files
+    - agent work to refactor
+        - buildDeps.loadWorkspaceConfig looks weird
+        - pass ignore list to fs instead of downstream deps?
+            - maybe pass ignore list to allFilesUnderPath
+            - maybe pass workspaceConfig instead of ignore list
+        - i dont like IFileSystem.readJsonFile
 - change activation events from all to proper ones
 - publish to openvsix or whatever it's called
 - feature: extract text to new note

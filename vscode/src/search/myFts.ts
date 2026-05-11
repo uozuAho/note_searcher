@@ -1,9 +1,14 @@
 import { IFullTextSearch } from './IFullTextSearch';
 import { IFileSystem } from '../utils/IFileSystem';
 import { IFile, SimpleFile } from '../utils/IFile';
+import { shouldIgnorePath } from '../utils/workspaceConfig';
 
 export class MyFts implements IFullTextSearch {
-  constructor(private fs: IFileSystem, private rootDir: string) {}
+  constructor(
+    private fs: IFileSystem,
+    private rootDir: string,
+    private ignorePathsContaining: string[] = []
+  ) {}
 
   public search = (query: string) => {
     if (query.trim() === "") {
@@ -17,6 +22,9 @@ export class MyFts implements IFullTextSearch {
     const pQuery = parseQuery(query);
 
     for (const path of this.fs.allFilesUnderPath(dir)) {
+      if (shouldIgnorePath(path, this.ignorePathsContaining)) {
+        continue;
+      }
       if (pQuery.pathIncludes.some(x => !path.includes(x))) {
         continue;
       }

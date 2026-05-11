@@ -68,5 +68,18 @@ describe('DefaultMultiIndex, mocked filesystem', () => {
       expect(notes).toHaveLength(0);
       expect(index.containsNote('source_file.cpp')).toBe(false);
     });
+
+    it('does not index ignored paths', async () => {
+      setupFiles([
+        new SimpleFile('keep/a.txt', ''),
+        new SimpleFile('skip/me/b.txt', ''),
+      ]);
+
+      index = new DefaultMultiIndex(fileSystem, '', new NullDiagnostics(), ['skip/me']);
+      await index.indexAllFiles('');
+
+      expect(Array.from(index.notes())).toEqual(['keep/a.txt']);
+      expect(index.containsNote('skip/me/b.txt')).toBe(false);
+    });
   });
 });

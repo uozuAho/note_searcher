@@ -14,6 +14,7 @@ class NodeFileSystem implements IFileSystem {
 
   public fileExists = (path: string) => fs.existsSync(path);
   public readFile = (path: string) => new String(fs.readFileSync(path)).toString();
+  public readJsonFile = <T>(path: string) => JSON.parse(this.readFile(path)) as T;
   public deleteFile = (path: any) => fs.unlinkSync(path);
   public writeFile = (path: any, text: any) => fs.writeFileSync(path, text);
   public moveFile = (oldPath: string, newPath: string) => fs.renameSync(oldPath, newPath);

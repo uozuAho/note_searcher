@@ -6,17 +6,21 @@ import { MyFts } from "../search/myFts";
 import { IFullTextSearch } from "../search/IFullTextSearch";
 import { IDiagnostics } from "../diagnostics/IDiagnostics";
 import { NullDiagnostics } from "../diagnostics/diagnostics";
+import { shouldIgnorePath } from "../utils/workspaceConfig";
 
 export class DefaultMultiIndex implements IMultiIndex {
   private _fullText: IFullTextSearch;
   private _linkIndex = new InMemoryLinkIndex();
+  private _ignorePathsContaining: string[];
 
   constructor(
     private _fileSystem: IFileSystem,
     workspaceDir: string,
-    private _diagnostics: IDiagnostics = new NullDiagnostics()
+    private _diagnostics: IDiagnostics = new NullDiagnostics(),
+    ignorePathsContaining: string[] = []
   )
   {
+    this._ignorePathsContaining = ignorePathsContaining;
     this._fullText = new MyFts(_fileSystem, workspaceDir);
   }
 
@@ -43,7 +47,7 @@ export class DefaultMultiIndex implements IMultiIndex {
     const jobs: Promise<void>[] = [];
 
     for (const path of this._fileSystem.allFilesUnderPath(dir)) {
-      if (!this.shouldIndex(path)) { continue; }
+      if (this.shouldIgnore(path) || !this.shouldIndex(path)) { continue; }
       jobs.push(this.addFile(path));
     }
 
@@ -52,7 +56,7 @@ export class DefaultMultiIndex implements IMultiIndex {
   };
 
   public onFileModified = async (path: string, text: string) => {
-    if (!this.shouldIndex(path)) { return; }
+    if (this.shouldIgnore(path) || !this.shouldIndex(path)) { return; }
 
     const tasks = [
       this._fullText.onFileModified(path, text),
@@ -63,7 +67,7 @@ export class DefaultMultiIndex implements IMultiIndex {
   };
 
   public onFileDeleted = async (path: string) => {
-    if (!this.shouldIndex(path)) { return; }
+    if (this.shouldIgnore(path) || !this.shouldIndex(path)) { return; }
 
     const tasks = [
       this._fullText.onFileDeleted(path),
@@ -87,4 +91,6 @@ export class DefaultMultiIndex implements IMultiIndex {
     }
     return false;
   };
+
+  private shouldIgnore = (path: string) => shouldIgnorePath(path, this._ignorePathsContaining);
 }
