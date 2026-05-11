@@ -32,7 +32,7 @@ const aTextFilePath = '/a/b/c.txt';
 let fakeFs: InMemFileSystem;
 
 describe.each([
-  ['MyFts', (fs: IFileSystem) => new MyFts(fs, "")]
+  ['MyFts', (fs: IFileSystem) => new MyFts(fs, "", _ => false)]
 ])('full text search: %s', (name, buildFts) => {
   let fts: IFullTextSearch;
 

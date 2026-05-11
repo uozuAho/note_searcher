@@ -1,1 +1,1 @@
-This file should indexed and searchable.
+This file should indexed and searchable. Not ignored.

@@ -53,9 +53,6 @@ See ./AGENTS.md
 
 
 # todo
-- add config file support, .notesearcher
-    - ignore dirs: start with anything that contains given string, eg 'debris/'
-      in path
 - change activation events from all to proper ones
 - publish to openvsix or whatever it's called
 - feature: extract text to new note

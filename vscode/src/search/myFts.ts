@@ -3,20 +3,27 @@ import { IFileSystem } from '../utils/IFileSystem';
 import { IFile, SimpleFile } from '../utils/IFile';
 
 export class MyFts implements IFullTextSearch {
-  constructor(private fs: IFileSystem, private rootDir: string) {}
+  constructor(
+    private _fs: IFileSystem,
+    private _rootDir: string,
+    private _shouldIgnore: (path: string) => boolean
+  ) {}
 
   public search = (query: string) => {
     if (query.trim() === "") {
       return Promise.resolve([]);
     }
-    return this.searchDir(this.rootDir, query);
-  }
+    return this.searchDir(this._rootDir, query);
+  };
 
   private searchDir = async (dir: string, query: string) => {
     const docs: IFile[] = [];
     const pQuery = parseQuery(query);
 
-    for (const path of this.fs.allFilesUnderPath(dir)) {
+    for (const path of this._fs.allFilesUnderPath(dir)) {
+      if (this._shouldIgnore(path)) {
+        continue;
+      }
       if (pQuery.pathIncludes.some(x => !path.includes(x))) {
         continue;
       }
@@ -25,7 +32,7 @@ export class MyFts implements IFullTextSearch {
       }
       if (path.endsWith('md') || path.endsWith('txt') || path.endsWith('log'))
       {
-        const text = this.fs.readFile(path);
+        const text = this._fs.readFile(path);
         docs.push(new SimpleFile(path, text));
       }
     }
@@ -48,7 +55,7 @@ export class MyFts implements IFullTextSearch {
       const myTerms = query.mustHave.concat(query.other);
       for (const term of myTerms) {
         const f = docStats.docTermCount(path, term);
-        if (f === 0) continue;
+        if (f === 0) {continue;}
         const df = docStats.numDocsContaining(term);
         const idf = Math.log(1 + (N - df + 0.5) / (df + 0.5));
         const denom = f + k1 * (1 - b + b * (docStats.docLen(path) / docStats.AvgDocLen));
@@ -64,16 +71,16 @@ export class MyFts implements IFullTextSearch {
       .slice(0, 20);
 
     return myRanked;
-  }
+  };
 
   // no-ops to satisfy IFullTextSearch
   public addFile(path: string, text: string) {}
   public onFileModified = (path: string, text: string) => {
     return Promise.resolve();
-  }
+  };
   public onFileDeleted = (path: string) => {
     return Promise.resolve();
-  }
+  };
 }
 
 class Query {
@@ -137,7 +144,7 @@ class DocStats {
   }
 
   public containsDoc(path: string) {
-    return this._termCounts.get(path) != undefined;
+    return this._termCounts.get(path) !== undefined;
   }
 
   public numDocsContaining(term: string) {
@@ -152,7 +159,7 @@ class DocStats {
     counts?.set(term, (counts.get(term) || 0) + count);
 
     // todo: prevent double counting?
-    this._docCounts.set(term, (this._docCounts.get(term) || 0) + 1)
+    this._docCounts.set(term, (this._docCounts.get(term) || 0) + 1);
   }
 
   public removeDoc(path: string) {

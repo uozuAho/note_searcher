@@ -1,3 +1,5 @@
+import _path = require('path');
+
 import { IMultiIndex } from "./MultiIndex";
 import { IFileSystem } from '../utils/IFileSystem';
 
@@ -6,18 +8,21 @@ import { MyFts } from "../search/myFts";
 import { IFullTextSearch } from "../search/IFullTextSearch";
 import { IDiagnostics } from "../diagnostics/IDiagnostics";
 import { NullDiagnostics } from "../diagnostics/diagnostics";
+import { IWorkspaceConfig, loadWorkspaceConfig } from "../utils/workspaceConfig";
 
 export class DefaultMultiIndex implements IMultiIndex {
   private _fullText: IFullTextSearch;
   private _linkIndex = new InMemoryLinkIndex();
+  private _workspaceConfig: IWorkspaceConfig;
 
   constructor(
     private _fileSystem: IFileSystem,
     workspaceDir: string,
-    private _diagnostics: IDiagnostics = new NullDiagnostics()
+    private _diagnostics: IDiagnostics = new NullDiagnostics(),
   )
   {
-    this._fullText = new MyFts(_fileSystem, workspaceDir);
+    this._workspaceConfig = loadWorkspaceConfig(_fileSystem, workspaceDir);
+    this._fullText = new MyFts(_fileSystem, workspaceDir, this._workspaceConfig.shouldIgnorePath);
   }
 
   public filenameToAbsPath = (filename: string) => this._linkIndex.filenameToAbsPath(filename);
@@ -26,7 +31,7 @@ export class DefaultMultiIndex implements IMultiIndex {
     this._diagnostics.trace(`search: "${query}"`);
     const realResults = await this._fullText.search(query);
     return realResults;
-  }
+  };
 
   public notes = () => this._linkIndex.notes();
 
@@ -80,6 +85,9 @@ export class DefaultMultiIndex implements IMultiIndex {
   };
 
   private shouldIndex = (path: string) => {
+    if (this._workspaceConfig.shouldIgnorePath(path)) {
+      return false;
+    }
     for (const ext of ['md', 'txt', 'log']) {
       if (path.endsWith(ext)) {
         return true;
