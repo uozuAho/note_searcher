@@ -53,8 +53,6 @@ See ./AGENTS.md
 
 
 # todo
-- WIP add config file support, .notesearcher
-    - all privates underscore in MyFts
 - change activation events from all to proper ones
 - publish to openvsix or whatever it's called
 - feature: extract text to new note

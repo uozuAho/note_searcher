@@ -4,8 +4,8 @@ import { IFile, SimpleFile } from '../utils/IFile';
 
 export class MyFts implements IFullTextSearch {
   constructor(
-    private fs: IFileSystem,
-    private rootDir: string,
+    private _fs: IFileSystem,
+    private _rootDir: string,
     private _shouldIgnore: (path: string) => boolean
   ) {}
 
@@ -13,14 +13,14 @@ export class MyFts implements IFullTextSearch {
     if (query.trim() === "") {
       return Promise.resolve([]);
     }
-    return this.searchDir(this.rootDir, query);
+    return this.searchDir(this._rootDir, query);
   };
 
   private searchDir = async (dir: string, query: string) => {
     const docs: IFile[] = [];
     const pQuery = parseQuery(query);
 
-    for (const path of this.fs.allFilesUnderPath(dir)) {
+    for (const path of this._fs.allFilesUnderPath(dir)) {
       if (this._shouldIgnore(path)) {
         continue;
       }
@@ -32,7 +32,7 @@ export class MyFts implements IFullTextSearch {
       }
       if (path.endsWith('md') || path.endsWith('txt') || path.endsWith('log'))
       {
-        const text = this.fs.readFile(path);
+        const text = this._fs.readFile(path);
         docs.push(new SimpleFile(path, text));
       }
     }
