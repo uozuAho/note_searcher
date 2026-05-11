@@ -8,12 +8,12 @@ import { MyFts } from "../search/myFts";
 import { IFullTextSearch } from "../search/IFullTextSearch";
 import { IDiagnostics } from "../diagnostics/IDiagnostics";
 import { NullDiagnostics } from "../diagnostics/diagnostics";
-import { loadWorkspaceConfig, shouldIgnorePath } from "../utils/workspaceConfig";
+import { IWorkspaceConfig, loadWorkspaceConfig } from "../utils/workspaceConfig";
 
 export class DefaultMultiIndex implements IMultiIndex {
   private _fullText: IFullTextSearch;
   private _linkIndex = new InMemoryLinkIndex();
-  private _ignorePathsContaining: string[];
+  private _workspaceConfig: IWorkspaceConfig;
 
   constructor(
     private _fileSystem: IFileSystem,
@@ -21,9 +21,8 @@ export class DefaultMultiIndex implements IMultiIndex {
     private _diagnostics: IDiagnostics = new NullDiagnostics(),
   )
   {
-    const config = loadWorkspaceConfig(_fileSystem, workspaceDir);
-    this._ignorePathsContaining = config.ignore_paths_containing;
-    this._fullText = new MyFts(_fileSystem, workspaceDir, config.ignore_paths_containing);
+    this._workspaceConfig = loadWorkspaceConfig(_fileSystem, workspaceDir);
+    this._fullText = new MyFts(_fileSystem, workspaceDir, this._workspaceConfig.shouldIgnorePath);
   }
 
   public filenameToAbsPath = (filename: string) => this._linkIndex.filenameToAbsPath(filename);
@@ -49,7 +48,7 @@ export class DefaultMultiIndex implements IMultiIndex {
     const jobs: Promise<void>[] = [];
 
     for (const path of this._fileSystem.allFilesUnderPath(dir)) {
-      if (this.shouldIgnore(path) || !this.shouldIndex(path)) { continue; }
+      if (!this.shouldIndex(path)) { continue; }
       jobs.push(this.addFile(path));
     }
 
@@ -58,7 +57,7 @@ export class DefaultMultiIndex implements IMultiIndex {
   };
 
   public onFileModified = async (path: string, text: string) => {
-    if (this.shouldIgnore(path) || !this.shouldIndex(path)) { return; }
+    if (!this.shouldIndex(path)) { return; }
 
     const tasks = [
       this._fullText.onFileModified(path, text),
@@ -69,7 +68,7 @@ export class DefaultMultiIndex implements IMultiIndex {
   };
 
   public onFileDeleted = async (path: string) => {
-    if (this.shouldIgnore(path) || !this.shouldIndex(path)) { return; }
+    if (!this.shouldIndex(path)) { return; }
 
     const tasks = [
       this._fullText.onFileDeleted(path),
@@ -86,6 +85,9 @@ export class DefaultMultiIndex implements IMultiIndex {
   };
 
   private shouldIndex = (path: string) => {
+    if (this._workspaceConfig.shouldIgnorePath(path)) {
+      return false;
+    }
     for (const ext of ['md', 'txt', 'log']) {
       if (path.endsWith(ext)) {
         return true;
@@ -93,6 +95,4 @@ export class DefaultMultiIndex implements IMultiIndex {
     }
     return false;
   };
-
-  private shouldIgnore = (path: string) => shouldIgnorePath(path, this._ignorePathsContaining);
 }

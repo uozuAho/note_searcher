@@ -55,10 +55,8 @@ See ./AGENTS.md
 # todo
 - WIP add config file support, .notesearcher
     - agent work to refactor
-        - pass ignore list to fs instead of downstream deps?
-            - maybe pass ignore list to allFilesUnderPath
-            - maybe pass workspaceConfig instead of ignore list
         - i dont like IFileSystem.readJsonFile
+    - all privates underscore in MyFts
 - change activation events from all to proper ones
 - publish to openvsix or whatever it's called
 - feature: extract text to new note
