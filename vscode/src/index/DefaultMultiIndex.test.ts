@@ -71,11 +71,12 @@ describe('DefaultMultiIndex, mocked filesystem', () => {
 
     it('does not index ignored paths', async () => {
       setupFiles([
+        new SimpleFile('.notesearcher', JSON.stringify({ignore_paths_containing: "skip/me"})),
         new SimpleFile('keep/a.txt', ''),
         new SimpleFile('skip/me/b.txt', ''),
       ]);
 
-      index = new DefaultMultiIndex(fileSystem, '', new NullDiagnostics(), ['skip/me']);
+      index = new DefaultMultiIndex(fileSystem, '', new NullDiagnostics());
       await index.indexAllFiles('');
 
       expect(Array.from(index.notes())).toEqual(['keep/a.txt']);

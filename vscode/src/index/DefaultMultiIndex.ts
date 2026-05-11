@@ -1,3 +1,5 @@
+import _path = require('path');
+
 import { IMultiIndex } from "./MultiIndex";
 import { IFileSystem } from '../utils/IFileSystem';
 
@@ -6,7 +8,7 @@ import { MyFts } from "../search/myFts";
 import { IFullTextSearch } from "../search/IFullTextSearch";
 import { IDiagnostics } from "../diagnostics/IDiagnostics";
 import { NullDiagnostics } from "../diagnostics/diagnostics";
-import { shouldIgnorePath } from "../utils/workspaceConfig";
+import { loadWorkspaceConfig, shouldIgnorePath } from "../utils/workspaceConfig";
 
 export class DefaultMultiIndex implements IMultiIndex {
   private _fullText: IFullTextSearch;
@@ -17,11 +19,12 @@ export class DefaultMultiIndex implements IMultiIndex {
     private _fileSystem: IFileSystem,
     workspaceDir: string,
     private _diagnostics: IDiagnostics = new NullDiagnostics(),
-    ignorePathsContaining: string[] = []
   )
   {
-    this._ignorePathsContaining = ignorePathsContaining;
-    this._fullText = new MyFts(_fileSystem, workspaceDir);
+    const adsf = _path.join(workspaceDir, ".notesearcher");
+    const config = loadWorkspaceConfig(_fileSystem.readJsonFile!, adsf);
+    this._ignorePathsContaining = config.ignore_paths_containing;
+    this._fullText = new MyFts(_fileSystem, workspaceDir, config.ignore_paths_containing);
   }
 
   public filenameToAbsPath = (filename: string) => this._linkIndex.filenameToAbsPath(filename);
