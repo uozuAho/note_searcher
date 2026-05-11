@@ -122,7 +122,8 @@ describe('on starting in the demo dir', () => {
       }
     });
 
-    expect(ns.searchResults()).toContain(_path.join(demoDir, 'subdir', 'not_ignored.md'));
+    expect(ns.searchResults()).toContain(
+      _path.join(demoDir, 'subdir', 'ignored_stuff', 'not_ignored.md'));
   });
 });
 

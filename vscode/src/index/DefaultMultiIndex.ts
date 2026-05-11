@@ -30,7 +30,7 @@ export class DefaultMultiIndex implements IMultiIndex {
     this._diagnostics.trace(`search: "${query}"`);
     const realResults = await this._fullText.search(query);
     return realResults;
-  }
+  };
 
   public notes = () => this._linkIndex.notes();
 
