@@ -55,7 +55,6 @@ See ./AGENTS.md
 # todo
 - WIP add config file support, .notesearcher
     - agent work to refactor
-        - buildDeps.loadWorkspaceConfig looks weird
         - pass ignore list to fs instead of downstream deps?
             - maybe pass ignore list to allFilesUnderPath
             - maybe pass workspaceConfig instead of ignore list

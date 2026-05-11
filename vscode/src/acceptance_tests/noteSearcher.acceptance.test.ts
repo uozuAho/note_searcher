@@ -118,7 +118,7 @@ describe('on starting in the demo dir', () => {
 
     expected_ignoreds.forEach(ign => {
       for (const result of ns.searchResults()) {
-        expect(result).not.toContain(ign)
+        expect(result).not.toContain(ign);
       }
     });
 
