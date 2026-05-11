@@ -5,7 +5,6 @@ export interface IFileSystem {
   writeFile(path: string, text: string): void;
   deleteFile(path: string): void;
   moveFile(oldPath: string, newPath: string): void;
-  readJsonFile?: <T>(path: string) => T;
   /**
    * Return all files under the given path (recursively),
    * in the current OS's path format

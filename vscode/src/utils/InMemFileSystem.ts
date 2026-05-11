@@ -30,7 +30,6 @@ export class InMemFileSystem implements IFileSystem {
 
   public fileExists = (path: string) => this._files.has(path);
   public readFileAsync = (path: string) => Promise.resolve(this.readFile(path));
-  public readJsonFile = <T>(path: string) => JSON.parse(this.readFile(path)) as T;
   public writeFile = (path: string, text: string) => this._files.set(path, text);
   public deleteFile = (path: string) => this._files.delete(path);
 
