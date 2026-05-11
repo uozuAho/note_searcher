@@ -3,6 +3,13 @@
 All notable changes to the "note-searcher" extension will be documented in this
 file. Format inspired by https://keepachangelog.com/en/1.0.0/
 
+## [4.2.0] - 2026-05-11
+### Added
+- Add optional config file `.notesearcher`, with support for ignoring paths
+
+### Security
+- Updated dependency versions
+
 ## [4.1.0] - 2025-10-23
 ### Added
 - Filter paths in full text search with `path:`

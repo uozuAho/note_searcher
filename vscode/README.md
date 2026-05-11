@@ -83,6 +83,18 @@ Links to files that can't be found are shown in the dead links section of the
 sidebar.
 
 
+### Ignoring files
+To ignore files/directories, add a file named .notesearcher at your project
+root. In it, you can add path substrings to ignore:
+
+```js
+{
+  ignore_paths_containing: ["stuff", "I/want/to/ignore"]
+}
+```
+
+
+
 ## Reporting bugs/issues/feature requests
 
 If you find any problems, have any questions, or have any requests for features,
