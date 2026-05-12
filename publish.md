@@ -14,7 +14,7 @@ Publishing is done by tagging master. Before you do:
 
 # Token expired?
 - log into azure devops
-- goto org
+- goto org (azure devops orgs? I dunno it never makes sense)
 - goto profile -> tokens
 - create a token with scope: marketplace -> manage: https://code.visualstudio.com/api/working-with-extensions/publishing-extension#get-a-personal-access-token
-- save token to github
+- save token to github: note searcher -> settings -> secrets and variables -> actions
