@@ -82,5 +82,19 @@ describe('DefaultMultiIndex, mocked filesystem', () => {
       expect(Array.from(index.notes())).toEqual(['keep/a.txt']);
       expect(index.containsNote('skip/me/b.txt')).toBe(false);
     });
+
+    it('ignores node_modules and .venv when config is missing', async () => {
+      setupFiles([
+        new SimpleFile('keep/a.txt', ''),
+        new SimpleFile('node_modules/pkg/b.txt', ''),
+        new SimpleFile('.venv/c.txt', ''),
+      ]);
+
+      await index.indexAllFiles('');
+
+      expect(Array.from(index.notes())).toEqual(['keep/a.txt']);
+      expect(index.containsNote('node_modules/pkg/b.txt')).toBe(false);
+      expect(index.containsNote('.venv/c.txt')).toBe(false);
+    });
   });
 });

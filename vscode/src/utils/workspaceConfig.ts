@@ -7,8 +7,14 @@ export interface IWorkspaceConfig {
 }
 
 export const defaultWorkspaceConfig = (): IWorkspaceConfig => ({
-  ignore_paths_containing: [],
-  shouldIgnorePath: x => false,
+  ignore_paths_containing: ['node_modules', '.venv'],
+  shouldIgnorePath: (path: string) =>
+    ['node_modules', '.venv'].some(x => path.includes(x)),
+});
+
+const createWorkspaceConfig = (ignorePathsContaining: string[]): IWorkspaceConfig => ({
+  ignore_paths_containing: ignorePathsContaining,
+  shouldIgnorePath: (path: string) => ignorePathsContaining.some(x => path.includes(x)),
 });
 
 export const loadWorkspaceConfig = (
@@ -22,9 +28,7 @@ export const loadWorkspaceConfig = (
     if (!config || !Array.isArray(config.ignore_paths_containing)) {
       return defaultWorkspaceConfig();
     }
-    config.shouldIgnorePath = (path: string) =>
-      config.ignore_paths_containing.some(x => path.includes(x));
-    return config;
+    return createWorkspaceConfig(config.ignore_paths_containing);
   } catch {
     return defaultWorkspaceConfig();
   }
