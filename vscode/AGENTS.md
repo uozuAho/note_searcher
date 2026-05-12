@@ -1,8 +1,7 @@
 # Code explainer
 
-Welcome human and machine coders. This project is a visual studio code extension
-that provides full text search and wiki-style links with forward and backward
-link navigation.
+This project is a visual studio code extension that provides full text search
+and wiki-style links with forward and backward link navigation.
 
 # project structure and important types
 - ./src/note_searcher/noteSearcher.ts
@@ -10,14 +9,14 @@ link navigation.
         - this is the central hub through which most extension functionality is
           coordinated
         - has
-            - ui:           INoteSearcherUi
-            - index:        IMultiIndex
-            - fs:           FileSystem
-            - timeProvider: TimeProvider
+            - ui:           `INoteSearcherUi`
+            - index:        `IMultiIndex`
+            - fs:           `FileSystem`
+            - timeProvider: `TimeProvider`
 - ./src/ui/INoteSearcherUi.ts
     - `INoteSearcherUi`
         - interface to the UI, which in this extension's case is VS code
-        - main implementation: VsCodeNoteSearcherUi
+        - main implementation: `VsCodeNoteSearcherUi`
 - ./src/index/MultiIndex.ts
     - `IMultiIndex`
         - single interface to all indexing functionality: full text, links
