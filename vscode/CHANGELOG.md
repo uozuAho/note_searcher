@@ -3,6 +3,11 @@
 All notable changes to the "note-searcher" extension will be documented in this
 file. Format inspired by https://keepachangelog.com/en/1.0.0/
 
+## [4.2.1] - 2026-05-12
+### Changed
+- reduce activation events
+- ignore node_modules and .venv if no config file found
+
 ## [4.2.0] - 2026-05-11
 ### Added
 - Add optional config file `.notesearcher`, with support for ignoring paths

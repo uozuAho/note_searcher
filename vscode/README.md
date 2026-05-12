@@ -93,6 +93,8 @@ root. In it, you can add path substrings to ignore:
 }
 ```
 
+If no .notesearcher file is found, `node_modules` and `.venv` are ignored by
+default.
 
 
 ## Reporting bugs/issues/feature requests
