@@ -20,10 +20,7 @@ export class MyFts implements IFullTextSearch {
     const docs: IFile[] = [];
     const pQuery = parseQuery(query);
 
-    for (const path of this._fs.allFilesUnderPath(dir)) {
-      if (this._shouldIgnore(path)) {
-        continue;
-      }
+    for (const path of this._fs.allFilesUnderPath(dir, this._shouldIgnore)) {
       if (pQuery.pathIncludes.some(x => !path.includes(x))) {
         continue;
       }

@@ -47,8 +47,7 @@ export class DefaultMultiIndex implements IMultiIndex {
     this._linkIndex.clear();
     const jobs: Promise<void>[] = [];
 
-    for (const path of this._fileSystem.allFilesUnderPath(dir)) {
-      if (!this.shouldIndex(path)) { continue; }
+    for (const path of this._fileSystem.allFilesUnderPath(dir, x => !this.shouldIndex(x))) {
       jobs.push(this.addFile(path));
     }
 

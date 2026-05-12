@@ -47,11 +47,13 @@ export class InMemFileSystem implements IFileSystem {
     this.writeFile(newPath, text);
   };
 
-  public allFilesUnderPath = (path: string) => {
+  public allFilesUnderPath = (path: string, ignore?: (path: string) => boolean) => {
     const files = [];
     for (const path of this._files.keys()) {
-      if (path.startsWith(path)) {
-        files.push(path);
+      if (ignore && !ignore(path)) {
+        if (path.startsWith(path)) {
+          files.push(path);
+        }
       }
     }
     return files;
