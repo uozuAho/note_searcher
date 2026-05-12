@@ -15,11 +15,12 @@ export async function activate(context: IVsCodeExtensionContext) {
     buildWikiLinkDefinitionProvider
   } = buildDeps();
 
-  if (!ui.currentlyOpenDir()) {
+  const openDir = ui.currentlyOpenDir();
+  if (!openDir) {
     return;
   }
 
-  const multiIndex = buildMultiIndex(ui.currentlyOpenDir()!);
+  const multiIndex = buildMultiIndex(openDir);
   const noteSearcher = new NoteSearcher(ui, multiIndex, fs);
   const noteLocator = new NoteLocator(multiIndex);
 

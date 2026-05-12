@@ -53,7 +53,6 @@ See ./AGENTS.md
 
 
 # todo
-- change activation events from all to proper ones
 - publish to openvsix or whatever it's called
     - https://github.com/EclipseFdn/open-vsx.org/wiki/Publishing-Extensions
 - feature: extract text to new note

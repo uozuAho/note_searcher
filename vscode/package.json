@@ -26,7 +26,7 @@
 		"search"
 	],
 	"activationEvents": [
-		"*"
+		"onView:noteSearcher"
 	],
 	"main": "./dist/noteSearcher.js",
 	"contributes": {
