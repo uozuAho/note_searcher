@@ -24,6 +24,7 @@ You can also use wiki links, like this: [[cheese]], or [[this | trains]].
 
 Links to the current note are shown in the 'backlinks' section of the sidebar.
 
+This link should work: [[not_ignored]]
 
 ## quirks
 This goto reference works fine: [[trains]]

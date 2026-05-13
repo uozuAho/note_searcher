@@ -26,7 +26,10 @@
 		"search"
 	],
 	"activationEvents": [
-		"onView:noteSearcher"
+		"onView:noteSearcher",
+    "onLanguage:plaintext",
+    "onLanguage:markdown",
+    "onLanguage:log"
 	],
 	"main": "./dist/noteSearcher.js",
 	"contributes": {
