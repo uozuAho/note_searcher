@@ -47,8 +47,10 @@ export class DefaultMultiIndex implements IMultiIndex {
     this._linkIndex.clear();
     const jobs: Promise<void>[] = [];
 
-    for (const path of this._fileSystem.allFilesUnderPath(dir, x => !this.shouldIndex(x))) {
-      jobs.push(this.addFile(path));
+    for (const path of this._fileSystem.allFilesUnderPath(dir, this.shouldIgnore)) {
+      if (this.shouldIndex(path)) {
+        jobs.push(this.addFile(path));
+      }
     }
 
     await Promise.all(jobs);
@@ -83,8 +85,12 @@ export class DefaultMultiIndex implements IMultiIndex {
     this._fullText.addFile(path, text);
   };
 
+  private shouldIgnore = (path: string) => {
+    return this._workspaceConfig.shouldIgnorePath(path);
+  };
+
   private shouldIndex = (path: string) => {
-    if (this._workspaceConfig.shouldIgnorePath(path)) {
+    if (this.shouldIgnore(path)) {
       return false;
     }
     for (const ext of ['md', 'txt', 'log']) {
