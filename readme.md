@@ -55,6 +55,8 @@ See ./AGENTS.md
 # todo
 - publish to openvsix or whatever it's called
     - https://github.com/EclipseFdn/open-vsx.org/wiki/Publishing-Extensions
+- inmemfilesystem: model dirs and files
+    - have had bugs that exist due to dirs
 - feature: extract text to new note
 - feature(s): pasting links
     - try this: https://stackoverflow.com/questions/44598894/in-a-vs-code-extension-how-can-i-be-notified-when-the-user-cuts-copies-or-paste
