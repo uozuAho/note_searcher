@@ -3,6 +3,11 @@
 All notable changes to the "note-searcher" extension will be documented in this
 file. Format inspired by https://keepachangelog.com/en/1.0.0/
 
+## [4.2.2] - 2026-05-13
+### Fixed
+- forward/backward links broken
+- extension not activating when text file viewed
+
 ## [4.2.1] - 2026-05-12
 ### Changed
 - reduce activation events
