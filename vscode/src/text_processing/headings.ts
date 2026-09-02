@@ -1,3 +1,3 @@
 export function filenameToHeading(filename: string) {
-  return filename.replace(/_/g, ' ').replace('.md', '').trim();
+  return filename.replace(/\.md$/, '').replace(/[-_.]/g, ' ').trim();
 }
