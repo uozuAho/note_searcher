@@ -86,3 +86,8 @@ Not tested:
 Although mocking out external dependencies is complex and often a source of
 confusion, I still prefer it to the old flakey UI tests. Everything is under my
 control, and the tests are fast.
+
+# Conventions
+- follow existing code and architecture patterns
+- prefer functional code with immutable data structures
+- update any documentation, including AGENTS.md, when making changes
