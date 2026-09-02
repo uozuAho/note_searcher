@@ -54,7 +54,6 @@ See ./AGENTS.md
 
 # todo
 - note searcher
-    - after renaming files - refresh any open editors
     - title - replace with spaces: -_.
 - publish to openvsix or whatever it's called
     - https://github.com/EclipseFdn/open-vsx.org/wiki/Publishing-Extensions
