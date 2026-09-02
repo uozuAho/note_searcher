@@ -11,6 +11,7 @@ import { IFile } from "../utils/IFile";
 import { DeadLinksTree } from './DeadLinksTree';
 import { LinksTree } from './LinksTree';
 import { Link } from '../index/LinkIndex';
+import { filenameToHeading } from '../text_processing/headings';
 
 export class VsCodeNoteSearcherUi implements INoteSearcherUi {
   private noteSavedListener: FileChangeListener | null = null;
@@ -72,7 +73,7 @@ export class VsCodeNoteSearcherUi implements INoteSearcherUi {
     const doc = await vscode.workspace.openTextDocument(uri);
     const pathSegments = uri.path.split('/');
     const filename = pathSegments[pathSegments.length - 1];
-    const heading = filename.replace(/_/g, ' ').replace('.md', '').trim();
+    const heading = filenameToHeading(filename);
     const editor = await vscode.window.showTextDocument(doc);
     await editor.edit(editBuilder => {
       editBuilder.insert(new vscode.Position(0, 0), `# ${heading}\n\n`);
