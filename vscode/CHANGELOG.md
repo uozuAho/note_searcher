@@ -3,7 +3,7 @@
 All notable changes to the "note-searcher" extension will be documented in this
 file. Format inspired by https://keepachangelog.com/en/1.0.0/
 
-## [4.2.2] - 2026-09-02
+## [4.3.0] - 2026-09-02
 ### Changed
 - New note heading replaces '.' and '-' with spaces (in addition to '_')
 
