@@ -53,8 +53,6 @@ See ./AGENTS.md
 
 
 # todo
-- note searcher
-    - title - replace with spaces: -_.
 - publish to openvsix or whatever it's called
     - https://github.com/EclipseFdn/open-vsx.org/wiki/Publishing-Extensions
 - inmemfilesystem: model dirs and files
